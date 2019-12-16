@@ -1,0 +1,16 @@
+{
+    'run_location': 'sacagawea',
+    'input_file': '/shares/gcp/climate/_spatial_data/SRB_MNE/segment_weights/SRB_MNE_adm0_{}_grid_segment_weights_area_pop.csv',
+    'output_dir': '/shares/gcp/climate/_spatial_data/SRB_MNE',
+    'region_columns': ['ISO'],
+    'group_by_column': None,
+    'weight_columns': ['popwt'],
+    'climate_source': ['GMFD'],
+    'parameters': ['tavg'],
+    'transforms': {'polyAbove': [4,20]},
+    'collapse_as': 'sum',
+    'collapse_to': 'year',
+    'year_block_size': 5,
+    'first_year': 1968,
+    'last_year': 2012
+}

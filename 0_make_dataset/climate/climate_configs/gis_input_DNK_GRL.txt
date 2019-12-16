@@ -1,0 +1,16 @@
+{
+    'run_location': 'sacagawea',
+    'n_jobs': 0,
+    'verbose': 2,
+    'clim': 'GMFD',
+    'shapefile_location': '/shares/gcp/climate/_spatial_data/DNK_GRL',
+    'shapefile_name': 'DNK_GRL_adm0',
+    'shp_id': 'DNK_GRL_adm0',
+    'numeric_id_fields': [],
+    'string_id_fields': ['ISO'],
+    'weightlist': ['pop'],
+    'use_existing_segment_shp': False,
+    'filter_ocean_pixels': False,
+    'keep_features': None,
+    'drop_features': None
+}
