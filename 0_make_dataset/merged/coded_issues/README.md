@@ -1,6 +1,34 @@
-# Coding Issues 
+# Dropping Data and Creating Fixed Effect Regimes
 
-In order to translate 
+Using the IEA World Energy Balances 2017 Edition Database Documentation, we clean the IEA World Energy Balances Dataset to account for the following types of data issues:
+* changes in sector and fuel definitions 
+* changes in data quality, availability, or reporting
+* documented changes in energy supply or demand
+* country geographic changes
+
+To accomplish this task, we first read the documentation and encoded the relevant issues into this [dataset](). Then, we created a procedure for dropping data or constructing fixed effect regimes based off the coded issues. Below, I will outline both of these steps. 
+
+## Encoding IEA World Balance Documentation
+
+1. Through multiple readings of the database documentation a team of RA's assembled a country x sector x fuel x issue dataset with the following metadata variables:
+* issue_code: what type of data quality issue is this? options include:
+    * combined sectors
+    * data availability
+    * climate data
+    * combined fuels
+    * ex-post revision
+    * extrapolation
+    * real anomaly
+    * data source change
+    * redefine sectors
+    * methodology change
+* issue: why is there an issue with the data? 
+* description: what caused the issue with the data?
+* year_start: what year did the data quality issue begin in?
+* year_end: what year did the data quality issue end in?
+
+## Addressing Encoded Issues in Data Cleaning and Analysis
+
 
 Criteria for Dropping:
 
