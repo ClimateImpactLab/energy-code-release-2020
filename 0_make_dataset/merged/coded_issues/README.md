@@ -10,7 +10,7 @@ To accomplish this task, we first read the documentation and encoded the relevan
 
 ## Encoding IEA World Balance Documentation
 
-1. Through multiple readings of the database documentation a team of RA's assembled a country x sector x fuel x issue dataset with the following metadata variables:
+### Step 1: Through multiple readings of the database documentation a team of RA's assembled a country x sector x fuel x issue dataset with the following metadata variables:
 * issue_code: what type of data quality issue is this? options include:
     * combined sectors
     * data availability
@@ -26,6 +26,9 @@ To accomplish this task, we first read the documentation and encoded the relevan
 * description: what caused the issue with the data?
 * year_start: what year did the data quality issue begin in?
 * year_end: what year did the data quality issue end in?
+
+### Step 2: Based off this metadata and cross referencing each issue with the database documentation we constructed 7 dummy variables for use in data cleaning and construction as well as in fixed effect regime assignment
+
 
 ## Addressing Encoded Issues in Data Cleaning and Analysis
 
