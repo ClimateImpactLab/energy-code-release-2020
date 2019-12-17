@@ -103,7 +103,7 @@ Geographic Changes:
 
 Using the `flag_drop` and `grey` indicator variables defined above, we drop observations. If an energy load observation corresponds to non-zero values of either indicator variable, we will drop that observation. Using the remaining issues we classify energy load observations into reporting regimes.
 
-This data cleaning and reporting regime construction takes place in [1_issue_fix_v2.do]()
+This data cleaning and reporting regime construction takes place in [1_issue_fix_v2.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/merged/1_issue_fix_v2.do)
 
 
 
