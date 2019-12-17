@@ -5,7 +5,7 @@ We construct three datasets for analysis:
 * data/GMFD_TINV_clim_EX_regsort.dta
 * data/GMFD_TINV_clim_regsort.dta
 
-## Directory folder scruture
+## Directory folder structure
 
 ## Constructing IEA_merged_long.dta
 
