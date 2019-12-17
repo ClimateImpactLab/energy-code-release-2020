@@ -27,48 +27,11 @@ else if "`c(username)'" == "manorman"{
 // set data type ie historic or replicated
 local data_type $data_type
 
-
 // set coded issue type
-
 local issue_type $issue_type
 
-
 // toggle for dropping exclusively estimated data
-
 local model $model
-
-******Set Model Parameters******************************************************
-
-//Climate Data type
-local clim_data $clim_data
-	
-//Zero Subset Case
-local case $case 
-	
-//flow product breakdown
-
-local bknum $bknum
-		
-if "`bknum'" == "break2" {
-	
-	local flowlist "COMPILE"
-	local productlist "other_energy electricity"
-
-}
-
-else if "`bknum'" == "break4" {
-	
-	local flowlist "TOTOTHER TOTIND"
-	local productlist "other_energy electricity"
-
-}
-
-else if "`bknum'" == "break6" {
-	
-	local flowlist "RESIDENT TOTIND COMMPUB"
-	local productlist "other_energy electricity"
-
-}
 	
 ********************************************************************************
 
@@ -77,65 +40,39 @@ else if "`bknum'" == "break6" {
 local DATA "`DROPBOX'/GCP_Reanalysis/ENERGY/IEA/Yuqi_Codes/Data"
 local replicated_data "`DROPBOX'/GCP_Reanalysis/ENERGY/IEA_Replication/Data"
 
-
 ********************************************************************************
-*Step 1: Load Energy Data and Coded Issues to Apply to Energy Dataset
+* Step 1: Load Energy Data and Coded Issues to Apply to Energy Dataset
 ********************************************************************************
 
-//Part A: Make Energy Dataset Tempfile and retrieve Country List for looping
-use "`replicated_data'/Analysis/`clim_data'/rationalized_code/`data_type'/data/IEA_Merged_long_`clim_data'.dta", clear
+// Part A: Make Energy Dataset Tempfile and retrieve Country List for looping
+
+use "`replicated_data'/Analysis/GMFD/rationalized_code/`data_type'/data/IEA_Merged_long_GMFD.dta", clear
 drop countryid
 keep if year>=1971 & year<=2012
 generate FEtag="G"
 tempfile energy_long
 save `energy_long', replace
-keep if temp1_`clim_data' !=.
+keep if temp1_GMFD !=.
 duplicates drop country, force
 levelsof country, local(countrylist)
 
-//Part B: Load Coded Issues - type/set of coded issues specified with toggle at top of code
+// Part B: Load Coded Issues - type/set of coded issues specified with toggle at top of code
 
-if ("`issue_type'" == "first-reading-issues") {
-	use "`DATA'/issue_coding_3sectors_fix.dta", clear
-	local type_of_issues "oldies"
-}
-else {
-	di "`replicated_data'/Cleaning/cleaned_coded_issues.csv"
-	insheet using "`replicated_data'/Cleaning/cleaned_coded_issues.csv", comma names clear
-	pause
-	foreach variable in "grey" "tot_drop" "flag_drop" "fuel_keep" {
-		replace `variable' = 0 if `variable' == .
-	}
-	
-	if ("`issue_type'" == "second-reading-issues") {
-		keep if no_match == 2 | no_match == 0
-		local type_of_issues "seconds"
-	} 
-	else if ("`issue_type'" == "revised-first-reading-issues") {
-		keep if no_match == 1 | no_match == 0
-		local type_of_issues "oldies revised"
-	}
-	else if ("`issue_type'" == "matched-issues") {
-		keep if no_match == 0
-		local type_of_issues "matchy matchy"
-	}
+di "`replicated_data'/Cleaning/cleaned_coded_issues.csv"
+insheet using "`replicated_data'/Cleaning/cleaned_coded_issues.csv", comma names clear
+foreach variable in "grey" "tot_drop" "flag_drop" "fuel_keep" {
+	replace `variable' = 0 if `variable' == .
 }
 
-di "Issue subset: `type_of_issues'"
+// Part C: Set up Exclusively Estimated Observations to be Dropped if model requires it
 
-di "Did we set up exclusively estimated data to be dropped?"
-//Part C: Set up Exclusively Estimated Observations to be Dropped if drop_ex_est toggle set
 if ("`model'" == "TINV_clim_EX" ) {
 	replace grey = 9 if ex_ex == 1 
 	di "Set up exclusively estimated data to be dropped."
 }
-else {
-	di "No"
-}
 
-pause
 ********************************************************************************
-*Step 2: Clean Coded Issues and Save in Issue Type Specific Datasets
+* Step 2: Clean Coded Issues and Save in Issue Type Specific Datasets
 ********************************************************************************
 
 **replace to match the main file**
@@ -199,7 +136,7 @@ preserve
 restore
 
 ********************************************************************************
-*Step 3: Write Programs To Use In Country Flow Product Loop
+* Step 3: Write Programs To Use In Country Flow Product Loop
 ********************************************************************************
 
 //Issue Data Cleaning and Reshaping Programs
@@ -288,118 +225,107 @@ program define grey_nine_issues //pass in number of observations to apply
 end
 
 ********************************************************************************
-*Step 4: Apply Issues Selected via Toggles at Top and Save Issue Fixed Data
+* Step 4: Apply Issues Selected and Save Issue Fixed Data
 ********************************************************************************
 
-if ("`issue_type'" != "face-value") { //if want face-value energy dataset no need to run code
-
-	**loop through fuels**
-	foreach var in `productlist' {
-		**loop through sectors**
-		foreach tag in `flowlist' {
-			**loop through countries**
-			foreach loc in `countrylist' {
+**loop through fuels**
+foreach var in "other_energy electricity" {
+	**loop through sectors**
+	foreach tag in "COMPILE" {
+		**loop through countries**
+		foreach loc in `countrylist' {
+		
+			timer on 1
 			
-				timer on 1
+			local merge_file "energy_long"
+			
+			foreach it in "fixed_effects" "flag_drop_issues" "grey_one_issues" "grey_nine_issues" { //note order issues are applied matters
 				
-				local merge_file "energy_long"
+				//load in and clean issues
+				qui use ``it'', clear
 				
-				foreach it in "fixed_effects" "flag_drop_issues" "grey_one_issues" "grey_nine_issues" { //note order issues are applied matters
-					
-					//load in and clean issues
-					qui use ``it'', clear
-					
-					clean_issues, country("`loc'") flow("`tag'") product("`var'")
-					
-					qui count 
-					local ct=r(N)
-					local zt=1
-					
-					drop oecd tot_drop fuel_keep
-					
-					**proceed only when the issue exists**
-					if `ct'!=0 & `zt'==1 {
-						
-						//compress issues so no time segements overlap, clean, and reshape
-						restructure_issues
-						//di "MT: $mt"
-						
-						**merge back to IEA datas**
-						qui merge 1:m country flow product using ``merge_file''
-						
-						//Datasets only have to match if no data points have been dropped
-						if ("`it'" == "fixed_effects" | "`it'" == "flag_drop_issues" ) {
-							assert _merge != 1
-						}
-						
-						qui keep if _merge == 3
-						drop _merge
-						
-						//run issue type specific program to clean data
-						`it' $mt
+				clean_issues, country("`loc'") flow("`tag'") product("`var'")
 				
-						**save and tempfile**
-						drop year_start* year_end*
-						tempfile file`loc'
-						qui save `file`loc'', replace
-						
+				qui count 
+				local ct=r(N)
+				local zt=1
+				
+				drop oecd tot_drop fuel_keep
+				
+				**proceed only when the issue exists**
+				if `ct'!=0 & `zt'==1 {
+					
+					//compress issues so no time segements overlap, clean, and reshape
+					restructure_issues
+					//di "MT: $mt"
+					
+					**merge back to IEA datas**
+					qui merge 1:m country flow product using ``merge_file''
+					
+					//Datasets only have to match if no data points have been dropped
+					if ("`it'" == "fixed_effects" | "`it'" == "flag_drop_issues" ) {
+						assert _merge != 1
 					}
 					
-					else if `ct'==0 & `zt'==1 {
-						
-						**keep the original data**
-						qui use ``merge_file'', clear
-						qui keep if country=="`loc'"
-						qui keep if flow=="`tag'"
-						qui keep if product=="`var'"
-						
-						**save and tempfile**
-						tempfile file`loc'
-						qui save `file`loc'', replace
+					qui keep if _merge == 3
+					drop _merge
 					
-					}
+					//run issue type specific program to clean data
+					`it' $mt
+			
+					**save and tempfile**
+					drop year_start* year_end*
+					tempfile file`loc'
+					qui save `file`loc'', replace
 					
-					else if `zt'==0 {
-					
-						**keep the original data**
-						qui use ``merge_file'', clear
-						qui drop if _n>0
-						
-						**save and tempfile**
-						tempfile file`loc'
-						qui save `file`loc'', replace	
-						
-					}
-					local merge_file = "`it'_file"
-					**appending back to the long data**
-					qui use ``merge_file'', clear
-					append using `file`loc''
-					qui save ``merge_file'', replace
 				}
 				
-				timer off 1
-				qui timer list 1
-				local tim=r(t1)
-				timer clear
+				else if `ct'==0 & `zt'==1 {
+					
+					**keep the original data**
+					qui use ``merge_file'', clear
+					qui keep if country=="`loc'"
+					qui keep if flow=="`tag'"
+					qui keep if product=="`var'"
+					
+					**save and tempfile**
+					tempfile file`loc'
+					qui save `file`loc'', replace
 				
-				**keep time track**
-				display "`var' `tag' `loc'-`tim's"
-			
+				}
+				
+				else if `zt'==0 {
+				
+					**keep the original data**
+					qui use ``merge_file'', clear
+					qui drop if _n>0
+					
+					**save and tempfile**
+					tempfile file`loc'
+					qui save `file`loc'', replace	
+					
+				}
+				local merge_file = "`it'_file"
+				**appending back to the long data**
+				qui use ``merge_file'', clear
+				append using `file`loc''
+				qui save ``merge_file'', replace
 			}
+			
+			timer off 1
+			qui timer list 1
+			local tim=r(t1)
+			timer clear
+			
+			**keep time track**
+			display "`var' `tag' `loc'-`tim's"
+		
 		}
 	}
-	
-	use `grey_nine_issues_file', clear
-}
-else {
-	use `energy_long', clear
-	local type_of_issues "no issues used"
 }
 
-//Clean
+use `grey_nine_issues_file', clear
+
+// clean up shop
 drop issue_code year_start year_end flag_drop tot_drop fuel_keep grey oecd
 sort flow product country year flow
-
-//save "`DATA'/IEA_Merged_long_`issue_type'_`clim_data'_`bknum'`drop_ex_est'.dta", replace
-di "Issue Types Applied: `type_of_issues'"
-pause
