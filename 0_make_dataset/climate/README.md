@@ -6,19 +6,18 @@ As outlined [here](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-relea
 * We construct yearly Australian climate data with the following definition of year: July t to June t + 1.  
 * We use a shapefile for Italy which includes San Marino and the Holy Sea.
 
-We implement this nuanced climate data construction by:
-1. creating shapefiles which correspond to the region definitions in the IEA dataset
-2. producing monthly (instead of yearly) aggregated climate data for regions which report energy data using non-standard year definitions 
-3. running shapefile specific stata programs which clean each 
+The code and shapefiles in this directory demonstrate how we address non-standard definitions of country boundaries and years when aggregating and compiling aggregated daily gridded climate data.
 
-A combination of complex
+## Directory File Structure
 
-## File Structure
+`programs` - stata programs for cleaning shapefile specific aggregated climate data
+* contribution: complete shapefile specific aggregated climate data cleaning, accounting for non-standard year definitions in particular regions for specific periods
 
-programs - stata programs for cleaning climate data
-* there is a program for each shapefile we use to construct climate data
+`shapefiles` - the shapefiles we use to construct country level climate data variables 
+* contribution: aggregate climate data into regions which correspond to the regions in the IEA energy load dataset
 
-shapefiles - the shapefiles we use to construct country level climate data variables 
+`1_clean_climate_data.do` - the master program
+* contribution:
 
 ## How we account for Non-Standard Year and Geographic Boundary Definitions in Climate Data Construction
 To account for non-standard geographic boundary definitions, we use shapefiles that correpond to the geographic boundaries associated with the energy load data. To account for non-standard temporal definitions, we generate monthly climate data for affected regions in order to build years that correspond with the energy load data reporting period. 
