@@ -5,7 +5,17 @@ We construct three datasets for analysis:
 * data/GMFD_TINV_clim_EX_regsort.dta
 * data/GMFD_TINV_clim_regsort.dta
 
-## Directory folder structure
+## Folder structure
+
+climate - code and shapefiles for constructing, cleaning and assembling climate data
+
+coded_issues - encoded issues and documentation used to construct reporting regimes, clean the energy load data, and construct the climate data
+
+energy_load - code for cleaning raw energy load data
+
+pop_and_income - code for cleaning population and income data
+
+merged - code for cleaning the merged dataset
 
 ## Constructing IEA_merged_long.dta
 
