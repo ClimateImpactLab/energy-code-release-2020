@@ -7,7 +7,7 @@ Using the IEA World Energy Balances 2017 Edition Database Documentation, we clea
 * country geographic definitions
 * non-gregorian definitions of a year
 
-To accomplish this task, we first read the documentation and encoded the relevant issues into this [dataset](). Then, we created a procedure for dropping data or constructing fixed effect regimes based off the coded issues. Below, I will outline both of these steps. 
+To accomplish this task, we first read the documentation and encoded the relevant issues into this [dataset](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/coded_issues/cleaned_coded_issues.csv). Then, we created a procedure for dropping data or constructing fixed effect regimes based off the coded issues. Below, I will outline both of these steps. 
 
 ## Encoding IEA World Balance Documentation
 
