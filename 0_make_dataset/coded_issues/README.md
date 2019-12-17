@@ -97,7 +97,7 @@ Geographic Changes:
 - CHE- “Includes Liechtenstein for the oil data. Data for other fuels do not include Liechtenstein.”
 - USA- “Includes the 50 states and the District of Columbia but generally excludes all territories, and all trade between the U.S. and its territories. Oil statistics include Guam, Puerto Rico 9 and the United States Virgin Islands; trade statistics for coal include international trade to and from Puerto Rico and the United States Virgin Islands.”
 
-[1_clean_climate_data.do]() cleans and constructs our climate data to reflect all of these nuances.
+[1_clean_climate_data.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/climate/1_clean_climate_data.do) cleans and constructs our climate data to reflect all of these nuances.
 
 ### Dropping Untrustworthy Observations and Constructing Reporting Regimes
 
