@@ -1,50 +1,25 @@
 /*
+
 Creator: Yuqi Song
 Date last modified: 4/29/19
 Last modified by: Maya Norman -- create one loop which all shapefiles go through, complete replication modifications
-References for issues addressed in Climate Data Construction: 
-historic: 
-	https://docs.google.com/spreadsheets/d/1xpwmzk4HVMSBgsiZ6r9JNCQOVxaRNcnAy5wFLAo72Rw/edit?usp=sharing
-	https://docs.google.com/spreadsheets/d/10br5G1PtPn20M8KI5_p4iESk7J1BhVT_vbXb6OjqEi8/edit?usp=sharing
-replication: 
-	https://paper.dropbox.com/doc/Energy-Replication-Data-Extraction-and-Clean--AcW~Qw9B5VVB29k4PJCYL1I3Ag-VAYyKKRjKXNub5MzctYgB
 
 Purpose: Clean/Aggregate Climate data for Energy
 
-	********************************************************************************
-	* Data Source: GMFD   														   *
-	* Generations: Using the data generation codes of https://bitbucket.org/       *
-	* ClimateImpactLab/climate_data_aggregation									   *
-	* Input files constructed with 0_Clim_Config_Gen.do		                   	   *
-	********************************************************************************
+********************************************************************************
+* Data Source: GMFD   														   *
+* Generations: Using the data generation codes of https://bitbucket.org/       *
+* ClimateImpactLab/climate_data_aggregation									   *
+********************************************************************************
 
 */
-
 
 *--Climate Data Cleaning--*
 
 program define clean_climate_data
 
-syntax , clim(string) //note functionality only set up for GMFD currently
+syntax , clim(string) programs_path(string) //note functionality only set up for GMFD currently
 
-	//SET UP RELEVANT PATHS
-
-	if "`c(username)'" == "mayanorman"{
-
-		local ROOT "/Users/`c(username)'"
-		local DROPBOX "`ROOT'/Dropbox"
-		local GIT "`ROOT'/Documents/Repos/gcp-energy"
-
-	}
-	else if "`c(username)'" == "manorman"{
-		// This path is for running the code on Sacagawea
-		local ROOT "/home/`c(username)'"
-		local DROPBOX "/home/`c(username)'"
-		local RAWDATA "/shares/gcp/estimation/energy/IEA"
-		local GIT "`ROOT'/gcp-energy"
-	}
-
-	local programs_path "`GIT'/rationalized/0_make_dataset/climate/programs"
 
 	//Define loop lists
 

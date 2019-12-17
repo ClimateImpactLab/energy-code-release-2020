@@ -9,9 +9,9 @@ Purpose: Clean Load Data for Analysis For the break 2 spec
 
 Flow: Compile = TOTOTHER + TOTIND
 
+**For future notes: 
 *TOTIND is all subsectors of industrial
-*TOTOTHER is all subsectors of other
-*RESIDENT, COMMPUB, AGRICULT, FISHING, TOTOTHER, ONONSPEC (non specified) are all subsectors of totother
+*TOTOTHER includes RESIDENT, COMMPUB, AGRICULT, FISHING, ONONSPEC (non specified)
 
 Products: other energy and electricity
 

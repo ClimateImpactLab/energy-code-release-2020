@@ -121,8 +121,6 @@ replace country = "MUS" if country == "MAURITIUS"
 ** Step 2: Adjust Dollar-years / Calculate Moving Average 
 ****************************************************************************************************
 
-di "Check where we have Income Data!!!!!!!!!!"
-
 // expand data set for backward extrapolation
 preserve
 	drop if year > 0
@@ -145,7 +143,6 @@ gen double lgdppc = log(gdppc)
 
 // extrapolate and calculate 15yr MA
 ipolate lgdppc year, g(lgdppc_i) by(country) epolate
-pause
 tssmooth ma double lgdppc_MA = lgdppc_i, window(15 0 0) 
 
 drop lgdppc

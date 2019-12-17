@@ -7,11 +7,6 @@ Last modified by: Maya Norman
 
 Purpose: Clean Load Data
 
-**For future notes: 
-*TOTIND is all subsectors of industrial
-*TOTOTHER is all subsectors of other
-*RESIDENT, COMMPUB, AGRICULT, FISHING, TOTOTHER, ONONSPEC (non specified) are all subsectors of totother
-
 ********************************************************************************
 * Data Source: IEA (International Energy Agency), World Balance Table (WBAL)   *
 * Access: 1) Log into UChicago Library 2) Search "OECD iLibrary", enter the    *

@@ -10,23 +10,23 @@ COMRENEW (Biofuels and waste); HEAT (Heat), HEATNS (Heat pro- duction from non-s
 
 */
 
-	//Grouping categories using IEA norm
-	**Coal: coal+peat+oilshale**
-	generate double coal=COAL+PEAT+OILSHALE
-	**NG: itself**
-	generate double natural_gas=NATGAS
-	**Electricity: itself, not obbeying the IEA grouping and drop heat**
-	cap generate double electricity=ELECTR
-	**Heat: to keep the balance work**
-	cap generate double heat_other=HEAT+HEATNS
+//Grouping categories using IEA norm
+**Coal: coal+peat+oilshale**
+generate double coal=COAL+PEAT+OILSHALE
+**NG: itself**
+generate double natural_gas=NATGAS
+**Electricity: itself, not obbeying the IEA grouping and drop heat**
+cap generate double electricity=ELECTR
+**Heat: to keep the balance work**
+cap generate double heat_other=HEAT+HEATNS
 
-	**separate out biofuels and oilproduct**
-	cap generate double biofuels=COMRENEW
-	generate double oil_products=TOTPRODS
-	cap generate double solar=SOLWIND+GEOTHERM
+**separate out biofuels and oilproduct**
+cap generate double biofuels=COMRENEW
+generate double oil_products=TOTPRODS
+cap generate double solar=SOLWIND+GEOTHERM
 
-	//clean up shop
-	keep country year flow coal natural_gas electricity heat_other biofuels oil_products solar
+//clean up shop
+keep country year flow coal natural_gas electricity heat_other biofuels oil_products solar
 
 
 	

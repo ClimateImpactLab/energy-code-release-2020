@@ -2,19 +2,18 @@
 Sub-script purpose: Load and clean energy load data
 */
 
-//raw to semi clean
+// raw to semi clean
 do "$dataset_construction/energy_load/a_extract_data.do"
 
-//only want data in TJ units
+// only want data in TJ units
 keep if unit=="TJ"
 
-//condense products that have multiple sub products (reference do file for documentation)
+// condense products that have multiple sub products (reference do file for documentation)
 do "$dataset_construction/energy_load/b_construct_intermediate_products.do"
 
-//reduce number of flow in dataset for reshape wide
+// reduce number of flow in dataset for reshape wide
 
 keep if inlist(flow, "TOTIND","TOTOTHER") 
-
 
 reshape wide coal natural_gas electricity heat_other biofuels oil_products solar, i(year country) j(flow) string
 

@@ -35,33 +35,19 @@ pause on
 
 /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////
 
-if "`c(username)'" == "mayanorman"{
-
-	local ROOT "/Users/`c(username)'"
-	local DROPBOX "`ROOT'/Dropbox"
-	local GIT "`ROOT'/Documents/Repos/gcp-energy/"
-
-}
-else if "`c(username)'" == "manorman"{
-	// This path is for running the code on Sacagawea
-	local ROOT "/home/`c(username)'"
-	local DROPBOX "/home/`c(username)'"
-	local RAWDATA "/shares/gcp/estimation/energy/IEA"
-	local GIT "`ROOT'/repos/gcp-energy/"
-}
+// path to energy-code-release repo 
+local root "/Users/`c(username)'/Documets/repos/energy-code-release"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 * Step 0: Define code and dataset paths
 
 // code path referenced by multiple files
-global dataset_construction "`GIT'/rationalized/0_make_dataset/"
+global dataset_construction "`root'/0_make_dataset/"
 
 
 // output data path
-
-local DATA "`DROPBOX'/GCP_Reanalysis/ENERGY/IEA_Replication/Data"
-
+local DATA "`root'/data"
 
 
 ********************************************************************************************************************************************
@@ -70,10 +56,7 @@ local DATA "`DROPBOX'/GCP_Reanalysis/ENERGY/IEA_Replication/Data"
 
 //Part A: Climate Data Construction
 do "$dataset_construction/climate/1_clean_climate_data.do"
-clean_climate_data, clim("GMFD")
-
-//save here for spot checking (can delete once confident in code)
-save "`DATA'/Climate_Data/rationalized_code/IEA_Climate_Data_GMFD.dta", replace
+clean_climate_data, clim("GMFD") programs_path("$dataset_construction/climate/programs")
 
 tempfile climate_data
 save `climate_data', replace
@@ -87,10 +70,10 @@ save `population_and_income_data', replace
 
 //Part C: Load Data Clean and Prepare For Merge with Pop, Inc, and Climate Data
 
-do $dataset_construction/energy_load/1_extract_clean_energy_load_data
+do $dataset_construction/energy_load/1_extract_clean_energy_load_data.do
 
 //Restrict Dataset to specified years (increase balance in dataset)
-drop if year>2012 | year < 1971
+drop if year > 2010 | year < 1971
 
 tempfile energy_load_data
 save `energy_load_data', replace
@@ -123,14 +106,8 @@ foreach var of varlist coal* oil* natural_gas* electricity* heat_other* biofuels
 //Part C: Complete Specification Specific Data Set Cleaning Steps
 
 do "$dataset_construction/merged/0_break2_clean.do"  
-drop if year > 2010 | year < 1971
 
 
-//Part D: Construct Time Invariant Income Data measure
-
-bysort country: egen double m_lgdppc_TINV = mean(lgdppc) if load_pc!=.
-bysort country: egen double lgdppc_TINV = max(m_lgdppc_TINV)
-drop m_*
-
-save "`DATA'/Analysis/GMFD/rationalized_code/replicated_data/data/IEA_Merged_long_GMFD.dta", replace
+di "mission complete :)"
+save "`DATA'/IEA_Merged_long_GMFD.dta", replace
 

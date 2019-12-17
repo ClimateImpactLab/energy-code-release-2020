@@ -10,8 +10,6 @@ Purpose: Master Do File for Analysis Dataset Construction
 Step 1) Construct FE regimes and drop data according to selected coded issues
 Step 2) Match product specific climate data with product
 Step 3) Prepare data for Income Group Construction and Construct Income Groups 
-	* Functionality exists here for winsorization if desired (default: "" => not winsorized)
-	* Functionality exists here for zero dropping (default case = "Exclude" => drop zeroes)
 Step 4) Perform Final Cleaning Steps before first differenced interacted variable construction
 	* Classify countries within 1 of 13 UN regions
 	* Classify countries in income deciles and groups
@@ -28,13 +26,13 @@ pause off
 
 //SET UP RELEVANT PATHS
 
-if "`c(username)'" == "mayanorman"{
+if "`c(username)'" == "mayanorman" {
 
 	local DROPBOX "/Users/`c(username)'/Dropbox"
 	local GIT "/Users/`c(username)'/Documents/Repos/gcp-energy/rationalized_code/0_make_dataset"
 
 }
-else if "`c(username)'" == "manorman"{
+else if "`c(username)'" == "manorman" {
 	
 	// This path is for running the code on Sacagawea
 	local DROPBOX "/home/`c(username)'"
@@ -50,14 +48,8 @@ global data_type "replicated_data"
 local data_type $data_type
 
 //Set Data type
-
-//What happens to Zeroes: currently dealt with in 0_merge so here we just drop the 
-//zeroes that were to set to zero previously based on Exclude rule
-//exclude rule: 0 if TOTOTHER or TOTIND is missing or zero
-
 global case "Exclude" //"Exclude" "Include"
 local case $case
-//Breakdown of fuels and products: break2 --> only two groups other_energy and electricity
 
 global bknum "break2"
 local bknum $bknum
@@ -66,20 +58,8 @@ local bknum $bknum
 	
 global IF "_all-issues" //second-reading-issues revised-first-reading-issues matched-issues all-issues face-value first-reading-issues
 local IF $IF
+
 //income grouping test: 
-
-/*
-
-Income grouping options and Implications:
-
-iterative-ftest: 
--all-issues, break2, Exclude, TINV_clim: other_energy (3-2) and electricity (1-2-1-1)
--first-reading-issues, break2, Exclude, TINV_clim: other_energy (4-1) and electricity (3-1-1)
-
-visual:
--all-issues, break2, Exclude, TINV_clim: other_energy and electricity (3-1-1)
-
-*/
 
 global grouping_test "visual" //visual (3 income groups), semi-parametric (2 income groups, top two income groups in visual get combined into 1 income group)
 local grouping_test $grouping_test
@@ -87,6 +67,7 @@ local grouping_test $grouping_test
 //Model type-- Options: TINV_clim, TINV_both, TINV_clim_EX
 global model "TINV_clim"
 local model $model
+
 global submodel ""
 local submodel $submodel
 
@@ -97,7 +78,6 @@ if ("$model" != "TINV_both") {
 
 	//Income Var Average type
 	local ma_inc "MA15"
-
 }
 else if ("$model" == "TINV_both") {
 
@@ -113,18 +93,17 @@ else if ("$model" == "TINV_both") {
 global clim_data "GMFD"
 local clim_data $clim_data
 
-
 ***********************************************************************************
-*Step 0) Confirm Toggles are Correctly Set up
+* Step 0) Confirm Toggles are Correctly Set up
 ***********************************************************************************
 
-local name "`clim_data'/rationalized_code/$data_type/data/clim`clim_data'_`case'`IF'_`bknum'_`grouping_test'`winsorization'`level'`clim_interaction'"
+local name "`clim_data'/rationalized_code/$data_type/data/clim`clim_data'_`case'`IF'_`bknum'_`grouping_test'"
 di "`name'_`model'_`data_type'_regsort.dta"
 di "Is this the right specification?????????????????"
 pause
 
 *************************************************************************
-*Step 1) Construct FE regimes and drop data according to specification
+* Step 1) Construct FE regimes and drop data according to specification
 *************************************************************************
 
 do "`GIT'/merged_data/1_issue_fix_v2.do"
@@ -141,27 +120,27 @@ else {
 }
 
 *************************************************************************
-*Step 2) Match Product Specific Climate Data with respective product
+* Step 2) Match Product Specific Climate Data with respective product
 *************************************************************************
 
 *Reference climate data construction for information about the issues causing different climate data for different products
 
 forval p=1/4 {
-	replace temp`p'_`clim_data' = temp`p'_other_`clim_data' if inlist(product,"other_energy","total_energy")
+	replace temp`p'_`clim_data' = temp`p'_other_`clim_data' if inlist(product,"other_energy")
 }
 
 forval q=1/2 {
-	replace precip`q'_`clim_data' = precip`q'_other_`clim_data' if product=="other_energy" | product=="total_energy"
-	replace polyAbove`q'_`clim_data' = polyAbove`q'_other_`clim_data' if inlist(product,"other_energy","total_energy")
-	replace polyBelow`q'_`clim_data' = polyBelow`q'_other_`clim_data' if inlist(product,"other_energy","total_energy")
+	replace precip`q'_`clim_data' = precip`q'_other_`clim_data' if product=="other_energy"
+	replace polyAbove`q'_`clim_data' = polyAbove`q'_other_`clim_data' if inlist(product,"other_energy")
+	replace polyBelow`q'_`clim_data' = polyBelow`q'_other_`clim_data' if inlist(product,"other_energy")
 }
 
-replace cdd20_`ma_clim'_`clim_data' = cdd20_other_`ma_clim'_`clim_data' if inlist(product,"other_energy","total_energy")
-replace hdd20_`ma_clim'_`clim_data' = hdd20_other_`ma_clim'_`clim_data' if inlist(product,"other_energy","total_energy")
+replace cdd20_`ma_clim'_`clim_data' = cdd20_other_`ma_clim'_`clim_data' if inlist(product,"other_energy")
+replace hdd20_`ma_clim'_`clim_data' = hdd20_other_`ma_clim'_`clim_data' if inlist(product,"other_energy")
 
 
 ***********************************************************************************************************************
-*Step 3) Income Group Construction plus a couple necessary cleaning steps for proper construction
+* Step 3) Income Group Construction plus a couple necessary cleaning steps for proper construction
 ***********************************************************************************************************************
 
 //Part A) Prepare Dataset for Income group construction by ensuring only data included in regression remains in dataset
@@ -200,26 +179,10 @@ replace hdd20_`ma_clim'_`clim_data' = hdd20_other_`ma_clim'_`clim_data' if inlis
 	}
 
 
-	//winsorized if desired
 	sort region_i year
 	tset region_i year
 
 	gen FD_load_`spe'pc = D.load_`spe'pc
-
-	if ("`winsorization'" == "_winsorized") {
-		
-		local lower_bound = `level'/2
-		local upper_bound = 100 - `level'/2
-		
-		codebook FD_load_pc
-		**Winorization**
-		winsor2 FD_load_pc, replace cuts(`lower_bound' `upper_bound') by(product)
-		codebook FD_load_pc
-		pause
-		
-		local warning_message = "`warning_message' Winsorized Data!!!!!!!!!!!"
-
-	}
 
 	//Organize variables
 	order country year flow product load_pc lgdppc_`ma_inc' pop FEtag *`clim_data'*
@@ -284,20 +247,6 @@ replace hdd20_`ma_clim'_`clim_data' = hdd20_other_`ma_clim'_`clim_data' if inlis
 
 			sort gpid
 		}
-		else if ("$grouping_test" == "iterative-ftest" & "`bknum'" == "break2" & "`case'" == "Exclude" & "`IF'" == "_all-issues") {
-			
-			**regrouping gpid**
-			qui generate largegpid_electricity =.
-			qui replace largegpid_electricity = 1 if (gpid>=1) & (gpid<=2) 
-			qui replace largegpid_electricity = 2 if (gpid>=3) & (gpid<=6) 
-			qui replace largegpid_electricity = 3 if gpid==7 | gpid==8 
-			qui replace largegpid_electricity = 4 if gpid==9 | gpid==10 
-			
-			qui generate largegpid_other_energy =.
-			qui replace largegpid_other_energy = 1 if (gpid>=1) & (gpid<=6) 
-			qui replace largegpid_other_energy = 2 if (gpid>=7) & (gpid<=10) 
-			sort gpid
-		}
 				
 
 		//generate cell ids based on income groups (for plotting arrays)
@@ -308,10 +257,10 @@ replace hdd20_`ma_clim'_`clim_data' = hdd20_other_`ma_clim'_`clim_data' if inlis
 		//generate cell ids based on income terciles
 		qui generate tallid = tgpid+100*tpid
 
-			//keep only necessary vars
-			keep cdd20_`ma_clim'_`clim_data' hdd20_`ma_clim'_`clim_data' /*Tmean_`ma_clim'*/ country year lgdppc_`ma_inc' gpid qgpid tpid tgpid cpid qcpid large* allid tallid
-			
-			local sumStat_list " qgpid gpid largegpid_electricity largegpid_other_energy tallid allid largeallid_electricity largeallid_other_energy tpid tgpid "
+		//keep only necessary vars
+		keep cdd20_`ma_clim'_`clim_data' hdd20_`ma_clim'_`clim_data' country year lgdppc_`ma_inc' gpid qgpid tpid tgpid cpid qcpid large* allid tallid
+		
+		local sumStat_list " qgpid gpid largegpid_electricity largegpid_other_energy tallid allid largeallid_electricity largeallid_other_energy tpid tgpid "
 
 
 		foreach dd in `sumStat_list' {
@@ -330,9 +279,8 @@ replace hdd20_`ma_clim'_`clim_data' = hdd20_other_`ma_clim'_`clim_data' if inlis
 
 		//keep only necessary vars
 		cap keep country year gpid qgpid cpid qcpid tpid* tgpid* large* allid tallid avg* numberC* min* max*
-		local break_data "`DROPBOX'/GCP_Reanalysis/ENERGY/IEA_Replication/Data/Analysis/`clim_data'/rationalized_code/`data_type'/data/break10_clim`clim_data'_`case'`IF'_`bknum'_`grouping_test'`winsorization'`level'_`model'_`data_type'.dta"
+		local break_data "`DROPBOX'/GCP_Reanalysis/ENERGY/IEA_Replication/Data/Analysis/`clim_data'/rationalized_code/`data_type'/data/break10_clim`clim_data'_`case'`IF'_`bknum'_`grouping_test'`level'_`model'_`data_type'.dta"
 		save "`break_data'", replace
-		pause
 
 	restore
 
@@ -399,25 +347,18 @@ merge m:1 country using `subregion'
 keep if _merge!=2
 drop _merge
 
-replace subregionid=6 if country=="FSUND"
-replace subregionid=4 if country=="YUGOND"
-replace subregionid=7 if country=="TWN"
-replace subregionid=4 if country=="XKO"
+replace subregionid = 6 if country=="FSUND"
+replace subregionid = 4 if country=="YUGOND"
+replace subregionid = 7 if country=="TWN"
+replace subregionid = 4 if country=="XKO"
 replace subregionname = "Central Asia and Eastern Europe" if country == "FSUND"
 replace subregionname = "Southern Europe" if country == "YUGOND"
-replace subregionname="Eastern Asia" if country == "TWN"
-replace subregionname="Southern Europe" if country=="XKO"
-
-//save "`data'/`name'clim`clim_data'_`case'`IF'_`bknum'_`grouping_test'`winsorization'`level'_`model'_`data_type'.dta", replace
-di "`warning_message'"
-
-pause
+replace subregionname = "Eastern Asia" if country == "TWN"
+replace subregionname = "Southern Europe" if country=="XKO"
 
 ***********************************************************************************************************************
-*Step 5) Construct First Differenced Interacted Variables
+* Step 5) Construct First Differenced Interacted Variables
 ***********************************************************************************************************************
 
 do "`GIT'/merged_data/2_construct_FD_interacted_variables.do"
-
-pause
 save "`DROPBOX'/GCP_Reanalysis/ENERGY/IEA_Replication/Data/Analysis/`name'_`model'_`data_type'_regsort.dta", replace
