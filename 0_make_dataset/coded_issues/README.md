@@ -7,22 +7,22 @@ Using the IEA World Energy Balances 2017 Edition Database Documentation, we clea
 * country geographic definitions
 * non-gregorian definitions of a year
 
-To accomplish this task, we first read the documentation and encoded the relevant issues into this [dataset](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/coded_issues/cleaned_coded_issues.csv). Then, we created a procedure for dropping data or constructing fixed effect regimes based off the coded issues. Below, I will outline both of these steps. 
+To accomplish this task, we first read the documentation and encoded the relevant issues into this [dataset](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/coded_issues/cleaned_coded_issues.csv). Then, using these coded issues, we cleaned the dataset and constructed reporting regimes. Below, I will outline both of these steps. 
 
 ## Encoding IEA World Balance Documentation
 
 ### Step 1: Through multiple readings of the database documentation a team of research assistants assembled a country x sector x fuel x issue dataset with the following metadata variables:
 * `issue_code`: what type of data quality issue is this? options include:
-    * combined sectors
-    * data availability
-    * climate data
-    * combined fuels
-    * ex-post revision
-    * extrapolation
-    * real anomaly
-    * data source change
-    * redefine sectors
-    * methodology change
+    * combined sectors - two or more sectors are combined
+    * data availability - changes in the availability of data
+    * climate data - cannot construct climate data for energy load data
+    * combined fuels - two or more fuels are combined
+    * ex-post revision - data was changed after it was originally reported
+    * extrapolation - data was estimated in some way
+    * real anomaly - an event occured which presumably causing an energy supply or demand shock
+    * data source change - there was a change in reporting source
+    * redefine sectors - the definition of the sectoral breakdown changed
+    * methodology change - how data got collected changed
 * `issue`: why is there an issue with the data? 
 * `description`: what caused the issue with the data?
 * `year_start`: what year did the data quality issue begin in?
