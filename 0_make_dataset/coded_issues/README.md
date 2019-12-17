@@ -55,7 +55,7 @@ Using the 5 dummy variables assigned in `Step 2` above we accomplish the followi
 
 ### Constructing climate data which aligns with the regions and time spans reflected in the energy load data
 
-We use the issues outlined below to construct climate data for a given country and year:
+We use the issues outlined below to construct climate data for impacted country boundary and year definitions:
 
 Fiscal year fixing: 
 
