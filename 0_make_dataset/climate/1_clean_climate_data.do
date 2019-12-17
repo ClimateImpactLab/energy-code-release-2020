@@ -53,8 +53,6 @@ syntax , clim(string) //note functionality only set up for GMFD currently
 
 	//Note: when generate the climate datas, one must follow the exact folder in this code in order for the cleaning code to be running 
 
-	pause on
-
 	***************************************************************************************
 	*Step 0: Source Programs -- Cleaning and Processing of Aggregated Climate Data Issues
 	***************************************************************************************
@@ -92,7 +90,7 @@ syntax , clim(string) //note functionality only set up for GMFD currently
 			if ("`shp'" == "WORLD" & inlist("`climvar'", "tmax_cdd_20C", "tmax_hdd_20C", "tavg_poly_1", "tavg_poly_2", "tavg_poly_3", "tavg_poly_4")) | ///
 			("`shp'" == "WORLDpre" & inlist("`climvar'", "tmax_cdd_20C", "tavg_poly_1", "tavg_poly_2", "tavg_poly_3", "tavg_poly_4")) {
 
-				local yearspan_list " 1950_1952 1953_1962 1963_1972 1973_1982 1983_1992 1993_2002 2003_2010"
+				local yearspan_list " 1950_1952 1953_1962 1963_1972 1973_1982 1983_1992 1993_2002 2003_2010 "
 
 			}
 			else if (("`shp'" == "WORLDpre" & inlist("`climvar'", "tmax_hdd_20C")) | ///
