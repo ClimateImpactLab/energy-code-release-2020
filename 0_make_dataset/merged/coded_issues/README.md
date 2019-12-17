@@ -11,7 +11,7 @@ To accomplish this task, we first read the documentation and encoded the relevan
 ## Encoding IEA World Balance Documentation
 
 ### Step 1: Through multiple readings of the database documentation a team of RA's assembled a country x sector x fuel x issue dataset with the following metadata variables:
-* issue_code: what type of data quality issue is this? options include:
+* `issue_code`: what type of data quality issue is this? options include:
     * combined sectors
     * data availability
     * climate data
@@ -22,12 +22,12 @@ To accomplish this task, we first read the documentation and encoded the relevan
     * data source change
     * redefine sectors
     * methodology change
-* issue: why is there an issue with the data? 
-* description: what caused the issue with the data?
-* year_start: what year did the data quality issue begin in?
-* year_end: what year did the data quality issue end in?
+* `issue`: why is there an issue with the data? 
+* `description`: what caused the issue with the data?
+* `year_start`: what year did the data quality issue begin in?
+* `year_end`: what year did the data quality issue end in?
 
-### Step 2: Based off this metadata and cross referencing each issue with the database documentation we constructed the following 7 dummy variables for use in data cleaning and construction as well as in fixed effect regime assignment. 
+### Step 2: Based off this metadata and cross referencing each issue with the database documentation we constructed the following 5 dummy variables for use in dataset cleaning and construction as well as in fixed effect regime assignment. 
 
 * `flag_drop`: = 1 if the issue is classified as “redefine sectors”, “combine sectors”, “redefine fuels”, or “combine fuels.” 
 * `grey`: If issues are classified as “data availability” or “ex-post revision” grey will be assigned a value based on the following procedure: 
@@ -46,5 +46,13 @@ To accomplish this task, we first read the documentation and encoded the relevan
 * `ex_ex`: = 1 if the issue is classified as “extrapolation” and the issue description indicates that the data was exclusively estimated. In other words, the only data source is estimation. 
 
 ## Addressing Encoded Issues in Data Cleaning and Analysis
+
+Using the 5 dummy variables assigned in `Step 2` above we accomplish the following tasks:
+1. construct country x year climate data which accurately reflect the calendar year and geographic regions associated with each energy load observation
+2. create reporting regimes as described in section A.5.1
+3. drop observations
+
+
+
 
 
