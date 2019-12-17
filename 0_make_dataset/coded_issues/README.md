@@ -1,4 +1,4 @@
-# Dropping Data and Creating Fixed Effect Regimes
+# Incorporating Dataset Documentation into Analysis and Data Cleaning/Construction
 
 Using the IEA World Energy Balances 2017 Edition Database Documentation, we clean the IEA World Energy Balances Dataset to account for the following types of data issues:
 * changes in sector and fuel definitions 
