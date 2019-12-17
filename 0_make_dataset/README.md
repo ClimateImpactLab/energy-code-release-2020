@@ -5,6 +5,8 @@ We construct three datasets for analysis:
 * data/GMFD_TINV_clim_EX_regsort.dta
 * data/GMFD_TINV_clim_regsort.dta
 
+## Directory folder scruture
+
 ## Constructing IEA_merged_long.dta
 
 [1_construct_dataset_from_raw_inputs.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/1_construct_dataset_from_raw_inputs.do) produces IEA_merged_long.dta throught the following steps:
