@@ -4,13 +4,14 @@ Using the IEA World Energy Balances 2017 Edition Database Documentation, we clea
 * changes in sector and fuel definitions 
 * changes in data quality, availability, or reporting
 * documented changes in energy supply or demand
-* country geographic changes
+* country geographic definitions
+* non-gregorian definitions of a year
 
 To accomplish this task, we first read the documentation and encoded the relevant issues into this [dataset](). Then, we created a procedure for dropping data or constructing fixed effect regimes based off the coded issues. Below, I will outline both of these steps. 
 
 ## Encoding IEA World Balance Documentation
 
-### Step 1: Through multiple readings of the database documentation a team of RA's assembled a country x sector x fuel x issue dataset with the following metadata variables:
+### Step 1: Through multiple readings of the database documentation a team of research assistants assembled a country x sector x fuel x issue dataset with the following metadata variables:
 * `issue_code`: what type of data quality issue is this? options include:
     * combined sectors
     * data availability
@@ -49,8 +50,8 @@ To accomplish this task, we first read the documentation and encoded the relevan
 
 Using the 5 dummy variables assigned in `Step 2` above we accomplish the following tasks:
 1. construct country x year climate data which accurately reflect the calendar year and geographic regions associated with each energy load observation
-2. create reporting regimes as described in section A.5.1
-3. drop untrustworthy observations
+2. drop untrustworthy observations
+3. create reporting regimes as described in section A.5.1
 
 ### Constructing climate data which aligns with the regions and time spans reflected in the energy load data
 
@@ -96,7 +97,13 @@ Geographic Changes:
 - CHE- “Includes Liechtenstein for the oil data. Data for other fuels do not include Liechtenstein.”
 - USA- “Includes the 50 states and the District of Columbia but generally excludes all territories, and all trade between the U.S. and its territories. Oil statistics include Guam, Puerto Rico 9 and the United States Virgin Islands; trade statistics for coal include international trade to and from Puerto Rico and the United States Virgin Islands.”
 
+[1_clean_climate_data.do]() cleans and constructs our climate data to reflect all of these nuances.
 
+### Dropping Untrustworthy Observations and Constructing Reporting Regimes
+
+Using the `flag_drop` and `grey` indicator variables defined above, we drop observations. If an energy load observation corresponds to non-zero values of either indicator variable, we will drop that observation. Using the remaining issues we classify energy load observations into reporting regimes.
+
+This data cleaning and reporting regime construction takes place in [1_issue_fix_v2.do]()
 
 
 
