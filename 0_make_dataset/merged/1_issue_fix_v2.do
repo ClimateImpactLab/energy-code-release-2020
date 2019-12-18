@@ -7,38 +7,10 @@ Purpose: Apply Coded Issues
 
 */
 
-
-//SET UP RELEVANT PATHS
-
-if "`c(username)'" == "mayanorman"{
-
-	local DROPBOX "/Users/`c(username)'/Dropbox"
-
-}
-else if "`c(username)'" == "manorman"{
-	// This path is for running the code on Sacagawea
-	local DROPBOX "/home/`c(username)'"
-	local RAWDATA "/shares/gcp/estimation/energy/IEA"
-
-}
-
 ******Set Script Toggles********************************************************
-
-// set data type ie historic or replicated
-local data_type $data_type
-
-// set coded issue type
-local issue_type $issue_type
 
 // toggle for dropping exclusively estimated data
 local model $model
-	
-********************************************************************************
-
-//Setting path shortcuts
-
-local DATA "`DROPBOX'/GCP_Reanalysis/ENERGY/IEA/Yuqi_Codes/Data"
-local replicated_data "`DROPBOX'/GCP_Reanalysis/ENERGY/IEA_Replication/Data"
 
 ********************************************************************************
 * Step 1: Load Energy Data and Coded Issues to Apply to Energy Dataset
@@ -46,7 +18,7 @@ local replicated_data "`DROPBOX'/GCP_Reanalysis/ENERGY/IEA_Replication/Data"
 
 // Part A: Make Energy Dataset Tempfile and retrieve Country List for looping
 
-use "`replicated_data'/Analysis/GMFD/rationalized_code/`data_type'/data/IEA_Merged_long_GMFD.dta", clear
+use "$root/data/IEA_Merged_long_GMFD.dta", clear
 drop countryid
 keep if year>=1971 & year<=2012
 generate FEtag="G"
@@ -58,9 +30,9 @@ levelsof country, local(countrylist)
 
 // Part B: Load Coded Issues - type/set of coded issues specified with toggle at top of code
 
-di "`replicated_data'/Cleaning/cleaned_coded_issues.csv"
-insheet using "`replicated_data'/Cleaning/cleaned_coded_issues.csv", comma names clear
-foreach variable in "grey" "tot_drop" "flag_drop" "fuel_keep" {
+insheet using "`root'/0_make_dataset/coded_issues/cleaned_coded_issues.csv", comma names clear
+
+foreach variable in "grey" "flag_drop" {
 	replace `variable' = 0 if `variable' == .
 }
 
@@ -75,8 +47,8 @@ if ("`model'" == "TINV_clim_EX" ) {
 * Step 2: Clean Coded Issues and Save in Issue Type Specific Datasets
 ********************************************************************************
 
-**replace to match the main file**
-keep country sector fuel issue_code year_start year_end oecd flag_drop grey tot_drop fuel_keep
+** replace to match the main file**
+keep country sector fuel issue_code year_start year_end flag_drop grey
 
 foreach var in fuel sector {
 	qui replace `var'="" if `var' == "." | `var'==""
@@ -92,30 +64,33 @@ replace product="oil_products" if product=="oil"
 replace product="solar" if product=="solar and geothermal"
 replace product="all" if product==""
 
-**sort the double counting for LVA**
-replace oecd=1 if country=="LVA"
+** save FEcut and dropped files individually**
 
-**save FEcut and dropped files individually**
+// Create tempfile for coded issues that classify observations into a FE regime
 preserve
 	keep if flag_drop==0 & grey==0
 	drop flag_drop grey
 	tempfile fixed_effects
 	save `fixed_effects', replace
 restore
+
+// Create tempfile for coded 
 preserve
 	keep if flag_drop==1
 	drop flag_drop grey
 	tempfile flag_drop_issues
 	save `flag_drop_issues', replace
 restore
+
 preserve
-	keep if grey==1
+	keep if grey == 1
 	drop flag_drop grey
 	tempfile grey_one_issues
 	save `grey_one_issues', replace
 restore
+
 preserve
-	keep if grey==9
+	keep if grey == 9
 	drop flag_drop grey
 	tempfile grey_nine_issues
 	save `grey_nine_issues', replace
@@ -124,7 +99,7 @@ restore
 **Make temp files for saving future data
 
 preserve
-	drop if _n>0
+	drop if _n > 0
 	tempfile fixed_effects_file
 	save `fixed_effects_file', replace
 	tempfile flag_drop_issues_file
@@ -166,7 +141,7 @@ syntax , country(string) flow(string) product(string)
 
 end
 
-program define restructure_issues
+program define restructure_issues, rclass
 
 	**duplicates drop**
 	qui duplicates drop year_start year_end, force
@@ -178,12 +153,13 @@ program define restructure_issues
 					
 	**local parameters**
 	qui summ idn
-	global mt=r(N)
+	local mt=r(N)
 					
 	**invert to obtain year segments**
 	qui drop issue_code //drop disturbing factors for now
 	qui reshape wide year_start year_end, i(country flow product) j(idn)
 
+	return scalar mt = `mt'
 end
 
 
@@ -249,15 +225,13 @@ foreach var in "other_energy electricity" {
 				qui count 
 				local ct=r(N)
 				local zt=1
-				
-				drop oecd tot_drop fuel_keep
-				
+								
 				**proceed only when the issue exists**
 				if `ct'!=0 & `zt'==1 {
 					
 					//compress issues so no time segements overlap, clean, and reshape
 					restructure_issues
-					//di "MT: $mt"
+					local mt =`r(mt)'
 					
 					**merge back to IEA datas**
 					qui merge 1:m country flow product using ``merge_file''
@@ -271,7 +245,7 @@ foreach var in "other_energy electricity" {
 					drop _merge
 					
 					//run issue type specific program to clean data
-					`it' $mt
+					`it' `mt'
 			
 					**save and tempfile**
 					drop year_start* year_end*
@@ -279,7 +253,6 @@ foreach var in "other_energy electricity" {
 					qui save `file`loc'', replace
 					
 				}
-				
 				else if `ct'==0 & `zt'==1 {
 					
 					**keep the original data**
@@ -293,7 +266,6 @@ foreach var in "other_energy electricity" {
 					qui save `file`loc'', replace
 				
 				}
-				
 				else if `zt'==0 {
 				
 					**keep the original data**
@@ -327,5 +299,5 @@ foreach var in "other_energy electricity" {
 use `grey_nine_issues_file', clear
 
 // clean up shop
-drop issue_code year_start year_end flag_drop tot_drop fuel_keep grey oecd
+drop issue_code year_start year_end flag_drop grey
 sort flow product country year flow
