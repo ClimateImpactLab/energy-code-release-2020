@@ -43,6 +43,8 @@ global model "TINV_clim"
 do "$root/0_make_dataset/merged/1_issue_fix_v2.do"
 
 //rename COMPILE -- OTHERIND and make sure only have desired flows and products for spec
+// OTHERIND = TOTOTHER + TOTIND
+
 replace flow = "OTHERIND" if flow == "COMPILE"
 keep if inlist(flow, "OTHERIND")
 keep if inlist(product, "other_energy", "electricity")
@@ -149,7 +151,7 @@ cap tab largegpid, gen(largeind)
 //Generate climate quintile dummies (can delete this section of code later)
 tab qcpid, gen(climind)
 
-// Classify world into 13 regions based on UN Regions (for fixed effects)
+// Classify world into 13 regions based on UN World Regions Classifications (for fixed effect... reference Temperature Response of Energy Consumption Section )
 
 **Clean the region data**
 preserve
