@@ -17,7 +17,7 @@ Input Data Options: `clim'_`model'_`data_type'_regsort.dta
 clear all
 set more off
 macro drop _all
-
+pause on
 
 //SET UP RELEVANT PATHS
 
@@ -153,17 +153,19 @@ else if ("$data_type"=="replicated_data") {
 use "`data'/clim`clim_data'_`case'`IF'_`bknum'_visual_`model'_`data_type'_regsort.dta", clear
 		
 
-local regionlist "CAN GLOBAL"
+local regionlist " OECD GLOBAL "
 local GLOBAL_color "dknavy"
 local GLOBAL_colTT "Blue"
 local OECD_color "dkorange"
 local OECD_colTT "Orange"
-local FRA_color "dkorange"
-local FRA_colTT "Orange"
-local USA_color "dkorange"
-local USA_colTT "Orange"
-local CAN_color "dkorange"
-local CAN_colTT "Orange"
+
+local productlist " electricity other_energy "
+local electricity_color "dknavy"
+local electricity_colTT "Blue"
+local other_energy_color "dkorange"
+local other_energy_colTT "Orange"
+
+local typelist "`productlist'"
 
 foreach k of num 1/4 {
 	rename temp`k'_`clim_data' temp`k'	
@@ -171,37 +173,11 @@ foreach k of num 1/4 {
 }
 
 *--Global Energy Consumption Response Plot Using Poly 4 Model--*
-		
 
-foreach var in "electricity" "other_energy" {
+foreach tag in "OTHERIND" {
 
-	if "`var'"=="electricity" {
-		local stit="Electricity"
-		local pg=1
-	}
-	else if "`var'"=="other_energy" {
-		local stit="Non-Electricity"
-		local pg=2
-	}
-
-	foreach tag in "OTHERIND" {
-
-		local fg = 1
-		local tit "All Flows"
-		
-		if "`tag'"=="RESIDENT" {
-			local tit="Residential"
-			local fg=2
-		}
-		else if "`tag'"=="COMMPUB" {
-			local tit="Commercial and Public"
-			local fg=1
-		}
-		else if "`tag'"=="TOTIND" {
-			local tit="Industrial"
-			local fg=3
-		}
-
+	local fg = 1
+	local tit "All Flows"
 
 		preserve
 			//local values
@@ -217,79 +193,70 @@ foreach var in "electricity" "other_energy" {
 		local colorGuide = ""
 		local SE = ""
 		local noSE = ""
-		local region_title = ""
-		local plot_line = ""
 		
-		
-		foreach region in `regionlist' {
-			
-			//load ster file
-			if (inlist("`region'","FRA","USA", "CAN")) {
-				estimate use "`ster'/FD/`region'_FD_clim`clim_data'_poly`o'_`bknum'_`case'.ster"
-			}
-			else {
-				estimate use "`ster'/FD_FGLS/`region'_`FD'_FGLS_clim`clim_data'_`case'`IF'_`bknum'_poly`o'_`model'.ster"
-			}
-			
-			//loop over the polynomials' degree and save the predict command in the local `line'
-			local line = "_b[c.indp`pg'#c.indf`fg'#c.`fd'temp1_`clim_data'] * (temp1 - `omit')"
-			foreach k of num 2/4 {
-				replace temp`k' = temp1 ^ `k'
-				local add = "+ _b[c.indp`pg'#c.indf`fg'#c.`fd'temp`k'_`clim_data'] * (temp`k' - `omit'^`k')"
-				local line "`line' `add'"
-			}
-			
-			//predict
-			predictnl yhat_`region' = `line', se(se_`region') ci(lower_`region' upper_`region')
+		foreach type in `typelist' {
 
-			if "`region'" == "GLOBAL" local plot_line "`plot_line' rarea upper_`region' lower_`region' temp1, col(``region'_color'%20) || line yhat_`region' temp1, lc (``region'_color') ||"
-			else local plot_line " `plot_line' line yhat_`region' temp1, lc (``region'_color') ||"
+				if "`type'"=="electricity" {
+					local stit="Electricity"
+					local pg=1
+					local region = "GLOBAL"
+				}
+				else if "`type'"=="other_energy" {
+					local stit="Non-Electricity"
+					local pg=2
+					local region = "GLOBAL"
+				}
 			
-			local SE "`SE' rarea upper_`region' lower_`region' temp1, col(``region'_color'%20) || line yhat_`region' temp1, lc (``region'_color') ||" 
-			local noSE "`noSE' line yhat_`region' temp1, lc (``region'_color') ||"
-
-			loc colorGuide = "`colorGuide' `region' (``region'_colTT')"
-			local region_title "`region_title'`region'_"
+				//load ster file
+				estimate use "`ster'/FD_FGLS/`region'_`FD'_FGLS_clim`clim_data'_`case'`IF'_`bknum'_poly`o'_`model'"
+				
+				//loop over the polynomials' degree and save the predict command in the local `line'
+				local line = "_b[c.indp`pg'#c.indf`fg'#c.`fd'temp1_`clim_data'] * (temp1 - `omit')"
+				foreach k of num 2/4 {
+					replace temp`k' = temp1 ^ `k'
+					local add = "+ _b[c.indp`pg'#c.indf`fg'#c.`fd'temp`k'_`clim_data'] * (temp`k' - `omit'^`k')"
+					local line "`line' `add'"
+				}
+				
+				//predict
+				predictnl yhat_`type' = `line', se(se_`type') ci(lower_`type' upper_`type')
+								
+				local SE "`SE' rarea upper_`type' lower_`type' temp1, col(``type'_color'%20) || line yhat_`type' temp1, lc (``type'_color') ||" 
+				local noSE "`noSE' line yhat_`type' temp1, lc (``type'_color') ||" 
+				loc colorGuide = "`colorGuide' `stit' (``type'_colTT')"
 
 		}
 		
 		cap mkdir "`OUTPUT'/uninteracted_response"	
 		
+		di "`SE'"
+		di "`noSE'"
+
+		pause
+
 		//plot with SE
 		tw `SE' , ///
 		yline(0, lwidth(vthin)) xlabel(`min'(10)`max', labsize(vsmall)) ///
-		ylabel(, labsize(vsmall) nogrid) legend(off) ///
-		title("`o' Polynomial Response `tit' `stit' " , size(vsmall)) ///
+		ylabel(-5(5)20, labsize(vsmall) nogrid) legend(off) ///
+		title("`o' Polynomial Response `tit' " , size(vsmall)) ///
 		subtitle("`colorGuide' " , size(vsmall)) ///
 		ytitle("", size(small)) xtitle("", size(vsmall)) ///
 		plotregion(color(white)) graphregion(color(white))
-		graph export "`OUTPUT'/uninteracted_response/`region_title'overlay_uninteracted_response_`FD'_clim`clim_data'_`case'`IF'_`bknum'_`model'_`var'_`tag'_poly`o'.pdf", replace
+		graph export "`OUTPUT'/uninteracted_response/product_overlay_`region'_uninteracted_response_FD_FGLS_clim`clim_data'_`case'`IF'_`bknum'_`model'_poly`o'.pdf", replace
 
 
 		//plot with no SE
 		tw `noSE' , ///
 		yline(0, lwidth(vthin)) xlabel(`min'(10)`max', labsize(vsmall)) ///
-		ylabel(, labsize(vsmall) nogrid) legend(off) ///
-		title("`o' Polynomial Response `tit' `stit' " , size(vsmall)) ///
+		ylabel(-5(5)20, labsize(vsmall) nogrid) legend(off) ///
+		title("`o' Polynomial Response `tit' " , size(vsmall)) ///
 		subtitle("`colorGuide'" , size(vsmall)) ///
 		ytitle("", size(small)) xtitle("", size(small)) ///
 		plotregion(color(white)) graphregion(color(white))
-		graph export "`OUTPUT'/uninteracted_response/`region_title'overlay_uninteracted_response_FD_clim`clim_data'_`case'`IF'_`bknum'_`model'_`var'_`tag'_poly`o'_noSE.pdf", replace
-
-
-		tw `plot_line' , ///
-		yline(0, lwidth(vthin)) xlabel(`min'(10)`max', labsize(vsmall)) ///
-		ylabel(, labsize(vsmall) nogrid) legend(off) ///
-		title("`o' Polynomial Response `tit' `stit' " , size(vsmall)) ///
-		subtitle("`colorGuide'" , size(vsmall)) ///
-		ytitle("", size(small)) xtitle("", size(small)) ///
-		plotregion(color(white)) graphregion(color(white))
-		graph export "`OUTPUT'/uninteracted_response/`region_title'overlay_uninteracted_response_FD_clim`clim_data'_`case'`IF'_`bknum'_`model'_`var'_`tag'_poly`o'_globalSE.pdf", replace
-
-
+		graph export "`OUTPUT'/uninteracted_response/product_overlay_`region'_uninteracted_response_FD_FGLS_clim`clim_data'_`case'`IF'_`bknum'_`model'_poly`o'_noSE.pdf", replace
 
 		graph drop _all
 		restore
-	}
+
 
 }
