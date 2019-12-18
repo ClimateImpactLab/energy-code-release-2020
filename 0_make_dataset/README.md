@@ -1,21 +1,21 @@
 # Dataset construction
 
 We construct three datasets for analysis:
-* data/IEA_merged_long.dta: This is an intermediary dataset including population, energy load, climate, and income data. We clean IEA_merged_long.dta in two different ways to produce regression ready datasets for our main specification and robustbess models.
-* data/GMFD_TINV_clim_EX_regsort.dta (regression ready data for estimating the Exclusively Imputed Robustness Model)
-* data/GMFD_TINV_clim_regsort.dta (regression ready data for estimating the Main Model)
+* `data/IEA_merged_long.dta`: This is an intermediary dataset including population, energy load, climate, and income data. We clean IEA_merged_long.dta in two different ways to produce regression ready datasets for our main specification and robustbess models.
+* `data/GMFD_TINV_clim_EX_regsort.dta`: regression ready data for estimating the Exclusively Imputed Robustness Model
+* `data/GMFD_TINV_clim_regsort.dta`: regression ready data for estimating the Main Model
 
 ## Folder structure
 
-climate - code and shapefiles for constructing, cleaning and assembling climate data
+`climate` - code and shapefiles for constructing, cleaning and assembling climate data
 
-coded_issues - encoded issues and documentation used to construct reporting regimes, clean the energy load data, and construct the climate data
+`coded_issues` - encoded issues and documentation used to construct reporting regimes, clean the energy load data, and construct the climate data
 
-energy_load - code for cleaning raw energy load data
+`energy_load` - code for cleaning raw energy load data
 
-pop_and_income - code for cleaning population and income data
+`pop_and_income` - code for cleaning population and income data
 
-merged - code for cleaning the merged dataset
+`merged` - code for cleaning the merged dataset
 
 ## Constructing IEA_merged_long.dta
 
