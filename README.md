@@ -1,6 +1,6 @@
 # The Social Cost of Global Energy Consumption Due to Climate Change -- Dataset Construction and Analysis Code
 
-The code in this repository allows users to generate the dataset and figures in the main text of ***Social Cost of Global Energy Consumption Due to Climate Change*** Paper figures may differ aesthetically due to post-processing.
+The code in this repository allows users to generate the dataset and figures related to pre-projection analysis in the main text of ***Social Cost of Global Energy Consumption Due to Climate Change*** Paper figures may differ aesthetically due to post-processing.
 
 ## Description of folders
 
