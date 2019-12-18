@@ -9,6 +9,8 @@
 
 `interacted_regression` - Code for estimating and plotting dose-response heterogeneity by income and long-run climate outlined in section A.7
 
+# Folder Contents
+
 Within each directory there are at least two pieces of code:
 1. `stacked.do` - estimates the dose-reponse function
 2. `plot_stacked.do` - plots the dose-response function
