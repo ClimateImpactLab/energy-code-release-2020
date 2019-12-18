@@ -26,7 +26,7 @@ To account for non-standard geographic boundary definitions, we use shapefiles t
 
 The shapefile specific programs below construct yearly climate data for specific countries and time periods based on the following year definitions: 
 
-* [programs/clean_WORLD.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/climate/programs/clean_WORLD.do):
+* [programs/clean_WORLD.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/climate/programs/clean_WORLD.do)
     * JPN: From 1990, data are reported on a fiscal year basis (e.g. April 2015 to March 2016 for 2015).
     * AUS: All data refer to the fiscal year (e.g. July 2014 to June 2015 for 2015)
     * BGD: Data are reported on a fiscal year basis, beginning on 1 July and ending on 30 June of the subsequent year.
@@ -38,8 +38,7 @@ The shapefile specific programs below construct yearly climate data for specific
     * NZL: Prior to 1994, data refer to fiscal year (April 1993 to March 1994 for 1993). From 1994, data refer to calendar year.
     * KEN: As of 2001, electricity data are reported on a fiscal year basis, beginning on 1 July and ending on 30 June of the subsequent year
 
-
-* [programs/clean_WORLDpre.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/climate/programs/clean_WORLDpre.do):
+* [programs/clean_WORLDpre.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/climate/programs/clean_WORLDpre.do)
     * ETH: Data are reported according to the Ethiopian financial year, which runs from 1 July to 30 June of the next year.
    
 
