@@ -3,11 +3,11 @@
 
 # Folder Structure
 
-`uninteracted_regression` - Code for estimating and plotting the global average dose-response function outlined in section A.6
+`uninteracted_regression` - Code for estimating and plotting the global average dose-response function. Section A.6 outlines this piece of analysis.
 
-`decile_regression` - Code for estimating and plotting the 
+`decile_regression` - Code for estimating and plotting the dose-response relationship for each decile of in sample GDP per-capita. Equation 3 on page 16 outlines this piece of analysis.
 
-`interacted_regression` - Code for estimating and plotting dose-response heterogeneity by income and long-run climate outlined in section A.7
+`interacted_regression` - Code for estimating and plotting dose-response heterogeneity by income and long-run climate. Section A.7 outlines this piece of analysis.
 
 # Folder Contents
 
