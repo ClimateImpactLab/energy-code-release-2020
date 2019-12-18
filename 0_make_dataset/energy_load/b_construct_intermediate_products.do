@@ -1,6 +1,7 @@
 /*
 Creator: Maya Norman
-Purpose: Condense Energy Other Energy Products using raw IEA products
+Purpose: Condense Energy Other Energy Products using raw IEA products into products
+These intermediary products will later be condensed into fuel variable other_energy
 
 We define electricity consumption based on ELECTR variable code, and consumption 
 of other fuels is obtained by aggregating over the following variable codes: COAL (Coal and coal products); 
