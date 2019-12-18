@@ -198,4 +198,4 @@ replace subregionname = "Southern Europe" if country=="XKO"
 ***********************************************************************************************************************
 
 do "$root/merged/2_construct_FD_interacted_variables.do"
-save "$root/GMFD_`model'_regsort.dta", replace
+save "$root/data/GMFD_`model'_regsort.dta", replace
