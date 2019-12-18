@@ -24,7 +24,7 @@ The code in this repository allows users to generate the dataset and figures rel
 	6. Robustness- Last decade SEE pg. 61
 	7. Tech trends SEE pg. 63-64
 
-## Instructions for Constructing the Analysis Dataset
+## Instructions for producing analysis related figures
 1. Run
     1. Global regression SEE Figure A.5 on pg. 39
 	2. Income decile regression SEE Figure 1A on pg. 10
