@@ -4,7 +4,7 @@ Creator: Yuqi Song
 Date last modified: 1/15/19 
 Last modified by: Maya Norman
 
-Purpose: Run non-stacked income quantile regression (generate sters)
+Purpose: Run stacked income decile regression (generate sters)
 
 */
 
@@ -38,7 +38,7 @@ forval pg=1/2 {
 
 local income_decile_temp_r = ""
 
-forval pg=1/2 {
+forval pg = 1/2 {
 	forval lg = 1/2 {
 		forval k = 1/2 {
 			local income_decile_temp_r = "`income_decile_temp_r' c.indp`pg'#c.indf1#c.FD_I`lg'temp`k'_GMFD"
