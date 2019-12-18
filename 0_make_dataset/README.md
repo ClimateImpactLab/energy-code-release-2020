@@ -22,6 +22,7 @@ merged - code for cleaning the merged dataset
 [1_construct_dataset_from_raw_inputs.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/1_construct_dataset_from_raw_inputs.do) produces IEA_merged_long.dta throught the following steps:
 1. Clean and construct population, income, climate and energy load datasets
 2. Merge population, income, climate and energy data by country and year
+
 Note: Currently the data to complete this step is not available to the public.
 
 ## Constructing GMFD_TINV_clim*_regsort.dta
