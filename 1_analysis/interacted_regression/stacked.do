@@ -7,7 +7,6 @@ Purpose: Run a stacked interacted regression. In other words, generate dose resp
 
 */
 
-
 ****** Set Model Specification Locals ******************************************
 
 local model $model
@@ -18,7 +17,6 @@ local submodel $submodel
 if "`submodel'" != "" local model_name = "`model'_`submodel'"
 else local model_name = "`model'"
 
-			
 ********************************************************************************
 *Step 1: Load Data
 ********************************************************************************
@@ -33,9 +31,6 @@ use "$root/data/GMFD_`model'_regsort.dta", clear
 sort region_i year 
 tset region_i year
 
-// Create UN region x year fixed effect
-local FE4 = "i.flow_i#i.product_i#i.year#i.subregionid"
-
 * long run income x income group
 
 local lgdppc_MA15_r = ""
@@ -45,7 +40,6 @@ forval pg=1/2 {
 		local lgdppc_MA15_r = "`lgdppc_MA15_r' c.indp`pg'#c.indf1#c.FD_I`lg'lgdppc_MA15"
 	}		
 }
-
 
 * large income group dummies
 
@@ -61,7 +55,7 @@ forval pg=1/2 {
 local precip_r = ""
 
 forval pg=1/2 {
-	forval lg = 1/2 {
+	forval k = 1/2 {
 		local precip_r = "`precip_r' c.indp`pg'#c.indf1#c.FD_precip`k'_GMFD"
 	}		
 }
@@ -79,9 +73,11 @@ forval pg=1/2 {
 * temp x long run climate
 
 local climate_r = ""
-forval pg=1/2 {
+forval pg = 1/2 {
 	forval lg = 1/2 {
-		local climate_r = "`climate_r' c.indp`pg'#c.indf1#c.FD_hdd20_TINVtemp`k'_GMFD c.indp`pg'#c.indf1#c.cdd20_TINVtemp`k'_GMFD"
+		forval k = 1/2 {
+			local climate_r = "`climate_r' c.indp`pg'#c.indf1#c.FD_hdd20_TINVtemp`k'_GMFD c.indp`pg'#c.indf1#c.cdd20_TINVtemp`k'_GMFD"
+		}
 	}		
 }
 
@@ -90,7 +86,9 @@ forval pg=1/2 {
 local income_spline_r = ""
 forval pg=1/2 {
 	forval lg = 1/2 {
-		local income_spline_r = "`income_spline_r' c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`lg'temp`k'"
+		forval k = 1/2 {
+			local income_spline_r = "`income_spline_r' c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`lg'temp`k'"
+		}
 	}		
 }
 
@@ -101,9 +99,9 @@ if ("`submodel'"== "lininter") {
 	local year_temp_r = ""
 
 	forval pg=1/2 {
-		forval lg = 1/2 {
+		forval k = 1/2 {
 			local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#c.FD_yeartemp`k'_GMFD"
-		}		
+		}	
 	}
 		
 	* temp x year x income spline
@@ -112,7 +110,9 @@ if ("`submodel'"== "lininter") {
 	
 	forval pg=1/2 {
 		forval lg = 1/2 {
-			local year_income_spline_r = "`year_income_spline_r' c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15yearI`lg'temp`k'"
+			forval k = 1/2 {
+				local year_income_spline_r = "`year_income_spline_r' c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15yearI`lg'temp`k'"
+			}
 		}		
 	}
 }
@@ -125,9 +125,9 @@ if ("`submodel'"== "decinter") {
 
 	forval pg=1/2 {
 		forval dg=1/4 {
-			forval lg = 1/2 {
+			forval k = 1/2 {
 				local temp_r = "`temp_r' c.indp`pg'#c.indf1#c.FD_D`dg'temp`k'_GMFD"
-			}		
+			}	
 		}
 	}
 }	
@@ -135,7 +135,7 @@ if ("`submodel'"== "decinter") {
 //run first stage regression
 reghdfe FD_load_pc `temp_r' `precip_r' `climate_r' ///
 `lgdppc_MA15_r' `income_spline_r' `year_temp_r' `year_income_spline_r' ///
-DumInc*, absorb(`FE4') cluster(region_i) residuals(resid)
+DumInc*, absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i) residuals(resid)
 estimates save "$root/sters/FD_inter_`model_name'", replace	
 
 //calculating weigts for FGLS
@@ -147,5 +147,5 @@ drop resid
 //run second stage FGLS regression
 reghdfe FD_load_pc `temp_r' `precip_r' `climate_r' ///
 `lgdppc_MA15_r' `income_spline_r' `year_temp_r' `year_income_spline_r' ///
-DumInc* [pw = weight], absorb(`FE4') cluster(region_i) residuals(resid)
+DumInc* [pw = weight], absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i) residuals(resid)
 estimates save "$root/sters/FD_FGLS_inter_`model_name'", replace

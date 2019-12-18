@@ -22,9 +22,6 @@ use "$root/data/GMFD_`model'_regsort.dta", clear
 *Step 2: Prepare Regressors and Run Regression
 ********************************************************************************
 
-//local pooled FE**					
-local FE4 = "i.flow_i#i.product_i#i.year#i.subregionid"
-
 //set time
 sort region_i year 
 xtset region_i year
@@ -60,7 +57,7 @@ forval pg=1/2 {
 }
 	
 // run first stage regression
-reghdfe FD_load_pc `income_decile_temp_r' `precip_r' DumInc*, absorb(`FE4') cluster(region_i) residuals(resid)
+reghdfe FD_load_pc `income_decile_temp_r' `precip_r' DumInc*, absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i) residuals(resid)
 estimates save "$root/sters/FD_income_decile_`model'", replace	
 			
 // calculating weigts for FGLS
@@ -69,6 +66,6 @@ bysort region_i: egen omega = var(resid)
 qui gen weight = 1/omega
 				
 // run second stage FGLS regression
-reghdfe FD_load_pc `income_decile_temp_r' `precip_r' DumInc*, absorb(`FE4') cluster(region_i)
+reghdfe FD_load_pc `income_decile_temp_r' `precip_r' DumInc*, absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i)
 estimates save "$root/sters/FD_FGLS_income_decile_`model'", replace	
 
