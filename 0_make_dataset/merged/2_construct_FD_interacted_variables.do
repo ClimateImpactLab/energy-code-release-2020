@@ -10,12 +10,11 @@ Purpose: Transform cleaned data to be regression ready
 
 */
 
-// Prepare data for regression variable construction
-
+// set time
 sort region_i year
 xtset region_i year
 
-**Decadal dummies**
+** Generate Decadal dummies**
 qui gen decade=.
 qui replace decade=1 if (year<=1980 & year>=1971)
 qui replace decade=2 if (year<=1990 & year>=1981)
@@ -32,23 +31,24 @@ foreach product in "other_energy" "electricity" {
 	replace dc1_lgdppc_MA15 = lgdppc_MA15 - `r(max)' if product == "`product'"
 }
 
-** income group and income x income group first difference
+** First difference income group and income x income group 
 	
 forval lg=1/2 {
 	qui gen FD_largeind`lg' = largeind`lg' - L1.largeind`lg'
 	qui gen double FD_I`lg'lgdppc_MA15 = ( lgdppc_MA15 * largeind`lg' ) - ( L1.lgdppc_MA15 * L1.largeind`lg' )
 }
 
-** precip **
+** First Difference precip **
 
 forval i=1/2 {
 	qui gen double FD_precip`i'_GMFD = precip`i'_GMFD - L1.precip`i'_GMFD
 }
 	
-** temp **
+** First Difference temp, temp x year, and temp x decade **
 
 forval i=1/4 {
 	
+	// temp
 	qui gen double FD_temp`i'_GMFD = temp`i'_GMFD - L1.temp`i'_GMFD
 	
 	// temp x year
@@ -61,7 +61,15 @@ forval i=1/4 {
 
 }
 
-** temp x year x income spline 
+** First difference temp x income decile
+
+forval lg = 1/10 {
+	forval i=1/4 {
+		gen double FD_I`lg'temp`i'_GMFD = ( temp`i'_GMFD * ind`lg' ) - ( L1.temp`i'_GMFD * L1.ind`lg' )
+	}
+}
+
+** First difference temp x year x income spline 
 
 forval lg=1/2 {
 	forval i=1/4 {
@@ -71,7 +79,7 @@ forval lg=1/2 {
 	}
 }		
 		
-** income spline x temp **
+** First difference income spline x temp
 
 forval lg=1/2 {
 	forval i=1/4 {
@@ -81,7 +89,7 @@ forval lg=1/2 {
 	}
 }
 
-** dd20 x polyBreak** 
+** First difference dd20 x polyBreak** 
 
 forval i=1/4 {
 	

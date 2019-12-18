@@ -71,9 +71,9 @@ forval pg=1/2 {
 local temp_r = ""
 
 forval pg=1/2 {
-	forval lg = 1/2 {
+	forval k=1/2 {
 		local temp_r = "`temp_r' c.indp`pg'#c.indf1#c.FD_temp`k'_GMFD"
-	}		
+	}
 }
 
 * temp x long run climate
