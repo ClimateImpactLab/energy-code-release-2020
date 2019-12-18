@@ -5,6 +5,7 @@ As described in Appendix A.1.4, we link gridded daily historical climate data to
 The IEA dataset documentation describes that some energy load observations are reported on non-gregorian calendars and for non-standard geographic regions. We account for these two types of energy load data features by constructing country x year climate data variables which align with the geographic and temporal definitions baked into each energy load observation. For example:
 * We construct yearly Australian climate data with the following definition of year: July t to June t + 1.  
 * We use a shapefile for Italy which includes San Marino and the Holy Sea.
+Please reference this [readme](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/coded_issues/README.md) for more information about the IEA dataset documentation and how we incorporated it into our analysis.
 
 The code and shapefiles in this directory demonstrate how we construct our climated data, accounting for non-standard definitions of country boundaries and years when aggregating and compiling aggregated daily gridded climate data.
 
