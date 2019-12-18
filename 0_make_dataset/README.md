@@ -2,8 +2,8 @@
 
 We construct three datasets for analysis:
 * data/IEA_merged_long.dta: This is an intermediary dataset including population, energy load, climate, and income data. We clean IEA_merged_long.dta in two different ways to produce regression ready datasets for our main specification and robustbess models.
-* data/GMFD_TINV_clim_EX_regsort.dta
-* data/GMFD_TINV_clim_regsort.dta
+* data/GMFD_TINV_clim_EX_regsort.dta (regression ready data for estimating the Exclusively Imputed Robustness Model)
+* data/GMFD_TINV_clim_regsort.dta (regression ready data for estimating the Main Model)
 
 ## Folder structure
 
