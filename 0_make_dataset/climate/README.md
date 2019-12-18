@@ -6,7 +6,7 @@ The IEA dataset documentation describes that some energy load observations are r
 * We construct yearly Australian climate data with the following definition of year: July t to June t + 1.  
 * We use a shapefile for Italy which includes San Marino and the Holy Sea.
 
-The code and shapefiles in this directory demonstrate how we address non-standard definitions of country boundaries and years when aggregating and compiling aggregated daily gridded climate data.
+The code and shapefiles in this directory demonstrate how we construct our climated data, accounting for non-standard definitions of country boundaries and years when aggregating and compiling aggregated daily gridded climate data.
 
 ## Directory File Structure
 
