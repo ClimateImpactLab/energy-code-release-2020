@@ -5,14 +5,7 @@ Please note, the raw data used here is not publically available.
 * The intermediate dataset, `IEA_merged_long.dta`, is outputed by  [1_construct_dataset_from_raw_inputs.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/1_construct_dataset_from_raw_inputs.do), and used as an input to [2_construct_regression_ready_data.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/2_construct_regression_ready_data.do).  
 * Please only try to run codes that occur downstream of the construction of `IEA_merged_long.dta`.
 
-# Dataset construction
-
-Codes in this folder construct three datasets for analysis:
-* `data/IEA_merged_long.dta`: This is an intermediary dataset including population, energy load, climate, and income data. We clean IEA_merged_long.dta in two different ways to produce regression ready datasets for our main specification and robustness models;
-* `data/GMFD_TINV_clim_EX_regsort.dta`: regression ready data for estimating the Exclusively Imputed robustness model
-* `data/GMFD_TINV_clim_regsort.dta`: regression ready data for estimating the main model
-
-## Folder structure
+# Folder structure
 
 `climate` - code and shapefiles for constructing, cleaning and assembling climate data
 
@@ -23,6 +16,13 @@ Codes in this folder construct three datasets for analysis:
 `pop_and_income` - code for cleaning population and income data
 
 `merged` - code for cleaning the merged dataset
+
+# Dataset construction
+
+Codes in this folder construct three datasets for analysis:
+* `data/IEA_merged_long.dta`: This is an intermediary dataset including population, energy load, climate, and income data. We clean IEA_merged_long.dta in two different ways to produce regression ready datasets for our main specification and robustness models;
+* `data/GMFD_TINV_clim_EX_regsort.dta`: regression ready data for estimating the Exclusively Imputed robustness model
+* `data/GMFD_TINV_clim_regsort.dta`: regression ready data for estimating the main model
 
 ## Constructing IEA_merged_long.dta
 
