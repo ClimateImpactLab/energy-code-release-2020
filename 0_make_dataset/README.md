@@ -2,8 +2,8 @@
 
 We construct three datasets for analysis:
 * `data/IEA_merged_long.dta`: This is an intermediary dataset including population, energy load, climate, and income data. We clean IEA_merged_long.dta in two different ways to produce regression ready datasets for our main specification and robustbess models.
-* `data/GMFD_TINV_clim_EX_regsort.dta`: regression ready data for estimating the Exclusively Imputed Robustness Model
-* `data/GMFD_TINV_clim_regsort.dta`: regression ready data for estimating the Main Model
+* `data/GMFD_TINV_clim_EX_regsort.dta`: regression ready data for estimating the Exclusively Imputed robustness model
+* `data/GMFD_TINV_clim_regsort.dta`: regression ready data for estimating the main model
 
 ## Folder structure
 
@@ -37,3 +37,4 @@ Note: Currently the data to complete this step is not available to the public.
 	* Classify countries in income deciles and groups -- merge constructed income groups from (3) into main dataset
 5. Construct First Differenced Interacted Variables used in the analysis section
 
+Note: at the top of `2_construct_regression_ready_data.do` set model to `TINV_clim` to produce regression ready data for the main model and to `TINV_clim_EX` to produce regression ready data for the Exclusively Imputed robustness model.
