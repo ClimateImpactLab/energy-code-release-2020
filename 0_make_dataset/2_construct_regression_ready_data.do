@@ -5,9 +5,9 @@ Date last modified: 5/6/19
 Last modified by: Maya Norman
 
 Purpose: Master Do File for Analysis Dataset Construction
-(Takes dataset from cleaned from IEA_merged_long*.dta to IEA_merged_long*_regsort.dta)
+(Takes dataset from cleaned from IEA_merged_long*.dta to GMFD_*_regsort.dta)
 
-Step 1) Construct FE regimes and drop data according to selected coded issues
+Step 1) Construct reporting regimes and drop data according to selected coded issues
 Step 2) Match product specific climate data with product
 Step 3) Prepare data for Income Group Construction and Construct Income Groups 
 Step 4) Perform Final Cleaning Steps before first differenced interacted variable construction
@@ -24,22 +24,13 @@ macro drop _all
 pause off
 
 
-//SET UP RELEVANT PATHS
+/////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////
 
-if "`c(username)'" == "mayanorman" {
+// path to energy-code-release repo 
+local root "/Users/`c(username)'/Documets/repos/energy-code-release"
 
-	local DROPBOX "/Users/`c(username)'/Dropbox"
-	local GIT "/Users/`c(username)'/Documents/Repos/gcp-energy/rationalized_code/0_make_dataset"
+/////////////////////////////////////////////////////////////////////////////////////////////////
 
-}
-else if "`c(username)'" == "manorman" {
-	
-	// This path is for running the code on Sacagawea
-	local DROPBOX "/home/`c(username)'"
-	local RAWDATA "/shares/gcp/estimation/energy/IEA"
-	local GIT "/home/`c(username)'/gcp-energy/rationalized_code/0_make_dataset"
-
-}
 
 ******Set Script Toggles********************************************************
 
