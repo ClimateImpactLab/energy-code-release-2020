@@ -1,181 +1,44 @@
 /*
 Creator: Maya Norman
-Date last modified: 12/17/18 
+Date last modified: 12/18/19 
 Last modified by: 
 
-Purpose: Run interacted regression (generate sters) Flow & Product specific
-Stacked regression
--model: TINV_clim
+Purpose: Run a stacked interacted regression (generate sters) 
 
-Climate Data Options: BEST, GMFD, GMFD_v3
-Model Options: TINV_clim, TINV_both_64, TINV_clim_EX
-SubModel Options (only available if model is TINV_clim): 
--decadal interaction (decinter)
--unrestricted income (ui)
--linear interaction (lininter)
-
-Input Data Options: `clim_data'_`model'_`data_type'_regsort.dta
--data_type: historic_data, replicated_data
 */
 
 
-//SET UP RELEVANT PATHS
-
-if "`c(username)'" == "mayanorman"{
-
-	local DROPBOX "/Users/`c(username)'/Dropbox"
-
-}
-else if "`c(username)'" == "manorman"{
-	// This path is for running the code on Sacagawea
-	local DROPBOX "/home/`c(username)'"
-	local RAWDATA "/shares/gcp/estimation/energy/IEA"
-
-}
-
 ******Set Script Toggles********************************************************
 
-local data_type $data_type
-
-//Number of data subsets used to estimate
-local bknum $bknum
-
-local case $case // "Exclude" "Include"
-
-//income grouping test
-
-local grouping_test $grouping_test
-
-******Set Model Parameters******************************************************
-
-
-	//Model type-- Options: TINV_clim, TINV_both, TINV_clim_EX
-		local model $model
-		local model_name $model
-		
-	//Submodel type-- (Default: "")
-	local submodel $submodel
-		
-	if ("`submodel'" == "decinter" | "`submodel'" == "lininter") {
+local model $model
+local submodel $submodel
 			
-		local time_dummy $time_dummy
-			
-	}
-	
-	//Climate Data type
-	local clim_data $clim_data
-		
-	//Issue Fix
-	
-	local IF $IF
-	
-	
-	//Specification:
-	
-		local FD $FD
-		
-		if ("`FD'" == "noFD") {
-
-			local fd ""
-	
-		}
-		else if ("`FD'" == "FD") {
-
-			local fd "FD_"
-
-		}
-	
-	//Define if covariates are MA15 or TINV
-	if ("$model" != "TINV_both") {
-		//Climate Var Average type
-		local ma_clim "TINV"
-
-		//Income Var Average type
-		local ma_inc "MA15"
-
-	}
-	else if ("$model" == "TINV_both") {
-	
-		//Climate Var Average type
-		local ma_clim "TINV"
-
-		//Income Var Average type
-		local ma_inc "TINV"
-		
-	}
-	
+********************************************************************************
+*Step 1: Load Data
 ********************************************************************************
 
-//Setting path shortcuts
-
-local data "`DROPBOX'/GCP_Reanalysis/ENERGY/IEA_Replication/Data/Analysis/`clim_data'/rationalized_code/$data_type/data"	
-local ster "`DROPBOX'/GCP_Reanalysis/ENERGY/IEA_Replication/Data/Analysis/`clim_data'/rationalized_code/$data_type/sters"	
-
-********************************************************************************
-*Step 1: Load Data and Clean
-********************************************************************************
-
-if (inlist("`model'","TINV_clim","TINV_clim_ui", "TINV_clim_income_spline", "TINV_clim_lininter", "TINV_clim_decinter")) {
-	use "`data'/clim`clim_data'_`case'`IF'_`bknum'_`grouping_test'_TINV_clim_`data_type'_regsort.dta", clear
-}
-else {
-	use "`data'/clim`clim_data'_`case'`IF'_`bknum'_`grouping_test'_`model'_`data_type'_regsort.dta", clear
-}
-
-pause
-cap drop DumC*
-			
-//keep 6 categories
-
-if ("`bknum'" == "break6") {
-	keep if flow=="RESIDENT" | flow=="COMMPUB" | flow=="TOTIND" 
-}
-else if ("`bknum'" == "break4") {
-	keep if flow=="TOTOTHER" | flow == "TOTIND"
-}
-else if ("`bknum'" == "break2") {
-	keep if flow=="OTHERIND"
-}
-
-keep if product=="electricity" | product=="other_energy"
-
-//tab product
-*1=electricity, 2=other_energy
-tab product, gen(indp)
-egen product_i = group(product)
-
-//tab flow
-*1=COMMPUB, 2=RESIDENT, 3=TOTIND
-tab flow, gen(indf)
-egen flow_i = group(flow)
-summ flow_i
-local fn `r(max)'
-
-
-//local pooled FE
-local FE4 = "i.flow_i#i.product_i#i.year#i.subregionid"
-//encode country, gen(cnt)
+use "$root/data/GMFD_`model'_regsort.dta", clear
 
 ********************************************************************************
 *Step 2: Prepare Regressors and Run Regression
 ********************************************************************************
 
-//set time
+// set time
 sort region_i year 
 tset region_i year
 
-//identify number of income groups
-sum largegpid
-local IG = `r(max)'
+// Create UN region x year fixed effect
+local FE4 = "i.flow_i#i.product_i#i.year#i.subregionid"
 
 //interacted lgdppcMA, controls, vary by large group
+
 foreach control in "lgdppc_`ma_inc'" {
 	local `control'regressor=""
 	forval pg=1/2 {
 		local `control'groupC`pg'=""
 		forval fg=1/`fn' {
 			local `control'groupB`fg'=""
-			forval lg = 1/`IG' {
+			forval lg = 1/2 {
 				local `control'groupA`lg'="c.indp`pg'#c.indf`fg'#c.`fd'I`lg'`control'"
 				local `control'groupB`fg'="``control'groupB`fg'' ``control'groupA`lg''"
 			}
@@ -189,7 +52,7 @@ foreach control in "lgdppc_`ma_inc'" {
 drop DumInc*
 forval pg=1/2 {
 	forval fg=1/`fn' {
-		forval lg=1/`IG' {
+		forval lg=1/2 {
 			gen DumIncG`lg'F`fg'P`pg'=`fd'largeind`lg'*indf`fg'*indp`pg'
 		}
 	}
@@ -224,7 +87,7 @@ forval pg=1/2 {
 	local tempgroupC`pg'=""
 	forval fg=1/`fn' {
 		local tempgroupB`fg'=""
-		forval lg = 1/`IG' {
+		forval lg = 1/2 {
 			local tempgroupA`lg'=""
 			forval k=1/2 {
 				local add="c.indp`pg'#c.indf`fg'#c.`fd'I`lg'temp`k'_`clim_data'"
@@ -261,7 +124,7 @@ forval pg=1/2 {
 	local covgroupC`pg'=""
 	forval fg=1/`fn' {
 		local covgroupB`fg'=""
-		forval lg = 1/`IG' {
+		forval lg = 1/2 {
 			local covgroupA`lg'=""
 			forval k=1/2 {
 				local add="c.indp`pg'#c.indf`fg'#c.`fd'cdd20_`ma_clim'I`lg'temp`k'_`clim_data' c.indp`pg'#c.indf`fg'#c.`fd'hdd20_`ma_clim'I`lg'temp`k'_`clim_data'"
@@ -325,7 +188,7 @@ if (("`submodel'"=="income_spline" | "`model'" == "TINV_clim_income_spline") & "
 		local income_spline_covgroupC`pg'=""
 		forval fg=1/`fn' {
 			local income_spline_covgroupB`fg'=""
-			forval lg = 1/`IG' {
+			forval lg = 1/2 {
 				local income_spline_covgroupA`lg'=""
 				forval k=1/2 {
 					local add="c.indp`pg'#c.indf`fg'#c.`fd'dc1_lgdppc_`ma_inc'I`lg'temp`k'"
@@ -368,7 +231,7 @@ if ("`submodel'"== "lininter") {
 		local lininter_tempgroupC`pg'=""
 		forval fg=1/`fn' {
 			local lininter_tempgroupB`fg'=""
-			forval lg = 1/`IG' {
+			forval lg = 1/2 {
 				
 				//make temp year interaction either income group specific or not
 				if ("`model'" == "TINV_clim") local tt = "I`lg'"
@@ -401,7 +264,7 @@ if ("`submodel'"== "lininter") {
 		local time_income_interaction = ""
 		forval fg=1/`fn' {
 			forval pg=1/2 {
-				forval lg = 1/`IG' {
+				forval lg = 1/2 {
 					local add="c.indp`pg'#c.indf`fg'#c.year#c.largeind`lg'"	
 					local time_income_interaction = "`time_income_interaction' `add'"
 				}
@@ -429,7 +292,7 @@ if ("`submodel'"=="lininter" & "`model'" == "TINV_clim_income_spline" & "`groupi
 		
 		forval fg=1/`fn' {
 			local lininterincomesplineB`fg'=""
-			forval lg = 1/`IG' {
+			forval lg = 1/2 {
 
 				local lininterincomesplineA`lg'=""
 				forval k=1/2 {
@@ -457,7 +320,7 @@ if ("`submodel'"== "decinter") {
 			
 		forval pg=1/2 {
 			forval fg=1/`fn' {
-				forval lg=1/`IG' {
+				forval lg=1/2 {
 					forval dg=1/4 {
 						gen DumIncG`lg'D`dg'F`fg'P`pg'=FD_DumInc`lg'Dec`dg'*indf`fg'*indp`pg'
 					}
@@ -474,7 +337,7 @@ if ("`submodel'"== "decinter") {
 			local tempgroupB`fg'=""
 			forval dg=1/4 {
 				local tempgroupD`dg'=""
-				forval lg = 1/`IG' {
+				forval lg = 1/2 {
 					if strpos("`model'","income_spline") == 0 local t = "I`lg'"
 					else local t = ""
 					local tempgroupA`lg'=""
@@ -497,7 +360,7 @@ if ("`submodel'"== "decinter") {
 		forval fg=1/`fn' {
 			forval pg=1/2 {
 				forval dg=1/4 {
-					forval lg = 1/`IG' {
+					forval lg = 1/2 {
 						local add = "c.indp`pg'#c.indf`fg'#c.decind`dg'#c.largeind`lg'"	
 						local decadal_income_interaction = "`decadal_income_interaction' `add'"
 					}

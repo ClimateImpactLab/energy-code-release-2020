@@ -144,12 +144,20 @@ gen largegpid = largegpid_electricity if product == "electricity"
 replace largegpid = largegpid_other_energy if product == "other_energy"
 drop largegpid_electricity largegpid_other_energy
 
-//Gnerate dummy variable by income decile and group 
+//Generate dummy variable by income decile and group 
 tab gpid, gen(ind)
 cap tab largegpid, gen(largeind)
 
-//Generate climate quintile dummies (can delete this section of code later)
-tab qcpid, gen(climind)
+//Generate sector and fuel dummies
+
+*1=electricity, 2=other_energy
+tab product, gen(indp)
+egen product_i = group(product)
+
+* only 1 sector, so this step exists due to path dependency
+tab flow, gen(indf)
+egen flow_i = group(flow)
+
 
 // Classify world into 13 regions based on UN World Regions Classifications (for fixed effect... reference Temperature Response of Energy Consumption Section )
 
