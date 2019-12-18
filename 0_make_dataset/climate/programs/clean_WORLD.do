@@ -48,9 +48,7 @@ are modified by the IEA Secretariat to include estimates for supply and demand f
 (also known as the Pridnestrovian Moldavian Republic or Transnistria). Other energy production or consumption from this region is not included in the Moldovan data.
 TZA: Some of oil data (EWURA) are reported on a fiscal year basis. Data for 2015 correspond to 1 July 2015 30 June 2016
 GRL: “Excludes Greenland and the Faroe Islands, except prior to 1990, where data on oil for Greenland were included with the Danish statistics. The Administration is planning to revise the series back to 1974 to exclude these amounts.” 
-Greenland were included with the Danish statistics. The Administration is planning to revise the series back to 1974 to exclude these amounts
 DNK: “Excludes Greenland and the Faroe Islands, except prior to 1990, where data on oil for Greenland were included with the Danish statistics. The Administration is planning to revise the series back to 1974 to exclude these amounts.” 
-Greenland were included with the Danish statistics. The Administration is planning to revise the series back to 1974 to exclude these amounts
 CHE: Includes Liechtenstein for the oil data. Data for other fuels do not include Liechtenstein
 LIE: Includes Liechtenstein for the oil data. Data for other fuels do not include Liechtenstein
 
