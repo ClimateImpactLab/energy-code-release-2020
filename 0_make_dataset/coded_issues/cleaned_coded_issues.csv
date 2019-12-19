@@ -1,4 +1,5 @@
 country,sector,fuel,issue_code,year_start,year_end,issue,description,flag_drop,tot_drop,fuel_keep,grey,geo_change,fiscal_year,ex_ex
+BEL,supply,electricity,data availability,1987,2012,data available,production of electricity from wind is available from 1987,,,,,,,
 FRA,Non-specified other,electricity,combined sectors,1971,1991,,"Non-specified other consumption includes exports to Monaco prior to 1992 and defence-related activities, among others.",1,1,0,,,,
 DEU,Non-specified other,naturalgas,data availability,2003,2012,,"Since 2003, consumption in agriculture and nonspecified other, which were previously estimated, are no longer shown, and losses data have been included in statistical differences.",1,1,0,,,,
 DEU,Agriculture,naturalgas,data availability,2003,2012,,"Since 2003, consumption in agriculture and nonspecified other, which were previously estimated, are no longer shown, and losses data have been included in statistical differences.",1,1,0,,,,
