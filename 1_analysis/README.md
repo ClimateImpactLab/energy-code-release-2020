@@ -34,7 +34,7 @@ $` \frac{1}{V_i} `$
 ### Pop-Weighted Regression
 
 * For pop-weighted regressions, we need to account for the fact that our residuals in the first stage regression have already had weights applied to them.
-* Therefore, we construct the FGLS weight for an observation $`j`$ within a regime $`i`$ as: $`w^{i}_{j} = w_{j} \frac{1}{\omega_i}`$
+* Therefore, we construct the FGLS weight for an observation $`j`$ within a regime $`i`$ as: $w^{i}_{j} = w_{j} \frac{1}{\omega_i}$
 * $`w_{j}`$ is the population weight assigned to observation $`j`$ in the first stage regression. 
 * $`\omega_i`$ is sample variance of the weighted first stage residuals, within regime $`i`$. 
 * This procedure applies to regressions in the `uninteracted_regression` folder in this directory. 
