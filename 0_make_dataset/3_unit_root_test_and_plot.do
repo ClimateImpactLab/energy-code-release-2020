@@ -13,7 +13,7 @@ clear all
 set more off
 
 * Set up the paths:
-global root "/Users/`c(username)'/Documets/repos/energy-code-release"
+global root "/Users/`c(username)'/Documents/repos/energy-code-release"
 
 global DATA "$root/data"
 global OUT "$root/figures"
