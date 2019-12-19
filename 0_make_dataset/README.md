@@ -26,7 +26,7 @@ Codes in this folder construct three datasets for analysis:
 * `data/GMFD_TINV_clim_EX_regsort.dta`: regression ready data for estimating the Exclusively Imputed robustness model
 * `data/GMFD_TINV_clim_regsort.dta`: regression ready data for estimating the main model
 
-## Constructing IEA_merged_long.dta
+## Constructing Intermediate Dataset (IEA_merged_long.dta)
 
 [1_construct_dataset_from_raw_inputs.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/1_construct_dataset_from_raw_inputs.do) produces IEA_merged_long.dta throught the following steps:
 1. Clean and construct population, income, climate and energy load datasets
@@ -34,7 +34,7 @@ Codes in this folder construct three datasets for analysis:
 
 Note: Currently the data to complete this step is not available to the public.
 
-## Constructing GMFD_TINV_clim*_regsort.dta
+## Constructing Regression Ready Dataset (GMFD_TINV_clim*_regsort.dta)
 
 [2_construct_regression_ready_data.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/2_construct_regression_ready_data.do) can produce both GMFD_TINV_clim_EX_regsort.dta and GMFD_TINV_clim_regsort.dta through the following steps:
 1. Construct reporting regimes and drop data according to encoded data issues
@@ -49,7 +49,7 @@ Note: Currently the data to complete this step is not available to the public.
 ***Note:*** at the top of `2_construct_regression_ready_data.do` set the global macro ***model*** to `TINV_clim` to produce regression ready data for the main model and to `TINV_clim_EX` to produce regression ready data for the Exclusively Imputed robustness model.
 
 ## Testing for the existence of unit roots in our outcome variable
-Through this data testing we motivate the first differencing completed in `Step 5` of **Constructing GMFD_TINV_clim*_regsort.dta**
+Through this data testing we motivate the first differencing completed in `Step 5` of **Constructing Regression Ready Dataset**
 
 `3_unit_root_test_and_plot.do` takes the regression ready dataset created in [2_construct_regression_ready_data.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/2_construct_regression_ready_data.do), and tests for the existence of unit roots in the load_pc variable.
 * The code implements the tests described in Section A.5.2 of the paper. 
