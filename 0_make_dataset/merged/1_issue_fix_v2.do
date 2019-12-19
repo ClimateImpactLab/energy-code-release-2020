@@ -30,7 +30,7 @@ levelsof country, local(countrylist)
 
 // Part B: Load Coded Issues - type/set of coded issues specified with toggle at top of code
 
-insheet using "`root'/0_make_dataset/coded_issues/cleaned_coded_issues.csv", comma names clear
+insheet using "$root/0_make_dataset/coded_issues/cleaned_coded_issues.csv", comma names clear
 
 foreach variable in "grey" "flag_drop" {
 	replace `variable' = 0 if `variable' == .
@@ -205,7 +205,7 @@ end
 ********************************************************************************
 
 **loop through fuels**
-foreach var in "other_energy electricity" {
+foreach var in "other_energy" "electricity" {
 	**loop through sectors**
 	foreach tag in "COMPILE" {
 		**loop through countries**
