@@ -9,8 +9,8 @@ Purpose: Run a stacked interacted regression. In other words, generate dose resp
 
 ****** Set Model Specification Locals ******************************************
 
-local model $model
-local submodel $submodel
+local model "$model"
+local submodel "$submodel"
 
 // create local for naming ster file
 
@@ -18,13 +18,13 @@ if "`submodel'" != "" local model_name = "`model'_`submodel'"
 else local model_name = "`model'"
 
 ********************************************************************************
-*Step 1: Load Data
+* Step 1: Load Data
 ********************************************************************************
 
 use "$root/data/GMFD_`model'_regsort.dta", clear
 
 ********************************************************************************
-*Step 2: Prepare Regressors and Run Regression
+* Step 2: Prepare Regressors and Run Regression
 ********************************************************************************
 
 // set time

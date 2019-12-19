@@ -126,6 +126,12 @@ replace hdd20_TINV_GMFD = hdd20_other_TINV_GMFD if inlist(product,"other_energy"
 		qui egen avgHDD_tpid=mean(hdd20_TINV_GMFD), by(tpid) //average HDD in each cell
 		qui egen avgInc_tgpid=mean(lgdppc_MA15), by(tgpid) //average lgdppc in each cell
 
+		//max lggdppc for each large income group for each cell
+		foreach var in "other_energy" "electricity" {
+			qui egen maxInc_largegpid_`var'=max(lgdppc_MA15), by(largegpid_`var') 
+		}
+
+
 		local break_data "$root/data/break_data_`model'.dta"
 		save "`break_data'", replace
 

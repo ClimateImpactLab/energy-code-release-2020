@@ -9,7 +9,7 @@ Purpose: Estimate stacked global dose response function
 
 ****** Set Model Specification Locals ******************************************
 
-local model $model
+local model "$model"
 
 ********************************************************************************
 * Step 1: Load Data
