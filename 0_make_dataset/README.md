@@ -49,6 +49,7 @@ Note: Currently the data to complete this step is not available to the public.
 ***Note:*** at the top of `2_construct_regression_ready_data.do` set the global macro ***model*** to `TINV_clim` to produce regression ready data for the main model and to `TINV_clim_EX` to produce regression ready data for the Exclusively Imputed robustness model.
 
 ## Testing for the existence of unit roots in our outcome variable
+Through this data testing we motivate the first differencing completed in `Step 5` of **Constructing GMFD_TINV_clim*_regsort.dta**
 
 `3_unit_root_test_and_plot.do` takes the regression ready dataset created in [2_construct_regression_ready_data.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/2_construct_regression_ready_data.do), and tests for the existence of unit roots in the load_pc variable.
 * The code implements the tests described in Section A.5.2 of the paper. 
