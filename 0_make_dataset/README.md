@@ -50,6 +50,6 @@ Note: Currently the data to complete this step is not available to the public.
 
 ## Testing for the existence of unit roots in our outcome variable
 
-`3_unit_root_test_and_plot.do` takes the regression ready dataset created in [2_construct_regression_ready_data.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/2_construct_regression_ready_data.do), and tests for the existence of unit roots in the load_pc variable. 
+`3_unit_root_test_and_plot.do` takes the regression ready dataset created in [2_construct_regression_ready_data.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/2_construct_regression_ready_data.do), and tests for the existence of unit roots in the load_pc variable.
 * The code implements the tests described in Section A.5.2 of the paper. 
 * The figures outputted are those in the paper as Figure A.4 
