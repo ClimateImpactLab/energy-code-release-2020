@@ -3,14 +3,15 @@ Creator: Yuqi Song
 Date last modified: 12/19/19 
 Last modified by: Maya Norman
 
-Purpose: Plot a product overlay of the income decile regression (Figure 1.A in the paper)
+Purpose: Plot a product overlay of the income decile x temperature energy response (Figure 1.A in the paper)
 
 */
+
+set scheme s1color
 
 ****** Set Model Specification Locals ******************************************
 
 local model = "$model"
-
 
 ****** Set Plotting Toggles ****************************************************
 
@@ -52,17 +53,17 @@ foreach k of num 1/2 {
 forval lg=1/10 {
 			
 	// set up plotting locals
-	loc SE ""
-	loc nonSE ""
+	local SE ""
+	local noSE ""
 	local colorGuide ""	
 
 	foreach var in "electricity" "other_energy" {
 
 		// assign product index
-		if "`var'"=="electricity" {
-			local pg=1
+		if "`var'" == "electricity" {
+			local pg = 1
 		}
-		else if "`var'"=="other_energy" {
+		else if "`var'" == "other_energy" {
 			local pg=2
 		}
 
@@ -73,7 +74,7 @@ forval lg=1/10 {
 		
 		forval k = 1/2 {
 
-			local line = "`line'`add'_b[c.indp`pg'#c.indf1#c.FD_I`lg'temp`k'] * (temp1 - 20^`k')"
+			local line = "`line'`add'_b[c.indp`pg'#c.indf1#c.FD_I`lg'temp`k'] * (temp`k' - 20^`k')"
 			local add " + "
 
 		} 
@@ -85,11 +86,13 @@ forval lg=1/10 {
 		
 		// add predicted dose reponse to plotting locals
 		loc SE = "`SE' rarea upper`lg'_`var' lower`lg'_`var' temp1, col(``var'_col'%30) || line yhat`lg'_`var' temp1, lc (``var'_col') ||"
-		loc noSE "`noSE' line yhat_`var' temp1, lc (``var'_col') ||"
+		loc noSE "`noSE' line yhat`lg'_`var' temp1, lc (``var'_col') ||"
 		loc colorGuide = "`colorGuide' `var' (``var'_colTT')"
 
 	}
 	
+
+
 	//plot with SE
 	tw `SE' , ///
 	yline(0, lwidth(vthin)) xlabel(-5(10)35, labsize(vsmall)) ///
@@ -109,21 +112,21 @@ forval lg=1/10 {
 	name(addgraph`lg'_noSE, replace)							
 
 	//add graphic for combined plotting later
-	local graphic = "`graphic' addgraph`cellid'"
-	local graphic_noSE = "`graphic_noSE' addgraph`cellid'_noSE"
+	local graphic = "`graphic' addgraph`lg'"
+	local graphic_noSE = "`graphic_noSE' addgraph`lg'_noSE"
 }				
 									
 	
 // plot and save combined plot with SE
 graph combine `graphic', imargin(zero) ycomm rows(1) xsize(20) ysize(3) ///
-title("Poly 2 Income Decile Dose Response (`model')", size(small)) ///
+title("Poly 2 Income Decile Energy Temperature Response (`model')", size(small)) ///
 subtitle("`colorGuide'", size(small)) ///
 plotregion(color(white)) graphregion(color(white)) name(comb, replace)
 graph export "$root/figures/fig1a_product_overlay_income_decile.pdf", replace
 
 // plot and save combined plot with no SE
 graph combine `graphic_noSE', imargin(zero) ycomm rows(1) xsize(20) ysize(3) ///
-title("Poly 2 Income Decile Dose Response (`model')", size(small)) ///
+title("Poly 2 Income Decile Energy Temperature Response (`model')", size(small)) ///
 subtitle("`colorGuide'", size(small)) ///
 plotregion(color(white)) graphregion(color(white)) name(comb_noSE, replace)
 graph export "$root/figures/fig1a_product_overlay_income_decile_noSE.pdf", replace

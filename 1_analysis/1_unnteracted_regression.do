@@ -5,6 +5,10 @@ Date last modified: 12/19/19
 Purpose: Estimate and Plot stacked global energy-temperature response
 */
 
+clear all
+set more off
+macro drop _all
+
 /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////
 
 // path to energy-code-release repo 

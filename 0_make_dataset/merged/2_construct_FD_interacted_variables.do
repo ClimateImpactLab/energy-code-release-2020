@@ -31,6 +31,10 @@ foreach product in "other_energy" "electricity" {
 	replace dc1_lgdppc_MA15 = lgdppc_MA15 - `r(max)' if product == "`product'"
 }
 
+** First difference energy load pc
+
+gen FD_load_pc = load_pc - L1.load_pc
+
 ** First difference income group and income x income group 
 	
 forval lg=1/2 {

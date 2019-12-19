@@ -89,8 +89,6 @@ replace hdd20_TINV_GMFD = hdd20_other_TINV_GMFD if inlist(product,"other_energy"
 	sort region_i year
 	tset region_i year
 
-	gen FD_load_`spe'pc = D.load_`spe'pc
-
 	//Organize variables
 	order country year flow product load_pc lgdppc_MA15 pop FEtag *GMFD*
 

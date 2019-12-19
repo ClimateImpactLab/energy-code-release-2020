@@ -7,6 +7,8 @@ Purpose: Plot stacked global energy-temperature response regression (Figure A.5 
 
 */
 
+set scheme s1color
+
 ****** Set Model Specification Locals ******************************************
 
 local model = "$model"
@@ -108,3 +110,4 @@ ytitle("", size(small)) xtitle("", size(small)) ///
 plotregion(color(white)) graphregion(color(white))
 graph export "$root/figures/figA5_product_overlay_global_noSE.pdf", replace
 
+graph drop _all	
