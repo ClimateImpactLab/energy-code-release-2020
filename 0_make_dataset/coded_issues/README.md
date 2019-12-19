@@ -29,7 +29,6 @@ To accomplish this task, we first read the documentation and encoded the relevan
 * `year_end`: what year did the data quality issue end in?
 
 ### Step 2: Based off this metadata and cross referencing each issue with the database documentation we constructed the following 5 dummy variables for use in dataset cleaning and construction as well as in fixed effect regime assignment. 
-(this section is slightly off base and needs some improvement)
 * `flag_drop`: = 1 if the issue is classified as “redefine sectors”, “combine sectors”, “redefine fuels”, or “combine fuels.” 
 * `grey`: If issues are classified as “data availability”, “ex-post revision” or "climate data" grey will be assigned a value based on the following procedure: 
     * = 1 if the period recorded has strictly better data quality than the period not recorded
