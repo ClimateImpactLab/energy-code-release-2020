@@ -27,7 +27,8 @@ pause off
 
 // path to energy-code-release repo 
 
-global root "/Users/`c(username)'/Documets/repos/energy-code-release"
+* global root "/Users/`c(username)'/Documents/repos/energy-code-release"
+global root "C:/Users/TomBearpark/Documents/energy-code-release"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -35,6 +36,7 @@ global root "/Users/`c(username)'/Documets/repos/energy-code-release"
 
 // What model do you want? TINV_clim or TINV_clim_EX
 global model "TINV_clim"
+local model $model
 
 *************************************************************************
 * Step 1) Construct FE regimes and drop data according to specification
@@ -212,5 +214,5 @@ replace subregionname = "Southern Europe" if country=="XKO"
 * Step 5) Construct First Differenced Interacted Variables
 ***********************************************************************************************************************
 
-do "$root/merged/2_construct_FD_interacted_variables.do"
+do "$root/0_make_dataset/merged/2_construct_FD_interacted_variables.do"
 save "$root/data/GMFD_`model'_regsort.dta", replace
