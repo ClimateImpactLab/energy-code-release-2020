@@ -3,7 +3,7 @@ Creator: Yuqi Song
 Date last modified: 1/15/19 
 Last modified by: Maya Norman
 
-Purpose: Plot stacked global dose response function regression (Figure A.5 in the paper)
+Purpose: Plot stacked global energy-temperature response regression (Figure A.5 in the paper)
 
 */
 
@@ -38,7 +38,7 @@ set obs `obs'
 
 replace temp1_GMFD = _n - 6
 
-foreach k of num 1/2 {
+foreach k of num 1/4 {
 	rename temp`k'_GMFD temp`k'
 	replace temp`k' = temp1 ^ `k'
 }
@@ -70,7 +70,7 @@ foreach var in "electricity" "other_energy" {
 	
 	forval k = 1/4 {
 
-		local line = "`line'`add'_b[c.indp`pg'#c.indf1#c.FD_temp1_GMFD] * (temp1 - 20^`k')"
+		local line = "`line'`add'_b[c.indp`pg'#c.indf1#c.FD_temp`k'_GMFD] * (temp`k' - 20^`k')"
 		local add " + "
 
 	} 
@@ -91,7 +91,7 @@ foreach var in "electricity" "other_energy" {
 tw `SE' , ///
 yline(0, lwidth(vthin)) xlabel(-5(10)35, labsize(vsmall)) ///
 ylabel(, labsize(vsmall) nogrid) legend(off) ///
-title("Global Dose Response" , size(vsmall)) ///
+title("Global Energy-temperature Response" , size(vsmall)) ///
 subtitle("`colorGuide' " , size(vsmall)) ///
 ytitle("", size(small)) xtitle("", size(vsmall)) ///
 plotregion(color(white)) graphregion(color(white))
@@ -102,7 +102,7 @@ graph export "$root/figures/figA5_product_overlay_global.pdf", replace
 tw `noSE' , ///
 yline(0, lwidth(vthin)) xlabel(-5(10)35, labsize(vsmall)) ///
 ylabel(, labsize(vsmall) nogrid) legend(off) ///
-title("Global Dose Response" , size(vsmall)) ///
+title("Global Energy-temperature Response" , size(vsmall)) ///
 subtitle("`colorGuide'" , size(vsmall)) ///
 ytitle("", size(small)) xtitle("", size(small)) ///
 plotregion(color(white)) graphregion(color(white))

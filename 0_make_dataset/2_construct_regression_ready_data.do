@@ -158,7 +158,7 @@ tab largegpid, gen(largeind)
 
 //Generate sector and fuel dummies
 
-*1=electricity, 2=other_energy
+* 1 = electricity, 2 = other_energy
 tab product, gen(indp)
 egen product_i = group(product)
 

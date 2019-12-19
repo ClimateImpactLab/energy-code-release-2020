@@ -3,7 +3,7 @@ Creator: Yuqi Song
 Date last modified: 1/15/19 
 Last modified by: Maya Norman
 
-Purpose: Estimate stacked global dose response function
+Purpose: Estimate stacked global energy-temperature response
 
 */
 
