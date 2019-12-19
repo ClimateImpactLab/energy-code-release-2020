@@ -16,3 +16,9 @@ Within each directory there are at least two pieces of code:
 2. `plot_stacked.do` - plots the dose-response function
 
 `interacted_regression` also contains `plot_time_marginal_effect.do`. This code is used to produce plots which illustrate how temperature responses change across time in the Tech Trends robustness model. 
+
+# FGLS Procedure
+
+## Pop-Weighted Regression
+
+## Non Pop-Weighted Regression
