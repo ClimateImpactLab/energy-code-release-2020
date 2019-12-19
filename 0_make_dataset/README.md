@@ -20,10 +20,16 @@ Please note, the raw data used here is not publically available.
 
 # Dataset construction
 
-Codes in this folder construct three datasets for analysis:
-* `data/IEA_merged_long.dta`: This is an intermediary dataset including population, energy load, climate, and income data. We clean IEA_merged_long.dta in two different ways to produce regression ready datasets for our main specification and robustness models;
-* `data/GMFD_TINV_clim_EX_regsort.dta`: regression ready data for estimating the Exclusively Imputed robustness model
-* `data/GMFD_TINV_clim_regsort.dta`: regression ready data for estimating the main model
+Codes in this folder construct five datasets, that are used in later analysis:
+* An intermediary dataset including population, energy load, climate, and income data. 
+    * `data/IEA_merged_long.dta`: 
+    *  We clean IEA_merged_long.dta in two different ways to produce regression ready datasets for our main specification and robustness models;
+* Regression ready data:
+    * `data/GMFD_TINV_clim_EX_regsort.dta`: used for estimating the Exclusively Imputed robustness model
+    * `data/GMFD_TINV_clim_regsort.dta`: used for estimating the main model
+* Information on each country-year's income and climate covariates, which is used as an input to plotting code
+    * `data/break_data_TINV_clim_EX.dta`: used for plotting output for the Exclusively Imputed robustness model
+    * `data/break_data_TINV_clim.dta`: used for plotting output for the main model
 
 ## Constructing Intermediate Dataset (IEA_merged_long.dta)
 
@@ -56,6 +62,37 @@ Codes in this folder construct three datasets for analysis:
 
 ### Code Outputs:
 * `energy-code-release/data/GMFD_TINV_clim*_regsort.dta`
+
+## Constructing Covariate Intermediate Datasets (break_data_TINV_clim*.dta)
+
+As well as producing the regression ready datasets, [2_construct_regression_ready_data.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/2_construct_regression_ready_data.do) 
+can produce both break_data_TINV_clim.dta and break_data_TINV_clim_EX.dta . These are intermediate 
+datasets, that are outputted for use in plots later in the analysis. These datasests contain covariate information for each 
+country-year, including:
+* Income: 
+    * Decile of overall income distribution of our observations (`gpid`)
+    * Tercile of overall income distribution of our observations (`tpid`)
+    * Income groupings based on location of knot (`largegpid_*`), note, these vary by product. 
+        * See the Paper Section A.7 for discussion of what these knots are.  
+    * Average values of the long run income covariate, within each climate tercile (`avgInc_tgpid`)
+    * Maximum values of the long run income covariate within each income group (`maxInc_largegpid_other_energy` and `maxInc_largegpid_electricity`)
+
+* Climate
+    * Tercile of the distribution of long run CDDs (`tgpid`)
+    * Average value of the long run HDD covariate, within each income tercile (`avgHDD_tpid`)
+    * Average value of the long run CDD covariate, within each income tercile (`avgCDD_tpid`)
+
+***Note:*** at the top of `2_construct_regression_ready_data.do` set the global macro ***model*** to `TINV_clim` to produce regression ready data for the main model and to `TINV_clim_EX` to produce this covariate information for the Exclusively Imputed robustness model.
+
+### Code Inputs:
+* `energy-code-release/data/IEA_merged_long.dta`
+
+### Code Outputs:
+* `energy-code-release/data/break_data_TINV_clim.dta`
+* `energy-code-release/data/break_data_TINV_clim_EX.dta`
+
+
+
 
 ## Testing for the existence of unit roots in our outcome variable
 Through this data testing we motivate the first differencing completed in `Step 5` of **Constructing Regression Ready Dataset**
