@@ -28,11 +28,13 @@ clear all
 set more off
 macro drop _all
 pause on
+cap ssc install rangestat
 
 /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////
 
 // path to energy-code-release repo 
 local root "/Users/`c(username)'/Documets/repos/energy-code-release"
+local root "/home/tbearpark/repos/energy-code-release"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -44,7 +46,7 @@ global dataset_construction "`root'/0_make_dataset/"
 
 // output data path
 local DATA "`root'/data"
-
+di "hello"
 
 ********************************************************************************************************************************************
 *Step 1: Construct Population/Income, Load, and Climate Datasets
@@ -52,8 +54,10 @@ local DATA "`root'/data"
 
 //Part A: Climate Data Construction
 do "$dataset_construction/climate/1_clean_climate_data.do"
-clean_climate_data, clim("GMFD") programs_path("$dataset_construction/climate/programs")
+di "hello"
 
+clean_climate_data, clim("GMFD") programs_path("$dataset_construction/climate/programs")
+di "jelo"
 tempfile climate_data
 save `climate_data', replace
 
@@ -102,7 +106,7 @@ foreach var of varlist coal* oil* natural_gas* electricity* heat_other* biofuels
 //Part C: Complete Specification Specific Data Set Cleaning Steps
 
 do "$dataset_construction/merged/0_break2_clean.do"  
-
+x
 
 di "mission complete :)"
 save "`DATA'/IEA_Merged_long_GMFD.dta", replace

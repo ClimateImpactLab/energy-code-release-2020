@@ -198,3 +198,4 @@ syntax , clim(string) programs_path(string) //note functionality only set up for
 	sort country year temp* cdd* hdd* polyAbove* polyBelow* precip*
 
 end
+di "program complete"
