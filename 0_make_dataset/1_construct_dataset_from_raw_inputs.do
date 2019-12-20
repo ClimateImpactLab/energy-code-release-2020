@@ -46,7 +46,6 @@ global dataset_construction "`root'/0_make_dataset/"
 
 // output data path
 local DATA "`root'/data"
-di "hello"
 
 ********************************************************************************************************************************************
 *Step 1: Construct Population/Income, Load, and Climate Datasets
@@ -54,16 +53,14 @@ di "hello"
 
 //Part A: Climate Data Construction
 do "$dataset_construction/climate/1_clean_climate_data.do"
-di "hello"
 
 clean_climate_data, clim("GMFD") programs_path("$dataset_construction/climate/programs")
-di "jelo"
 tempfile climate_data
 save `climate_data', replace
 
 //Part B: Population and Income Data Construction
 
-do "$dataset_construction/pop_and_income/extract_and_clean.do"
+do "$dataset_construction/pop_and_income/1_extract_and_clean.do"
 
 tempfile population_and_income_data
 save `population_and_income_data', replace
