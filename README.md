@@ -80,7 +80,6 @@ variables for use in later econometric analysis.
     * These can be found in [/data](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/data)
 
 
-
 ## Step 2 - Econometric Analysis to Establish Energy-Temperature Empirical Relationship
 
 This step implements analysis to recover the emprical relationship between temperature and energy consumption.
@@ -118,6 +117,25 @@ Code for this step is not currently in this repo.
 In the final step of the analysis, we use the empirically derived damage function to calculate an energy-only partial social cost of carbon.
 
 Code for this step is not currently in this repo.
+
+
+
+
+
+
+
+
+
+
+
+
+--------------------------- to delete at the bottom--------------------------- 
+
+
+
+
+
+
 
 
 
