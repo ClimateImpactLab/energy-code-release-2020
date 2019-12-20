@@ -34,7 +34,7 @@ cap ssc install rangestat
 
 // path to energy-code-release repo 
 local root "/Users/`c(username)'/Documets/repos/energy-code-release"
-local root "/home/tbearpark/repos/energy-code-release"
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
