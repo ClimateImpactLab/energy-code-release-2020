@@ -1,6 +1,6 @@
 # Climate Data Construction
 
-As described in Appendix A.1.4, we link gridded daily historical climate data to country-year-level energy consumption data by aggregating daily grid cell information to the country year level. Nonlinear transformations of temperature and rainfall are computed at the grid cell level before averaging values across space using population weights and finally summing over days within a year. This procedure recovers grid-by-day-level nonlinearities in the energy-temperature (and energy-precipitation) relationship, because energy consumption is additive across time and space.
+As described in Appendix A.1.4, we link GMFD gridded daily historical climate data to country-year-level energy consumption data by aggregating daily grid cell information to the country year level. Nonlinear transformations of temperature and rainfall are computed at the grid cell level before averaging values across space using population weights and finally summing over days within a year. This procedure recovers grid-by-day-level nonlinearities in the energy-temperature (and energy-precipitation) relationship, because energy consumption is additive across time and space.
 
 The IEA dataset documentation describes that some energy load observations are reported on non-gregorian calendars and for non-standard geographic regions. We account for these two types of energy load data features by constructing country x year climate data variables which align with the geographic and temporal definitions baked into each energy load observation. For example:
 * We construct yearly Australian climate data with the following definition of year: July t to June t + 1.  
@@ -22,14 +22,11 @@ The code and shapefiles in this directory demonstrate how we construct our clima
 
 ## Definitions of the Climate Variables we use in our analysis: 
 
-Below we describe the climate variables we construct from the GMFD climate data to use in our empirical analysis of the the relationship between energy consumption and temperature. We e
+Below we describe the climate variable transformations we perform at the grid cell level before calculating a pop weighted average across space and summing across days.
 
-Please note: GMFD refers to the Global Meteorological Forcing Dataset, which is the source for our climate variables. 
-More details on these data can be found in appendix section A.1.1
-
-* temp*_GMFD
-    * These variables are polynomials of temperature. For example, temp2_GMFD refers to 
-    the second order polynomial of pixel level daily average temperature (averaged to the year by country level).
+* temp*_GMFD 
+    * These variables are polynomials of the daily average temperature. For example, temp2_GMFD refers to 
+    the second order polynomial of pixel level daily average temperature (summed to the year by country level).
     These variables are referred to in the paper as $` T^k_{jt} `$, where `k` is polynomial order, `j` is country, and `t` is year.
 * precip*_GMFD
     * Similarly, these terms are polynomials of precipitation. They are reffered to in the paper as $` P^k_{jt} `$.
@@ -37,8 +34,8 @@ More details on these data can be found in appendix section A.1.1
     *  
 * polyBelow*_GMFD
 
-* cdd20_*_GMFD
-    * $` \sum_{ d \in t} \abs(T_d - 20) * I_{T_d > 20} `$ 
+* cdd20_TINV_GMFD
+    * outlined in section A.7 of the appendix 
 To capture the role of climate-driven adaptation, the CDD and HDD measures are
 interacted with temperature and its square over the respective temperature ranges for
 which they hold adaptive signicance. Specically, we allow the CDD measure to modu-
