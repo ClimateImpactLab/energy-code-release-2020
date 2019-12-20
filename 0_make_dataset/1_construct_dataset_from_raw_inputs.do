@@ -103,7 +103,6 @@ foreach var of varlist coal* oil* natural_gas* electricity* heat_other* biofuels
 //Part C: Complete Specification Specific Data Set Cleaning Steps
 
 do "$dataset_construction/merged/0_break2_clean.do"  
-x
 
 di "mission complete :)"
 save "`DATA'/IEA_Merged_long_GMFD.dta", replace
