@@ -79,10 +79,3 @@ $` \frac{1}{V_i} `$
 * $` w_{j} `$ is the population weight assigned to observation $` j `$ in the first stage regression. 
 * $` \omega_i `$ is sample variance of the weighted first stage residuals, within regime $` i `$. 
 * This procedure applies to regressions in the `uninteracted_regression` folder in this directory. 
-
-# To-Do's
-
-1. Change to GJ
-2. Check ME time plots... might be slightly different but hard to tell. A tom confirmation would be totally wicked.
-
-
