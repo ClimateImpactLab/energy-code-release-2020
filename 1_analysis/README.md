@@ -1,22 +1,29 @@
 # Run Instructions
 
 In order to run codes, please change the macro `$root` at the top of the codes to the location of this repo on your computer. 
+Note, the input datasets for codes in this analysis are generated in the [0_make_dataset](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/0_make_dataset) section of this repo
 
 1. Run `1_uninteracted_regression.do` to estimate and plot the global average energy-temperature response.
 	* ***Code Inputs***: `energy-code-release/data/GMFD_TINV_clim_regsort.dta` -- used for response estimation and plotting
 	* ***Code Outputs***:
-		* `energy-code-release/sters/FD_global_TINV_clim.ster`
-		* `energy-code-release/sters/FD_FGLS_global_TINV_clim.ster`
-		* `energy-code-release/figures/figA5_product_overlay_TINV_clim_global.pdf` (Figure A.5 in the paper)
-		* `energy-code-release/figures/figA5_product_overlay_TINV_clim_global_noSE.pdf`
+	    * Regression output  
+    		* `energy-code-release/sters/FD_global_TINV_clim.ster`
+    		* `energy-code-release/sters/FD_FGLS_global_TINV_clim.ster`
+		* Figures
+	    	* `energy-code-release/figures/figA5_product_overlay_TINV_clim_global.pdf` (Figure A.5 in the paper)
+		    * `energy-code-release/figures/figA5_product_overlay_TINV_clim_global_noSE.pdf`
+
 
 2. Run `2_decile_regression.do` to estimate and plot the energy-temperature response for each decile of in sample GDP per-capita
 	* ***Code Inputs***: `energy-code-release/data/GMFD_TINV_clim_regsort.dta` -- used for response estimation and plotting
 	* ***Code Outputs***:
-		* `energy-code-release/sters/FD_income_decile_TINV_clim.ster`
-		* `energy-code-release/sters/FD_FGLS_income_decile_TINV_clim.ster`
-		* `energy-code-release/figures/fig1a_product_overlay_income_decile_TINV_clim.pdf` (Figure 1.a in the paper)
-		* `energy-code-release/figures/fig1a_product_overlay_income_decile_TINV_clim_noSE.pdf`
+	    * Regression output  
+		    * `energy-code-release/sters/FD_income_decile_TINV_clim.ster`
+		    * `energy-code-release/sters/FD_FGLS_income_decile_TINV_clim.ster`
+    	* Figures
+            * `energy-code-release/figures/fig1a_product_overlay_income_decile_TINV_clim.pdf` (Figure 1.a in the paper)
+		    * `energy-code-release/figures/fig1a_product_overlay_income_decile_TINV_clim_noSE.pdf`
+
 
 3. Run `3_interacted_regression.do` to estimate and plot the energy-temperature response heterogeneity by income and long-run climate for the main (`TINV_clim`), excluding imputed data (`EX`), most recent decade (`decinter`), and tech trends model (`lininter`)
 	* ***Code Inputs***: 
@@ -24,23 +31,25 @@ In order to run codes, please change the macro `$root` at the top of the codes t
 		* `energy-code-release/data/GMFD_TINV_clim_EX_regsort.dta` -- used for excluding imputed data response estimation and plotting
 		* `energy-code-release/data/break_data_TINV_clim.dta` -- used for plotting all outputs
 	* ***Code Outputs***:
-		* `energy-code-release/sters/FD_inter_TINV_clim.ster`
-		* `energy-code-release/sters/FD_FGLS_inter_TINV_clim.ster` (main model ster file)
-		* `energy-code-release/sters/FD_inter_TINV_clim_EX.ster`
-		* `energy-code-release/sters/FD_FGLS_inter_TINV_clim_EX.ster` (excluding imputed data model ster file)
-		* `energy-code-release/sters/FD_inter_TINV_clim_lininter.ster`
-		* `energy-code-release/sters/FD_FGLS_inter_TINV_clim_lininter.ster` (tech trend model ster file)
-		* `energy-code-release/sters/FD_inter_TINV_clim_decinter.ster`
-		* `energy-code-release/sters/FD_FGLS_inter_TINV_clim_decinter.ster` (most recent decade ster file)
-		* `energy-code-release/figures/fig1b_*_interacted_TINV_clim.pdf` (Figure 1.b in the paper) 
-		* `energy-code-release/figures/fig1b_*_interacted_TINV_clim_noSE.pdf`
-		* `energy-code-release/figures/figA13_*_interacted_main_model_TINV_clim_overlay_model_EX.pdf` 
-		* `energy-code-release/figures/figA13_*_interacted_main_model_TINV_clim_overlay_model_EX_noSE.pdf` (Figure A.13 in the paper)
-		* `energy-code-release/figures/figA14_*_interacted_main_model_TINV_clim_overlay_model_decinter.pdf` 
-		* `energy-code-release/figures/figA14_*_interacted_main_model_TINV_clim_overlay_model_decinter_noSE.pdf` (Figure A.14 in the paper)
-		* `energy-code-release/figures/figA15a_ME_time_TINV_clim_lininter_*.pdf` (Figure A.15a) 
-		* `energy-code-release/figures/figA15b_*_interacted_main_model_TINV_clim_overlay_model_lininter.pdf` 
-		* `energy-code-release/figures/figA15b_*_interacted_main_model_TINV_clim_overlay_model_lininter_noSE.pdf` (Figure A.15b in the paper)
+	    * Regression output  
+    		* `energy-code-release/sters/FD_inter_TINV_clim.ster`
+    		* `energy-code-release/sters/FD_FGLS_inter_TINV_clim.ster` (main model ster file)
+    		* `energy-code-release/sters/FD_inter_TINV_clim_EX.ster`
+    		* `energy-code-release/sters/FD_FGLS_inter_TINV_clim_EX.ster` (excluding imputed data model ster file)
+    		* `energy-code-release/sters/FD_inter_TINV_clim_lininter.ster`
+    		* `energy-code-release/sters/FD_FGLS_inter_TINV_clim_lininter.ster` (tech trend model ster file)
+    		* `energy-code-release/sters/FD_inter_TINV_clim_decinter.ster`
+    		* `energy-code-release/sters/FD_FGLS_inter_TINV_clim_decinter.ster` (most recent decade ster file)
+		* Figures
+        	* `energy-code-release/figures/fig1b_*_interacted_TINV_clim.pdf` (Figure 1.b in the paper) 
+    		* `energy-code-release/figures/fig1b_*_interacted_TINV_clim_noSE.pdf`
+    		* `energy-code-release/figures/figA13_*_interacted_main_model_TINV_clim_overlay_model_EX.pdf` 
+    		* `energy-code-release/figures/figA13_*_interacted_main_model_TINV_clim_overlay_model_EX_noSE.pdf` (Figure A.13 in the paper)
+    		* `energy-code-release/figures/figA14_*_interacted_main_model_TINV_clim_overlay_model_decinter.pdf` 
+    		* `energy-code-release/figures/figA14_*_interacted_main_model_TINV_clim_overlay_model_decinter_noSE.pdf` (Figure A.14 in the paper)
+    		* `energy-code-release/figures/figA15a_ME_time_TINV_clim_lininter_*.pdf` (Figure A.15a) 
+    		* `energy-code-release/figures/figA15b_*_interacted_main_model_TINV_clim_overlay_model_lininter.pdf` 
+    		* `energy-code-release/figures/figA15b_*_interacted_main_model_TINV_clim_overlay_model_lininter_noSE.pdf` (Figure A.15b in the paper)
 
 # Folder Structure
 
