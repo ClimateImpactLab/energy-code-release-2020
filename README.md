@@ -84,9 +84,21 @@ variables for use in later econometric analysis.
 ## Step 2 - Econometric Analysis to Establish Energy-Temperature Empirical Relationship
 
 This step implements analysis to recover the emprical relationship between temperature and energy consumption.
-In this step, we take the cleaned data produced in step 1, run regression
+In this step, we take the cleaned data produced in step 1, run regressions and then plot the resulting outputs. 
 
-
+We run three kinds of regressions in this section: 
+1. Uninteracted global regressions
+    * These regressions recover the global population weighted average response of energy consumption to temperature variation. 
+    * Code for these regressions can be found in [1_analysis/uninteracted_regression](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/1_analysis/uninteracted_regression)
+    * This code outputs Appendix Figure A5. 
+2. Decile regressions
+    * These regressions are run in order to understand how the sensitivity of energy consumption to climate change modulates with incomoe levels. 
+    * Code for these regressions can be found in [1_analysis/decile_regression](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/1_analysis/decile_regression)
+    * This code outputs Figure 1A of the paper. 
+3. Interacted regressions
+    * In these regressions, we model heterogeneity in the energy-climate relationship, by interacting our models with income and climate covariates.
+    * Code for these regressions can be found in [1_analysis/interacted_regression](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/1_analysis/interacted_regression)
+    * This code outputs Figures 1B in the paper, and Appendix Figures A13, A14, A15a and A15b.
 
 ## Step 3 - Project Future Impacts of Climate Change 
 
@@ -105,6 +117,7 @@ Code for this step is not currently in this repo.
 
 In the final step of the analysis, we use the empirically derived damage function to calculate an energy-only partial social cost of carbon.
 
+Code for this step is not currently in this repo.
 
 
 
@@ -158,8 +171,6 @@ consumption-temperature relationship.
 
 
 
-
-
 1. Run [0_construct_dataset_from_raw_inputs.do]() to construct a country x year x fuel panel dataset with climate, energy load, population and income data. SEE pg. 14
 2. Run [1_construct_regression_ready_data.do]() to construct a dataset ready for regressions. This script completes the following tasks:
 	1. Construct fixed effect regimes and drop data based off coded issues (fill out based on paper) SEE pg. 36 of paper
@@ -168,3 +179,22 @@ consumption-temperature relationship.
 	4. Final cleaning steps SEE pg. 16 for UN region FEs
 	5. Construct FD variables SEE pg. 36
 
+
+## Instructions for Running Regressions
+1. Run
+    1. FGLS 
+    2. Global regression SEE pg. 16, 38
+	3. Income decile regression SEE pg. 16
+	4. Income/Climate interacted regression SEE pg. 17, 41
+	5. Robustness- Excl. imputed data SEE pg. 60
+	6. Robustness- Last decade SEE pg. 61
+	7. Tech trends SEE pg. 63-64
+
+## Instructions for producing analysis related figures
+1. Run
+    1. Global regression SEE Figure A.5 on pg. 39
+	2. Income decile regression SEE Figure 1A on pg. 10
+	3. Income/Climate interacted regression SEE Figure 1B on pg. 10; description on pg. 5, 42
+	4. Robustness- Excl. imputed data SEE Figure A.13 on pg. 61
+	5. Robustness- Last decade SEE Figure A.14 on pg. 64
+	6. Tech trends SEE Figure A.15 on pg. 65
