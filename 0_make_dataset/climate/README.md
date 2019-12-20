@@ -24,7 +24,7 @@ The code and shapefiles in this directory demonstrate how we construct our clima
 
 Below we describe the climate variable transformations we perform at the grid cell level and each transformations variable name in the country x year climate dataset. 
 
-[This section needs to be filled out.. waiting for paper language to get updated so can swip it]
+[This section needs to be filled out.. waiting for paper language to get updated so can swipe it]
 
 * temp1_GMFD, temp2_GMFD, temp3_GMFD, and temp4_GMFD
     * These variables are polynomials of the daily average temperature. For example, temp2_GMFD is a pop-weighted average 
@@ -32,14 +32,13 @@ Below we describe the climate variable transformations we perform at the grid ce
     These variables are referred to in the paper as $` T^k_{jt} `$, where `k` is polynomial order, `j` is country, and `t` is year.
 * precip1_GMFD, precip2_GMFD
     * Similarly, these terms are polynomials of precipitation. They are reffered to in the paper as $` P^k_{jt} `$.
-* polyAbove*_GMFD
+* polyAbove1_GMFD, polyAbove2_GMFD
     *  
-* polyBelow*_GMFD
-
-* cdd20_TINV_GMFD
-    * Cooling degree days, which are defined in Appendix section A.7, and are written in the paper with notation $`\bar{CDD}`$
-* hdd20_TINV_GMFD
-    * Heating degree days, which are defined in Appendix section A.7, and are written in the paper with notation $`\overline(HDD)`$
+* polyBelow1_GMFD, polyBelow2_GMFD
+* cdd20_GMFD
+    * cooling degree days   
+* hdd20_GMFD
+    * heating degree days 
 
 
 ## How we account for Non-Standard Year and Geographic Boundary Definitions in Climate Data Construction
