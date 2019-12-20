@@ -9,7 +9,7 @@ Please reference this [readme](https://gitlab.com/ClimateImpactLab/Impacts/energ
 
 The code and shapefiles in this directory demonstrate how we construct our climated data, accounting for non-standard definitions of country boundaries and years when aggregating and compiling aggregated daily gridded climate data.
 
-## Directory File Structure
+## Directory Contents
 
 `programs` - stata programs for cleaning shapefile specific aggregated climate data
 * contribution: complete shapefile specific aggregated climate data cleaning, accounting for non-standard year definitions in particular regions for specific periods
