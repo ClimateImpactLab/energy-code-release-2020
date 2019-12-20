@@ -11,6 +11,8 @@ The analysis in the paper proceeds in five steps.
 
 This master readme outlines the process for each step, and each analysis step has it’s own readme and set of scripts and subdirectories.
 
+**Note, the code in this repo performs the first two steps outlined above**
+
 ## Description of folders
 
 `0_make_dataset` - Code for constructing the dataset used to estimate all models described and displayed in the paper
