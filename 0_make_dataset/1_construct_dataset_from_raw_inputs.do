@@ -1,9 +1,5 @@
 /*
 
-Creator: Yuqi Song
-Date last modified: 5/6/19 
-Last modified by: Maya Norman
-
 Purpose: Master Do File for Dataset Construction
 
 This script takes in raw data input files either downloaded from the internet or constructed using merge_transform_average.py

@@ -1,7 +1,4 @@
 /*
-Creator: Yuqi Song
-Date last modified: 1/15/19 
-Last modified by: Maya Norman
 
 Purpose: Estimate stacked global energy-temperature response
 
@@ -78,6 +75,6 @@ bysort region_i: egen weighted_residual_variance = total(square_term_weighted)
 gen FGLS_weight = pop_weight / (weighted_residual_variance)
 
 //run second stage FGLS regression
-reghdfe FD_load_pc `temp_r' `precip_r'  [pw=FGLS_weight], absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i)
+reghdfe FD_load_pc `temp_r' `precip_r' [pw=FGLS_weight], absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i)
 estimates save "$root/sters/FD_FGLS_global_`model'", replace
 

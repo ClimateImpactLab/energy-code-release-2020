@@ -1,5 +1,4 @@
 /*
-Creator: Maya Norman
 Purpose: CUW_BES_ABW Shape File Climate Data Clean Function
 Note: this file relies on programs in the helper_functions.do script
 

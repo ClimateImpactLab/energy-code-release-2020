@@ -1,9 +1,7 @@
 /*
-Creator: Maya Norman
-Date last modified: 12/18/19 
-Last modified by: 
 
-Purpose: Run a stacked interacted regression. In other words, generate dose response sters for fully interacted model.
+Purpose: Run a stacked interacted regression. 
+In other words, generate energy-temperature response sters for fully interacted model.
 
 */
 
@@ -21,7 +19,12 @@ else local model_name = "`model'"
 * Step 1: Load Data
 ********************************************************************************
 
-use "$root/data/GMFD_`model'_regsort.dta", clear
+if (strpos("`model_name'", "EX") == 0) {
+	use "$root/data/GMFD_`model'_regsort.dta", clear
+}
+else {
+	use "$root/data/GMFD_`model_name'_regsort.dta", clear
+}
 
 ********************************************************************************
 * Step 2: Prepare Regressors and Run Regression
@@ -76,7 +79,7 @@ local climate_r = ""
 forval pg = 1/2 {
 	forval lg = 1/2 {
 		forval k = 1/2 {
-			local climate_r = "`climate_r' c.indp`pg'#c.indf1#c.FD_hdd20_TINVtemp`k'_GMFD c.indp`pg'#c.indf1#c.cdd20_TINVtemp`k'_GMFD"
+			local climate_r = "`climate_r' c.indp`pg'#c.indf1#c.FD_hdd20_TINVtemp`k'_GMFD c.indp`pg'#c.indf1#c.FD_cdd20_TINVtemp`k'_GMFD"
 		}
 	}		
 }
@@ -92,7 +95,7 @@ forval pg=1/2 {
 	}		
 }
 
-if ("`submodel'"== "lininter") {
+if ("`submodel'" == "lininter") {
 	
 	* temp x year
 
@@ -147,5 +150,5 @@ drop resid
 //run second stage FGLS regression
 reghdfe FD_load_pc `temp_r' `precip_r' `climate_r' ///
 `lgdppc_MA15_r' `income_spline_r' `year_temp_r' `year_income_spline_r' ///
-DumInc* [pw = weight], absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i) residuals(resid)
+DumInc* [pw = weight], absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i)
 estimates save "$root/sters/FD_FGLS_inter_`model_name'", replace

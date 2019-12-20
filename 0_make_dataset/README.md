@@ -25,10 +25,10 @@ Codes in this folder construct five datasets, that are used in later analysis:
     * `data/IEA_merged_long.dta`: 
     *  We clean IEA_merged_long.dta in two different ways to produce regression ready datasets for our main specification and robustness models;
 * Regression ready data:
-    * `data/GMFD_TINV_clim_EX_regsort.dta`: used for estimating the Exclusively Imputed robustness model
+    * `data/GMFD_TINV_clim_EX_regsort.dta`: used for estimating the excluding imputed data model
     * `data/GMFD_TINV_clim_regsort.dta`: used for estimating the main model
 * Information on each country-year's income and climate covariates, which is used as an input to plotting code
-    * `data/break_data_TINV_clim_EX.dta`: used for plotting output for the Exclusively Imputed robustness model
+    * `data/break_data_TINV_clim_EX.dta`: used for plotting output for the excluding imputed data model
     * `data/break_data_TINV_clim.dta`: used for plotting output for the main model
 
 ## Constructing Intermediate Dataset (IEA_merged_long.dta)
@@ -55,7 +55,7 @@ Codes in this folder construct five datasets, that are used in later analysis:
 	* Classify countries in income deciles and groups -- merge constructed income groups from (3) into main dataset
 5. Construct First Differenced Interacted Variables used in the analysis section
 
-***Note:*** at the top of `2_construct_regression_ready_data.do` set the global macro ***model*** to `TINV_clim` to produce regression ready data for the main model and to `TINV_clim_EX` to produce regression ready data for the Exclusively Imputed robustness model.
+***Note:*** at the top of `2_construct_regression_ready_data.do` set the global macro ***model*** to `TINV_clim` to produce regression ready data for the main model and to `TINV_clim_EX` to produce regression ready data for the excluding imputed data model.
 
 ### Code Inputs:
 * `energy-code-release/data/IEA_merged_long.dta`
@@ -82,7 +82,7 @@ country-year, including:
     * Average value of the long run HDD covariate, within each income tercile (`avgHDD_tpid`)
     * Average value of the long run CDD covariate, within each income tercile (`avgCDD_tpid`)
 
-***Note:*** at the top of `2_construct_regression_ready_data.do` set the global macro ***model*** to `TINV_clim` to produce regression ready data for the main model and to `TINV_clim_EX` to produce this covariate information for the Exclusively Imputed robustness model.
+***Note:*** at the top of `2_construct_regression_ready_data.do` set the global macro ***model*** to `TINV_clim` to produce regression ready data for the main model and to `TINV_clim_EX` to produce this covariate information for the excluding imputed data model.
 
 ### Code Inputs:
 * `energy-code-release/data/IEA_merged_long.dta`
@@ -90,9 +90,6 @@ country-year, including:
 ### Code Outputs:
 * `energy-code-release/data/break_data_TINV_clim.dta`
 * `energy-code-release/data/break_data_TINV_clim_EX.dta`
-
-
-
 
 ## Testing for the existence of unit roots in our outcome variable
 Through this data testing we motivate the first differencing completed in `Step 5` of **Constructing Regression Ready Dataset**

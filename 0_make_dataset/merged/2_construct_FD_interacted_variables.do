@@ -1,7 +1,4 @@
 /*
-Creator: Maya Norman
-Date last modified: 12/13/19
-Last modified by: Maya Norman
 
 Purpose: Transform cleaned data to be regression ready
 - construct decade variable for the last decade robustness check

@@ -1,8 +1,6 @@
 
 /*
-Creator: Maya Norman
-Date last modified: 12/19/19 
-Purpose: Estimate and Plot stacked global energy-temperature response
+Purpose: Estimate and Plot stacked income decile energy-temperature response
 */
 
 clear all

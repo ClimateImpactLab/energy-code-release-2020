@@ -1,9 +1,7 @@
 /*
-Creator: Yuqi Song
-Date last modified: 12/19/19 
-Last modified by: Maya Norman
 
-Purpose: Plot a product overlay of the income decile x temperature energy response (Figure 1.A in the paper)
+Purpose: Plot a product overlay of the income decile x temperature energy temperature response 
+(Figure 1.A in the paper)
 
 */
 
@@ -122,13 +120,13 @@ graph combine `graphic', imargin(zero) ycomm rows(1) xsize(20) ysize(3) ///
 title("Poly 2 Income Decile Energy Temperature Response (`model')", size(small)) ///
 subtitle("`colorGuide'", size(small)) ///
 plotregion(color(white)) graphregion(color(white)) name(comb, replace)
-graph export "$root/figures/fig1a_product_overlay_income_decile.pdf", replace
+graph export "$root/figures/fig1a_product_overlay_income_decile_`model'.pdf", replace
 
 // plot and save combined plot with no SE
 graph combine `graphic_noSE', imargin(zero) ycomm rows(1) xsize(20) ysize(3) ///
 title("Poly 2 Income Decile Energy Temperature Response (`model')", size(small)) ///
 subtitle("`colorGuide'", size(small)) ///
 plotregion(color(white)) graphregion(color(white)) name(comb_noSE, replace)
-graph export "$root/figures/fig1a_product_overlay_income_decile_noSE.pdf", replace
+graph export "$root/figures/fig1a_product_overlay_income_decile_`model'_noSE.pdf", replace
 			
 graph drop _all	

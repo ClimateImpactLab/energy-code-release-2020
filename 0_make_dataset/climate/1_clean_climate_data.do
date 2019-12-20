@@ -1,9 +1,5 @@
 /*
 
-Creator: Yuqi Song
-Date last modified: 4/29/19
-Last modified by: Maya Norman -- create one loop which all shapefiles go through, complete replication modifications
-
 Purpose: Clean/Aggregate Climate data for Energy
 
 ********************************************************************************

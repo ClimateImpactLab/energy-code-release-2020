@@ -1,5 +1,4 @@
 /*
-Creator: Maya Norman
 Purpose: ITA_SMR_VAT Shape File Climate Data Clean Function
 Note: this file relies on programs in the helper_functions.do script
 

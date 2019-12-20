@@ -1,7 +1,4 @@
 /*
-Creator: Yuqi Song
-Date last modified: 1/15/19 
-Last modified by: Maya Norman
 
 Purpose: Plot stacked global energy-temperature response regression (Figure A.5 in the paper)
 
@@ -97,7 +94,7 @@ title("Global Energy-temperature Response" , size(vsmall)) ///
 subtitle("`colorGuide' " , size(vsmall)) ///
 ytitle("", size(small)) xtitle("", size(vsmall)) ///
 plotregion(color(white)) graphregion(color(white))
-graph export "$root/figures/figA5_product_overlay_global.pdf", replace
+graph export "$root/figures/figA5_product_overlay_`model'_global.pdf", replace
 
 
 //plot with no SE
@@ -108,6 +105,6 @@ title("Global Energy-temperature Response" , size(vsmall)) ///
 subtitle("`colorGuide'" , size(vsmall)) ///
 ytitle("", size(small)) xtitle("", size(small)) ///
 plotregion(color(white)) graphregion(color(white))
-graph export "$root/figures/figA5_product_overlay_global_noSE.pdf", replace
+graph export "$root/figures/figA5_product_overlay_`model'_global_noSE.pdf", replace
 
 graph drop _all	

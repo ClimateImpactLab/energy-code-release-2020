@@ -1,7 +1,4 @@
 /*
-Creator: Yuqi Song
-Date last modified: 2/13/19 
-Last modified by: Maya Norman
 
 Purpose: Apply Coded Issues
 

@@ -1,9 +1,5 @@
 
 /*
-Creator: Yuqi Song
-Date last modified: 5/6/19 
-Last modified by: Maya Norman
-//turn into cleaner script
 
 Purpose: Clean Load Data
 

@@ -1,5 +1,4 @@
 /*
-Creator: Maya Norman
 Purpose: Helper Functions To Simplify Climate Data Cleaning Loop
 
 Included Functions:

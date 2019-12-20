@@ -1,7 +1,4 @@
 /*
-Creator: Yuqi Song
-Date last modified: 2/13/19 
-Last modified by: Maya Norman
 
 Purpose: Clean Load Data for Analysis For the break 2 spec
 
@@ -41,7 +38,8 @@ foreach product in `productlist' {
 
 	qui generate double `product'COMPILE= `product'TOTOTHER + `product'TOTIND
 	if (inlist("`product'", "other_energy", "electricity")) {
-		replace `product'COMPILE= 0 if ((`product'TOTOTHER == 0 | `product'TOTOTHER == .) | (`product'TOTIND == 0 | `product'TOTIND == .)) 
+		// if other_energy or electricity is zero or missing for either TOTIND or TOTOTHER we deam the observation untrustworthy and drop it downstream of this code
+		replace `product'COMPILE = 0 if ((`product'TOTOTHER == 0 | `product'TOTOTHER == .) | (`product'TOTIND == 0 | `product'TOTIND == .))  
 	}
 	qui gen double `product'COMPILE_pc = `product'COMPILE / pop
 	qui gen double `product'COMPILE_log_pc = log(`product'COMPILE_pc)
@@ -65,6 +63,5 @@ sort country year flow product
 rename log_pc load_log_pc
 
 keep if flow == "COMPILE"
-
-
+keep if inlist(product, "other_energy", "electricity")
 

@@ -1,10 +1,6 @@
 /*
 
-Creator: Yuqi Song
-Date last modified: 1/15/19 
-Last modified by: Maya Norman
-
-Purpose: Run stacked income decile regression (generate sters)
+Purpose: Estimate stacked income decile regression (generate sters)
 
 */
 

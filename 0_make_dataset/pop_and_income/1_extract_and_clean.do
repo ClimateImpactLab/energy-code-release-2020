@@ -1,7 +1,4 @@
 /*
-Creator: Yuqi Song
-Date last modified: 5/6/19 
-Last modified by: Maya Norman
 
 Purpose: Clean Pop and Income Data
 
@@ -22,7 +19,6 @@ Purpose: Clean Pop and Income Data
 //Note: we convert to 2005 GDP PPP USD using WB values https://data.worldbank.org/indicator/NY.GDP.MKTP.PP.CD, using the real growth rate of IEA measure of GDP
 //Note: for SSD and TWN the WB data does not exist, so we scale GDPPPP from IEA (their scaling with 2010 PPP) to 2005 at https://data.worldbank.org/indicator/FP.CPI.TOTL
 //Note: for former USSR and Yugoslavia we have no 2005 GDP (WB or IEA), so we sum the values for all breakdown countries to form their 2005 measures. 
-//Source of income adjustment handling for reference: Mike
 //Note: GRL GDP is not in the dataset due to no WB data for GDP PPP 
 
 //This part of the code is to be run under Sacagawea, where raw datafile saved

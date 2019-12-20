@@ -21,7 +21,6 @@ global OUT "$root/figures"
 
 ** TESTING EXISTENCE OF UNIT ROOTS **
 
-cap mkdir $OUT/A4_Unit_Root_Tests
 global data_name "GMFD_TINV_clim_regsort.dta"
 
 * Loop over the different products, and the different types of tests
@@ -164,6 +163,6 @@ foreach prod in "other_energy" "electricity" {
 		subtitle("`sub_tit' Unit Root Test P-value Histograms") ///
 		graphregion(color(white)) plotregion(color(white))
 	* Save the graph 
-	graph export "$OUT/A4_Unit_Root_Tests/p_val_hists_`prod'.pdf", replace
+	graph export "$OUT/figA4_Unit_Root_Tests_p_val_hists_`prod'.pdf", replace
 }
 graph drop _all	

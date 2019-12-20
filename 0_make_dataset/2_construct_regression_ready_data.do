@@ -1,9 +1,5 @@
 /*
 
-Creator: Yuqi Song
-Date last modified: 5/6/19 
-Last modified by: Maya Norman
-
 Purpose: Master Do File for Analysis Dataset Construction
 (Takes dataset from cleaned from IEA_merged_long*.dta to GMFD_*_regsort.dta)
 

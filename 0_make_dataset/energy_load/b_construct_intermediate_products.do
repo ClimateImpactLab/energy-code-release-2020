@@ -1,5 +1,4 @@
 /*
-Creator: Maya Norman
 Purpose: Condense Energy Other Energy Products using raw IEA products into products
 These intermediary products will later be condensed into fuel variable other_energy
 
