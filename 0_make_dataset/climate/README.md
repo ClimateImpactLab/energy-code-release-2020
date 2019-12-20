@@ -20,6 +20,35 @@ The code and shapefiles in this directory demonstrate how we construct our clima
 `1_clean_climate_data.do` - the master program
 * contribution: assemble a country x year panel dataset with temporally and spatially aggregated climate data that corresponds to definitions of space and time in each energy load observation.
 
+## Definitions of the Climate Variables we use in our analysis: 
+
+**NOT COMPELETE - MAYA  **
+
+Here is a short description of the climate variables that this process outputs, and are later merged into our data for running regressions:
+
+Please note: GMFD refers to the Global Meteorological Forcing Dataset, which is the source for our climate variables. 
+More details on these data can be found in appendix section A.1.1
+
+* temp*_GMFD
+    * These variables are polynomials of temperature. For example, temp2_GMFD refers to 
+    the second order polynomial of pixel level daily average temperature (averaged to the year by country level).
+    These variables are referred to in the paper as $`T^k_{jt}`$, where `k` is polynomial order, `j` is country, and `t` is year.
+* precip*_GMFD
+    * Similarly, these terms are polynomials of precipitation. They are reffered to in the paper as $`P^k_{jt}`$.
+* polyAbove*_GMFD
+    *  
+* polyBelow*_GMFD
+
+* cdd20_*_GMFD
+* hdd20_*_GMFD
+
+* cdd20_GMFD
+    * Cooling degree days, which are defined in Appendix section A.7, and are written in the paper with notation $`\bar{CDD}`$
+* hdd20_GMFD
+    * Heating degree days, which are defined in Appendix section A.7, and are written in the paper with notation $`\overline(HDD)`$
+
+
+
 ## How we account for Non-Standard Year and Geographic Boundary Definitions in Climate Data Construction
 To account for non-standard geographic boundary definitions, we use shapefiles that correpond to the geographic boundaries associated with the energy load data. To account for non-standard temporal definitions, we generate monthly climate data for affected regions in order to build years that correspond with the energy load data reporting period. Below, I outline the non-standard spatial and temporal definitions we account for in our analysis. Additionally, I describe which shape files and pieces of code account for these non-standard definitions.
 
