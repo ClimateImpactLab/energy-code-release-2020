@@ -40,6 +40,7 @@ Below we describe the climate variable transformations we perform at the grid ce
 * hdd20_GMFD
     * heating degree days 
 
+Note: the `*_other*` tag in climate data variable names denotes climate data that will be assigned to other fuel final energy consumption. Some encoded issues differ by product for a specific temporal or spatial definition, thus we need to differentiate climate data by product. The Moldova case outlined below is an example of where climate data differs by fuel.
 
 ## How we account for Non-Standard Year and Geographic Boundary Definitions in Climate Data Construction
 To account for non-standard geographic boundary definitions, we use shapefiles that correpond to the geographic boundaries associated with the energy load data. To account for non-standard temporal definitions, we generate monthly climate data for affected regions in order to build years that correspond with the energy load data reporting period. Below, I outline the non-standard spatial and temporal definitions we account for in our analysis. Additionally, I describe which shape files and pieces of code account for these non-standard definitions.
@@ -62,7 +63,6 @@ The shapefile specific programs below construct yearly climate data for specific
 
 * [programs/clean_WORLDpre.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/climate/programs/clean_WORLDpre.do)
     * ETH: Data are reported according to the Ethiopian financial year, which runs from 1 July to 30 June of the next year.
-   
 
 ### Non-Standard Geographic Boundary Definitions
 
