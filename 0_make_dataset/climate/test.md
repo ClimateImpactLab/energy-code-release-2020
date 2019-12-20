@@ -1,1 +1,1 @@
-$` \sum_{ d \in t} |T_d - 20| * I_{T_d > 20} `$ 
+$` \sum_{ i \in C} \sum_{ d \in t} |T_{d,i} - 20| * I_{T_{d,i} > 20} `$ 
