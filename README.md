@@ -1,6 +1,17 @@
 # The Social Cost of Global Energy Consumption Due to Climate Change
 
-The analysis in this paper proceeds in five steps. First, historical data on energy consumption and climate are cleaned and merged. Second, econometric analysis is conducted to establish the energy-temperature empirical relationship. Third, this relationship is used to project future impacts of climate change using an ensemble of climate models (Note: this step is exceptionally computationally intensive and will be added to this repo before publication, but sharable code that is helpful for an average user is a work in progress), fourth, these impacts are translated into empirical “damage functions” relating monetized damages to warming, and fifth, damage functions are used to compute an energy-only partial social cost of carbon. This master readme outlines the process for each step, and each analysis step has it’s own readme and set of scripts and subdirectories.
+The analysis in the paper proceeds in five steps. 
+
+1. Historical data on energy consumption and climate are cleaned and merged, along with other covariates needed our analysis. 
+2. Econometric analysis is conducted to establish the energy-temperature empirical relationship. 
+3. This relationship is used to project future impacts of climate change using an ensemble of climate models 
+    * Note: this step is exceptionally computationally intensive, and sharable code that is helpful for an average user for steps after step 2 are a work in progress.
+4. These impacts are translated into empirical “damage functions” relating monetized damages to warming 
+5. Damage functions are used to compute an energy-only partial social cost of carbon. 
+
+This master readme outlines the process for each step, and each analysis step has it’s own readme and set of scripts and subdirectories.
+
+**Note, the code in this repo performs the first two steps outlined above**
 
 ## Description of folders
 
@@ -10,7 +21,7 @@ The analysis in this paper proceeds in five steps. First, historical data on ene
 
 `data` - 
 
-`figures` -
+`figures` - 
 
 `sters` -
 
