@@ -16,7 +16,12 @@ The analysis in this paper proceeds in five steps. First, historical data on ene
 
 ## Step 1 - Historical Energy Consumption and Climate Dataset Construction
 
-Data construction is a multi-faceted process. We start with energy consumption data from the Internation Energy Agency's (IEA) World Energy Balances dataset, historical climate data from the Global Meterological Forcing Dataset (GMFD), and income and population data from IEA  
+Data construction is a multi-faceted process. We start with energy consumption data from the International Energy Agency's (IEA) World Energy Balances dataset, historical climate data from the Global Meterological Forcing Dataset (GMFD), and income and population data from IEA  
+
+
+
+___________________ everything below this is scraps to build off of ___________________________
+
 
 
 At the root dataset construction depends on extensive documentatoin Part A, we construct data on final consumption of electricity and other fuels, covering 146 countries annually over the period 1971 to 2010.  Part B, we construct data on historical climate to align with the geographic and temporal definitions used in the energy final consumption dataset. Part C, in our final merged dataset we also include population and income data. Part D, clean intermediate merged dataset based on the documented issues 
