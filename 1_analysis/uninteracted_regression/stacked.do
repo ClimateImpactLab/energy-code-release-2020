@@ -5,7 +5,6 @@ Purpose: Estimate stacked global energy-temperature response
 */
 
 ****** Set Model Specification Locals ******************************************
-
 local model "$model"
 
 ********************************************************************************
@@ -22,9 +21,6 @@ use "$root/data/GMFD_`model'_regsort.dta", clear
 bysort year product flow: egen year_product_flow_total_pop = total(pop)  
 gen pop_weight = pop / year_product_flow_total_pop
 					
-// Generate the relative population weights within a FE for variance weighting
-bysort region_i: egen sum_of_weights_in_FE = total(pop_weight)
-gen for_variance_weighting = pop_weight / sum_of_weights_in_FE
 
 ********************************************************************************
 * Step 3: Prepare Regressors and Run Regression
@@ -58,11 +54,19 @@ forval pg=1/2 {
 reghdfe FD_load_pc `temp_r' `precip_r' [pw=pop_weight], absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i) residuals(resid)
 estimates save "$root/sters/FD_global_`model'", replace
 					
-// Generate variance weights using Equation for weights in the FGLS note 
+
+
+// Generate FGLS weights using Equation for weights, given that we also have pop weights here
 
 //Generate count variable to identify singletons (ie for use in the replace line below)
 drop if resid == .
-    
+
+bysort region_i: gen count = _N
+
+// Generate the relative population weights within a FE for variance weighting
+bysort region_i: egen sum_of_weights_in_FE = total(pop_weight)
+gen for_variance_weighting = pop_weight / sum_of_weights_in_FE
+
 // Generate the weighted mean at the fixed effect level    
 gen weighted_residual = for_variance_weighting * resid
 bysort region_i: egen weighted_mean_resid_FE_level = mean(weighted_residual)
@@ -73,6 +77,9 @@ bysort region_i: egen weighted_residual_variance = total(square_term_weighted)
 
 // Calculate the FGLS weighs which are the pop weights divided by the variance weights in each FE found above 
 gen FGLS_weight = pop_weight / (weighted_residual_variance)
+
+// Rounding error in stata can mean we dont get exactly zero weights for these when (resid - weighted_mean_resid_FE_level) should be zero. Drop them
+drop if count == 1
 
 //run second stage FGLS regression
 reghdfe FD_load_pc `temp_r' `precip_r' [pw=FGLS_weight], absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i)
