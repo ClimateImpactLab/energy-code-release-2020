@@ -43,7 +43,7 @@ The shapefile specific programs below construct yearly climate data for specific
     * ETH: Data are reported according to the Ethiopian financial year, which runs from 1 July to 30 June of the next year.
    
 
-### Non-Standard Geographic Boundary Defitions
+### Non-Standard Geographic Boundary Definitions
 
 The shapefile specific programs below clean yearly climate data for specific countries and time periods based on the following country definitions: 
 
