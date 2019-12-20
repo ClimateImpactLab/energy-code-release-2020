@@ -22,37 +22,23 @@ The code and shapefiles in this directory demonstrate how we construct our clima
 
 ## Definitions of the Climate Variables we use in our analysis: 
 
-Below we describe the climate variable transformations we perform at the grid cell level before calculating a pop weighted average across space and summing across days.
+Below we describe the climate variable transformations we perform at the grid cell level and each transformations variable name in the country x year climate dataset. 
 
-* temp*_GMFD 
-    * These variables are polynomials of the daily average temperature. For example, temp2_GMFD refers to 
-    the second order polynomial of pixel level daily average temperature (summed to the year by country level).
+[This section needs to be filled out.. waiting for paper language to get updated so can swip it]
+
+* temp1_GMFD, temp2_GMFD, temp3_GMFD, and temp4_GMFD
+    * These variables are polynomials of the daily average temperature. For example, temp2_GMFD is a pop-weighted average 
+    of a second order polynomial of pixel level daily average temperature for a given country summed to the year.
     These variables are referred to in the paper as $` T^k_{jt} `$, where `k` is polynomial order, `j` is country, and `t` is year.
-* precip*_GMFD
+* precip1_GMFD, precip2_GMFD
     * Similarly, these terms are polynomials of precipitation. They are reffered to in the paper as $` P^k_{jt} `$.
 * polyAbove*_GMFD
     *  
 * polyBelow*_GMFD
 
 * cdd20_TINV_GMFD
-    * outlined in section A.7 of the appendix 
-To capture the role of climate-driven adaptation, the CDD and HDD measures are
-interacted with temperature and its square over the respective temperature ranges for
-which they hold adaptive signicance. Specically, we allow the CDD measure to modu-
-late the energy consumption response on days where the average temperature is at least
-20 C. Conversely, the HDD measure is allowed to modulate the energy consumption
-response on days where the average temperature is below 20 C. Figure A.6 provides
-graphical intuition for this split interaction on either side of 20 C. In order to model this
-type of interaction eect when energy consumption data are annual rather than daily, it
-is necessary to exploit information on the number of days in a year where the average
-temperature is  20 C and < 20 C. For this purpose, we construct the variables ITjd20
-and ITjd<20, which denote the share of country j's population experiencing an average
-temperature on day d that is  20 C and < 20 C, respectively.12
-* hdd20_*_GMFD
-
-* cdd20_GMFD
     * Cooling degree days, which are defined in Appendix section A.7, and are written in the paper with notation $`\bar{CDD}`$
-* hdd20_GMFD
+* hdd20_TINV_GMFD
     * Heating degree days, which are defined in Appendix section A.7, and are written in the paper with notation $`\overline(HDD)`$
 
 
