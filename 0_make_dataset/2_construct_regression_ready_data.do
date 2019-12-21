@@ -5,7 +5,7 @@ Purpose: Master Do File for Analysis Dataset Construction
 
 Step 1) Construct reporting regimes and drop data according to selected coded issues
 Step 2) Match product specific climate data with product
-Step 3) Prepare data for Income Group Construction and Construct Income Groups 
+Step 3) Identify income spline knot location by constructing two income groups for each product
 Step 4) Perform Final Cleaning Steps before first differenced interacted variable construction
 	* Classify countries within 1 of 13 UN regions
 	* Classify countries in income deciles and groups
@@ -68,7 +68,7 @@ replace hdd20_TINV_GMFD = hdd20_other_TINV_GMFD if inlist(product,"other_energy"
 
 
 ***********************************************************************************************************************
-* Step 3) Income Group Construction plus a couple necessary cleaning steps for proper construction
+* Step 3) Identify income spline knot location by constructing two income groups for each product
 ***********************************************************************************************************************
 
 //Part A) Prepare Dataset for Income group construction by ensuring only data included in regression remains in dataset

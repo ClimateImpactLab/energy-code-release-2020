@@ -8,7 +8,7 @@ Please note, the raw data used here is not publically available.
 
 # Folder structure
 
-`climate` - code and shapefiles for constructing, cleaning and assembling climate data
+`climate` - code and shapefiles for constructing, cleaning and assembling climate data 
 
 `coded_issues` - encoded issues and documentation used to construct reporting regimes, clean the energy load data, and construct the climate data
 
@@ -18,18 +18,21 @@ Please note, the raw data used here is not publically available.
 
 `merged` - code for cleaning the merged dataset
 
-# Dataset construction
+Because the raw data is currently unavailable code in `climate`, `energy_load`, and `pop_and_income` cannot be run and is only present for reference.
 
-Codes in this folder construct five datasets, that are used in later analysis:
-* An intermediary dataset including population, energy load, climate, and income data. 
+# Directory Master Scripts
+
+Codes in this folder accomplish the following tasks:
+* Construct an intermediary dataset including population, energy load, climate, and income data. 
     * `data/IEA_merged_long.dta`: 
     *  We clean IEA_merged_long.dta in two different ways to produce regression ready datasets for our main specification and robustness models;
-* Regression ready data:
+* Construct regression ready data:
     * `data/GMFD_TINV_clim_EX_regsort.dta`: used for estimating the excluding imputed data model
     * `data/GMFD_TINV_clim_regsort.dta`: used for estimating the main model
-* Information on each country-year's income and climate covariates, which is used as an input to plotting code
+* Save information on each country-year's income and climate covariates, which is used as an input to plotting code
     * `data/break_data_TINV_clim_EX.dta`: used for plotting output for the excluding imputed data model
     * `data/break_data_TINV_clim.dta`: used for plotting output for the main model
+* Testing for the existence of unit roots in our outcome variable, motivating the need to use first differenced variables in our empirical analysis
 
 ## Constructing Intermediate Dataset (IEA_merged_long.dta)
 
@@ -47,9 +50,9 @@ Codes in this folder construct five datasets, that are used in later analysis:
 
 [2_construct_regression_ready_data.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/2_construct_regression_ready_data.do) can produce both GMFD_TINV_clim_EX_regsort.dta and GMFD_TINV_clim_regsort.dta through the following steps:
 1. Construct reporting regimes and drop data according to encoded data issues
-2. Match product specific climate data with product -- climate is product specific due to the encoded data issues
-3. Prepare data for Income Group Construction and Construct Large Income Groups 
-    * this step is necessary to construct the income spline
+2. Match product specific climate data with product
+    * climate is product specific due to the encoded data issues. Please reference this [climate/README.md](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/climate/README.md) for more information on the topic.
+3. Find income spline knot location to model a nonlinear effect of income on energy temperature sensitivity
 4. Perform Final Cleaning Steps before first differenced interacted variable construction
 	* Classify countries within 1 of 13 UN regions -- these UN regions are used to construct one of the fixed effects used in the analysis
 	* Classify countries in income deciles and groups -- merge constructed income groups from (3) into main dataset
@@ -67,18 +70,18 @@ Codes in this folder construct five datasets, that are used in later analysis:
 
 As well as producing the regression ready datasets, [2_construct_regression_ready_data.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/2_construct_regression_ready_data.do) 
 can produce both break_data_TINV_clim.dta and break_data_TINV_clim_EX.dta . These are intermediate 
-datasets, that are outputted for use in plots later in the analysis. These datasests contain covariate information for each 
+datasets, that are outputted for 3x3 array plotting. These datasests contain covariate information for each 
 country-year, including:
 * Income: 
     * Decile of overall income distribution of our observations (`gpid`)
     * Tercile of overall income distribution of our observations (`tpid`)
     * Income groupings based on location of knot (`largegpid_*`), note, these vary by product. 
         * See the Paper Section A.7 for discussion of what these knots are.  
-    * Average values of the long run income covariate, within each climate tercile (`avgInc_tgpid`)
+    * Average values of the long run income covariate, within each CDD tercile (`avgInc_tgpid`)
     * Maximum values of the long run income covariate within each income group (`maxInc_largegpid_other_energy` and `maxInc_largegpid_electricity`)
 
 * Climate
-    * Tercile of the distribution of long run CDDs (`tgpid`)
+    * Tercile of the distribution of long run CDDs (`tpid`)
     * Average value of the long run HDD covariate, within each income tercile (`avgHDD_tpid`)
     * Average value of the long run CDD covariate, within each income tercile (`avgCDD_tpid`)
 
