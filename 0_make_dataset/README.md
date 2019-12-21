@@ -20,18 +20,19 @@ Please note, the raw data used here is not publically available.
 
 Because the raw data is currently unavailable code in `climate`, `energy_load`, and `pop_and_income` cannot be run and is only present for reference.
 
-# Dataset construction
+# Directory Master Scripts
 
-Codes in this folder construct five datasets, that are used in later analysis:
-* An intermediary dataset including population, energy load, climate, and income data. 
+Codes in this folder accomplish the following tasks:
+* Construct an intermediary dataset including population, energy load, climate, and income data. 
     * `data/IEA_merged_long.dta`: 
     *  We clean IEA_merged_long.dta in two different ways to produce regression ready datasets for our main specification and robustness models;
-* Regression ready data:
+* Construct regression ready data:
     * `data/GMFD_TINV_clim_EX_regsort.dta`: used for estimating the excluding imputed data model
     * `data/GMFD_TINV_clim_regsort.dta`: used for estimating the main model
-* Information on each country-year's income and climate covariates, which is used as an input to plotting code
+* Save information on each country-year's income and climate covariates, which is used as an input to plotting code
     * `data/break_data_TINV_clim_EX.dta`: used for plotting output for the excluding imputed data model
     * `data/break_data_TINV_clim.dta`: used for plotting output for the main model
+* Testing for the existence of unit roots in our outcome variable, motivating the need to use first differenced variables in our empirical analysis
 
 ## Constructing Intermediate Dataset (IEA_merged_long.dta)
 
