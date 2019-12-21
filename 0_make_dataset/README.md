@@ -8,7 +8,7 @@ Please note, the raw data used here is not publically available.
 
 # Folder structure
 
-`climate` - code and shapefiles for constructing, cleaning and assembling climate data
+`climate` - code and shapefiles for constructing, cleaning and assembling climate data 
 
 `coded_issues` - encoded issues and documentation used to construct reporting regimes, clean the energy load data, and construct the climate data
 
@@ -17,6 +17,8 @@ Please note, the raw data used here is not publically available.
 `pop_and_income` - code for cleaning population and income data
 
 `merged` - code for cleaning the merged dataset
+
+Because the raw data is currently unavailable code in `climate`, `energy_load`, and `pop_and_income` cannot be run and is only present for reference.
 
 # Dataset construction
 
@@ -67,18 +69,18 @@ Codes in this folder construct five datasets, that are used in later analysis:
 
 As well as producing the regression ready datasets, [2_construct_regression_ready_data.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/2_construct_regression_ready_data.do) 
 can produce both break_data_TINV_clim.dta and break_data_TINV_clim_EX.dta . These are intermediate 
-datasets, that are outputted for use in plots later in the analysis. These datasests contain covariate information for each 
+datasets, that are outputted for 3x3 array plotting. These datasests contain covariate information for each 
 country-year, including:
 * Income: 
     * Decile of overall income distribution of our observations (`gpid`)
     * Tercile of overall income distribution of our observations (`tpid`)
     * Income groupings based on location of knot (`largegpid_*`), note, these vary by product. 
         * See the Paper Section A.7 for discussion of what these knots are.  
-    * Average values of the long run income covariate, within each climate tercile (`avgInc_tgpid`)
+    * Average values of the long run income covariate, within each CDD tercile (`avgInc_tgpid`)
     * Maximum values of the long run income covariate within each income group (`maxInc_largegpid_other_energy` and `maxInc_largegpid_electricity`)
 
 * Climate
-    * Tercile of the distribution of long run CDDs (`tgpid`)
+    * Tercile of the distribution of long run CDDs (`tpid`)
     * Average value of the long run HDD covariate, within each income tercile (`avgHDD_tpid`)
     * Average value of the long run CDD covariate, within each income tercile (`avgCDD_tpid`)
 
