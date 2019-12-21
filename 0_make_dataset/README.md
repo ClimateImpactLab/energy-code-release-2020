@@ -52,8 +52,7 @@ Codes in this folder accomplish the following tasks:
 1. Construct reporting regimes and drop data according to encoded data issues
 2. Match product specific climate data with product
     * climate is product specific due to the encoded data issues. Please reference this [climate/README.md](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/climate/README.md) for more information on the topic.
-3. Prepare data for Income Group Construction and Construct Large Income Groups 
-    * this step is necessary to construct the income spline
+3. Find income spline knot location to model a nonlinear effect of income on energy temperature sensitivity
 4. Perform Final Cleaning Steps before first differenced interacted variable construction
 	* Classify countries within 1 of 13 UN regions -- these UN regions are used to construct one of the fixed effects used in the analysis
 	* Classify countries in income deciles and groups -- merge constructed income groups from (3) into main dataset
