@@ -9,7 +9,7 @@ The analysis in the paper proceeds in **five steps**.
 4. These impacts are translated into empirical “damage functions” relating monetized damages to warming 
 5. Damage functions are used to compute an energy-only partial social cost of carbon. 
 
-This master readme outlines the process for each step, and each analysis step has it’s own readme and set of scripts and subdirectories.
+This master readme outlines the process for each step, and each analysis step has it’s own readme and set of scripts in a subdirectory.
 
 *Note, the code currently in this repo performs the first two steps outlined above. We will update with more replication code in the future*
 
@@ -42,7 +42,7 @@ Part D, we clean and merge together data produced in each of the previous parts,
 * From this raw data, we construct a country-year-product level panel dataset (where product is either electricity or other_energy). 
 * Due to data quality concerns, we incorporate information on data consistency and quality from the IEAs documentation into this dataset. 
     * Details of this can be found in Appendix Section A.5, and in the [0_make_dataset/coded_issues](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/0_make_dataset/coded_issues) folder of this repo.
-    * This allows us to determine which data should be dropped, and to contruct a set of fixed effects, and FGLS weights to help deal with data quality concerns.
+    * This allows us to determine which data should be dropped, to contruct a set of fixed effects and FGLS weights to help deal with data quality concerns, and assemble climate data that reflects the geographic and temporal definitions used to report energy consumption data.
 
 #### Part 1.B - Historical Climate Data
 
@@ -64,21 +64,26 @@ the International Energy Agencys World Energy Balances dataset, which in turn so
 these data from the World Bank. 
 * Cleaning steps undertaken on these variables can be found in [0_make_dataset/pop_and_income](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/0_make_dataset/pop_and_income)
 
-
-#### Part 1.D - Population and income data
+#### Part 1.D - Merge energy final consumption, historical climate, population and income data
 
 * As the final part of our dataset construction, we merge all of the data together. 
 * Codes used in this step can be found in [0_make_dataset/merged](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/0_make_dataset/merged)
-* Motivated by [tests](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/3_unit_root_test_and_plot.do) 
-that showed that our outcome variable has a unit root, we also construct first differenced versions of our 
-variables for use in later econometric analysis. 
 
+#### Part 1.E - Clean merged data for econometric analysis 
+
+* Motivated by [tests](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/3_unit_root_test_and_plot.do) 
+that showed that our outcome variable has a unit root, we construct first differenced versions of our 
+variables for use in later econometric analysis. 
+* To nonlinearly model income heterogeneity in the energy-temperature response, we construct an income spline variable. We decide on knot location based on in sample income deciles.
+* Lastly to plot 3 x 3 arrays displaying the interacted model, we save a dataset with information on average income and climate in different terciles of the in sample data.
 
 ### Outputs of Step 1 
 
-* Step 1 produces datasets ready to run regressions on, and datasets used in later plotting analysis. 
-    * These can be found in [/data](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/data)
-
+* Step 1 produces datasets ready to run regressions on, and datasets used in later plotting analysis. These can be found in [/data](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/data). Specifically,
+    * Part 1.D produces `/data/IEA_Merged_long_GMFD.do` -- an intermediate dataset used to construct the final analysis dataset
+    * Part 1.E produces: 
+        * `/data/GMFD_*_regsort.data` -- the analysis dataset used in `Step 2`
+        * `/data/break_data_*.dta` -- a dataset used for plotting 3 x 3 arrays
 
 ## Step 2 - Econometric Analysis to Establish Energy-Temperature Empirical Relationship
 
@@ -89,15 +94,15 @@ We run three kinds of regressions in this section:
 1. Uninteracted global regressions
     * These regressions recover the global population weighted average response of energy consumption to temperature variation. 
     * Code for these regressions can be found in [1_analysis/uninteracted_regression](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/1_analysis/uninteracted_regression)
-    * This code outputs Appendix Figure A5. 
+    * This code outputs Appendix Figure A5 with and without standard errors. 
 2. Decile regressions
     * These regressions are run in order to understand how the sensitivity of energy consumption to climate change modulates with incomoe levels. 
     * Code for these regressions can be found in [1_analysis/decile_regression](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/1_analysis/decile_regression)
-    * This code outputs Figure 1A of the paper. 
+    * This code outputs Figure 1A with and without standard errors. 
 3. Interacted regressions
     * In these regressions, we model heterogeneity in the energy-climate relationship, by interacting our models with income and climate covariates.
     * Code for these regressions can be found in [1_analysis/interacted_regression](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/1_analysis/interacted_regression)
-    * This code outputs Figures 1B in the paper, and Appendix Figures A13, A14, A15a and A15b.
+    * This code outputs Figures 1B in the paper, and Appendix Figures A13, A14, A15a and A15b. All figures are output with and without standard errors.
 
 ## Step 3 - Project Future Impacts of Climate Change 
 
@@ -117,102 +122,3 @@ Code for this step is not currently in this repo.
 In the final step of the analysis, we use the empirically derived damage function to calculate an energy-only partial social cost of carbon.
 
 Code for this step is not currently in this repo.
-
-
-
-
-
-
-
-
-
-
-
-
---------------------------- to delete at the bottom--------------------------- 
-
-
-
-
-
-
-
-
-
-
-
---------------------------- to delete at the bottom--------------------------- 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-Electricity con-
-sumption is taken from the ELECTR variable code, and consumption of other fuels is ob-
-tained by aggregating over the following variable codes: COAL (Coal and coal products);
-PEAT (Peat and peat products); OILSHALE (Oil shale and oil sands); TOTPRODS
-(Oil products); NATGAS (Natural gas); SOLWIND (Solar/wind/other); GEOTHERM
-(Geothermal); COMRENEW (Biofuels and waste); HEAT (Heat), and HEATNS (Heat
-production from non-specified combustible fuels). For both electricity and other fuels, we
-aggregate over the following sectoral codes: TOTIND, which encompasses consumption in
-the industrial sector, and TOTOTHER, which encompasses consumption in the commer-
-cial/public services, residential, agricultural, forestry, fishing, and non-specified sectors.
-The non-specified sector includes consumption in the other sectors within TOTOTHER
-if disaggregated fgures are not provided for those sectors.
-	The IEA's data on energy consumption are extensively documented with regard to
-data inconsistencies and quality issues across countries and years,30 including lack of
-data, partial revisions to data, imputed data, and changes in reporting practices over
-time. We employ a series of data preparation and econometric techniques to address such
-record-keeping idiosyncrasies (Appendix, A.5).
-	Historical Climata Data on daily average temperature and precip-
-itation are obtained from the Global Meteorological Forcing Dataset (GMFD) dataset.31
-This data product relies on a climate model in combination with observational data to
-create globally-comprehensive data on daily mean, maximum, and minimum temperature
-and precipitation at 0.25 x 0.25 degree gridded resolution. We link climate and energy con-
-sumption data by aggregating gridded daily temperature data to the country-year level
-using a procedure detailed in Appendix A.1.4 that preserves nonlinearity in the energy
-
-
-
-consumption-temperature relationship.
-
-
-
-1. Run [0_construct_dataset_from_raw_inputs.do]() to construct a country x year x fuel panel dataset with climate, energy load, population and income data. SEE pg. 14
-2. Run [1_construct_regression_ready_data.do]() to construct a dataset ready for regressions. This script completes the following tasks:
-	1. Construct fixed effect regimes and drop data based off coded issues (fill out based on paper) SEE pg. 36 of paper
-	2. Pair climate data
-	3. Income group construction SEE pg. 10 for deciles, pg. 40 for large income groups
-	4. Final cleaning steps SEE pg. 16 for UN region FEs
-	5. Construct FD variables SEE pg. 36
-
-
-## Instructions for Running Regressions
-1. Run
-    1. FGLS 
-    2. Global regression SEE pg. 16, 38
-	3. Income decile regression SEE pg. 16
-	4. Income/Climate interacted regression SEE pg. 17, 41
-	5. Robustness- Excl. imputed data SEE pg. 60
-	6. Robustness- Last decade SEE pg. 61
-	7. Tech trends SEE pg. 63-64
-
-## Instructions for producing analysis related figures
-1. Run
-    1. Global regression SEE Figure A.5 on pg. 39
-	2. Income decile regression SEE Figure 1A on pg. 10
-	3. Income/Climate interacted regression SEE Figure 1B on pg. 10; description on pg. 5, 42
-	4. Robustness- Excl. imputed data SEE Figure A.13 on pg. 61
-	5. Robustness- Last decade SEE Figure A.14 on pg. 64
-	6. Tech trends SEE Figure A.15 on pg. 65
