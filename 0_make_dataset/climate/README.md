@@ -1,6 +1,6 @@
 # Climate Data Construction
 
-As described in Appendix A.1.4, we link gridded daily historical climate data to country-year-level energy consumption data by aggregating daily grid cell information to the country year level. Nonlinear transformations of temperature and rainfall are computed at the grid cell level before averaging values across space using population weights and finally summing over days within a year. This procedure recovers grid-by-day-level nonlinearities in the energy-temperature (and energy-precipitation) relationship, because energy consumption is additive across time and space.
+As described in Appendix A.1.4, we link GMFD gridded daily historical climate data to country-year-level energy consumption data by aggregating daily grid cell information to the country year level. Nonlinear transformations of temperature and rainfall are computed at the grid cell level before averaging values across space using population weights and finally summing over days within a year. This procedure recovers grid-by-day-level nonlinearities in the energy-temperature (and energy-precipitation) relationship, because energy consumption is additive across time and space.
 
 The IEA dataset documentation describes that some energy load observations are reported on non-gregorian calendars and for non-standard geographic regions. We account for these two types of energy load data features by constructing country x year climate data variables which align with the geographic and temporal definitions baked into each energy load observation. For example:
 * We construct yearly Australian climate data with the following definition of year: July t to June t + 1.  
@@ -9,7 +9,7 @@ Please reference this [readme](https://gitlab.com/ClimateImpactLab/Impacts/energ
 
 The code and shapefiles in this directory demonstrate how we construct our climated data, accounting for non-standard definitions of country boundaries and years when aggregating and compiling aggregated daily gridded climate data.
 
-## Directory File Structure
+## Directory Contents
 
 `programs` - stata programs for cleaning shapefile specific aggregated climate data
 * contribution: complete shapefile specific aggregated climate data cleaning, accounting for non-standard year definitions in particular regions for specific periods
@@ -19,6 +19,28 @@ The code and shapefiles in this directory demonstrate how we construct our clima
 
 `1_clean_climate_data.do` - the master program
 * contribution: assemble a country x year panel dataset with temporally and spatially aggregated climate data that corresponds to definitions of space and time in each energy load observation.
+
+## Definitions of the Climate Variables we use in our analysis: 
+
+Below we describe the climate variable transformations we perform at the grid cell level and each transformations variable name in the country x year climate dataset. 
+
+[This section needs to be filled out.. waiting for paper language to get updated so can swipe it]
+
+* temp1_GMFD, temp2_GMFD, temp3_GMFD, and temp4_GMFD
+    * These variables are polynomials of the daily average temperature. For example, temp2_GMFD is a pop-weighted average 
+    of a second order polynomial of pixel level daily average temperature for a given country summed to the year.
+    These variables are referred to in the paper as $` T^k_{jt} `$, where `k` is polynomial order, `j` is country, and `t` is year.
+* precip1_GMFD, precip2_GMFD
+    * Similarly, these terms are polynomials of precipitation. They are reffered to in the paper as $` P^k_{jt} `$.
+* polyAbove1_GMFD, polyAbove2_GMFD
+    *  
+* polyBelow1_GMFD, polyBelow2_GMFD
+* cdd20_GMFD
+    * cooling degree days   
+* hdd20_GMFD
+    * heating degree days 
+
+Note: the `*_other*` tag in climate data variable names denotes climate data that will be assigned to other fuel final energy consumption. Some encoded issues differ by product for a specific temporal or spatial definition, thus we need to differentiate climate data by product. The Moldova case outlined below is an example of where climate data differs by fuel.
 
 ## How we account for Non-Standard Year and Geographic Boundary Definitions in Climate Data Construction
 To account for non-standard geographic boundary definitions, we use shapefiles that correpond to the geographic boundaries associated with the energy load data. To account for non-standard temporal definitions, we generate monthly climate data for affected regions in order to build years that correspond with the energy load data reporting period. Below, I outline the non-standard spatial and temporal definitions we account for in our analysis. Additionally, I describe which shape files and pieces of code account for these non-standard definitions.
@@ -41,9 +63,8 @@ The shapefile specific programs below construct yearly climate data for specific
 
 * [programs/clean_WORLDpre.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/climate/programs/clean_WORLDpre.do)
     * ETH: Data are reported according to the Ethiopian financial year, which runs from 1 July to 30 June of the next year.
-   
 
-### Non-Standard Geographic Boundary Defitions
+### Non-Standard Geographic Boundary Definitions
 
 The shapefile specific programs below clean yearly climate data for specific countries and time periods based on the following country definitions: 
 

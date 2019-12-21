@@ -26,8 +26,8 @@ replace country="GRL" if country=="GREENLAND"
 replace country="MLI" if country=="MALI"
 replace country="MUS" if country=="MAURITIUS"
 
-//Converting to kWh because plotting scale is more familiar
-local factor=277777.778
+//Converting to GJ because plotting scale is more familiar
+local factor=1000
 foreach var of varlist coal* oil* natural_gas* electricity* heat_other* biofuels* solar* {
 	qui replace `var'=`var'*`factor'
 }

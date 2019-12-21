@@ -32,7 +32,7 @@ global root "C:/Users/TomBearpark/Documents/energy-code-release"
 
 // What model do you want? TINV_clim or TINV_clim_EX
 global model "TINV_clim"
-local model $model
+local model $model	
 
 *************************************************************************
 * Step 1) Construct FE regimes and drop data according to specification
