@@ -94,15 +94,30 @@ We run three kinds of regressions in this section:
 1. Uninteracted global regressions
     * These regressions recover the global population weighted average response of energy consumption to temperature variation. 
     * Code for these regressions can be found in [1_analysis/uninteracted_regression](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/1_analysis/uninteracted_regression)
-    * This code outputs Appendix Figure A5 with and without standard errors. 
+    * This code outputs: 
+        * ster files for both the first stage and the FGLS regression: `FD_global_TINV_clim.ster` and `FD_FGLS_global_TINV_clim.ster`, respectively  
+        * Appendix Figure A5 with and without standard errors (`figA5_product_overlay_TINV_clim_global*.pdf`)
 2. Decile regressions
     * These regressions are run in order to understand how the sensitivity of energy consumption to climate change modulates with incomoe levels. 
     * Code for these regressions can be found in [1_analysis/decile_regression](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/1_analysis/decile_regression)
-    * This code outputs Figure 1A with and without standard errors. 
+    * This code outputs:
+        * ster files for both the first stage and the FGLS regression: `FD_FGLS_income_decile_TINV_clim.ster` and `FD_FGLS_income_decile_TINV_clim.ster`, respectively
+        * Figure 1A with and without standard errors (`fig1a_product_overlay_income_decile_TINV_clim*.pdf`) 
 3. Interacted regressions
     * In these regressions, we model heterogeneity in the energy-climate relationship, by interacting our models with income and climate covariates.
     * Code for these regressions can be found in [1_analysis/interacted_regression](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/1_analysis/interacted_regression)
-    * This code outputs Figures 1B in the paper, and Appendix Figures A13, A14, A15a and A15b. All figures are output with and without standard errors.
+    * This code outputs: 
+        * Ster files for the first stage and the FGLS regression for the main (`TINV_clim`), the excluding imputed data (`TINV_clim_EX`), tech trend (`TINV_clim_lininter`), and most recent decade (`TINV_clim_decinter`) models:
+            * `TINV_clim`: `FD_inter_TINV_clim.ster` and `FD_FGLS_inter_TINV_clim.ster`
+            * `TINV_clim_EX`: `FD_inter_TINV_clim_EX.ster` and `FD_FGLS_inter_TINV_clim_EX.ster`
+            * `TINV_clim_lininter`: `FD_inter_TINV_clim_lininter.ster` and `FD_FGLS_inter_TINV_clim_lininter.ster`
+            * `TINV_clim_decinter`: `FD_inter_TINV_clim_decinter.ster` and `FD_FGLS_inter_TINV_clim_decinter.ster`
+        * The following paper and appendix figures with and without standard errors:
+            * Figures 1B (`fig1b_*_interacted_TINV_clim*.pdf`)
+            * Appendix Figure A13 (`figA13_*_interacted_main_model_TINV_clim_overlay_model_EX*.pdf`)
+            * Appendix Figure A14 (`figA14_*_interacted_main_model_TINV_clim_overlay_model_decinter*.pdf`)
+            * Appendix Figure A15a (`figA15a_ME_time_TINV_clim_lininter_*.pdf`)
+            * Appendix Figure A15b (`figA15b_*_interacted_main_model_TINV_clim_overlay_model_lininter*.pdf`)
 
 ## Step 3 - Project Future Impacts of Climate Change 
 
