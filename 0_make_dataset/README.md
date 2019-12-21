@@ -49,7 +49,8 @@ Codes in this folder construct five datasets, that are used in later analysis:
 
 [2_construct_regression_ready_data.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/2_construct_regression_ready_data.do) can produce both GMFD_TINV_clim_EX_regsort.dta and GMFD_TINV_clim_regsort.dta through the following steps:
 1. Construct reporting regimes and drop data according to encoded data issues
-2. Match product specific climate data with product -- climate is product specific due to the encoded data issues
+2. Match product specific climate data with product
+    * climate is product specific due to the encoded data issues. Please reference this [climate/README.md](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/climate/README.md) for more information on the topic.
 3. Prepare data for Income Group Construction and Construct Large Income Groups 
     * this step is necessary to construct the income spline
 4. Perform Final Cleaning Steps before first differenced interacted variable construction
