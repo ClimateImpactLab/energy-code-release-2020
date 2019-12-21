@@ -107,17 +107,17 @@ We run three kinds of regressions in this section:
     * In these regressions, we model heterogeneity in the energy-climate relationship, by interacting our models with income and climate covariates.
     * Code for these regressions can be found in [1_analysis/interacted_regression](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/1_analysis/interacted_regression)
     * This code outputs: 
-        * Ster files for the first stage and the FGLS regression for the main (`TINV_clim`), the excluding imputed data (`TINV_clim_EX`), tech trend (`TINV_clim_lininter`), and most recent decade (`TINV_clim_decinter`) models:
+        * Ster files for the first stage and the FGLS regression for the main (***TINV_clim***), the excluding imputed data (***TINV_clim_EX***), tech trend (***TINV_clim_lininter***), and most recent decade (***TINV_clim_decinter***) models:
             * ***TINV_clim***: `FD_inter_TINV_clim.ster` and `FD_FGLS_inter_TINV_clim.ster`
             * ***TINV_clim_EX***: `FD_inter_TINV_clim_EX.ster` and `FD_FGLS_inter_TINV_clim_EX.ster`
             * ***TINV_clim_lininter***: `FD_inter_TINV_clim_lininter.ster` and `FD_FGLS_inter_TINV_clim_lininter.ster`
             * ***TINV_clim_decinter***: `FD_inter_TINV_clim_decinter.ster` and `FD_FGLS_inter_TINV_clim_decinter.ster`
         * The following paper and appendix figures with and without standard errors:
-            * Figures 1B (`fig1b_*_interacted_TINV_clim*.pdf`)
-            * Appendix Figure A13 (`figA13_*_interacted_main_model_TINV_clim_overlay_model_EX*.pdf`)
-            * Appendix Figure A14 (`figA14_*_interacted_main_model_TINV_clim_overlay_model_decinter*.pdf`)
-            * Appendix Figure A15a (`figA15a_ME_time_TINV_clim_lininter_*.pdf`)
-            * Appendix Figure A15b (`figA15b_*_interacted_main_model_TINV_clim_overlay_model_lininter*.pdf`)
+            * Figures 1B: `fig1b_*_interacted_TINV_clim*.pdf`
+            * Appendix Figure A13: `figA13_*_interacted_main_model_TINV_clim_overlay_model_EX*.pdf`
+            * Appendix Figure A14: `figA14_*_interacted_main_model_TINV_clim_overlay_model_decinter*.pdf`
+            * Appendix Figure A15a: `figA15a_ME_time_TINV_clim_lininter_*.pdf`
+            * Appendix Figure A15b: `figA15b_*_interacted_main_model_TINV_clim_overlay_model_lininter*.pdf`
 
 ## Step 3 - Project Future Impacts of Climate Change 
 
