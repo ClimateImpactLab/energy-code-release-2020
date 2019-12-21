@@ -4,10 +4,11 @@ Purpose: Helper Functions To Simplify Climate Data Cleaning Loop
 Included Functions:
 1) process monthly: transforms monthly aggregated climate data from wide to long
 2) process yearly: transforms yearly aggregated climate data from wide to long
-3) calculates long run climate measures (TINV and MA15)
-4) Generate climate variable specific to other energy 
-	- in practice this just means generating all the variables with an "_other"
-	tag
+3) collapse_monthly_to_yearly: transform monthly data into yearly data -- 
+	- this program gets called after fiscal year fixing specific to a region occured in a clean*.do program
+4) calculates long run time invariant climate measures
+5) Generate climate variable specific to other energy 
+	- in practice this just means generating all the variables with an "_other" tag
 	- in a couple instances this variable with the other tag is treated differently
 	(which is why it exists at all)
 
@@ -49,7 +50,6 @@ end
 program define longrun_climate_measures
 
 	foreach var of varlist tmax* {
-		qui rangestat (mean) `var'_MA15 = `var', interval(year -15 -1) by(country)
 		qui bysort country: egen double `var'_TINV = mean(`var') if year >= 1971 & year <= 2010
 	}
 
