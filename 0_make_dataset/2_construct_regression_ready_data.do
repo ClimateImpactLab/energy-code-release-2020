@@ -23,8 +23,8 @@ pause off
 
 // path to energy-code-release repo 
 
-* global root "/Users/`c(username)'/Documents/repos/energy-code-release"
-global root "C:/Users/TomBearpark/Documents/energy-code-release"
+global root "/Users/`c(username)'/Documents/repos/energy-code-release"
+
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
