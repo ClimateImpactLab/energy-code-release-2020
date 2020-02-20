@@ -3,7 +3,10 @@
 In order to run codes, please change the macro `$root` at the top of the codes to the location of this repo on your computer. 
 
 Please note, the raw data used here is not publically available. 
-* Therefore, only [2_construct_regression_ready_data.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/2_construct_regression_ready_data.do) and [3_unit_root_test_and_plot.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/3_unit_root_test_and_plot.do) in this folder that use intermediate data as an input can be run by a user. 
+* Therefore, only [2_construct_regression_ready_data.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/2_construct_regression_ready_data.do), 
+[3_unit_root_test_and_plot.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/3_unit_root_test_and_plot.do), and
+[4_plot_ITA_other_energy_regimes_timeseries.R](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/4_plot_ITA_other_energy_regimes_timeseries.R)
+in this folder (the codes that use intermediate data as an input) can be run by a user outside of the Climate Impact Lab. 
 * The intermediate dataset, `IEA_merged_long.dta`, is outputed by  [1_construct_dataset_from_raw_inputs.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/1_construct_dataset_from_raw_inputs.do), and cannot be run.
 
 # Folder structure
@@ -97,11 +100,11 @@ country-year, including:
 ## Testing for the existence of unit roots in our outcome variable
 Through this data testing we motivate the first differencing completed in `Step 5` of **Constructing Regression Ready Dataset**
 
-`3_unit_root_test_and_plot.do` takes the regression ready dataset created in [2_construct_regression_ready_data.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/2_construct_regression_ready_data.do), and tests for the existence of unit roots in the load_pc variable.
+[`3_unit_root_test_and_plot.do`](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/3_unit_root_test_and_plot.do) takes the regression ready dataset created in [2_construct_regression_ready_data.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/2_construct_regression_ready_data.do), and tests for the existence of unit roots in the load_pc variable.
 * The code implements the tests described in Section Appendix A.1 of the paper. 
 * The figures outputted are those in the paper as Appendix Figure A.1 
 
-`4_plot_ITA_other_energy_regimes_timeseries.R` takes the regression ready dataset created in [2_construct_regression_ready_data.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/2_construct_regression_ready_data.do), and plots a simple visualisation of the time series for ITALY Other fuels.
+[`4_plot_ITA_other_energy_regimes_timeseries.R`](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/4_plot_ITA_other_energy_regimes_timeseries.R) takes the regression ready dataset created in [2_construct_regression_ready_data.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/2_construct_regression_ready_data.do), and plots a simple visualisation of the time series for ITALY Other fuels.
 * The figure outputted is in the paper as Appendix Figure A.2 
 
 
@@ -109,4 +112,5 @@ Through this data testing we motivate the first differencing completed in `Step 
 * `energy-code-release/data/GMFD_TINV_clim_regsort.dta`
 
 ### Code Outputs:
-* `energy-code-release/figures/A4_Unit_Root_Tests/p_val_hists_*.pdf`
+* `energy-code-release/figures/fig_Appendix-A1_ITA_other_fuels_time_series_regimes.pdf`
+* `energy-code-release/figures/fig_Appendix-A2_Unit_Root_Tests_p_val_hists_electricity.pdf`
