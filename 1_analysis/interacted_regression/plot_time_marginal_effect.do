@@ -1,6 +1,6 @@
 /*
 
-Purpose: Plot change in energy temperature response per year in Tech Trend Model
+Purpose: Plot change in energy temperature response per year in Temporal Trend Model
 
 */
 
@@ -47,7 +47,7 @@ summ maxInc_largegpid_`var' if largegpid_`var' == 1
 local ibar = `r(max)'
 restore
 
-* load tech trend ster file
+* load temporal trend ster file
 
 estimates use "$root/sters/FD_FGLS_inter_`model'_lininter.ster"
 
