@@ -54,7 +54,7 @@ Using the 5 dummy variables assigned in `Step 2` above we accomplish the followi
     * please reference this [readme](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/climate/README.md) for more information about how climate data gets constructed with these issues in mind
 2. drop untrustworthy observations
     * Using the `flag_drop` and `grey` indicator variables defined above, we drop observations. If an energy load observation corresponds to non-zero values of either indicator variable, we will drop that observation.
-3. create reporting regimes as described in section A.5.1
+3. create reporting regimes as described in Appendix Section A.1
     * we use all encoded issues that don't lead to data dropping to classify energy load observations into reporting regimes.
 
 
