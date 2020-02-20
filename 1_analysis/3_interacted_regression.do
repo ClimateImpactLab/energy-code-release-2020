@@ -1,7 +1,7 @@
 /*
 Purpose: 
 	1. Estimate and Plot stacked income x climate energy-temperature response for main spec and robustness models
-	2. Plot change in energy temp response per year for Tech Trend Model
+	2. Plot change in energy temp response per year for Temporal Trend Model
 */
 
 clear all
@@ -48,7 +48,7 @@ foreach product in "other_energy" "electricity" {
 
 ********************************************************************************
 * Step 3: Plot Marginal Effect of Time on Energy Temperature Response 
-* for Tech Trend Model
+* for Temporal Trend Model
 ********************************************************************************
 
 foreach product in "other_energy" "electricity" {
