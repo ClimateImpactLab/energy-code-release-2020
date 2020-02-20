@@ -2,7 +2,6 @@
 
 * Purpose: Testing for the existence of unit roots in energy load data
 	* Does this separately for electricity and other energy
-* Last modified: Tom Bearpark, 12/19/2019
 
 Uses cleaned dataset outputted by 2_construct_regression_ready_data.do
 Outputs two figures - one for each product
