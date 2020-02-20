@@ -76,7 +76,7 @@ country-year, including:
     * Decile of overall income distribution of our observations (`gpid`)
     * Tercile of overall income distribution of our observations (`tpid`)
     * Income groupings based on location of knot (`largegpid_*`), note, these vary by product. 
-        * See the Paper Section A.7 for discussion of what these knots are.  
+        * See the Paper Appendix Section C.3 for discussion of what these knots are.  
     * Average values of the long run income covariate, within each CDD tercile (`avgInc_tgpid`)
     * Maximum values of the long run income covariate within each income group (`maxInc_largegpid_other_energy` and `maxInc_largegpid_electricity`)
 
@@ -98,8 +98,12 @@ country-year, including:
 Through this data testing we motivate the first differencing completed in `Step 5` of **Constructing Regression Ready Dataset**
 
 `3_unit_root_test_and_plot.do` takes the regression ready dataset created in [2_construct_regression_ready_data.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/2_construct_regression_ready_data.do), and tests for the existence of unit roots in the load_pc variable.
-* The code implements the tests described in Section A.5.2 of the paper. 
-* The figures outputted are those in the paper as Figure A.4 
+* The code implements the tests described in Section Appendix A.1 of the paper. 
+* The figures outputted are those in the paper as Appendix Figure A.1 
+
+`4_plot_ITA_other_energy_regimes_timeseries.R` takes the regression ready dataset created in [2_construct_regression_ready_data.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/2_construct_regression_ready_data.do), and plots a simple visualisation of the time series for ITALY Other fuels.
+* The figure outputted is in the paper as Appendix Figure A.2 
+
 
 ### Code Inputs:
 * `energy-code-release/data/GMFD_TINV_clim_regsort.dta`
