@@ -1,10 +1,10 @@
 # Folder Structure
 
-`uninteracted_regression` - Code for estimating and plotting the global average energy-temperature response function. Section A.6 outlines this piece of analysis.
+`uninteracted_regression` - Code for estimating and plotting the global average energy-temperature response function. Appendix Section C.1 outlines this piece of analysis.
 
-`decile_regression` - Code for estimating and plotting the energy-temperature response relationship for each decile of in sample GDP per-capita. Equation 3 on page 16 outlines this piece of analysis.
+`decile_regression` - Code for estimating and plotting the energy-temperature response relationship for each decile of in sample GDP per-capita. Appendix Section C.2 outlines this piece of analysis.
 
-`interacted_regression` - Code for estimating and plotting energy-temperature response heterogeneity by income and long-run climate. Section A.7 outlines this piece of analysis.
+`interacted_regression` - Code for estimating and plotting energy-temperature response heterogeneity by income and long-run climate. Appendix Section C.3 outlines this piece of analysis.
 
 # Folder Contents
 
@@ -26,8 +26,7 @@ Note, the input datasets for codes in this analysis are generated in the [0_make
     		* `energy-code-release/sters/FD_global_TINV_clim.ster`
     		* `energy-code-release/sters/FD_FGLS_global_TINV_clim.ster`
 		* Figures
-	    	* `energy-code-release/figures/figA5_product_overlay_TINV_clim_global.pdf` (Figure A.5 in the paper)
-		    * `energy-code-release/figures/figA5_product_overlay_TINV_clim_global_noSE.pdf`
+	    	* `energy-code-release/figures/fig_Appendix-C1_product_overlay_TINV_clim_global.pdf` (Appendix Figure C.1 in the paper)
 
 
 2. Run `2_decile_regression.do` to estimate and plot the energy-temperature response for each decile of in sample GDP per-capita
