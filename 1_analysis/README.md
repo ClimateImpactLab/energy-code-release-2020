@@ -60,7 +60,7 @@ Note, the input datasets for codes in this analysis are generated in the [0_make
     		* `energy-code-release/figures/fig_Appendix-I3A_ME_time_TINV_clim_lininter_*.pdf` (Appendix Figure I3A in the paper)
     		* `energy-code-release/figures/fig_Appendix-I3B_*_interacted_main_model_TINV_clim_overlay_model_lininter.pdf` (Appendix Figure I3B in the paper)
 
-# FGLS Procedure
+# Feasible Generalised Least Squares (FGLS) Procedure
 
 * In order to address differential data quality across reporting regimes, we employ inverse variance weighting in all regressions. 
 * Details of this can be found in Appendix Section C.1.
