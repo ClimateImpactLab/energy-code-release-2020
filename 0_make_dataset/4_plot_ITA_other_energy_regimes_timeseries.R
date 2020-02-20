@@ -1,10 +1,10 @@
 # Plot a country energy consumption time series with fixed effect regimes. 
 # To run, ensure you have installed haven and ggplot packages, and update the "root" string to your repo location
 
+# Clean environment, and load up the required packages
 rm(list = ls())
-
-library(haven)
-library(ggplot2)
+if (!require(tidyverse)) { install.packages("tidyverse"); library(tidyverse) } 
+if (!require(haven)) { install.packages("haven"); library(haven) } 
 
 root = "/Users/{YOUR_USERNAME}/Documents/repos/energy-code-release"
 
