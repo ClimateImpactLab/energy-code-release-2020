@@ -36,8 +36,7 @@ Note, the input datasets for codes in this analysis are generated in the [0_make
 		    * `energy-code-release/sters/FD_income_decile_TINV_clim.ster`
 		    * `energy-code-release/sters/FD_FGLS_income_decile_TINV_clim.ster`
     	* Figures
-            * `energy-code-release/figures/fig1a_product_overlay_income_decile_TINV_clim.pdf` (Figure 1.a in the paper)
-		    * `energy-code-release/figures/fig1a_product_overlay_income_decile_TINV_clim_noSE.pdf`
+            * `energy-code-release/figures/fig_1C_product_overlay_income_decile_TINV_clim.pdf` (Figure 1A in the paper)
 
 
 3. Run `3_interacted_regression.do` to estimate and plot the energy-temperature response heterogeneity by income and long-run climate for the main (`TINV_clim`), excluding imputed data (`EX`), most recent decade (`decinter`), and tech trends model (`lininter`)
@@ -52,24 +51,19 @@ Note, the input datasets for codes in this analysis are generated in the [0_make
     		* `energy-code-release/sters/FD_inter_TINV_clim_EX.ster`
     		* `energy-code-release/sters/FD_FGLS_inter_TINV_clim_EX.ster` (excluding imputed data model ster file)
     		* `energy-code-release/sters/FD_inter_TINV_clim_lininter.ster`
-    		* `energy-code-release/sters/FD_FGLS_inter_TINV_clim_lininter.ster` (tech trend model ster file)
+    		* `energy-code-release/sters/FD_FGLS_inter_TINV_clim_lininter.ster` (temporal trends model ster file)
     		* `energy-code-release/sters/FD_inter_TINV_clim_decinter.ster`
     		* `energy-code-release/sters/FD_FGLS_inter_TINV_clim_decinter.ster` (most recent decade ster file)
 		* Figures
-        	* `energy-code-release/figures/fig1b_*_interacted_TINV_clim.pdf` (Figure 1.b in the paper) 
-    		* `energy-code-release/figures/fig1b_*_interacted_TINV_clim_noSE.pdf`
-    		* `energy-code-release/figures/figA13_*_interacted_main_model_TINV_clim_overlay_model_EX.pdf` 
-    		* `energy-code-release/figures/figA13_*_interacted_main_model_TINV_clim_overlay_model_EX_noSE.pdf` (Figure A.13 in the paper)
-    		* `energy-code-release/figures/figA14_*_interacted_main_model_TINV_clim_overlay_model_decinter.pdf` 
-    		* `energy-code-release/figures/figA14_*_interacted_main_model_TINV_clim_overlay_model_decinter_noSE.pdf` (Figure A.14 in the paper)
-    		* `energy-code-release/figures/figA15a_ME_time_TINV_clim_lininter_*.pdf` (Figure A.15a) 
-    		* `energy-code-release/figures/figA15b_*_interacted_main_model_TINV_clim_overlay_model_lininter.pdf` 
-    		* `energy-code-release/figures/figA15b_*_interacted_main_model_TINV_clim_overlay_model_lininter_noSE.pdf` (Figure A.15b in the paper)
+        	* `energy-code-release/figures/fig_1C_*_interacted_TINV_clim.pdf` (Figure 1C in the paper) 
+    		* `energy-code-release/figures/fig_Appendix-I2_*_interacted_main_model_TINV_clim_overlay_model_EX.pdf` (Appendix Figure I2 in the paper)
+    		* `energy-code-release/figures/fig_Appendix-I3A_ME_time_TINV_clim_lininter_*.pdf` (Appendix Figure I3A in the paper)
+    		* `energy-code-release/figures/fig_Appendix-I3B_*_interacted_main_model_TINV_clim_overlay_model_lininter.pdf` (Appendix Figure I3B in the paper)
 
 # FGLS Procedure
 
 * In order to address differential data quality across reporting regimes, we employ inverse variance weighting in all regressions. 
-* Details of this can be found in Section A.5.3; "Inverse Variance Weighting".
+* Details of this can be found in Appendix Section C.1.
 * The overall approach is to first run a regression without FGLS, in order to save the residuals.
 * We then use these residuals to calculate the FGLS weights that are applied in second stage regressions.
 
@@ -83,7 +77,7 @@ $` \frac{1}{V_i} `$
 ### Pop-Weighted Regression - We implement this procedure in the `uninteracted` model
 
 * For pop-weighted regressions, we need to account for the fact that our residuals in the first stage regression have already had weights applied to them.
-* Therefore, we construct the FGLS weight for an observation $` j `$ within a regime $` i `$ as: $` w^{i}_{j} = w_{j} \frac{1}{\omega_i} `$
+* Therefore, we construct the FGLS weight for an observation $` j `$ within a regime $`i`$ as: $` w^{i}_{j} = w_{j} \frac{1}{\omega_i} `$
 * $` w_{j} `$ is the population weight assigned to observation $` j `$ in the first stage regression. 
 * $` \omega_i `$ is sample variance of the weighted first stage residuals, within regime $` i `$. 
 * This procedure applies to regressions in the `uninteracted_regression` folder in this directory. 
