@@ -18,7 +18,7 @@ df.plot = df %>% subset(product == "other_energy" & country == "ITA")
 
 ggplot() +
   geom_line(aes(x=year, y=load_pc, group=region_i, color= FEtag), data = df.plot, size=.3) +
-  ylab("Load pc (GJ)") + 
+  ylab("Total consumption per capita (GJ)") + 
   xlab("Year") +
   theme_bw() + theme(plot.title=element_text(size=7),
                      axis.title.y=element_text(size = 9, vjust=+0.2),
