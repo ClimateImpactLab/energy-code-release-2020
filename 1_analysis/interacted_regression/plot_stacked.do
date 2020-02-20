@@ -84,7 +84,6 @@ else {
 
 local colorGuide " Model Spec: `model_main' (`col_main') "
 local plot_title "`model_main'"
-local fig "fig1b"
 
 // create list of model types to loop over
 local type_list " _main "
@@ -99,17 +98,17 @@ if ( "`submodel_ov'" != "" ) {
 
 	local plot_title "main_model_`plot_title'_overlay_model_`submodel_ov'"
 
-	if "`submodel_ov'" == "decinter" {
-		local fig "figA14"
+	if "`submodel_ov'" == "lininter" {
+		local fig "fig_Appendix-I3B"
 	}
-	else if "`submodel_ov'" == "lininter" {
-		local fig "figA15b"
-	}
-	else if "`submodel_ov'" == "EX" {
-		local fig "figA13"
+	if "`submodel_ov'" == "EX" {
+		local fig "fig_Appendix-I2"
 	}
 
-}						
+}
+else{
+	local fig "fig_1C"
+}		
 
 ********************************************************************************
 * Step 3: Plot, Plot, Plot
@@ -207,44 +206,37 @@ forval lg=3(-1)1 {	//Income tercile
 			
 		}
 		
-		//plot with SE
-		tw `SE' , yline(0, lwidth(vthin)) xlabel(-5(10)35, labsize(vsmall)) ///
-		ylabel(, labsize(vsmall) nogrid) legend(off) ///
-		subtitle("", size(vsmall) color(dkgreen)) ///
-		ytitle("", size(vsmall)) xtitle("", size(small)) ///
-		plotregion(color(white)) graphregion(color(white)) nodraw  ///
-		name(Maddgraph`cellid', replace)
-		//add graphic with SE
-		local graphicM = "`graphicM' Maddgraph`cellid'"
-
-
-		//plot with no SE
-		tw `noSE' , yline(0, lwidth(vthin)) xlabel(-5(10)35, labsize(vsmall)) ///
-		ylabel(, labsize(vsmall) nogrid) legend(off) ///
-		subtitle("", size(vsmall) color(dkgreen)) ///
-		ytitle("", size(vsmall)) xtitle("", size(small)) ///
-		plotregion(color(white)) graphregion(color(white)) nodraw ///
-		name(Maddgraph`cellid'_noSE, replace)			
+		if ( "`submodel_ov'" == "" ) {
+			// Main model plots include standard errors
+			tw `SE' , yline(0, lwidth(vthin)) xlabel(-5(10)35, labsize(vsmall)) ///
+			ylabel(, labsize(vsmall) nogrid) legend(off) ///
+			subtitle("", size(vsmall) color(dkgreen)) ///
+			ytitle("", size(vsmall)) xtitle("", size(small)) ///
+			plotregion(color(white)) graphregion(color(white)) nodraw ///
+			name(Maddgraph`cellid', replace)
+		}
+		else{
+			//plot with no SE for overlay plots
+			tw `noSE' , yline(0, lwidth(vthin)) xlabel(-5(10)35, labsize(vsmall)) ///
+			ylabel(, labsize(vsmall) nogrid) legend(off) ///
+			subtitle("", size(vsmall) color(dkgreen)) ///
+			ytitle("", size(vsmall)) xtitle("", size(small)) ///
+			plotregion(color(white)) graphregion(color(white)) nodraw ///
+			name(Maddgraph`cellid', replace)
+		}			
 		//add graphic no SE
-		local graphicM_noSE="`graphicM_noSE' Maddgraph`cellid'_noSE"
+		local graphicM="`graphicM' Maddgraph`cellid'"
 	}
 }
 
 
 // Plot arrays and save
 
-//combine cells with SE
+//combine cells
 graph combine `graphicM', imargin(zero) ycomm rows(3) ///
 title("Split Degree Days Poly 2 Interaction Model `var'", size(small)) ///
 subtitle("`colorGuide'", size(vsmall)) ///
-plotregion(color(white)) graphregion(color(white)) name(comb, replace)
-graph export "$root/figures/`fig'_`var'_interacted_`plot_title'.pdf", replace
-
-//combine cells no SE
-graph combine `graphicM_noSE', imargin(zero) ycomm rows(3) ///
-title("Split Degree Days Poly 2 Interaction Model `var'", size(small)) ///
-subtitle("`colorGuide'", size(vsmall)) ///
 plotregion(color(white)) graphregion(color(white)) name(comb_nose, replace)
-graph export "$root/figures/`fig'_`var'_interacted_`plot_title'_noSE.pdf", replace
+graph export "$root/figures/`fig'_`var'_interacted_`plot_title'.pdf", replace
 
 graph drop _all	

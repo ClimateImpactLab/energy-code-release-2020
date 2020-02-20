@@ -10,7 +10,7 @@ set scheme s1color
 
 local model = "$model" // What is the main model for this plot?
 local var = "$product" // What product's response function are we plotting?
-local fig = "figA15a" // Whats the plots figure number in the paper?
+local fig = "fig_Appendix-I3A" // Whats the plots figure number in the paper?
 
 ********************************************************************************
 * Step 1: Load Data and Clean for Plotting

@@ -37,7 +37,7 @@ foreach submodel in "" "EX" "lininter" "decinter" {
 ********************************************************************************
 
 foreach product in "other_energy" "electricity" {
-	foreach submodel in "" "EX" "lininter" "decinter" {
+	foreach submodel in "" "EX" "lininter"  {
 		
 		global submodel_ov "`submodel'"
 		global product "`product'"

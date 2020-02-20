@@ -163,6 +163,6 @@ foreach prod in "other_energy" "electricity" {
 		subtitle("`sub_tit' Unit Root Test P-value Histograms") ///
 		graphregion(color(white)) plotregion(color(white))
 	* Save the graph 
-	graph export "$OUT/figA4_Unit_Root_Tests_p_val_hists_`prod'.pdf", replace
+	graph export "$OUT/fig_Appendix-A2_Unit_Root_Tests_p_val_hists_`prod'.pdf", replace
 }
 graph drop _all	

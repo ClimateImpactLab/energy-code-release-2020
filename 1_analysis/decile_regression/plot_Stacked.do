@@ -100,15 +100,6 @@ forval lg=1/10 {
 	plotregion(color(white)) graphregion(color(white)) nodraw ///
 	name(addgraph`lg', replace)
 
-	//plot with no SE
-	tw `noSE' , ///
-	yline(0, lwidth(vthin)) xlabel(-5(10)35, labsize(vsmall)) ///
-	ylabel(, labsize(vsmall) nogrid) legend(off) ///
-	subtitle("", size(vsmall) color(dkgreen)) ///
-	ytitle("", size(small)) xtitle("", size(small)) ///
-	plotregion(color(white)) graphregion(color(white)) nodraw ///
-	name(addgraph`lg'_noSE, replace)							
-
 	//add graphic for combined plotting later
 	local graphic = "`graphic' addgraph`lg'"
 	local graphic_noSE = "`graphic_noSE' addgraph`lg'_noSE"
@@ -120,13 +111,7 @@ graph combine `graphic', imargin(zero) ycomm rows(1) xsize(20) ysize(3) ///
 title("Poly 2 Income Decile Energy Temperature Response (`model')", size(small)) ///
 subtitle("`colorGuide'", size(small)) ///
 plotregion(color(white)) graphregion(color(white)) name(comb, replace)
-graph export "$root/figures/fig1a_product_overlay_income_decile_`model'.pdf", replace
+graph export "$root/figures/fig_1A_product_overlay_income_decile_`model'.pdf", replace
 
-// plot and save combined plot with no SE
-graph combine `graphic_noSE', imargin(zero) ycomm rows(1) xsize(20) ysize(3) ///
-title("Poly 2 Income Decile Energy Temperature Response (`model')", size(small)) ///
-subtitle("`colorGuide'", size(small)) ///
-plotregion(color(white)) graphregion(color(white)) name(comb_noSE, replace)
-graph export "$root/figures/fig1a_product_overlay_income_decile_`model'_noSE.pdf", replace
 			
 graph drop _all	
