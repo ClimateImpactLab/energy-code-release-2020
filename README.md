@@ -30,10 +30,10 @@ This master readme outlines the process for each step, and each analysis step ha
 Data construction is a multi-faceted process. We clean and merge data on energy consumption from the International Energy Agency's (IEA) World Energy Balances dataset, 
 historical climate data from the Global Meterological Forcing Dataset (GMFD), and income and population data from the IEA.
 
-Part A, we construct data on final consumption of electricity and other fuels, covering 146 countries annually over the period 1971 to 2010.  
-Part B, we construct data on historical climate to align with the geographic and temporal definitions used in the energy final consumption dataset. 
-Part C, we clean data on population and income of each country-year in our data. 
-Part D, we clean and merge together data produced in each of the previous parts, and output an intermediate merged dataset.
+In Part A, we construct data on final consumption of electricity and other fuels, covering 146 countries annually over the period 1971 to 2010.  
+In Part B, we construct data on historical climate to align with the geographic and temporal definitions used in the energy final consumption dataset. 
+In Part C, we clean data on population and income of each country-year in our data. 
+In Part D, we clean and merge together data produced in each of the previous parts, and output an intermediate merged dataset.
 
 #### Part 1.A - Final Consumption Energy Data
 
@@ -41,7 +41,7 @@ Part D, we clean and merge together data produced in each of the previous parts,
 * This dataset is not public, and not provided in this repository. 
 * From this raw data, we construct a country-year-product level panel dataset (where product is either electricity or other_energy). 
 * Due to data quality concerns, we incorporate information on data consistency and quality from the IEAs documentation into this dataset. 
-    * Details of this can be found in Appendix Section A.5, and in the [0_make_dataset/coded_issues](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/0_make_dataset/coded_issues) folder of this repo.
+    * Details of this can be found in Appendix Section A.1, and in the [0_make_dataset/coded_issues](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/0_make_dataset/coded_issues) folder of this repo.
     * This allows us to determine which data should be dropped, to contruct a set of fixed effects and FGLS weights to help deal with data quality concerns, and assemble climate data that reflects the geographic and temporal definitions used to report energy consumption data.
 
 #### Part 1.B - Historical Climate Data
@@ -50,7 +50,7 @@ Part D, we clean and merge together data produced in each of the previous parts,
 itation from the Global Meteorological Forcing Dataset (GMFD) dataset.
 * The raw GMFD data is at the 0.25 x 0.25 degree gridded resolution. We link climate and energy con-
 sumption data by aggregating gridded daily temperature data to the country-year level
-using a procedure detailed in Appendix A.1.4 that preserves nonlinearity in the energy
+using a procedure detailed in Appendix A.2.4 that preserves nonlinearity in the energy
 consumption-temperature relationship.
     * This step is highly computationally intensive, and the code for this step is not currently provided in this repo.
 * In addition to temperature and precipitation measures, we also calculate other climate measures, such as cooling and heating degree days.
