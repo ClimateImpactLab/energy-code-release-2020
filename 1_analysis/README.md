@@ -39,9 +39,9 @@ Note, the input datasets for codes in this analysis are generated in the [0_make
             * `energy-code-release/figures/fig_1C_product_overlay_income_decile_TINV_clim.pdf` (Figure 1A in the paper)
 
 
-3. Run `3_interacted_regression.do` to estimate and plot the energy-temperature response heterogeneity by income and long-run climate for the main (`TINV_clim`), excluding imputed data (`EX`), most recent decade (`decinter`), and temporal trends model (`lininter`)
+3. Run `3_interacted_regression.do` to estimate and plot the energy-temperature response heterogeneity by income and long-run climate for the main (`TINV_clim`), excluding imputed data (`EX`), and temporal trends model (`lininter`)
 	* ***Code Inputs***: 
-		* `energy-code-release/data/GMFD_TINV_clim_regsort.dta` -- used for main, most recent decade, and temporal trend models response estimation and plotting
+		* `energy-code-release/data/GMFD_TINV_clim_regsort.dta` -- used for main and temporal trend models response estimation and plotting
 		* `energy-code-release/data/GMFD_TINV_clim_EX_regsort.dta` -- used for excluding imputed data response estimation and plotting
 		* `energy-code-release/data/break_data_TINV_clim.dta` -- used for plotting all outputs
 	* ***Code Outputs***:
@@ -52,8 +52,7 @@ Note, the input datasets for codes in this analysis are generated in the [0_make
     		* `energy-code-release/sters/FD_FGLS_inter_TINV_clim_EX.ster` (excluding imputed data model ster file)
     		* `energy-code-release/sters/FD_inter_TINV_clim_lininter.ster`
     		* `energy-code-release/sters/FD_FGLS_inter_TINV_clim_lininter.ster` (temporal trends model ster file)
-    		* `energy-code-release/sters/FD_inter_TINV_clim_decinter.ster`
-    		* `energy-code-release/sters/FD_FGLS_inter_TINV_clim_decinter.ster` (most recent decade ster file)
+
 		* Figures
         	* `energy-code-release/figures/fig_1C_*_interacted_TINV_clim.pdf` (Figure 1C in the paper) 
     		* `energy-code-release/figures/fig_Appendix-I2_*_interacted_main_model_TINV_clim_overlay_model_EX.pdf` (Appendix Figure I2 in the paper)
