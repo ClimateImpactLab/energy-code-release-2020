@@ -1,13 +1,21 @@
 # Climate Data Construction
 
-As described in Appendix A.1.4, we link GMFD gridded daily historical climate data to country-year-level energy consumption data by aggregating daily grid cell information to the country year level. Nonlinear transformations of temperature and rainfall are computed at the grid cell level before averaging values across space using population weights and finally summing over days within a year. This procedure recovers grid-by-day-level nonlinearities in the energy-temperature (and energy-precipitation) relationship, because energy consumption is additive across time and space.
+As described in Appendix A.2.4, we link GMFD gridded daily historical climate data to country-year-level energy consumption data by aggregating daily grid cell 
+information to the country year level. Nonlinear transformations of temperature and rainfall are computed at the grid cell level before averaging values 
+across space using population weights and finally summing over days within a year. 
+This procedure recovers grid-by-day-level nonlinearities in the energy-temperature (and energy-precipitation) 
+relationship, because energy consumption is additive across time and space.
 
-The IEA dataset documentation describes that some energy load observations are reported on non-gregorian calendars and for non-standard geographic regions. We account for these two types of energy load data features by constructing country x year climate data variables which align with the geographic and temporal definitions baked into each energy load observation. For example:
+The IEA dataset documentation describes that some energy load observations are reported on non-gregorian calendars and for non-standard geographic regions. 
+We account for these two types of energy load data features by constructing country x year climate data variables which align with the geographic and temporal 
+definitions baked into each energy load observation. For example:
 * We construct yearly Australian climate data with the following definition of year: July t to June t + 1.  
-* We use a shapefile for Italy which includes San Marino and the Holy Sea.
-Please reference this [readme](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/coded_issues/README.md) for more information about the IEA dataset documentation and how we incorporated it into our analysis.
+* We use a shapefile for Italy which includes San Marino and the Holy See.
+Please reference this [readme](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/coded_issues/README.md) 
+for more information about the IEA dataset documentation and how we incorporated it into our analysis.
 
-The code and shapefiles in this directory demonstrate how we construct our climated data, accounting for non-standard definitions of country boundaries and years when aggregating and compiling aggregated daily gridded climate data.
+The code and shapefiles in this directory demonstrate how we construct our climated data, accounting for non-standard definitions of country boundaries and years
+when aggregating and compiling aggregated daily gridded climate data.
 
 ## Directory Contents
 
@@ -18,13 +26,14 @@ The code and shapefiles in this directory demonstrate how we construct our clima
 * contribution: aggregate climate data into regions which correspond to the regions in the IEA energy load dataset
 
 `1_clean_climate_data.do` - the master program
-* contribution: assemble a country x year panel dataset with temporally and spatially aggregated climate data that corresponds to definitions of space and time in each energy load observation.
+* contribution: assemble a country x year panel dataset with temporally and spatially aggregated climate data that corresponds 
+* to definitions of space and time in each energy load observation.
 
 ## Definitions of the Climate Variables we use in our analysis: 
 
 Below we describe the climate variable transformations we perform at the grid cell level and each transformations variable name in the country x year climate dataset. 
 
-[This section needs to be filled out.. waiting for paper language to get updated so can swipe it]
+**[This section needs to be filled out.. ASHWIN TO UPDATE]**
 
 * temp1_GMFD, temp2_GMFD, temp3_GMFD, and temp4_GMFD
     * These variables are polynomials of the daily average temperature. For example, temp2_GMFD is a pop-weighted average 
@@ -40,10 +49,15 @@ Below we describe the climate variable transformations we perform at the grid ce
 * hdd20_GMFD
     * heating degree days 
 
-Note: the `*_other*` tag in climate data variable names denotes climate data that will be assigned to other fuel final energy consumption. Some encoded issues differ by product for a specific temporal or spatial definition, thus we need to differentiate climate data by product. The Moldova case outlined below is an example of where climate data differs by fuel.
+Note: the `*_other*` tag in climate data variable names denotes climate data that will be assigned to other fuel final energy consumption. 
+Some encoded issues differ by product for a specific temporal or spatial definition, thus we need to differentiate climate data by product. 
+The Moldova case outlined below is an example of where climate data differs by fuel.
 
 ## How we account for Non-Standard Year and Geographic Boundary Definitions in Climate Data Construction
-To account for non-standard geographic boundary definitions, we use shapefiles that correpond to the geographic boundaries associated with the energy load data. To account for non-standard temporal definitions, we generate monthly climate data for affected regions in order to build years that correspond with the energy load data reporting period. Below, I outline the non-standard spatial and temporal definitions we account for in our analysis. Additionally, I describe which shape files and pieces of code account for these non-standard definitions.
+To account for non-standard geographic boundary definitions, we use shapefiles that correpond to the geographic boundaries associated with the energy load data. 
+To account for non-standard temporal definitions, we generate monthly climate data for affected regions in order to build years that correspond with the energy 
+load data reporting period. Below, we outline the non-standard spatial and temporal definitions we account for in our analysis. 
+Additionally, we describe which shape files and pieces of code account for these non-standard definitions.
 
 ### Non-Standard Year Definitions
 
@@ -59,7 +73,8 @@ The shapefile specific programs below construct yearly climate data for specific
     * IRN: Data for 2015 correspond to 20 March 2015 19 March 2016, which is Iranian year 1394
     * NPL: Data are reported on a fiscal year basis, beginning on 1 July and ending on 30 June of the subsequent year 2015/16 is treated as 2015
     * NZL: Prior to 1994, data refer to fiscal year (April 1993 to March 1994 for 1993). From 1994, data refer to calendar year.
-    * KEN: As of 2001, electricity data are reported on a fiscal year basis, beginning on 1 July and ending on 30 June of the subsequent year
+    * KEN: As of 2001, electricity data are reported on a fiscal year basis, beginning on 1 July and ending on 30 June of the subsequent year.
+    * MMR: Some data are reported on a fiscal year basis. Since we do not know which years, we cannot match climate data to MMR, and therefore do not include it in our analysis.
 
 * [programs/clean_WORLDpre.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/climate/programs/clean_WORLDpre.do)
     * ETH: Data are reported according to the Ethiopian financial year, which runs from 1 July to 30 June of the next year.
@@ -79,10 +94,11 @@ The shapefile specific programs below clean yearly climate data for specific cou
     * [shapefile/ISR_PSE](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/0_make_dataset/climate/shapefiles/ISR_PSE)
     * Note from documentation: The statistical data for Israel are supplied by and under the responsibility of the relevant Israeli authorities. The use of such data by the OECD is without prejudice to the status of the Golan Heights, East Jerusalem and Israeli settlements in the West Bank under the terms of international law
 * [programs/clean_ITA_SMR_VAT.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/climate/programs/clean_ITA_SMR_VAT.do):
-    * Italy data includes San Marino and the Holy Sea
+    * Italy data includes San Marino and the Holy See
     * [shapefile/ITA_SMR_VAT](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/0_make_dataset/climate/shapefiles/ITA_SMR_VAT)
 * [programs/clean_MDA_other.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/climate/programs/clean_MDA_other.do):
-    * For Moldova, official figures on natural gas imports, natural gas inputs to power plants, electricity production and consumption are modified by the IEA Secretariat to include estimates for supply and demand for the autonomous region of Stînga Nistrului (also known as the Pridnestrovian Moldavian Republic or Transnistria). Other energy production or consumption from this region is not included in the Moldovan data.
+    * For Moldova, official figures on natural gas imports, natural gas inputs to power plants, electricity production and consumption are modified by the IEA Secretariat to include estimates for supply and demand for the autonomous region of Stînga Nistrului (also known as the Pridnestrovian Moldavian Republic or Transnistria). 
+    * Other energy production or consumption from this region is not included in the Moldovan data.
     * [shapefile/MDA_other](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/0_make_dataset/climate/shapefiles/MDA_other) 
 * [programs/clean_SRB_MNE.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/climate/programs/clean_SRB_MNE.do):
     * Serbia data includes Montenegro and only Montenegro from 1999 to 2004
