@@ -21,7 +21,7 @@ in this folder (the codes that use intermediate data as an input) can be run by 
 
 `merged` - code for cleaning the merged dataset
 
-Because the raw data is currently unavailable code in `climate`, `energy_load`, and `pop_and_income` cannot be run and is only present for reference.
+**Because the raw data is currently unavailable, code in `climate`, `energy_load`, and `pop_and_income` cannot be run and is only present for reference.**
 
 # Directory Master Scripts
 
@@ -72,7 +72,7 @@ Codes in this folder accomplish the following tasks:
 ## Constructing Covariate Intermediate Datasets (break_data_TINV_clim*.dta)
 
 As well as producing the regression ready datasets, [2_construct_regression_ready_data.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/2_construct_regression_ready_data.do) 
-can produce both break_data_TINV_clim.dta and break_data_TINV_clim_EX.dta . These are intermediate 
+can produce both `break_data_TINV_clim.dta` and `break_data_TINV_clim_EX.dta`. These are intermediate 
 datasets, that are outputted for 3x3 array plotting. These datasests contain covariate information for each 
 country-year, including:
 * Income: 
