@@ -5,7 +5,7 @@ The analysis in the paper proceeds in **five steps**.
 1. Historical data on energy consumption and climate are cleaned and merged, along with other covariates needed in our analysis (population and income). 
 2. Econometric analysis is conducted to establish the energy-temperature empirical relationship. 
 3. This relationship is used to project future impacts of climate change using an ensemble of climate models 
-    * Note: this step is exceptionally computationally intensive, and sharable code that is helpful for an average user for steps after step 2 are a work in progress.
+    * Note: this step is exceptionally computationally intensive, and sharable code for steps after step 2 are a work in progress.
 4. These impacts are translated into empirical “damage functions” relating monetized damages to warming 
 5. Damage functions are used to compute an energy-only partial social cost of carbon. 
 
@@ -28,7 +28,7 @@ This master readme outlines the process for each step, and each analysis step ha
 ## Step 1 - Historical Energy Consumption and Climate Dataset Construction
 
 Data construction is a multi-faceted process. We clean and merge data on energy consumption from the International Energy Agency's (IEA) World Energy Balances dataset, 
-historical climate data from the Global Meterological Forcing Dataset (GMFD), and income and population data from IEA.
+historical climate data from the Global Meterological Forcing Dataset (GMFD), and income and population data from the IEA.
 
 Part A, we construct data on final consumption of electricity and other fuels, covering 146 countries annually over the period 1971 to 2010.  
 Part B, we construct data on historical climate to align with the geographic and temporal definitions used in the energy final consumption dataset. 
@@ -84,6 +84,11 @@ variables for use in later econometric analysis.
     * Part 1.E produces: 
         * `/data/GMFD_*_regsort.data` -- the analysis dataset used in `Step 2`
         * `/data/break_data_*.dta` -- a dataset used for plotting 3 x 3 arrays
+* Within Step 1, we produce two figures that are used in the paper:
+    * ***Figure Appendix A.1***: `fig_Appendix-A1_ITA_other_fuels_time_series_regimes.pdf`
+        * This figure is used to visualise the persistent shocks present in energy consumption. 
+    * ***Figure Appendix A.2***: `fig_Appendix-A2_Unit_Root_Tests_p_val_hists_*.pdf`
+        * These figures are used to visualise the distribution of p-values for unit root tests for within regime energy consumption.
 
 ## Step 2 - Econometric Analysis to Establish Energy-Temperature Empirical Relationship
 
@@ -96,25 +101,24 @@ We run three kinds of regressions in this section:
     * Code for these regressions can be found in [1_analysis/uninteracted_regression](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/1_analysis/uninteracted_regression)
     * This code outputs: 
         * ster files for both the first stage and the FGLS regression: `FD_global_TINV_clim.ster` and `FD_FGLS_global_TINV_clim.ster`, respectively  
-        * Appendix Figure A5 with and without standard errors (`figA5_product_overlay_TINV_clim_global*.pdf`)
+        * ***Appendix Figure C1***: `fig_Appendix-C1_product_overlay_TINV_clim_global.pdf`
 2. Decile regressions
     * These regressions are run in order to understand how the sensitivity of energy consumption to climate change modulates with incomoe levels. 
     * Code for these regressions can be found in [1_analysis/decile_regression](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/1_analysis/decile_regression)
     * This code outputs:
         * ster files for both the first stage and the FGLS regression: `FD_FGLS_income_decile_TINV_clim.ster` and `FD_FGLS_income_decile_TINV_clim.ster`, respectively
-        * Figure 1A with and without standard errors (`fig1a_product_overlay_income_decile_TINV_clim*.pdf`) 
+        * ***Figure 1A***: `fig_1A_product_overlay_income_decile_TINV_clim.pdf` 
 3. Interacted regressions
     * In these regressions, we model heterogeneity in the energy-climate relationship, by interacting our models with income and climate covariates.
     * Code for these regressions can be found in [1_analysis/interacted_regression](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/1_analysis/interacted_regression)
     * This code outputs: 
         * Ster files for the first stage and the FGLS regression for the main (***TINV_clim***), the excluding imputed data (***TINV_clim_EX***), tech trend (***TINV_clim_lininter***), and most recent decade (***TINV_clim_decinter***) models:
             * `FD_inter_*.ster` and `FD_FGLS_inter_*.ster`
-        * The following paper and appendix figures with and without standard errors:
-            * ***Figures 1B***: `fig1b_*_interacted_TINV_clim*.pdf`
-            * ***Appendix Figure A13***: `figA13_*_interacted_main_model_TINV_clim_overlay_model_EX*.pdf`
-            * ***Appendix Figure A14***: `figA14_*_interacted_main_model_TINV_clim_overlay_model_decinter*.pdf`
-            * ***Appendix Figure A15a***: `figA15a_ME_time_TINV_clim_lininter_*.pdf`
-            * ***Appendix Figure A15b***: `figA15b_*_interacted_main_model_TINV_clim_overlay_model_lininter*.pdf`
+        * The following paper and appendix figures:
+            * ***Figures 1C***: `fig_1C_*_interacted_TINV_clim*.pdf`
+            * ***Appendix Figures I2***: `fig_Appendix-I2_*_interacted_main_model_TINV_clim_overlay_model_EX*.pdf`
+            * ***Appendix Figures I3A***: `fig_Appendix-I3A_ME_time_TINV_clim_lininter_*.pdf`
+            * ***Appendix Figures I3B***: `fig_Appendix-I3B_*_interacted_main_model_TINV_clim_overlay_model_lininter.pdf`
 
 ## Step 3 - Project Future Impacts of Climate Change 
 
