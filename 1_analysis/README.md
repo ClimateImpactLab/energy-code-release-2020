@@ -12,7 +12,7 @@ Within each directory there are at least two pieces of code:
 1. `stacked.do` - estimates the energy-temperature reponse function
 2. `plot_stacked.do` - plots the energy-temperature response function
 
-`interacted_regression` also contains `plot_time_marginal_effect.do`. This code is used to produce plots which illustrate how temperature responses change across time in the Tech Trends model. 
+`interacted_regression` also contains `plot_time_marginal_effect.do`. This code is used to produce plots which illustrate how temperature responses change across time in the Temporal Trends model. 
 
 # Run Instructions
 
@@ -39,9 +39,9 @@ Note, the input datasets for codes in this analysis are generated in the [0_make
             * `energy-code-release/figures/fig_1C_product_overlay_income_decile_TINV_clim.pdf` (Figure 1A in the paper)
 
 
-3. Run `3_interacted_regression.do` to estimate and plot the energy-temperature response heterogeneity by income and long-run climate for the main (`TINV_clim`), excluding imputed data (`EX`), most recent decade (`decinter`), and tech trends model (`lininter`)
+3. Run `3_interacted_regression.do` to estimate and plot the energy-temperature response heterogeneity by income and long-run climate for the main (`TINV_clim`), excluding imputed data (`EX`), most recent decade (`decinter`), and temporal trends model (`lininter`)
 	* ***Code Inputs***: 
-		* `energy-code-release/data/GMFD_TINV_clim_regsort.dta` -- used for main, most recent decade, and tech trend models response estimation and plotting
+		* `energy-code-release/data/GMFD_TINV_clim_regsort.dta` -- used for main, most recent decade, and temporal trend models response estimation and plotting
 		* `energy-code-release/data/GMFD_TINV_clim_EX_regsort.dta` -- used for excluding imputed data response estimation and plotting
 		* `energy-code-release/data/break_data_TINV_clim.dta` -- used for plotting all outputs
 	* ***Code Outputs***:
