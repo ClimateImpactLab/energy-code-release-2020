@@ -25,7 +25,7 @@ global model "TINV_clim"
 * Step 1: Estimate Energy Temperature Response
 ********************************************************************************
 
-foreach submodel in "" "EX" "lininter" "decinter" {
+foreach submodel in "" "EX" "lininter"  {
 
 	global submodel "`submodel'"
 	do $root/1_analysis/interacted_regression/stacked.do

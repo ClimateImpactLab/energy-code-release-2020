@@ -165,16 +165,7 @@ forval lg=3(-1)1 {	//Income tercile
 			
 			if `subInc' > `ibar`type'' local ig = 2
 			else if `subInc' <= `ibar`type'' local ig = 1
-			
-			// make local to plot last decade robustness model
 
-			if (strpos("`plot_model'", "decinter") > 0) {
-				local D = "D4"
-			}
-			else {
-				local D = ""
-			}
-			
 			// create dose response function equation
 
 			local line ""
@@ -182,7 +173,7 @@ forval lg=3(-1)1 {	//Income tercile
 			
 			foreach k of num 1/2 {
 				
-				local line = " `line' `add' _b[c.indp`pg'#c.indf1#c.FD_`D'temp`k'_GMFD] * (temp`k' - 20^`k')"
+				local line = " `line' `add' _b[c.indp`pg'#c.indf1#c.FD_temp`k'_GMFD] * (temp`k' - 20^`k')"
 				local line = "`line' + above20*_b[c.indp`pg'#c.indf`fg'#c.FD_cdd20_TINVtemp`k'_GMFD]*`subCDD' * (temp`k' - 20^`k')"
 				local line = "`line' + below20*_b[c.indp`pg'#c.indf`fg'#c.FD_hdd20_TINVtemp`k'_GMFD]*`subHDD' * (20^`k' - temp`k')"
 				local line = "`line' + _b[c.indp`pg'#c.indf`fg'#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"

@@ -120,20 +120,6 @@ if ("`submodel'" == "lininter") {
 	}
 }
 
-if ("`submodel'"== "decinter") {
-
-	* temp x decade
-
-	local temp_r = ""
-
-	forval pg=1/2 {
-		forval dg=1/4 {
-			forval k = 1/2 {
-				local temp_r = "`temp_r' c.indp`pg'#c.indf1#c.FD_D`dg'temp`k'_GMFD"
-			}	
-		}
-	}
-}	
 
 //run first stage regression
 reghdfe FD_load_pc `temp_r' `precip_r' `climate_r' ///
