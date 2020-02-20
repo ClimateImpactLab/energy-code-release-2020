@@ -24,7 +24,7 @@ local col_other_energy_ov "black"
 local col_main "`col_`var''"
 local col_ov "`col_`var'_ov'"
 
-// year to plot tech trend model:
+// year to plot temporal trend model:
 
 local year = 2099
 			
