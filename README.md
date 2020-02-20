@@ -112,7 +112,7 @@ We run three kinds of regressions in this section:
     * In these regressions, we model heterogeneity in the energy-climate relationship, by interacting our models with income and climate covariates.
     * Code for these regressions can be found in [1_analysis/interacted_regression](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/1_analysis/interacted_regression)
     * This code outputs: 
-        * Ster files for the first stage and the FGLS regression for the main (***TINV_clim***), the excluding imputed data (***TINV_clim_EX***), tech trend (***TINV_clim_lininter***), and most recent decade (***TINV_clim_decinter***) models:
+        * Ster files for the first stage and the FGLS regression for the main (***TINV_clim***), the excluding imputed data (***TINV_clim_EX***), and temporal trend (***TINV_clim_lininter***) models:
             * `FD_inter_*.ster` and `FD_FGLS_inter_*.ster`
         * The following paper and appendix figures:
             * ***Figures 1C***: `fig_1C_*_interacted_TINV_clim*.pdf`
