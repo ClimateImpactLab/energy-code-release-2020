@@ -34,21 +34,22 @@ In Part A, we construct data on final consumption of electricity and other fuels
 In Part B, we construct data on historical climate to align with the geographic and temporal definitions used in the energy final consumption dataset. 
 In Part C, we clean data on population and income of each country-year in our data. 
 In Part D, we clean and merge together data produced in each of the previous parts, and output an intermediate merged dataset.
+In Part E, we prepare merged data for econometric analysis.
 
 #### Part 1.A - Final Consumption Energy Data
 
 * Data on energy consumption were obtained from the International Energy Agency's (IEA) World Energy Balances dataset. 
 * This dataset is not public, and not provided in this repository. 
 * From this raw data, we construct a country-year-product level panel dataset (where product is either electricity or other_energy). 
-* Due to data quality concerns, we incorporate information on data consistency and quality from the IEAs documentation into this dataset. 
+* Due to data quality concerns, we incorporate information on data consistency and quality from the IEA's documentation into this dataset. 
     * Details of this can be found in Appendix Section A.1, and in the [0_make_dataset/coded_issues](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/0_make_dataset/coded_issues) folder of this repo.
     * This allows us to determine which data should be dropped, to contruct a set of fixed effects and FGLS weights to help deal with data quality concerns, and assemble climate data that reflects the geographic and temporal definitions used to report energy consumption data.
 
 #### Part 1.B - Historical Climate Data
 
 * We take Historical Climata Data on daily average temperature and precip-
-itation from the Global Meteorological Forcing Dataset (GMFD) dataset.
-* The raw GMFD data is at the 0.25 x 0.25 degree gridded resolution. We link climate and energy con-
+itation from the Global Meteorological Forcing Dataset v1 (GMFD) dataset.
+* The raw GMFD data are at the 0.25 x 0.25 degree gridded resolution. We link climate and energy con-
 sumption data by aggregating gridded daily temperature data to the country-year level
 using a procedure detailed in Appendix A.2.4 that preserves nonlinearity in the energy
 consumption-temperature relationship.
@@ -60,7 +61,7 @@ consumption-temperature relationship.
 #### Part 1.C - Population and income data
 
 * We obtain historical values of country-level annual income per capita from within
-the International Energy Agencys World Energy Balances dataset, which in turn sources
+the International Energy Agency's World Energy Balances dataset, which in turn sources
 these data from the World Bank. 
 * Cleaning steps undertaken on these variables can be found in [0_make_dataset/pop_and_income](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/0_make_dataset/pop_and_income)
 
@@ -75,7 +76,7 @@ these data from the World Bank.
 that showed that our outcome variable has a unit root, we construct first differenced versions of our 
 variables for use in later econometric analysis. 
 * To nonlinearly model income heterogeneity in the energy-temperature response, we construct an income spline variable. We decide on knot location based on in sample income deciles.
-* Lastly to plot 3 x 3 arrays displaying the interacted model, we save a dataset with information on average income and climate in different terciles of the in sample data.
+* Lastly to plot 3 x 3 arrays displaying the interacted model (*Methods* Equation 1), we save a dataset with information on average income and climate in different terciles of the in sample data.
 
 ### Outputs of Step 1 
 
@@ -96,19 +97,19 @@ This step implements analysis to recover the emprical relationship between tempe
 In this step, we take the cleaned data produced in step 1, run regressions and then plot the resulting outputs. 
 
 We run three kinds of regressions in this section: 
-1. Uninteracted global regressions
+1. Uninteracted global regressions (*Appendix* Equation C.1)
     * These regressions recover the global population weighted average response of energy consumption to temperature variation. 
     * Code for these regressions can be found in [1_analysis/uninteracted_regression](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/1_analysis/uninteracted_regression)
     * This code outputs: 
         * ster files for both the first stage and the FGLS regression: `FD_global_TINV_clim.ster` and `FD_FGLS_global_TINV_clim.ster`, respectively  
         * ***Appendix Figure C1***: `fig_Appendix-C1_product_overlay_TINV_clim_global.pdf`
-2. Decile regressions
+2. Decile regressions (*Appendix* Equation C.3)
     * These regressions are run in order to understand how the sensitivity of energy consumption to climate change modulates with incomoe levels. 
     * Code for these regressions can be found in [1_analysis/decile_regression](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/1_analysis/decile_regression)
     * This code outputs:
         * ster files for both the first stage and the FGLS regression: `FD_FGLS_income_decile_TINV_clim.ster` and `FD_FGLS_income_decile_TINV_clim.ster`, respectively
         * ***Figure 1A***: `fig_1A_product_overlay_income_decile_TINV_clim.pdf` 
-3. Interacted regressions
+3. Interacted regressions (*Appendix* Equations C.4, I.1)
     * In these regressions, we model heterogeneity in the energy-climate relationship, by interacting our models with income and climate covariates.
     * Code for these regressions can be found in [1_analysis/interacted_regression](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/1_analysis/interacted_regression)
     * This code outputs: 
