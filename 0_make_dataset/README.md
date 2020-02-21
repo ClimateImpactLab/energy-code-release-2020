@@ -13,9 +13,9 @@ in this folder (the codes that use intermediate data as an input) can be run by 
 
 `climate` - code and shapefiles for constructing, cleaning and assembling climate data 
 
-`coded_issues` - encoded issues and documentation used to construct reporting regimes, clean the energy load data, and construct the climate data
+`coded_issues` - encoded issues and documentation used to construct reporting regimes, clean the energy consumption data, and construct the climate data
 
-`energy_load` - code for cleaning raw energy load data
+`energy_load` - code for cleaning raw energy consumption data
 
 `pop_and_income` - code for cleaning population and income data
 
@@ -26,7 +26,7 @@ in this folder (the codes that use intermediate data as an input) can be run by 
 # Directory Master Scripts
 
 Codes in this folder accomplish the following tasks:
-* Construct an intermediary dataset including population, energy load, climate, and income data. 
+* Construct an intermediate dataset including population, energy consumption, climate, and income data. 
     * `data/IEA_merged_long.dta`: 
     *  We clean IEA_merged_long.dta in two different ways to produce regression ready datasets for our main specification (*Methods* Equation 2; *Appendix* Equation C.4) and robustness models;
 * Construct regression ready data:
@@ -40,7 +40,7 @@ Codes in this folder accomplish the following tasks:
 ## Constructing Intermediate Dataset (IEA_merged_long.dta)
 
 [1_construct_dataset_from_raw_inputs.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/1_construct_dataset_from_raw_inputs.do) produces IEA_merged_long.dta throught the following steps:
-1. Clean and construct population, income, climate and energy load datasets
+1. Clean and construct population, income, climate and energy consumption datasets
 2. Merge population, income, climate and energy data by country and year
 
 ### Code Inputs:
