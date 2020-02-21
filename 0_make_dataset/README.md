@@ -2,7 +2,7 @@
 
 In order to run codes, please change the macro `$root` at the top of the codes to the location of this repo on your computer. 
 
-Please note, the raw data used here is not publically available. 
+Please note, the raw data used here is not publicly available. 
 * Therefore, only [2_construct_regression_ready_data.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/2_construct_regression_ready_data.do), 
 [3_unit_root_test_and_plot.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/3_unit_root_test_and_plot.do), and
 [4_plot_ITA_other_energy_regimes_timeseries.R](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/4_plot_ITA_other_energy_regimes_timeseries.R)
