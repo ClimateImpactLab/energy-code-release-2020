@@ -28,9 +28,9 @@ in this folder (the codes that use intermediate data as an input) can be run by 
 Codes in this folder accomplish the following tasks:
 * Construct an intermediary dataset including population, energy load, climate, and income data. 
     * `data/IEA_merged_long.dta`: 
-    *  We clean IEA_merged_long.dta in two different ways to produce regression ready datasets for our main specification and robustness models;
+    *  We clean IEA_merged_long.dta in two different ways to produce regression ready datasets for our main specification (*Methods* Equation 2; *Appendix* Equation C.4) and robustness models;
 * Construct regression ready data:
-    * `data/GMFD_TINV_clim_EX_regsort.dta`: used for estimating the excluding imputed data model
+    * `data/GMFD_TINV_clim_EX_regsort.dta`: used for estimating the excluding imputed data model (*Appendix* I.2)
     * `data/GMFD_TINV_clim_regsort.dta`: used for estimating the main model
 * Save information on each country-year's income and climate covariates, which is used as an input to plotting code
     * `data/break_data_TINV_clim_EX.dta`: used for plotting output for the excluding imputed data model
@@ -102,10 +102,10 @@ Through this data testing we motivate the first differencing completed in `Step 
 
 [`3_unit_root_test_and_plot.do`](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/3_unit_root_test_and_plot.do) takes the regression ready dataset created in [2_construct_regression_ready_data.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/2_construct_regression_ready_data.do), and tests for the existence of unit roots in the load_pc variable.
 * The code implements the tests described in Section Appendix A.1 of the paper. 
-* The figures outputted are those in the paper as Appendix Figure A.1 
+* The figures outputted are those in the paper as Appendix Figure A.2
 
 [`4_plot_ITA_other_energy_regimes_timeseries.R`](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/4_plot_ITA_other_energy_regimes_timeseries.R) takes the regression ready dataset created in [2_construct_regression_ready_data.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/2_construct_regression_ready_data.do), and plots a simple visualisation of the time series for ITALY Other fuels.
-* The figure outputted is in the paper as Appendix Figure A.2 
+* The figure outputted is in the paper as Appendix Figure A.1
 
 
 ### Code Inputs:
