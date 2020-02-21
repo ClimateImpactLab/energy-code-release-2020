@@ -55,7 +55,7 @@ using a procedure detailed in Appendix A.2.4 that preserves nonlinearity in the 
 consumption-temperature relationship.
     * This step is highly computationally intensive, and the code for this step is not currently provided in this repo.
 * In addition to temperature and precipitation measures, we also calculate other climate measures, such as cooling and heating degree days.
-* We then clean these data, so that they match the observations present in our energy load data. 
+* We then clean these data, so that they match the observations present in our energy consumption data. 
     * More documentation of the cleaning process can be found in [0_make_dataset/climate](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/0_make_dataset/climate)
 
 #### Part 1.C - Population and income data
