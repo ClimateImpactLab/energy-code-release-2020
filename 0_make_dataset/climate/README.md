@@ -6,9 +6,9 @@ across space using population weights and finally summing over days within a yea
 This procedure recovers grid-by-day-level nonlinearities in the energy-temperature (and energy-precipitation) 
 relationship, because energy consumption is additive across time and space.
 
-The IEA dataset documentation describes that some energy load observations are reported on non-gregorian calendars and for non-standard geographic regions. 
-We account for these two types of energy load data features by constructing country x year climate data variables which align with the geographic and temporal 
-definitions baked into each energy load observation. For example:
+The IEA dataset documentation describes that some energy consumption observations are reported on non-standard year definitions and for non-standard geographic regions. 
+We account for these two types of energy consumption data features by constructing country x year climate data variables which align with the geographic and temporal 
+definitions baked into each energy consumption observation. For example:
 * We construct yearly Australian climate data with the following definition of year: July t to June t + 1.  
 * We use a shapefile for Italy which includes San Marino and the Holy See.
 Please reference this [readme](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/coded_issues/README.md) 
@@ -23,40 +23,39 @@ when aggregating and compiling aggregated daily gridded climate data.
 * contribution: complete shapefile specific aggregated climate data cleaning, accounting for non-standard year definitions in particular regions for specific periods
 
 `shapefiles` - the shapefiles we use to construct country level climate data from gridded climate data 
-* contribution: aggregate climate data into regions which correspond to the regions in the IEA energy load dataset
+* contribution: aggregate climate data into regions which correspond to the regions in the IEA energy consumption dataset
 
 `1_clean_climate_data.do` - the master program
 * contribution: assemble a country x year panel dataset with temporally and spatially aggregated climate data that corresponds 
-* to definitions of space and time in each energy load observation.
+* to definitions of space and time in each energy consumption observation.
 
 ## Definitions of the Climate Variables we use in our analysis: 
 
 Below we describe the climate variable transformations we perform at the grid cell level and each transformations variable name in the country x year climate dataset. 
 
-**[This section needs to be filled out.. ASHWIN TO UPDATE]**
-
 * temp1_GMFD, temp2_GMFD, temp3_GMFD, and temp4_GMFD
     * These variables are polynomials of the daily average temperature. For example, temp2_GMFD is a pop-weighted average 
     of a second order polynomial of pixel level daily average temperature for a given country summed to the year.
-    These variables are referred to in the paper as $` T^k_{jt} `$, where `k` is polynomial order, `j` is country, and `t` is year.
+    These variables constitute the elements of the vector $\boldsymbol{T}_{jt}$  for country $j$, year $t$ (*Appendix* A.2.4; C.1).
 * precip1_GMFD, precip2_GMFD
-    * Similarly, these terms are polynomials of precipitation. They are reffered to in the paper as $` P^k_{jt} `$.
+    * Similarly, these terms are polynomials of precipitation. They constitute the elements of the vector $\boldsymbol{P}_{jt}$ (*Appendix* A.2.4; C.1).
 * polyAbove1_GMFD, polyAbove2_GMFD
-    *  
+    *  These terms are respectively $\sum_{d \in t}(T_{jd}-20)\mathbf{I}_{T_{jd}\geq20}$ and $\sum_{d \in t}(T^{2}_{jd}-20^{2})\mathbf{I}_{T_{jd}\geq20}$ from Appendix Equation C.4.
 * polyBelow1_GMFD, polyBelow2_GMFD
+    *  These terms are respectively $\sum_{d \in t}(20-T_{jd})\mathbf{I}_{T_{jd}<20}$ and $\sum_{d \in t}(20^{2}-T^{2}_{jd})\mathbf{I}_{T_{jd}<20}$ from Appendix Equation C.4
 * cdd20_GMFD
-    * cooling degree days   
+    * cooling degree days (*Appendix* C.3)
 * hdd20_GMFD
-    * heating degree days 
+    * heating degree days (*Appendix* C.3)
 
 Note: the `*_other*` tag in climate data variable names denotes climate data that will be assigned to other fuel final energy consumption. 
 Some encoded issues differ by product for a specific temporal or spatial definition, thus we need to differentiate climate data by product. 
 The Moldova case outlined below is an example of where climate data differs by fuel.
 
 ## How we account for Non-Standard Year and Geographic Boundary Definitions in Climate Data Construction
-To account for non-standard geographic boundary definitions, we use shapefiles that correpond to the geographic boundaries associated with the energy load data. 
+To account for non-standard geographic boundary definitions, we use shapefiles that correpond to the geographic boundaries associated with the energy consumption data. 
 To account for non-standard temporal definitions, we generate monthly climate data for affected regions in order to build years that correspond with the energy 
-load data reporting period. Below, we outline the non-standard spatial and temporal definitions we account for in our analysis. 
+consumption data reporting period. Below, we outline the non-standard spatial and temporal definitions we account for in our analysis. 
 Additionally, we describe which shape files and pieces of code account for these non-standard definitions.
 
 ### Non-Standard Year Definitions
@@ -115,4 +114,4 @@ The shapefile specific programs below clean yearly climate data for specific cou
 
 ## Standard Country Boundary Definitions
 
-Most of the climate data we construct is unnuanced. We rely on [shapefile/WORLD](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/0_make_dataset/climate/shapefiles/WORLD) for country boundary definitions and clean the aggregated climate data with [programs/clean_WORLD.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/climate/programs/clean_WORLD.do).
+We rely on [shapefile/WORLD](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/0_make_dataset/climate/shapefiles/WORLD) for country boundary definitions and clean the aggregated climate data with [programs/clean_WORLD.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/climate/programs/clean_WORLD.do).
