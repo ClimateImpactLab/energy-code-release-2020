@@ -36,13 +36,13 @@ Below we describe the climate variable transformations we perform at the grid ce
 * temp1_GMFD, temp2_GMFD, temp3_GMFD, and temp4_GMFD
     * These variables are polynomials of the daily average temperature. For example, temp2_GMFD is a pop-weighted average 
     of a second order polynomial of pixel level daily average temperature for a given country summed to the year.
-    These variables constitute the elements of the vector $\boldsymbol{T}_{jt}$  for country $j$, year $t$ (*Appendix* A.2.4; C.1).
+    These variables constitute the elements of the vector $`\boldsymbol{T}_{jt}`$  for country $`j`$, year $`t`$ (*Appendix* A.2.4; C.1).
 * precip1_GMFD, precip2_GMFD
-    * Similarly, these terms are polynomials of precipitation. They constitute the elements of the vector $\boldsymbol{P}_{jt}$ (*Appendix* A.2.4; C.1).
+    * Similarly, these terms are polynomials of precipitation. They constitute the elements of the vector $`\boldsymbol{P}_{jt}`$ (*Appendix* A.2.4; C.1).
 * polyAbove1_GMFD, polyAbove2_GMFD
-    *  These terms are respectively $\sum_{d \in t}(T_{jd}-20)\mathbf{I}_{T_{jd}\geq20}$ and $\sum_{d \in t}(T^{2}_{jd}-20^{2})\mathbf{I}_{T_{jd}\geq20}$ from Appendix Equation C.4.
+    *  These terms are respectively $`\sum_{d \in t}(T_{jd}-20)\mathbf{I}_{T_{jd}\geq20}`$ and $`\sum_{d \in t}(T^{2}_{jd}-20^{2})\mathbf{I}_{T_{jd}\geq20}`$ from Appendix Equation C.4.
 * polyBelow1_GMFD, polyBelow2_GMFD
-    *  These terms are respectively $\sum_{d \in t}(20-T_{jd})\mathbf{I}_{T_{jd}<20}$ and $\sum_{d \in t}(20^{2}-T^{2}_{jd})\mathbf{I}_{T_{jd}<20}$ from Appendix Equation C.4
+    *  These terms are respectively $`\sum_{d \in t}(20-T_{jd})\mathbf{I}_{T_{jd}<20}`$ and $`\sum_{d \in t}(20^{2}-T^{2}_{jd})\mathbf{I}_{T_{jd}<20}`$ from Appendix Equation C.4
 * cdd20_GMFD
     * cooling degree days (*Appendix* C.3)
 * hdd20_GMFD
