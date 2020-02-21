@@ -43,7 +43,7 @@ To accomplish this task, we first read the documentation and encoded the relevan
 
 * `geo_change`: = 1 if the issue indicates a geographic definition change
 * `fiscal_year`: = 1 if the issue indicates data is not recordered on a Jan.-Dec. calendar year
-* `ex_ex`: = 1 if the issue is classified as “extrapolation” and the issue description indicates that the data was exclusively estimated. In other words, the only data source is estimation. 
+* `ex_ex`: = 1 if the issue is classified as “extrapolation” and the issue description indicates that the data was exclusively estimated. In other words, the only data source is imputation. (*Appendix* I.2) 
 
 Please note, there are some instances where `flag_drop` and `grey` are used to drop data with issues classified outside of the definitions specified above. Please reference [cleaned_coded_issues.csv](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/coded_issues/cleaned_coded_issues.csv) for examples of these exceptions.
 
