@@ -12,12 +12,12 @@ local clim_data "GMFD"
 //SET UP RELEVANT PATHS
 // TO BE UPDATED !!
 
-loc DB "C:/Users/TomBearpark/Dropbox"
-loc DB_data "`DB'/GCP_Reanalysis/ENERGY/code_release_data"
+glob DB "C:/Users/TomBearpark/Dropbox"
+loc DB_data "$DB/GCP_Reanalysis/ENERGY/code_release_data"
 
-loc git "C:/Users/TomBearpark/Documents/energy-code-release"
-loc data "`git'/data"
-loc output "`git'/figures"
+glob root "C:/Users/TomBearpark/Documents/energy-code-release"
+loc data "$root/data"
+loc output "$root/figures"
 
 
 ***********************************************************************************
@@ -180,7 +180,7 @@ foreach var in "electricity" "other_energy" {
 				local add " + "
 			}
 			* Load in ster file, to get response function coefficients
-			estimates use "`git'/sters/FD_FGLS_inter_TINV_clim.ster"
+			estimates use "$root/sters/FD_FGLS_inter_TINV_clim.ster"
 
 			* Get predicted values, and SEs
 			predictnl yhat_`var'`scen' = `line', se(se_`var'`scen') ci(lower_`var'`scen' upper_`var'`scen')
@@ -225,10 +225,9 @@ foreach var in "electricity" "other_energy" {
 	graph combine `plotgraph', ycomm rows(1) ///
 		graphregion(color(gs16) m(zero))  name(`var') ///
 		title("`stit'") imargin(zero)
-		
 }
 
 * Combine plots, and save
 graph combine electricity other_energy, rows(2)
-graph export "$root/figures/`fig'_`var'_interacted_`plot_title'.pdf", replace
+graph export "$root/figures/fig_2A_city_response_functions_2015_and_2099.pdf", replace
 graph drop _all	
