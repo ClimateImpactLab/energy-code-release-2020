@@ -200,20 +200,20 @@ forval lg=3(-1)1 {	//Income tercile
 		if ( "`submodel_ov'" == "" ) {
 			// Main model plots include standard errors
 			tw `SE' , yline(0, lwidth(vthin)) xlabel(-5(10)35, labsize(vsmall)) ///
-			ylabel(, labsize(vsmall) nogrid) legend(off) ///
-			subtitle("", size(vsmall) color(dkgreen)) ///
-			ytitle("", size(vsmall)) xtitle("", size(small)) ///
-			plotregion(color(white)) graphregion(color(white)) nodraw ///
-			name(Maddgraph`cellid', replace)
+				ylabel(, labsize(vsmall) nogrid) legend(off) ///
+				subtitle("", size(vsmall) color(dkgreen)) ///
+				ytitle("", size(vsmall)) xtitle("", size(small)) ///
+				plotregion(color(white)) graphregion(color(white)) nodraw ///
+				name(Maddgraph`cellid', replace)
 		}
 		else{
 			//plot with no SE for overlay plots
 			tw `noSE' , yline(0, lwidth(vthin)) xlabel(-5(10)35, labsize(vsmall)) ///
-			ylabel(, labsize(vsmall) nogrid) legend(off) ///
-			subtitle("", size(vsmall) color(dkgreen)) ///
-			ytitle("", size(vsmall)) xtitle("", size(small)) ///
-			plotregion(color(white)) graphregion(color(white)) nodraw ///
-			name(Maddgraph`cellid', replace)
+				ylabel(, labsize(vsmall) nogrid) legend(off) ///
+				subtitle("", size(vsmall) color(dkgreen)) ///
+				ytitle("", size(vsmall)) xtitle("", size(small)) ///
+				plotregion(color(white)) graphregion(color(white)) nodraw ///
+				name(Maddgraph`cellid', replace)
 		}			
 		//add graphic no SE
 		local graphicM="`graphicM' Maddgraph`cellid'"
@@ -225,9 +225,9 @@ forval lg=3(-1)1 {	//Income tercile
 
 //combine cells
 graph combine `graphicM', imargin(zero) ycomm rows(3) ///
-title("Split Degree Days Poly 2 Interaction Model `var'", size(small)) ///
-subtitle("`colorGuide'", size(vsmall)) ///
-plotregion(color(white)) graphregion(color(white)) name(comb_nose, replace)
+	title("Split Degree Days Poly 2 Interaction Model `var'", size(small)) ///
+	subtitle("`colorGuide'", size(vsmall)) ///
+	plotregion(color(white)) graphregion(color(white)) name(comb_nose, replace)
 graph export "$root/figures/`fig'_`var'_interacted_`plot_title'.pdf", replace
 
 graph drop _all	
