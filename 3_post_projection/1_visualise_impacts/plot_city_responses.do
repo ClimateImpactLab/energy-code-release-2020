@@ -307,31 +307,62 @@ foreach var in `product_list' {
 					local subInc=loggdppc`inc_yr'[1]
 					local subCDD=climtascdd20`clim_yr'[1]
 					local subHDD=climtashdd20`clim_yr'[1]
-					local lg=lg_`var'`inc_yr'[1]
+					local ig=lg_`var'`inc_yr'[1]
 					local mincut=minT[1]
 					local maxcut=maxT[1]
 					local deltacut_subInc= `subInc' - `ibar_`var''
 				restore
 
-				di "`inctag' `climtag' large income group: `lg' `var'"
+
+
+				local line ""
+				local add ""
 				
-				if ("`submodel'" == "_income_spline" | "model" == "TINV_clim_income_spline") {
-					local tt "I`lg'"
+				foreach k of num 1/2 {
+					
+					local line = " `line' `add' _b[c.indp`pg'#c.indf1#c.FD_temp`k'_GMFD] * (temp`k' - 20^`k')"
+					local line = "`line' + above20*_b[c.indp`pg'#c.indf`fg'#c.FD_cdd20_TINVtemp`k'_GMFD]*`subCDD' * (temp`k' - 20^`k')"
+					local line = "`line' + below20*_b[c.indp`pg'#c.indf`fg'#c.FD_hdd20_TINVtemp`k'_GMFD]*`subHDD' * (20^`k' - temp`k')"
+					local line = "`line' + _b[c.indp`pg'#c.indf`fg'#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
+
+					local add " + "
+
 				}
+
+				estimates use "`git'/sters/FD_FGLS_inter_TINV_clim.ster"
+
+
+
+
+
+				* di "`inctag' `climtag' large income group: `lg' `var'"
 				
-				local ster "FD_FGLS_inter_clim`clim_data'_`case'`IF'_`bknum'_`grouping_test'_poly2_`model'`submodel'"
-				get_interacted_response , model("`ster'") product("`var'") income_group(`lg') n_income_group(`IG') ///
-				subInc(`subInc') subCDD(`subCDD') subHDD(`subHDD') deltacut_subInc(`deltacut_subInc') myyear(`inc_yr')
+				* if ("`submodel'" == "_income_spline" | "model" == "TINV_clim_income_spline") {
+				* 	local tt "I`lg'"
+				* }
 				
-				local line `s(interacted_response_line)'
+				* local ster "FD_FGLS_inter_clim`clim_data'_`case'`IF'_`bknum'_`grouping_test'_poly2_`model'`submodel'"
+				* get_interacted_response , model("`ster'") product("`var'") income_group(`lg') n_income_group(`IG') ///
+				* subInc(`subInc') subCDD(`subCDD') subHDD(`subHDD') deltacut_subInc(`deltacut_subInc') myyear(`inc_yr')
+				
+				* local line `s(interacted_response_line)'
 
 				** Predict
-				estimates use "`analysis_data'/sters/FD_FGLS/`ster'.ster"
+				* estimates use "`analysis_data'/sters/FD_FGLS/`ster'.ster"
 				di "`line'"
 				pause
 				predictnl yhat_`var'`scen' = `line', se(se_`var'`scen') ci(lower_`var'`scen' upper_`var'`scen')
+
 				qui gen double yhat_full_`var'`scen' = yhat_`var'`scen'
+				
 				qui replace yhat_`var'`scen'=. if (temp1<`mincut' | temp1>`maxcut')
+
+
+
+
+
+
+
 
 				if ("`scen'" == "noadapt") {
 					** Local line
