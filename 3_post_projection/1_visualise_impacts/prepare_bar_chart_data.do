@@ -1,78 +1,63 @@
-/* Create the energy bar charts - of current pc consumption (2010), 2099 impacts, and 2099 impacts due to income.
-Separate charts for electricity and other energy
-
-CONTENTS:
-Initialising, set up paths, program the countries we want to include 
-0. Get the country level population data
-1. Get and save 2010 consumption 
-2. Load and save 2099 impacts - separate files for SGP and other countries 
-3. NO LONDER DONE - check previous commit if we want this again: (Loop over Beta no adapt and beta no adapt (both hist clim) files, generate a variable of their different check ) 
-4. Merge the three types of data
-5. Plot the bar chart 
+/* 
+Purpose: Generate a CSV of country level impacts of climate change on enerngy consumption, to use for plotting
+the bar chart in Figure 2B
 */
 
 clear all
 set more off
-if c(hostname) == "EPIC-14669" { 
-	global DB "C:\Users\TomBearpark\Dropbox"
-	global impacts "C:\Users\TomBearpark\Desktop\local_data"
-	global impact_new "$impacts\new"
-}
-if c(hostname) == "sacagawea" { 
-	global DB "/local/shsiang/Dropbox"
-	global impacts "/shares/gcp/social/parameters/energy/extraction"
-	global impacts_new "/shares/gcp/social/parameters/energy/extraction/multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/TINV_clim_income_spline_GMFD"
-}
-global current_data "$DB/GCP_Reanalysis/ENERGY/IEA_Replication/Data/Analysis/GMFD/rationalized_code/replicated_data/data"
-global price "/shares/gcp/social/baselines/energy"
-global OUT "$DB/GCP_Reanalysis/ENERGY/IEA_Replication/Projection/eel_projection/GMFD/rationalized_code/replicated_data/TINV_clim_income_spline/semi-parametric/bars"
-global pop_data "/shares/gcp/estimation/mortality/damage_function/data"
 
+//SET UP RELEVANT PATHS
+// TO BE UPDATED !!
 
-** TOGGLES **
-loc yr = 2100
+glob DB "C:/Users/TomBearpark/Dropbox"
+loc DB_data "$DB/GCP_Reanalysis/ENERGY/code_release_data"
 
-
+glob root "C:/Users/TomBearpark/Documents/energy-code-release"
+loc data "$root/data"
+loc output "$root/figures"
 
 **************************************
-* 0. Populatoin data
+* 1. Population data
 **************************************
 
-* Get population data for pc impact conversion 
-import delim "$pop_data/population_by_agegroup_SSP3_low.csv", clear //  rowrange(13:) varnames(13)
-keep region year pop
-keep if year == `yr' | year == 2010
+* Get population data for converting Per capita impacts into levels 
+import delim "`DB_data'/SSP3_IR_level_population_2010_and_2099.csv", clear 
 
+* Our population estimates are done using a step function. We only have data for each 5th year
+* Therefore, we assign 2099 population the values of population from 2095
+replace year  = 2099 if year == 2095
+
+* I think this can be removed  
 preserve
-	keep if year == `yr'
+	keep if year == 2099
 	rename pop population
 	tempfile population
 	save `population', replace
 restore
 
+* Collapse to the country level (the level of the bar chart's data)
+* The first three letters of a region's name identifies it's country
 gen country = substr(region, 1, 3)
 collapse (sum) pop , by(country year)
 tempfile iso_pop
 save `iso_pop', replace
-// reshape wide population, i(country) j(year)
-
 
 **************************************
-* 1. 2010 current consumption - from the main energy dataset 
+* 2. 2010 current consumption - from the analysis data  
 **************************************
-use "$current_data/IEA_Merged_long_GMFD.dta", clear
+
+use "`data'/IEA_Merged_long_GMFD.dta", clear
 keep if year == 2010
-keep if product == "other_energy" | product == "electricity"
+
 keep country product load_pc year
 rename load_pc consumption_
 reshape wide consumption_, i(country year) j(product) string
 foreach var in "other_energy" "electricity" {
 	ren consumption_`var' `var'
 }
-// gen scn = "impact"
 tempfile twenty_10
 save `twenty_10', replace
-di "twenty 10 impacts saved"
+di "2010 Per Capita country level consumption saved"
 
 **************************************
 * 2. 2099 impacts
@@ -80,20 +65,27 @@ di "twenty 10 impacts saved"
 
 foreach prod in "electricity" "other_energy" {
 
-	* Get the SGP impacts
-	insheet using "$impacts_new/median_OTHERIND_`prod'_TINV_clim_income_spline_GMFD/rcp85-SSP3_median_high_fulladapt.csv", clear
+	* Get the 2099 impact region level impacts data
+	insheet using "`DB_data'/`prod'_TINV_clim_income_spline_SSP3-rcp85_impactpc_high_fulladapt_2099.csv", clear
+	
+	* Covert to GJ from KWh, since projection system outputs are in KWh
+	replace mean = mean * 0.0036
+
+	* Collapse to the country level, weighting impacts according to IR level population
 	gen country = substr(region,1,3)
-	keep if year == `yr'
-	merge m:1 region year using "`population'", assert(3) nogen
+	merge 1:1 region year using "`population'", assert(3) nogen
 	ren mean `prod'
 	collapse (mean) `prod' [aw=pop], by(country year)
 	keep country year `prod'
-
 	tempfile `prod'_impacts
 	save ``prod'_impacts', replace
-	di "saving `prod'_impacts"
+	di "saving `prod' 2099 impacts tempfile"
 }
-* append the elec and other energy impacts together
+
+**************************************
+* 2. Merge it all together and save
+**************************************
+
 use `electricity_impacts', clear
 preserve
 	keep country
@@ -106,20 +98,20 @@ restore
 
 merge 1:1 country year using `other_energy_impacts', nogen
 append using `twenty_10'
+
 merge m:1 country year using `iso_pop', nogen
-// merge 1:1 country using `twenty_10', keep(1 3) nogen
 tempfile impacts
 save `impacts', replace
-di "impacts saved"
+
+* Clean up shop
 merge m:1 country using "`key'", nogen
 keep if key == 1
 drop key
+di "impacts saved"
 
+* Generate levels, by multiplying country level population with the PC impacts 
 foreach prod in "electricity" "other_energy" { 
-
 	gen levels_`prod' = `prod' * pop
-
 }
-
-
-export delimited using "$OUT/barchart_v2_output_v2.csv", replace
+* Save as a csv for plotting in R using ggplot
+export delimited using "`DB_data'/outputs/figure_2B_bar_chart_data.csv", replace
