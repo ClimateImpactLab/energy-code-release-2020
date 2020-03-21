@@ -10,10 +10,10 @@ library(readr)
 
 DB = "C:/Users/TomBearpark/Dropbox"
 DB_data = paste0(DB, "/GCP_Reanalysis/ENERGY/code_release_data")
+data = paste0(DB_data, "/outputs")
 
 root =  "C:/Users/TomBearpark/Documents/energy-code-release"
-data = paste0(DB_data, "/outputs")
-output = paste0(DB_data, "/figures")
+output = paste0(root, "/figures")
 
 
 ###########################
@@ -62,8 +62,8 @@ dfsellist = dfsel[dfsel$country %in%
               dplyr::select(country) %>%
       				mutate(order=1:n())
 
-# Get a dataframe of 2099 change due to climate change percent of 2010 consumption
-get_percent_change_df  = function(fuel, df, list) {
+# Function to get a dataframe of 2099 change due to climate change percent of 2010 consumption
+get_percent_change_df = function(fuel, df, list) {
   
   var_name = paste0("levels_", fuel)
   
@@ -78,85 +78,66 @@ get_percent_change_df  = function(fuel, df, list) {
   return(pchange)
 }
 
-plot_2B_bar_charts = function(fuel, df, list) {
+# Function to plot the bar charts... 
+plot_2B_bar_charts = function(fuel, df, list, output) {
+  
+  # Get the percentages
+  pchange = get_percent_change_df(fuel = fuel, df = df, list = list) %>%
+    as.data.frame()
+  
+  #Set fuel specific options
+  if(fuel == "electricity"){
+    print('electricity plot!!')
+    title = "Electricity"
+    limits = c(0, 15)
+    var_name = "levels_electricity"
+  }
+  if(fuel == "other_energy"){
+    print('other energy plot!!')
+    title = "Other Fuels"
+    limits = c(-10, 50)
+    var_name = "levels_other_energy"
+  }
+  
+  #subset the dataframe
+  plot_df = df %>% 
+    left_join(list) %>% 
+    filter(!is.na(order))
 
-plt =	dfsel %>% 
-    left_join(dfsellist) %>% 
-    filter(!is.na(order))%>%
-		ggplot() +
-		geom_bar(aes(x=reorder(country_name,-order), 
-		            y = levels_electricity, fill=factor(year, levels=c(2099,2010) )), 
-		         position="dodge", stat="identity", width=.6) +
-		geom_hline(yintercept=0, colour = 'lightgray', size=0.5, linetype='solid') +
-		coord_flip() +
-		theme_minimal() +
-	  scale_y_continuous(limits = c(0, 15), expand = c(0, 0)) +
-		labs(title="Electricity") +
-		ylab("EJ") +
-		xlab("Country") +
-		scale_fill_manual(values=c("#ffb961","#c05c7e"),name = "", 
-		                  labels = c("End of Century Impact", "Current Consumption")) +
-		theme(axis.text.y = element_text(size=9),
-				axis.text.x = element_text(size=10, vjust=2),
-				axis.title.y = element_blank(),
-				legend.position=c(0.75, 0.25),
-				legend.title = element_blank(),
-				legend.spacing.x = unit(.2, 'cm'),
-				panel.grid.major =element_blank(),
-				panel.grid.minor =element_blank(),
-				axis.line.x = element_line(colour = 'lightgray', size=0.5, linetype='solid'),
-				panel.border = element_blank()) +
-		geom_text(aes(x=reorder(country_name,-order), y=yval + 0.5, 
-		              label = paste0(pc,'%'), fill = NULL), color="#2F4F4F", data = pchange, size=3)
+  #Plot!!
+  plt =	ggplot(plot_df) +
+  		geom_bar(aes(x=reorder(country_name,-order),
+  		            y = get(var_name), fill=factor(year, levels=c(2099,2010) )),
+  		         position="dodge", stat="identity", width=.6) +
+  		geom_hline(yintercept=0, colour = 'lightgray', size=0.5, linetype='solid') +
+  		coord_flip() +
+  		theme_minimal() +
+  	  scale_y_continuous(limits = limits, expand = c(0,0)) +
+  		labs(title=title) +
+  		ylab("EJ") +
+  		xlab("Country") +
+  		scale_fill_manual(values=c("#ffb961","#c05c7e"),name = "",
+  		                  labels = c("End of Century Impact", "Current Consumption")) +
+  		theme(axis.text.y = element_text(size=9),
+  				axis.text.x = element_text(size=10, vjust=2),
+  				axis.title.y = element_blank(),
+  				legend.position=c(0.75, 0.25),
+  				legend.title = element_blank(),
+  				legend.spacing.x = unit(.2, 'cm'),
+  				panel.grid.major =element_blank(),
+  				panel.grid.minor =element_blank(),
+  				axis.line.x = element_line(colour = 'lightgray', size=0.5, linetype='solid'),
+  				panel.border = element_blank()) +
+  		geom_text(aes(x=reorder(country_name,-order), y=yval + 0.5,
+  		              label = paste0(pc,'%'), fill = NULL), color="#2F4F4F", data = pchange, size=3)
 
+  ggsave(paste0(output,"/fig_2B_",fuel,"_consumption_compared_to_2099_impact_bars.pdf"), plot=plt, height=7.5, width=7.5)
+  print("saved plot at location...")
+  print(paste0(output,"/fig_2B_",fuel,"_consumption_compared_to_2099_impact_bars.pdf"))
+  return(plt)
 }
-plt
+# Run the functions!
+plt = plot_2B_bar_charts(fuel = "other_energy", df = dfsel, list = dfsellist, output  = output)
+plt = plot_2B_bar_charts(fuel = "electricity", df = dfsel, list = dfsellist, output = output)
 
 
-ggsave(paste0(dir,'energy_barchart_ele_levels_shortlist_v2.png'), plot=plt, height=7.5, width=7.5)
-
-
-
-
-
-
-# OTHER ENERGY
-####################
-
-
-pchange = dfsel %>% left_join(dfsellist) %>% 
-					filter(!is.na(order)) %>% 
-					select(year,country_name,order,levels_other_energy) %>%
-					spread(year,levels_other_energy,sep='_') %>%
-					mutate(pc=(year_2099/year_2010)*100, yval =if_else(year_2099<year_2010,year_2010,year_2099))
-pchange$pc = round(pchange$pc,1)
-
-
-plt =	dfsel %>% left_join(dfsellist) %>% filter(!is.na(order)) %>%
-		ggplot( ) +
-		geom_bar(aes(x=reorder(country_name,-order), y = levels_other_energy, fill=factor(year, levels=c(2099,2010) )), position="dodge", stat="identity", width=.6) +
-		geom_hline(yintercept=0, colour = 'lightgray', size=0.5, linetype='solid') +
-		# geom_segment(aes(x=reorder(country_name,-order), y = -2000, xend =reorder(country_name,-order), yend = 0), colour = 'lightgray', size=0.25, linetype='solid') +
-		geom_bar(aes(x=reorder(country_name,-order), y = levels_other_energy, fill=factor(year, levels=c(2099,2010) )), position="dodge", stat="identity", width=.6) +
-		coord_flip() + 
-		theme_minimal() +
-		scale_y_continuous(limits = c(-2000, 12500), expand = c(0, 0), breaks=seq(4000,12000,4000)) +
-		labs(title="Other Energy") +
-		ylab("Billion kwh") +
-		xlab("Country") +
-		scale_fill_manual(values=c("#ffb961","#2d3561"),name = "", labels = c("End of Century Impact", "Current Consumption")) +
-		theme(axis.text.y = element_text(size=9),
-				axis.text.x = element_text(size=10, vjust=2),
-				axis.title.y = element_blank(),
-				legend.position=c(0.75, 0.25),
-				legend.title = element_blank(),
-				legend.spacing.x = unit(.2, 'cm'),
-				panel.grid.major =element_blank(),
-				panel.grid.minor =element_blank(),
-				axis.line.x = element_line(colour = 'lightgray', size=0.5, linetype='solid'),
-				panel.border = element_blank()) +
-		geom_text(aes(x=reorder(country_name,-order), y=yval+700, label = paste0(pc,'%'), fill = NULL), color="#2F4F4F", data = pchange, size=3)
-
-plt
-
-ggsave(paste0(dir,'energy_barchart_oe_levels_shortlist_v2.png'), plot=plt, height=7.5, width=7.5)
