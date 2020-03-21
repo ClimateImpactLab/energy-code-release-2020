@@ -54,32 +54,32 @@ dfsel = bind_rows(df,df2)
 # 2 Plot Selected Countries 	  #
 #################################
 
-
-shortlist = c("BRA","CHN","ETH","IDN","IND","NGA","PAK","USA", "EUR")
-
-# ELECTRICITY
-####################
-
-
-dfsellist = dfsel[dfsel$country %in% shortlist,] %>% 
+# Get a dataframe of the country names we want to plot, and put them in an order for plotting
+dfsellist = dfsel[dfsel$country %in% 
+                    c("BRA","CHN","ETH","IDN","IND","NGA","PAK","USA", "EUR"),] %>% 
               dplyr::filter(year==2010) %>%
-      				arrange(-levels_electricity) %>%
+              dplyr::arrange(-levels_electricity) %>%
               dplyr::select(country) %>%
-      				slice(1:50) %>% 
       				mutate(order=1:n())
 
 # Get a dataframe of 2099 change due to climate change percent of 2010 consumption
-
-plot_bar = function(fuel, df) {
-  pchange = dfsel %>% 
-              dplyr::left_join(dfsellist) %>% 
+get_percent_change_df  = function(fuel, df, list) {
+  
+  var_name = paste0("levels_", fuel)
+  
+  pchange = df %>% 
+              dplyr::left_join(list) %>% 
               dplyr::filter(!is.na(order)) %>% 
-    					dplyr::select(year,country_name,order,levels_electricity) %>%
-    					tidyr::spread(year,levels_electricity,sep='_') %>%
+    					dplyr::select(year,country_name,order,!!var_name) %>%
+    					tidyr::spread(year,!!var_name,sep='_') %>%
               dplyr::mutate(pc=(year_2099/year_2010)*100, 
                                 yval =if_else(year_2099<year_2010,year_2010,year_2099)) %>%
               mutate(pc = round(pc, 1))
+  return(pchange)
 }
+
+plot_2B_bar_charts = function(fuel, df, list) {
+
 plt =	dfsel %>% 
     left_join(dfsellist) %>% 
     filter(!is.na(order))%>%
@@ -109,6 +109,7 @@ plt =	dfsel %>%
 		geom_text(aes(x=reorder(country_name,-order), y=yval + 0.5, 
 		              label = paste0(pc,'%'), fill = NULL), color="#2F4F4F", data = pchange, size=3)
 
+}
 plt
 
 
