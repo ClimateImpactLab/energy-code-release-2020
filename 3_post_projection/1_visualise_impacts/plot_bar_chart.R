@@ -3,10 +3,13 @@
 
 rm(list = ls())
 
-library(ggplot2)
-library(dplyr)
-library(tidyr)
-library(readr)
+# Load in the required packages, using the pacman package
+if(!require("pacman")){install.packages(("pacman"))}
+
+pacman::p_load(ggplot2, # plotting functions
+               dplyr,   # data manipulation functions
+               tidyr,   # spread()
+               readr)   # read_csv()
 
 DB = "C:/Users/TomBearpark/Dropbox"
 DB_data = paste0(DB, "/GCP_Reanalysis/ENERGY/code_release_data")
