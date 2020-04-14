@@ -1,4 +1,4 @@
-# Produces maps displayed in the energy paper. Uses Functions in mapping.R
+# Produces maps displayed in the energy paper. Uses functions in mapping.R
 
 rm(list = ls())
 
@@ -30,7 +30,7 @@ df= df %>%
   mutate_at(names, scale)
 
 
-# Function for getting quantiles of the data, for use in the box plots.
+# Function for extracting a vector of quantiles of the data, for use in the box plots.
 get.boxplot.vect <- function(df = NULL, yr = 2099) {
   boxplot <- c(as.numeric(df[df$year==yr,'q5']), 
                as.numeric(df[df$year==yr,'q10']),
@@ -57,7 +57,6 @@ get_df_list = function(fuel, df){
     filter(rcp == "rcp85", adapt_scen == "fulladapt") %>%
     get.boxplot.vect(yr = 2099 )
   
-
   u_85 = df %>% 
     dplyr::filter(rcp == "rcp85", adapt_scen == "fulladapt") %>% 
     dplyr::select(year, q10, q90) %>%
@@ -85,7 +84,8 @@ get_df_list = function(fuel, df){
     )
 }
 
-# Plotting function
+# Plotting function, for replicating Figure 2C. Note - coloring in  the paper requires 
+# post processing in illustrator 
 
 plot_ts = function(df, fuel){
   
@@ -116,12 +116,6 @@ plot_ts = function(df, fuel){
 
 p = plot_ts(df = df, fuel = "OTHERIND_other_energy")
 q = plot_ts(df = df, fuel = "OTHERIND_electricity")
-
-
-
-
-
-
 
 
 
