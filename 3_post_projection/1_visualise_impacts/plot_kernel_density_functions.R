@@ -17,8 +17,8 @@ root =  "C:/Users/TomBearpark/Documents/energy-code-release"
 output = paste0(root, "/figures")
 
 
-# Source the KD plot code
-source()
+# Source the Kernel Density plotting code
+source(paste0(root, "/3_post_projection/0_utils/kernel_densities.R"))
 
 
 # 1. Functions for taking draws from a uniform distribution, with the number of draws
@@ -57,68 +57,65 @@ take_draws <- function(seed, iterations, mean_sd_df, gcm_weight_df, year) {
 }
 
 
-gen_plot_save_kd_energy <- 
-          function(env, IR, ssp, rcp, 
-                    product, price, iam, iterations, 
-                    seed, output, year, title, unit, xmin, xmax, ymax, 
-                    gdp_scale, df_gdp){
+
+# 2. Function for generating and plotting the kernely density functions for each IR in the paper
+gen_plot_save_kd <- 
+          function(IR, title, iterations, 
+                    seed, output, xmin, xmax, ymax, DB_data){
   
-  fuel = product
-  IR = "USA.14.608"
-  iterations <- 1000
-  seed = 123
+  # Load in variance and mean impacts information
   df_joined <- read_csv(
                     paste0(DB_data, 
                              "/select-IRs-gcm-level-price014-",
                              "total_energy_main_model_SSP3-",
                              "rcp85_damages_high_fulladapt_2099.csv")) %>%
     dplyr::filter(region == !!IR)
-    
+  
+  # Load in the gcm weights
   gcm.weights = read_csv(paste0(DB_data, "/gcm_weights.csv")) %>%
     dplyr::select(gcm, norm_weight_rcp85) %>%
     dplyr::rename(norm_weight = norm_weight_rcp85)
   
+  # Take draws
   df_mc <- take_draws(seed = seed, iterations = iterations, year = 2099,
               mean_sd_df=df_joined, gcm_weight_df=gcm.weights) %>% 
     as.data.frame()
   
-  if(!is.null(gdp_scale) ){
-    df_gdp = read_csv(paste0(DB_data, )
-    print('Converting the damage draws into percent of GDP')
-    val = df_gdp$gdp[df_gdp$region == IR] %>% as.numeric()
-    val = val / 1000000000 
-    df_mc$value = df_mc$value / val
-    tag = "percent_gdp-"
-    print(paste0('max is ', max(df_mc$value), ' min is ', min(df_mc$value), ' mean is ', mean(df_mc$value)))
-  }else{
-    tag = NULL
-  }
-  
-  print("done MC")
-  print(paste0(fuel, "  ", IR))
+  message('Converting the damage draws into percent of GDP')
+  df_gdp = read_csv(paste0(DB_data,"/gdppc_pop_IR_values_2099.csv"))
+  val = df_gdp$gdp99[df_gdp$region == IR] %>% as.numeric()
+  # Convert to dollars, since that 
+  # was the units of the impacts was  billions of dollars
+  val = val / 1000000000 
+  df_mc$value = df_mc$value / val
 
-  # kd_plot <-  plot_kd(df_mc=df_mc, year=year, fuel = fuel, title=title, iam=iam, rcp=rcp, xmax = xmax, xmin = xmin, ymax = ymax)
+  print(paste0("plotting for ", IR))
+
   kd_plot <- ggkd(df.kd = df_mc,
-                  topcode.ub = NULL, topcode.lb = NULL, 
-                  yr = year, ir.name = paste0(title, " ", fuel, "-", rcp, "-", iam), 
+                  yr = 2099, ir.name = paste0(title, " total_energy-rcp85-high"), 
                   x.label = NULL, y.label = "Density", 
                   kd.color = "grey") 
   
+  # Add limits, so we can nicely compare across plots
   if(!is.null(xmin)){
     kd_plot = kd_plot + xlim(xmin, xmax) 
   } 
   if(!is.null(ymax)){
     kd_plot = kd_plot + ylim(0, ymax)
   } 
-
-  # kd_plot
-  print('saving')
-  if(!is.null(xmin)) {
-    ggsave(paste0(output, paste(tag, IR, ssp, rcp, unit, price, year, fuel, "xcomm", sep="_"), ".pdf"), kd_plot)
-  }else{
-    ggsave(paste0(output, paste(tag, IR, ssp, rcp, unit, price, year, fuel, sep="_"), ".pdf"), kd_plot)
-  }
-  print(val)
-  return(kd_plot)
+  ggsave(paste0(output, "/fig_3/fig_3A_kd_plot_",IR, ".pdf"), kd_plot)
+  # return(kd_plot)
 }
+
+
+
+# 3. Loop over the IR names that we want to plot for... 
+IR_list = c("USA.14.608", "SWE.15", "CHN.2.18.78", "CHN.6.46.280", "IND.21.317.1249", "BRA.25.5235.9888")
+IR_list_names = c("Chicago", "Stockholm", "Beijing", "Guangzhou", "Mumbai", "Sao Paulo")
+
+args = list(iterations = 1000, seed = 123, xmax =0.03, xmin = -0.03, ymax = 800,
+            DB_data = DB_data, output = output)
+
+mapply(gen_plot_save_kd, IR = IR_list, title =IR_list_names, MoreArgs = args)
+
 
