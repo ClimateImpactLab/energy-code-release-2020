@@ -26,17 +26,19 @@ mymap = load.map(shploc = paste0(DB_data, "/world-combo-new-nytimes"))
 #############################################
 # 2. Figure 2 A
 
-plot_2A = function(fuel, bound) {
+plot_2A = function(fuel, bound, DB_data, map=mymap) {
 
+  # Load in the impacts-pc data, and convert it to GJ
   df= read_csv(
     paste0(DB_data, 
       "/", fuel, "_TINV_clim_income_spline_SSP3-rcp85_impactpc_high_fulladapt_2099.csv")) %>%
     mutate(mean =mean * 0.0036)
   
+  # Set scaling factor for map color bar
   scale_v = c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1)
   rescale_value <- scale_v*bound
   
-  p = join.plot.map(map.df = mymap, 
+  p = join.plot.map(map.df = map, 
                      df = df, 
                      df.key = "region", 
                      plot.var = "mean", 
@@ -47,14 +49,73 @@ plot_2A = function(fuel, bound) {
                      rescale_val = rescale_value,
                      colorbar.title = paste0(fuel, " imapacts, GJ PC, 2099"), 
                      map.title = paste0(fuel, 
-                                          "_TINV_clim_income_spline_SSP3-rcp85_impactpc_high_fulladapt_2099"))
+                                    "_TINV_clim_income_spline_SSP3-rcp85_impactpc_high_fulladapt_2099"))
   
   ggsave(paste0(output, "/fig_2A_", fuel, "_impacts_map.png"), p)
 }
-plot_2A(fuel = "electricity", bound = 3)
-plot_2A(fuel = "other_energy", bound = 18)
+plot_2A(fuel = "electricity", bound = 3, DB_data = DB_data)
+plot_2A(fuel = "other_energy", bound = 18, DB_data = DB_data)
 
 
 #############################################
-# 2. Figure 2 A
+# 3. Figure 3 A
+
+plot_3A = function(DB_data, map){
+  
+  # Load in the projected impacts data, which is in billions of 2019 dollars
+  # Calculate each IRs damage as a proportion of it's SSP3 projected 2099 GDP
+  df = read_csv(
+    paste0(DB_data, 
+            "/price014-total_energy_main_model_SSP3-rcp85_damages_high_fulladapt_2099.csv")) %>%
+    mutate(damage_per_gdp99 = damage * 1000000000 / gdp99)
+
+  bound= 0.03
+  rescale_value <- c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1) *bound
+  
+  p = join.plot.map(map.df = map, 
+                    df = df, 
+                    df.key = "region",
+                    plot.var = "damage_per_gdp99", 
+                    breaks_labels_val = seq(-bound, bound, bound/3),
+                    topcode = T, 
+                    topcode.ub = max(rescale_value), 
+                    color.scheme = "div", 
+                    rescale_val = rescale_value,
+                    colorbar.title = "2099 Damages, Proportion of 2099 GDP", 
+                    map.title = "Per-GDP-price014-ssp3-rcp85-high")
+  
+  ggsave(paste0(output, "/fig_3/fig_3A_2099_damages_proportion_gdp_map.png"), p)
+}
+plot_3A(DB_data= DB_data, map = mymap)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
