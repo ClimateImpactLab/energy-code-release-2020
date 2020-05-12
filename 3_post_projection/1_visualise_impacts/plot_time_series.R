@@ -140,8 +140,52 @@ q = plot_ts_fig_2C(DB_data = DB_data, fuel = "OTHERIND_electricity", output = ou
 #########################################
 # 2. Figure 3B
 
-df = read_csv(paste0(fuel))
+plot_ts_fig_3B = function(DB_data, output){
+  
+  # Load in the impacts data
+  df_impacts = read_csv(paste0(DB_data, 
+                       "/damages-total_energy-price014-SSP3-high-fulladapt-timeseries.csv"))
+  
+  # Load in gdp global projected SSP3 time series
+  df_gdp = read_csv(paste0(DB_data, "/global_gdp_time_series.csv"))
+  
+  # Get separate dataframes for rcp45 and rcp85, for plotting
+  format_df = function(rcp, df_impacts, df_gdp){
+    
+    df = df_impacts %>% 
+      dplyr::filter(rcp == !!rcp) %>% 
+      left_join(df_gdp, by = "year") %>%
+      mutate(percent_gdp = (mean/gdp) *100, 
+             ub = (q95/gdp) *100, 
+             lb = (q5/gdp) *100)
+    df_mean = df %>% dplyr::select(year, percent_gdp)
+    
+    return(list(df, df_mean))
+  }
+  
+  df_45 = format_df(rcp = 'rcp45', df_impacts= df_impacts, df_gdp = df_gdp)
+  df_85 = format_df(rcp = 'rcp85', df_impacts= df_impacts, df_gdp = df_gdp)
+  
+  # Call the ggtimeseries function, and also add on extra ribbons
+  p <- ggtimeseries(df.list = list(as.data.frame(df_45[2]), as.data.frame(df_85[2])), 
+                    df.x = "year",
+                    x.limits = c(2010, 2100),                               
+                    y.limits=c(-0.8,0.2),
+                    y.label = "% GDP", 
+                    legend.title = "RCP", legend.breaks = c("RCP 4.5", "RCP 8.5"), 
+                    legend.values = c('blue', 'red')) + 
+    geom_ribbon(data = df_45[[1]], aes(x=df_45[[1]]$year, ymin=df_45[[1]]$ub, ymax=df_45[[1]]$lb), 
+                fill = "blue", alpha=0.1, show.legend = FALSE) +
+    geom_ribbon(data = df_85[[1]], aes(x=df_85[[1]]$year, ymin=df_85[[1]]$ub, ymax=df_85[[1]]$lb), 
+                fill = "red",  alpha=0.1, show.legend = FALSE) + 
+    ggtitle("Damages as a percent of global gdp, ssp3-high")
 
+  ggsave(p, file = paste0(output, 
+          "/fig_3/fig_3b_global_damage_time_series_percent_gdp_SSP3-high.pdf"), width = 8, height = 6)
+  
+  return(p)  
+}
+r = plot_ts_fig_3B(DB_data =DB_data, output = output)
 
 
 
