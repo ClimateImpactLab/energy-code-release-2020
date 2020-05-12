@@ -65,7 +65,7 @@ ggtimeseries <- function(df.list = NULL,
     
     p <- p + geom_line(data=df, aes(x=df[,1], y=df[,2], color=model), alpha = 1, size=1) #plot adaptation scenario lines
   }
-  print('hello')
+
   if(!is.null(df.box)){ #plot first boxplot
     p <- p + geom_errorbar(aes(x=(end.yr+3), ymin = df.box[1], ymax = df.box[7]), color = "tomato4", lty = "dotted", width = 0) + #errorbar rcp85
         geom_boxplot(aes(x=(end.yr+3), ymin = df.box[2], lower = df.box[3], middle = df.box[4], upper = df.box[5], ymax = df.box[6]), #boxplot rcp85

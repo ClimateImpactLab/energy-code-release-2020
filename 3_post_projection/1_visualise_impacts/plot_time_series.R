@@ -1,4 +1,12 @@
-# Produces maps displayed in the energy paper. Uses functions in mapping.R
+# Produces maps displayed in the energy paper. Uses functions in "0_utils/time_series.R"
+# Contents: 
+# 0. Set up
+# 1. Code for replicating figure 2C
+# 2. Code for replicating figure 3B
+
+
+#########################################
+# 0. Set up
 
 rm(list = ls())
 
@@ -20,17 +28,18 @@ output = paste0(root, "/figures")
 # Source time series plotting codes
 source(paste0(root, "/3_post_projection/0_utils/time_series.R"))
 
-# Load in the impacts data: 
-df = read_csv(paste0(DB_data, "/time_series_main_model_impacts_PC.csv"))
 
-# convert to GJ
-scale = function(x) (x* 0.0036)
-names = c("mean", "q50", "q5", "q95", "q10", "q90", "q75","q25")
-df= df %>%
-  mutate_at(names, scale)
+#########################################
+# 1. Figure 2C
+# There are three functions needed for replicating this figure
+    # "get.boxplot.vect" takes in a dataframe, and returns a vector of quantiles
+    # "get_df_list_fig_2C" loads in the impacts projected data, and returns a formatted list of 
+        # lines for plotting
+    # "plot_ts_fig_2C" uses the above two functions, and the "time_series.R" code to 
+        # replicate figure 2C
 
 
-# Function for extracting a vector of quantiles of the data, for use in the box plots.
+# Function for formatting a vector of the distribution of the data for a given year, for use in the box plots.
 get.boxplot.vect <- function(df = NULL, yr = 2099) {
   boxplot <- c(as.numeric(df[df$year==yr,'q5']), 
                as.numeric(df[df$year==yr,'q10']),
@@ -44,8 +53,18 @@ get.boxplot.vect <- function(df = NULL, yr = 2099) {
 
 # Function that takes in the long data, subsets it and returns a list of dataframes 
 # and vectors needed to plot the time series for a given fuel
-get_df_list = function(fuel, df){
+get_df_list_fig_2C = function(DB_data, fuel){
   
+  # Load in the impacts data: 
+  df = read_csv(paste0(DB_data, "/time_series_main_model_impacts_PC.csv"))
+  
+  # convert to GJ
+  scale = function(x) (x* 0.0036)
+  names = c("mean", "q50", "q5", "q95", "q10", "q90", "q75","q25")
+  df= df %>%
+    mutate_at(names, scale)
+  
+  # Subset and format for plotting
   df = df %>%
     dplyr::filter(spec == !!fuel)
   
@@ -84,22 +103,22 @@ get_df_list = function(fuel, df){
     )
 }
 
-# Plotting function, for replicating Figure 2C. Note - coloring in  the paper requires 
+# Plotting function, for replicating Figure 2C. Note - coloring in the paper requires 
 # post processing in illustrator 
-
-plot_ts = function(df, fuel){
+plot_ts_fig_2C = function(fuel, output, DB_data){
   
-  plot_df = get_df_list(fuel = fuel, df = df)
+  plot_df = get_df_list_fig_2C(DB_data = DB_data,fuel = fuel)
   
   p <- ggtimeseries(
     df.list = list(plot_df$df_85[,c('year', 'mean')] %>% as.data.frame() , 
                    plot_df$df_85.na[,c('year', 'mean')]%>% as.data.frame(),
                    plot_df$df_45[,c('year', 'mean')]%>% as.data.frame(),
                    plot_df$df_45.na[,c('year', 'mean')]%>% as.data.frame()), # mean lines
-    df.u = plot_df$df.u %>% as.data.frame(), #uncertainty - first layer
+    df.u = plot_df$df.u %>% as.data.frame(), 
     ub = "q90_85", lb = "q10_85", #uncertainty - first layer
     ub.2 = "q90_45", lb.2 = "q10_45", #uncertainty - second layer
-    uncertainty.color = "red", uncertainty.color.2 = "blue",
+    uncertainty.color = "red", 
+    uncertainty.color.2 = "blue",
     df.box = plot_df$bp_85, 
     df.box.2 = plot_df$bp_45,
     x.limits = c(2010, 2099),
@@ -112,10 +131,38 @@ plot_ts = function(df, fuel){
   
   ggsave(paste0(output, "/fig_2C_", fuel, "time_series.pdf"), p)
   return(p)
-  }
+}
 
-p = plot_ts(df = df, fuel = "OTHERIND_other_energy")
-q = plot_ts(df = df, fuel = "OTHERIND_electricity")
+p = plot_ts_fig_2C(DB_data = DB_data, fuel = "OTHERIND_other_energy", output = output)
+q = plot_ts_fig_2C(DB_data = DB_data, fuel = "OTHERIND_electricity", output = output)
+
+
+#########################################
+# 2. Figure 3B
+
+df = read_csv(paste0(fuel))
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
