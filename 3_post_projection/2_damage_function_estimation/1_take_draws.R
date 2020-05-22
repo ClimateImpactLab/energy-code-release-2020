@@ -10,7 +10,7 @@ pacman::p_load(dplyr,
 
 
 # Set paths
-DB = "C:/Users/TomBearpark/Dropbox"
+DB = "C:/Users/TomBearpark/SynologyDrive/"
 DB_data = paste0(DB, "/GCP_Reanalysis/ENERGY/code_release_data")
 dir = paste0(DB_data, "/damage_function_estimation/")
 
