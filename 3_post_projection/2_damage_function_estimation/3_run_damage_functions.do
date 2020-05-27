@@ -1,30 +1,20 @@
-* TOM TO DO - change this so we use the function from the DF repo. 
-
-
 *****************************************
 * DAMAGE FUNCTION ESTIMATION FOR SCC 
 * CALCULATION INCLUDING POST-2100 EXTRAPOLATION
 *****************************************
-
 /* 
-
 This script does the following:
 	* 1) Pulls in a .csv containing damages at global or impact region level. The .csv 
 			should be SSP-specific, and contain damages in current year USD for every
 			RCP-GCM-IAM-year combination. 
 	* 2) Runs a regression in which the damage function is nonparametrically estimated for each year 't'
 			using data only from the 5 years around 't'
-	* 3) Runs a second regression in which GMST is interacted linearly with time. This regression uses
-			only data from the second half of the century, given irregular early year behavior documented
-			in mortality
+	* 3) Runs a second regression in which GMST is interacted linearly with time. 
 	* 4) Predicts damage function coefficients for all years 2015-2300, with post-2100 extrapolation 
 			conducted using the linear temporal interaction model and pre-2100 using the nonparametric model
 	* 5) Saves a csv of damage function coefficients to be used by the SCC calculation derived from the FAIR 
 			simple climate model
-	
-
 */
-
 **********************************************************************************
 * SET UP -- Change paths and input choices to fit desired output
 **********************************************************************************
@@ -43,7 +33,7 @@ loc ssp = "SSP3"
 * Model toggle 
 loc model = "main"
 
-* What year do we use data for determining DF estimates used for the out of sample extrapolation
+* What year do we use data from for determining DF estimates used for the out of sample extrapolation
 loc subset = 2085
 
 
@@ -91,7 +81,6 @@ merge m:1 year rcp gcm using `GMST', nogen keep(3)
 sort rcp gcm iam year 
 drop if year < 2010
 ren temp anomaly
-
 
 **********************************************************************************
 * STEP 2: Regressions & construction of time-varying damage function coefficients 
@@ -141,8 +130,7 @@ postclose damage_coeffs
 * STEP 3: WRITE AND SAVE OUTPUT 
 **********************************************************************************
 
-* Format for the specific requirements of the SCC code, and write out results
-clear 
+* Format for the specific requirements of the SCC code, and write out results 
 use "`coeffs'", clear
 
 gen placeholder = "ss"
@@ -150,4 +138,3 @@ ren var_type growth_rate
 order year placeholder growth_rate
 
 outsheet using "$dir/coefficients/df_mean_output_`ssp'`model_tag'.csv", comma replace	
-di "saving at $dir/df_mean_output_`ssp'`model_tag'.csv"

@@ -162,10 +162,6 @@ di "Time to completion = `r(t1)'"
 **********************************************************************************
 * STEP 3: WRITE AND SAVE OUTPUT 
 **********************************************************************************
-
-* save and write out results
-clear 
+ 
 use "`coeffs'", clear
-x
-outsheet using "$dir/coefficients/df_qreg_output_`ssp'`model_tag'.csv", comma replace	
-
+outsheet using "$dir/coefficients/df_qreg_output_`ssp'`model_tag'.csv", comma replace
