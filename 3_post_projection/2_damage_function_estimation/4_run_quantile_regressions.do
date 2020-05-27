@@ -24,7 +24,8 @@ clear all
 set more off
 set scheme s1color
 
-glob DB "C:/Users/TomBearpark/SynologyDrive"
+* glob DB "C:/Users/TomBearpark/SynologyDrive"
+glob DB "/mnt/norgay_synology_drive"
 glob DB_data "$DB/GCP_Reanalysis/ENERGY/code_release_data"
 glob dir "$DB_data/damage_function_estimation"
 
@@ -66,7 +67,7 @@ di "`quantiles_to_eval'"
 
 foreach price in `pricelist' {
 	di "`price'"
-	import delim "$dir/resampled_data/gcm_damages_OTHERIND_total_energy_`price'_`ssp'`model_tag'-100-draws.csv", clear
+	import delim "$dir/resampled_data/gcm_damages_OTHERIND_total_energy_`price'_`ssp'`model_tag'-100-draws.csv", clear case(preserve)
 	keep rcp year gcm iam `price'value batch
 	ren `price'value `price'
 	tempfile `price'
