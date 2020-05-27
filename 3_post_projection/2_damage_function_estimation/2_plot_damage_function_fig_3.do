@@ -8,7 +8,9 @@ clear all
 set more off
 set scheme s1color
 
-glob DB "C:/Users/TomBearpark/Dropbox"
+* glob DB "C:/Users/TomBearpark/Dropbox"
+glob DB "C:/Users/TomBearpark/SynologyDrive"
+
 glob DB_data "$DB/GCP_Reanalysis/ENERGY/code_release_data"
 glob dir "$DB_data/damage_function_estimation/resampled_data"
 

@@ -22,7 +22,7 @@ dir = paste0(DB_data, "/damage_function_estimation/")
 
 
 
-take_draws = function(price, ssp, fuel, num_interations, 
+take_draws = function(price, ssp, fuel, num_iterations, 
                       directory) {
   
   # set seed for replicability:
@@ -44,7 +44,7 @@ take_draws = function(price, ssp, fuel, num_interations,
   
   # Take draws
   l = length(df$mean)
-  for(i in 1:num_interations) {
+  for(i in 1:num_iterations) {
     x = paste0("batch", i)
     df[x] = rnorm(l, mean = df$mean, sd = df$sd)
   }
@@ -61,7 +61,7 @@ take_draws = function(price, ssp, fuel, num_interations,
   
   write_csv(df, paste0(directory, "resampled_data/",
                        "gcm_", type, "_OTHERIND_",fuel,
-                       price_tag, "_",ssp,"-", num_interations, "-draws.csv"))
+                       price_tag, "_",ssp,"-", num_iterations, "-draws.csv"))
 
   return(df)
     
@@ -71,13 +71,13 @@ take_draws = function(price, ssp, fuel, num_interations,
 # 1. Get the data needed for the display in Figure 3C
 
 df = take_draws(price = "price014", ssp = "SSP3", 
-                fuel = "total_energy", num_interations = 15, directory = dir)
+                fuel = "total_energy", num_iterations = 15, directory = dir)
 
 df_oe = take_draws(price = NULL, ssp = "SSP3", 
-                fuel = "other_energy", num_interations = 15, directory = dir)
+                fuel = "other_energy", num_iterations = 15, directory = dir)
 
 df_elec = take_draws(price = NULL, ssp = "SSP3", 
-                fuel = "electricity", num_interations = 15, directory = dir)
+                fuel = "electricity", num_iterations = 15, directory = dir)
 
 
 
@@ -86,6 +86,8 @@ df_elec = take_draws(price = NULL, ssp = "SSP3",
 pricelist = c("price014", "price0", "price03", "WITCHGLOBIOM42", 
               "MERGEETL60", "REMINDMAgPIE1730", "REMIND17CEMICS", "REMIND17") 
 
+lapply(pricelist, FUN = take_draws, 
+       ssp = "SSP3", fuel = "total_energy", num_iterations = 100, directory = dir)
 
 
 

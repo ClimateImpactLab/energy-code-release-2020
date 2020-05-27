@@ -37,9 +37,6 @@ glob DB "C:/Users/TomBearpark/SynologyDrive"
 glob DB_data "$DB/GCP_Reanalysis/ENERGY/code_release_data"
 glob dir "$DB_data/damage_function_estimation"
 
-glob root "C:/Users/TomBearpark/Documents/energy-code-release"
-glob output "$root/figures/"
-
 * SSP toggle 
 loc ssp = "SSP3" 
 
@@ -62,6 +59,7 @@ if("`model'" == "main") {
 if("`ssp'" == "SSP3") {
 	loc pricelist price014 price0 price03 WITCHGLOBIOM42 MERGEETL60 REMINDMAgPIE1730 REMIND17CEMICS REMIND17
 }
+
 
 **********************************************************************************
 * STEP 1: Pull in and format each price scenarios csv
@@ -94,15 +92,10 @@ sort rcp gcm iam year
 drop if year < 2010
 ren temp anomaly
 
-tempfile clean_damages
-save "`clean_damages'", replace
-
-* loc yr = 2016
 
 **********************************************************************************
-* STEP 3: Regressions & construction of time-varying damage function coefficients 
+* STEP 2: Regressions & construction of time-varying damage function coefficients 
 **********************************************************************************
-
 
 **  INITIALIZE FILE WE WILL POST RESULTS TO
 capture postutil clear
@@ -128,10 +121,9 @@ foreach vv in `pricelist' {
 	}
 	
 	* Linear extrapolation for years post-2100 
-	 qui reg `vv' c.anomaly##c.anomaly##c.t  if year >= `subset'
+    qui reg `vv' c.anomaly##c.anomaly##c.t  if year >= `subset'
 	
 	* Generate predicted coeffs for each year post 2100 with linear extrapolation
-	
 	foreach yr of numlist 2100/2300 {
 		di "`vv' `yr'"
 		loc cons = _b[_cons] + _b[t]*(`yr'-2010)
@@ -139,18 +131,17 @@ foreach vv in `pricelist' {
 		loc beta2 = _b[c.anomaly#c.anomaly] + _b[c.anomaly#c.anomaly#c.t]*(`yr'-2010)
 		
 		* NOTE: we don't have future min and max, so assume they go through all GMST values 	
-		post damage_coeffs ("`vv'") (`yr') (`cons') (`beta1') (`beta2') (0) (11)
-						
+		post damage_coeffs ("`vv'") (`yr') (`cons') (`beta1') (`beta2') (0) (11)						
 	}		
 }
 
 postclose damage_coeffs
 
 **********************************************************************************
-* STEP 4: WRITE AND SAVE OUTPUT 
+* STEP 3: WRITE AND SAVE OUTPUT 
 **********************************************************************************
 
-* save, format for the specifics of the SCC code, and write out results
+* Format for the specific requirements of the SCC code, and write out results
 clear 
 use "`coeffs'", clear
 
@@ -158,6 +149,5 @@ gen placeholder = "ss"
 ren var_type growth_rate
 order year placeholder growth_rate
 
-outsheet using "$dir/coefficients/df_mean_output_SSP`ssp'`model_tag'.csv", comma replace	
+outsheet using "$dir/coefficients/df_mean_output_`ssp'`model_tag'.csv", comma replace	
 di "saving at $dir/df_mean_output_`ssp'`model_tag'.csv"
-
