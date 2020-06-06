@@ -27,11 +27,11 @@ glob DB "C:/Users/TomBearpark/SynologyDrive"
 glob DB_data "$DB/GCP_Reanalysis/ENERGY/code_release_data"
 glob dir "$DB_data/damage_function_estimation"
 
-* SSP toggle 
+* SSP toggle - options are "SSP2", "SSP3", or "SSP4"
 loc ssp = "SSP3" 
 
-* Model toggle 
-loc model = "main"
+* Model toggle  - options are "main", "lininter", or "lininter_double"
+loc model = "lininter_double"
 
 * What year do we use data from for determining DF estimates used for the out of sample extrapolation
 loc subset = 2085
@@ -40,16 +40,24 @@ loc subset = 2085
 
 ******************************************
 * Set locals based on options 
+* We run only the price014 scenario, except for SSP3 main model
 
 if("`model'" == "main") {
+	
 	loc model_tag = ""
-}
 
-* list of the scenarios we want to run a damage function for 
-if("`ssp'" == "SSP3") {
-	loc pricelist price014 price0 price03 WITCHGLOBIOM42 MERGEETL60 REMINDMAgPIE1730 REMIND17CEMICS REMIND17
+	if ("`ssp'" == "SSP3") {
+		loc pricelist price014 price0 price03 WITCHGLOBIOM42 MERGEETL60 REMINDMAgPIE1730 REMIND17CEMICS REMIND17
+	}
+	else {
+		loc pricelist price014 
+	}
+} 
+else if (inlist("`model'", "lininter", "lininter_double")){
+	loc model_tag = "_`model'"
+	assert("`ssp'" == "SSP3")
+	loc pricelist price014 
 }
-
 
 **********************************************************************************
 * STEP 1: Pull in and format each price scenarios csv
