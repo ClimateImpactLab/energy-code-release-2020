@@ -8,10 +8,10 @@ pacman::p_load(ggplot2,
                dplyr,
                readr)
 
-DB = "C:/Users/TomBearpark/Dropbox"
+DB = "C:/Users/TomBearpark/synologyDrive"
 
 DB_data = paste0(DB, "/GCP_Reanalysis/ENERGY/code_release_data")
-root =  "C:/Users/TomBearpark/Documents/energy-code-release"
+root =  "C:/Users/TomBearpark/Documents/energy-code-release-2020"
 output = paste0(root, "/figures")
 
 source(paste0(root, "/3_post_projection/0_utils/mapping.R"))
@@ -20,7 +20,7 @@ source(paste0(root, "/3_post_projection/0_utils/mapping.R"))
 # 1. Load in a world shapefile, containing Impact Region boundaries, and convert to a 
 #     dataframe for plotting
 
-mymap = load.map(shploc = paste0(DB_data, "/world-combo-new-nytimes"))
+mymap = load.map(shploc = paste0(DB_data, "/shapefiles/world-combo-new-nytimes"))
 
 
 #############################################
