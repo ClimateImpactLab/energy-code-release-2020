@@ -4,6 +4,8 @@
 # 1. Code for replicating figure 2C - per capita impacts by fuel
 # 2. Code for replicating figure 3B - percent gdp impacts for total energy
 # 3. Code for figure Appendix D.1 - time series by rcp and price scenario
+# 4. Code for figure Appendix I.1 - Comparison to slow adaptation scenario single run
+# 5. Code for figure Appendix I3 - Modelling tech trends 
 
 #########################################
 # 0. Set up
@@ -261,7 +263,7 @@ get_plot_df_by_fuel = function(fuel, DB_data) {
 
 }
 
-plot_and_save_appendix_I1 = function(fuel, DB_data){
+plot_and_save_appendix_I1 = function(fuel, DB_data, output){
   
   df = get_plot_df_by_fuel(fuel = fuel, DB_data = DB_data)
   p = ggplot() +
@@ -285,16 +287,49 @@ plot_and_save_appendix_I1 = function(fuel, DB_data){
   return(p)
 }
 
-plot_and_save_appendix_I1(fuel = "electricity", DB_data = DB_data)
-plot_and_save_appendix_I1(fuel = "other_energy", DB_data = DB_data)
+plot_and_save_appendix_I1(fuel = "electricity", DB_data = DB_data, output = output)
+plot_and_save_appendix_I1(fuel = "other_energy", DB_data = DB_data, output = output)
 
 
+#########################################
+# 4. Figure Appendix I.3 - modelling tech trends 
 
 
+plot_ts_appendix_I3 = function(fuel, output){
+  
+  
+  spec = paste0("OTHERIND_", fuel)
+  
+  # Load in data for each scenario
+  df_lininter = read_csv(paste0(
+    DB_data, "/time_series_lininter_model-", fuel, 
+    "-impacts_PC-rcp85-SSP3-high.csv")) %>% 
+    mutate(type = "lininter")
+  
+  df_main = read_csv(paste0(DB_data, "/time_series_main_model_impacts_PC.csv")) %>% 
+    dplyr::filter(rcp =="rcp85" )%>% 
+    dplyr::filter(adapt_scen =="fulladapt" )%>% 
+    dplyr::filter(spec ==!!spec )%>%
+    dplyr::select(year, mean) %>%  
+    dplyr::mutate(mean = mean * 0.0036) %>%
+    mutate(type = "main model")
+  
+  p = ggtimeseries(df.list = list(as.data.frame(df_lininter), as.data.frame(df_main)), 
+                   y.label = "Impacts per capita, Gigajoules", 
+                   legend.title = "Scenario", legend.breaks = c("Full adapt Tech Trends",
+                                                                "Full adapt Main Model"), 
+                   rcp.value = paste0(spec, '-rcp85'), ssp.value = "SSP3", iam.value = "high", 
+                   x.limits =c(2010, 2100),
+                   y.limits=c(-4,8)) + scale_y_continuous(breaks=seq(-3,7,3))
+
+  ggsave(p, file = paste0(output, 
+                          "/fig_Appendix-I3_lininter-global_", fuel, "_timeseries_impact-pc_SSP3-high-rcp85.pdf"), 
+         width = 8, height = 6)
+}
 
 
-
-
+plot_ts_appendix_I3(fuel = "electricity", output = output)
+plot_ts_appendix_I3(fuel = "other_energy", output = output)
 
 
 
