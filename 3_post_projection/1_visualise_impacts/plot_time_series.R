@@ -1,9 +1,9 @@
 # Produces maps displayed in the energy paper. Uses functions in "0_utils/time_series.R"
 # Contents: 
 # 0. Set up
-# 1. Code for replicating figure 2C
-# 2. Code for replicating figure 3B
-
+# 1. Code for replicating figure 2C - per capita impacts by fuel
+# 2. Code for replicating figure 3B - percent gdp impacts for total energy
+# 3. Code for figure Appendix D.1 - time series by rcp and price scenario
 
 #########################################
 # 0. Set up
@@ -15,14 +15,15 @@ if(!require("pacman")){install.packages(("pacman"))}
 pacman::p_load(ggplot2, 
                dplyr,
                readr, 
-               DescTools)
+               DescTools,
+               RColorBrewer)
 
 
 # Set paths
-DB = "C:/Users/TomBearpark/Dropbox"
+DB = "C:/Users/TomBearpark/synologyDrive"
 
 DB_data = paste0(DB, "/GCP_Reanalysis/ENERGY/code_release_data")
-root =  "C:/Users/TomBearpark/Documents/energy-code-release"
+root =  "C:/Users/TomBearpark/Documents/energy-code-release-2020"
 output = paste0(root, "/figures")
 
 # Source time series plotting codes
@@ -188,16 +189,57 @@ plot_ts_fig_3B = function(DB_data, output){
 r = plot_ts_fig_3B(DB_data =DB_data, output = output)
 
 
+#########################################
+# 3. Figure Appendix D.1 - Time series by price scenario
+
+df_gdp = read_csv(paste0(DB_data, "/global_gdp_time_series.csv"))
 
 
+# Helper function for loading time series data, and converting to 
+# percent of gdp
 
+load_timeseries = function(rcp, price, df_gdp){
+  
+  df = read_csv(paste0(DB_data, '/damage_time_series/', 
+                       'main_model-damages-total_energy-', 
+                       price,'-' , rcp, '-SSP3-high-fulladapt-global-timeseries.csv'))  %>% 
+    left_join(df_gdp, by="year") %>% 
+    mutate(percent_gdp = (damage/gdp) *100) %>%
+    dplyr::select(year, percent_gdp) %>% 
+    as.data.frame()
+  
+  return(df)
+}
 
+plot_prices = function(rcp, pricelist, output) {
+  
+  df = mapply(load_timeseries, price=pricelist, 
+              MoreArgs = list(rcp = rcp, df_gdp = df_gdp),
+              SIMPLIFY = FALSE)
+  
+  colourCount = length(pricelist)
+  print('plotting')
+  
+  p <- ggtimeseries(df.list = df, 
+                    df.x = "year",
+                    x.limits = c(2010, 2100),                               
+                    # y.limits=c(-0.8,0.2),
+                    y.label = "Total Damages, % GDP", 
+                    legend.title = "Price scenario", 
+                    legend.breaks = pricelist, 
+                    legend.values = brewer.pal(colourCount, "Spectral"),
+                    rcp.value = rcp, ssp.value = "SSP3", iam.value = "high") 
+  
+  ggsave(p, file = paste0(output, 
+                          "/fig_Appendix-D1_global_total_energy_timeseries_all-prices-", 
+                          rcp, ".pdf"), width = 8, height = 6)
+}
 
+pricelist = c("price0", "price014", "price03", "WITCHGLOBIOM42", 
+              "MERGEETL60", "REMINDMAgPIE1730", "REMIND17CEMICS", "REMIND17") 
 
-
-
-
-
+plot_prices(pricelist = pricelist, rcp = "rcp45",  output = output)
+plot_prices(pricelist = pricelist, rcp = "rcp85",  output = output)
 
 
 
