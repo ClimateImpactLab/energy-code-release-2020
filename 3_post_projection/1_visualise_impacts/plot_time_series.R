@@ -242,6 +242,56 @@ plot_prices(pricelist = pricelist, rcp = "rcp45",  output = output)
 plot_prices(pricelist = pricelist, rcp = "rcp85",  output = output)
 
 
+#########################################
+# 4. Figure Appendix I.1 - Comparison to slow adaptation scenario single run
+
+get_plot_df_by_fuel = function(fuel, DB_data) {
+  
+  df_SA = read_csv(paste0(DB_data, "/CCSM4_single/", 
+              "SA_single_", fuel, "_SSP3-high-CCSM4-impactspc_timeseries.csv"))
+  
+  df_main = read_csv(paste0(DB_data, "/CCSM4_single/", 
+              "main_model_single_", fuel, "_SSP3-high-CCSM4-impactspc_timeseries.csv"))
+  
+  df <- rbind(df_SA, df_main) %>%
+    mutate(legend = paste0(type,"_", rcp)) %>%
+    mutate(value_pc_GJ = (value * 0.0036) )
+  
+  return(df)
+
+}
+
+plot_and_save_appendix_I1 = function(fuel, DB_data){
+  
+  df = get_plot_df_by_fuel(fuel = fuel, DB_data = DB_data)
+  p = ggplot() +
+    geom_line(data = df, aes(x = year, y = value_pc_GJ, color = rcp, linetype = type)) +
+    scale_colour_manual(values=c("blue", "red", "steelblue", "tomato1")) +
+    scale_linetype_manual(values=c("dashed", "solid"))+
+    scale_x_continuous(breaks=seq(2010, 2100, 10))  +
+    geom_hline(yintercept=0, size=.2) +
+    scale_alpha_manual(name="", values=c(.7)) +
+    theme_bw() +
+    theme(panel.grid.major = element_blank(), 
+          panel.grid.minor = element_blank(),
+          panel.background = element_blank(), 
+          axis.line = element_line(colour = "black")) +
+    ggtitle(paste0(fuel, "-SSP3-CCSM4-High")) +
+    ylab("Impacts (GJ PC)") + xlab("")
+  
+  ggsave(p, file = paste0(output, 
+                          "/fig_Appendix-I1_Slow_adapt-global_", fuel, "_timeseries_impact-pc_CCSM4-SSP3-high.pdf"), 
+                          width = 8, height = 6)
+  return(p)
+}
+
+plot_and_save_appendix_I1(fuel = "electricity", DB_data = DB_data)
+plot_and_save_appendix_I1(fuel = "other_energy", DB_data = DB_data)
+
+
+
+
+
 
 
 
