@@ -9,11 +9,11 @@ pacman::p_load(ggplot2, # plotting functions
                tidyr,   # spread()
                readr)   # read_csv()
 
-DB = "C:/Users/TomBearpark/Dropbox"
+DB = "C:/Users/TomBearpark/synologyDrive"
 DB_data = paste0(DB, "/GCP_Reanalysis/ENERGY/code_release_data")
 data = paste0(DB_data, "/outputs")
 
-root =  "C:/Users/TomBearpark/Documents/energy-code-release"
+root =  "C:/Users/TomBearpark/Documents/energy-code-release-2020"
 output = paste0(root, "/figures")
 
 
@@ -65,14 +65,13 @@ gen_plot_save_kd <-
   
   # Load in variance and mean impacts information
   df_joined <- read_csv(
-                    paste0(DB_data, 
-                             "/select-IRs-gcm-level-price014-",
-                             "total_energy_main_model_SSP3-",
-                             "rcp85_damages_high_fulladapt_2099.csv")) %>%
+                    paste0(DB_data, "/projection_system_outputs/IR_GCM_level_impacts/",
+                           "gcm_damages-main_model-total_energy-SSP3-rcp85-",
+                           "high-fulladapt-price014-2099-select_IRs.csv")) %>%
     dplyr::filter(region == !!IR)
   
   # Load in the gcm weights
-  gcm.weights = read_csv(paste0(DB_data, "/gcm_weights.csv")) %>%
+  gcm.weights = read_csv(paste0(DB_data, "/miscellaneous/gcm_weights.csv")) %>%
     dplyr::select(gcm, norm_weight_rcp85) %>%
     dplyr::rename(norm_weight = norm_weight_rcp85)
   
@@ -82,7 +81,8 @@ gen_plot_save_kd <-
     as.data.frame()
   
   message('Converting the damage draws into percent of GDP')
-  df_gdp = read_csv(paste0(DB_data,"/gdppc_pop_IR_values_2099.csv"))
+  df_gdp = read_csv(paste0(DB_data,"/projection_system_outputs/covariates/",
+                           "/SSP3-high-IR_level-gdppc_pop-2099.csv"))
   val = df_gdp$gdp99[df_gdp$region == IR] %>% as.numeric()
   # Convert to dollars, since that 
   # was the units of the impacts was  billions of dollars

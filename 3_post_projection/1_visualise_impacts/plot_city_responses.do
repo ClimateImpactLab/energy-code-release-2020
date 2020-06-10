@@ -12,10 +12,10 @@ local clim_data "GMFD"
 //SET UP RELEVANT PATHS
 // TO BE UPDATED !!
 
-glob DB "C:/Users/TomBearpark/Dropbox"
+glob DB "C:/Users/TomBearpark/synologyDrive"
 loc DB_data "$DB/GCP_Reanalysis/ENERGY/code_release_data"
 
-glob root "C:/Users/TomBearpark/Documents/energy-code-release"
+glob root "C:/Users/TomBearpark/Documents/energy-code-release-2020"
 loc data "$root/data"
 loc output "$root/figures"
 
@@ -26,12 +26,12 @@ loc output "$root/figures"
 
 //Part A: save income and climate covariate data as tempfile
 
-import delim using "`DB_data'/stockholm_guangzhou_covariates_2015_2099.csv"
+import delim using "`DB_data'/miscellaneous/stockholm_guangzhou_covariates_2015_2099.csv"
 tempfile covar_data
 save `covar_data', replace
 
 //Part B: Load in daily tavg distribution min and max for 2015
-import delim using "`DB_data'/stockholm_guangzhou_2015_min_max.csv", clear 
+import delim using "`DB_data'//miscellaneous/stockholm_guangzhou_2015_min_max.csv", clear 
 rename mint minT
 rename maxt maxT
 keep city maxT minT
@@ -52,7 +52,7 @@ foreach var in "electricity" "other_energy" {
 }
 
 // ii) extract covariates 
-import delim using "`DB_data'/stockholm_guangzhou_region_names_key.csv", clear varnames(1)
+import delim using "`DB_data'/miscellaneous/stockholm_guangzhou_region_names_key.csv", clear varnames(1)
 
 //load in covariates
 foreach yr of num 2099 2015 {

@@ -20,7 +20,7 @@ DB_data = paste0(DB, "/GCP_Reanalysis/ENERGY/code_release_data")
 root =  "C:/Users/TomBearpark/Documents/energy-code-release-2020"
 output = paste0(root, "/figures/fig_Appendix-C3_sample_overlap_present_future")
 
-covariates <- paste0(DB_data, 
+covariates <- paste0(DB_data, "/projection_system_outputs/covariates/",
                      "/covariates-SSP3-rcp85-high-2010_2090-CCSM4.csv")
 
 # load and clean data

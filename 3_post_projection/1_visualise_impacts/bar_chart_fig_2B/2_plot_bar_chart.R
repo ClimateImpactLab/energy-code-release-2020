@@ -11,11 +11,11 @@ pacman::p_load(ggplot2, # plotting functions
                tidyr,   # spread()
                readr)   # read_csv()
 
-DB = "C:/Users/TomBearpark/Dropbox"
+DB = "C:/Users/TomBearpark/synologyDrive"
 DB_data = paste0(DB, "/GCP_Reanalysis/ENERGY/code_release_data")
-data = paste0(DB_data, "/outputs")
+data = paste0(DB_data, "/intermediate_data")
 
-root =  "C:/Users/TomBearpark/Documents/energy-code-release"
+root =  "C:/Users/TomBearpark/Documents/energy-code-release-2020"
 output = paste0(root, "/figures")
 
 
@@ -34,18 +34,18 @@ df = readr::read_csv(paste0(data,'/figure_2B_bar_chart_data.csv')) %>%
                 levels_other_energy = levels_other_energy  /1000000000 )
 
 # Merge with the country names strings for plotting
-names = readr::read_csv(paste0(DB_data,"/country_names.csv")) %>% 
+names = readr::read_csv(paste0(DB_data,"/miscellaneous/country_names.csv")) %>% 
   data.frame()
 df = left_join(df,names)
 
 # Load information about the EU countries, so we can combine them into one regoin for the chat
-eu = read_csv(paste0(DB_data,"/eu_countries.csv")) %>% 
+eu = read_csv(paste0(DB_data,"/miscellaneous/eu_countries.csv")) %>% 
       data.frame() %>%
       mutate(tag = 1)
 
 df2 = left_join(df,eu) %>%
 		dplyr::filter(tag==1) %>%
-		select(c(year,levels_electricity, levels_other_energy)) %>%
+		dplyr::select(c(year,levels_electricity, levels_other_energy)) %>%
 		group_by(year) %>%
 		summarize_all(sum) %>%
 		data.frame() %>%

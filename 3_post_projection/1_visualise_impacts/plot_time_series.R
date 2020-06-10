@@ -59,18 +59,22 @@ get.boxplot.vect <- function(df = NULL, yr = 2099) {
 get_df_list_fig_2C = function(DB_data, fuel){
   
   # Load in the impacts data: 
-  df = read_csv(paste0(DB_data, "/time_series_main_model_impacts_PC.csv"))
-  
-  # convert to GJ
-  scale = function(x) (x* 0.0036)
-  names = c("mean", "q50", "q5", "q95", "q10", "q90", "q75","q25")
-  df= df %>%
-    mutate_at(names, scale)
-  
+  load_df = function(rcp, adapt, fuel){
+    print(rcp)
+    df = read_csv(paste0(DB_data,   
+                   '/projection_system_outputs/time_series_data/', 
+                   'main_model-', fuel, '-SSP3-',rcp, '-high-',adapt,'-impact_pc.csv')
+                         ) 
+    return(df)
+  }
+  options = expand.grid(rcp = c("rcp45", "rcp85"), 
+                        adapt = c("fulladapt", "noadapt"))
+  df = mapply(load_df, rcp = options$rcp, adapt = options$adapt, 
+              MoreArgs = list(fuel = fuel), SIMPLIFY = FALSE) %>% 
+    bind_rows()
+
   # Subset and format for plotting
-  df = df %>%
-    dplyr::filter(spec == !!fuel)
-  
+
   bp_45 = df %>%
     filter(rcp == "rcp45", adapt_scen == "fulladapt") %>%
     get.boxplot.vect(yr = 2099)
@@ -107,6 +111,7 @@ get_df_list_fig_2C = function(DB_data, fuel){
 }
 
 # Plotting function, for replicating Figure 2C. Note - coloring in the paper requires 
+
 # post processing in illustrator 
 plot_ts_fig_2C = function(fuel, output, DB_data){
   
@@ -136,8 +141,8 @@ plot_ts_fig_2C = function(fuel, output, DB_data){
   return(p)
 }
 
-p = plot_ts_fig_2C(DB_data = DB_data, fuel = "OTHERIND_other_energy", output = output)
-q = plot_ts_fig_2C(DB_data = DB_data, fuel = "OTHERIND_electricity", output = output)
+p = plot_ts_fig_2C(DB_data = DB_data, fuel = "other_energy", output = output)
+q = plot_ts_fig_2C(DB_data = DB_data, fuel = "electricity", output = output)
 
 
 #########################################
@@ -146,22 +151,32 @@ q = plot_ts_fig_2C(DB_data = DB_data, fuel = "OTHERIND_electricity", output = ou
 plot_ts_fig_3B = function(DB_data, output){
   
   # Load in the impacts data
-  df_impacts = read_csv(paste0(DB_data, 
-                       "/damages-total_energy-price014-SSP3-high-fulladapt-timeseries.csv"))
+  df_impacts = read_csv(paste0(DB_data, '/projection_system_outputs/time_series_data/', 
+                        'main_model-total_energy-SSP3-rcp45-high-fulladapt-price014.csv'))%>% 
+    mutate(rcp = "rcp45") %>% 
+    bind_rows(
+      read_csv(paste0(DB_data, '/projection_system_outputs/time_series_data/', 
+                      'main_model-total_energy-SSP3-rcp85-high-fulladapt-price014.csv')) %>% 
+        mutate(rcp = "rcp85")
+    )
   
   # Load in gdp global projected SSP3 time series
-  df_gdp = read_csv(paste0(DB_data, "/global_gdp_time_series.csv"))
+  df_gdp = read_csv(paste0(DB_data, '/projection_system_outputs/covariates/', 
+                           "/SSP3-global-gdp-time_series.csv"))
   
   # Get separate dataframes for rcp45 and rcp85, for plotting
   format_df = function(rcp, df_impacts, df_gdp){
-    
+
     df = df_impacts %>% 
       dplyr::filter(rcp == !!rcp) %>% 
-      left_join(df_gdp, by = "year") %>%
+      left_join(df_gdp, by = "year")%>% 
+      mutate(mean = mean * 1000000000, q95 = q95 *1000000000 , q5 = q5* 1000000000) %>% #convert from billions of dollars 
       mutate(percent_gdp = (mean/gdp) *100, 
              ub = (q95/gdp) *100, 
              lb = (q5/gdp) *100)
-    df_mean = df %>% dplyr::select(year, percent_gdp)
+    
+    df_mean = df %>% 
+      dplyr::select(year, percent_gdp)
     
     return(list(df, df_mean))
   }
@@ -194,7 +209,8 @@ r = plot_ts_fig_3B(DB_data =DB_data, output = output)
 #########################################
 # 3. Figure Appendix D.1 - Time series by price scenario
 
-df_gdp = read_csv(paste0(DB_data, "/global_gdp_time_series.csv"))
+df_gdp = read_csv(paste0(DB_data, '/projection_system_outputs/covariates/', 
+                         "/SSP3-global-gdp-time_series.csv"))
 
 
 # Helper function for loading time series data, and converting to 
@@ -202,11 +218,11 @@ df_gdp = read_csv(paste0(DB_data, "/global_gdp_time_series.csv"))
 
 load_timeseries = function(rcp, price, df_gdp){
   
-  df = read_csv(paste0(DB_data, '/damage_time_series/', 
-                       'main_model-damages-total_energy-', 
-                       price,'-' , rcp, '-SSP3-high-fulladapt-global-timeseries.csv'))  %>% 
+  df = read_csv(paste0(DB_data, '/projection_system_outputs/time_series_data/',
+                'main_model-total_energy-SSP3-',rcp,'-high-fulladapt-',price,'.csv'))  %>% 
     left_join(df_gdp, by="year") %>% 
-    mutate(percent_gdp = (damage/gdp) *100) %>%
+    mutate(mean = mean * 1000000000)%>% 
+    mutate(percent_gdp = (mean/gdp) *100) %>%
     dplyr::select(year, percent_gdp) %>% 
     as.data.frame()
   
@@ -249,15 +265,14 @@ plot_prices(pricelist = pricelist, rcp = "rcp85",  output = output)
 
 get_plot_df_by_fuel = function(fuel, DB_data) {
   
-  df_SA = read_csv(paste0(DB_data, "/CCSM4_single/", 
-              "SA_single_", fuel, "_SSP3-high-CCSM4-impactspc_timeseries.csv"))
+  df_SA = read_csv(paste0(DB_data, "/projection_system_outputs/time_series_data/CCSM4_single/",
+              "SA_single-", fuel, "-SSP3-high-fulladapt-impact_pc.csv"))
   
-  df_main = read_csv(paste0(DB_data, "/CCSM4_single/", 
-              "main_model_single_", fuel, "_SSP3-high-CCSM4-impactspc_timeseries.csv"))
-  
+  df_main = read_csv(paste0(DB_data, "/projection_system_outputs/time_series_data/CCSM4_single/", 
+              "main_model_single-", fuel, "-SSP3-high-fulladapt-impact_pc.csv"))
+
   df <- rbind(df_SA, df_main) %>%
-    mutate(legend = paste0(type,"_", rcp)) %>%
-    mutate(value_pc_GJ = (value * 0.0036) )
+    mutate(legend = paste0(type,"_", rcp))
   
   return(df)
 
@@ -267,7 +282,7 @@ plot_and_save_appendix_I1 = function(fuel, DB_data, output){
   
   df = get_plot_df_by_fuel(fuel = fuel, DB_data = DB_data)
   p = ggplot() +
-    geom_line(data = df, aes(x = year, y = value_pc_GJ, color = rcp, linetype = type)) +
+    geom_line(data = df, aes(x = year, y = mean, color = rcp, linetype = type)) +
     scale_colour_manual(values=c("blue", "red", "steelblue", "tomato1")) +
     scale_linetype_manual(values=c("dashed", "solid"))+
     scale_x_continuous(breaks=seq(2010, 2100, 10))  +
@@ -302,16 +317,17 @@ plot_ts_appendix_I3 = function(fuel, output){
   
   # Load in data for each scenario
   df_lininter = read_csv(paste0(
-    DB_data, "/time_series_lininter_model-", fuel, 
-    "-impacts_PC-rcp85-SSP3-high.csv")) %>% 
+    DB_data, '/projection_system_outputs/time_series_data/',
+    'lininter_model-', fuel,'-SSP3-rcp85-high-fulladapt-impact_pc.csv')) %>% 
     mutate(type = "lininter")
   
-  df_main = read_csv(paste0(DB_data, "/time_series_main_model_impacts_PC.csv")) %>% 
+  df_main = read_csv(paste0(
+      DB_data, '/projection_system_outputs/time_series_data/',
+      'main_model-', fuel,'-SSP3-rcp85-high-fulladapt-impact_pc.csv'))%>% 
     dplyr::filter(rcp =="rcp85" )%>% 
     dplyr::filter(adapt_scen =="fulladapt" )%>% 
     dplyr::filter(spec ==!!spec )%>%
     dplyr::select(year, mean) %>%  
-    dplyr::mutate(mean = mean * 0.0036) %>%
     mutate(type = "main model")
   
   p = ggtimeseries(df.list = list(as.data.frame(df_lininter), as.data.frame(df_main)), 

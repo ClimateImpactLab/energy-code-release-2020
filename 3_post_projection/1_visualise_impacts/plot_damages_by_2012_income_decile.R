@@ -41,18 +41,26 @@ get_deciles = function(df){
 }
 
 # Load in pop and income data
-df_covariates = read_csv(paste0(DB_data, '/IR_level-SSP3-high-gdppc-pop.csv'))
+df_covariates = read_csv(paste0(DB_data, '/projection_system_outputs/covariates', 
+                        '/SSP3-high-IR_level-gdppc-pop-2012.csv'))
 
 # Find each Impact region's 2012 decile of income per capita. 
 deciles = get_deciles(df_covariates)
 
 
 # Load in impacts data
-df_impacts = read_csv(paste0(DB_data, 
-                "/price014-total_energy_main_model_SSP3-rcp85_damages_high_fulladapt_2099.csv")) %>%
+df_impacts = read_csv(paste0(DB_data, '/projection_system_outputs/mapping_data',
+                "/main_model-total_energy-SSP3-rcp85-high-fulladapt-price014-2099-map.csv")) %>%
   mutate(damage = damage * 1000000000) %>% 
   left_join(deciles, by = "region")
 
+# Join with 2099 population data
+df_pop99= read_csv(paste0(DB_data, '/projection_system_outputs/covariates', 
+                                   '/SSP3-high-IR_level-gdppc_pop-2099.csv')) %>% 
+  dplyr::select(region, pop99)
+
+df_impacts = df_impacts %>% 
+    left_join(df_pop99, by = "region")
 
 # Collapse to decile level
 df_plot = df_impacts %>% 

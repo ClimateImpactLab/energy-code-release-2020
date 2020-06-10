@@ -9,10 +9,10 @@ set more off
 //SET UP RELEVANT PATHS
 // TO BE UPDATED !!
 
-glob DB "C:/Users/TomBearpark/Dropbox"
+glob DB "C:/Users/TomBearpark/synologyDrive"
 loc DB_data "$DB/GCP_Reanalysis/ENERGY/code_release_data"
 
-glob root "C:/Users/TomBearpark/Documents/energy-code-release"
+glob root "C:/Users/TomBearpark/Documents/energy-code-release-2020"
 loc data "$root/data"
 loc output "$root/figures"
 
@@ -21,13 +21,13 @@ loc output "$root/figures"
 **************************************
 
 * Get population data for converting Per capita impacts into levels 
-import delim "`DB_data'/SSP3_IR_level_population_2010_and_2099.csv", clear 
+import delim "`DB_data'/projection_system_outputs/covariates/SSP3_IR_level_population.csv", clear 
 
 * Our population estimates are done using a step function. We only have data for each 5th year
 * Therefore, we assign 2099 population the values of population from 2095
 replace year  = 2099 if year == 2095
+keep if inlist(year,2010, 2099)
 
-* I think this can be removed  
 preserve
 	keep if year == 2099
 	rename pop population
@@ -66,11 +66,8 @@ di "2010 Per Capita country level consumption saved"
 foreach prod in "electricity" "other_energy" {
 
 	* Get the 2099 impact region level impacts data
-	insheet using "`DB_data'/`prod'_TINV_clim_income_spline_SSP3-rcp85_impactpc_high_fulladapt_2099.csv", clear
+	insheet using "`DB_data'/projection_system_outputs/mapping_data/main_model-`prod'-SSP3-rcp85-high-fulladapt-impact_pc-2099-map.csv", clear
 	
-	* Covert to GJ from KWh, since projection system outputs are in KWh
-	replace mean = mean * 0.0036
-
 	* Collapse to the country level, weighting impacts according to IR level population
 	gen country = substr(region,1,3)
 	merge 1:1 region year using "`population'", assert(3) nogen
@@ -114,4 +111,4 @@ foreach prod in "electricity" "other_energy" {
 	gen levels_`prod' = `prod' * pop
 }
 * Save as a csv for plotting in R using ggplot
-export delimited using "`DB_data'/outputs/figure_2B_bar_chart_data.csv", replace
+export delimited using "`DB_data'/intermediate_data/figure_2B_bar_chart_data.csv", replace
