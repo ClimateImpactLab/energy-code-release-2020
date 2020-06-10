@@ -42,7 +42,7 @@ In Part E, we prepare merged data for econometric analysis.
 * This dataset is not public, and not provided in this repository. 
 * From this raw data, we construct a country-year-product level panel dataset (where product is either electricity or other_energy). 
 * Due to data quality concerns, we incorporate information on data consistency and quality from the IEA's documentation into this dataset. 
-    * Details of this can be found in Appendix Section A.1, and in the [0_make_dataset/coded_issues](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/0_make_dataset/coded_issues) folder of this repo.
+    * Details of this can be found in Appendix Section A.1, and in the [0_make_dataset/coded_issues](https://github.com/ClimateImpactLab/energy-code-release-2020/tree/master/0_make_dataset/coded_issues) folder of this repo.
     * This allows us to determine which data should be dropped, to contruct a set of fixed effects and FGLS weights to help deal with data quality concerns, and assemble climate data that reflects the geographic and temporal definitions used to report energy consumption data.
 
 #### Part 1.B - Historical Climate Data
@@ -56,23 +56,23 @@ consumption-temperature relationship.
     * This step is highly computationally intensive, and the code for this step is not currently provided in this repo.
 * In addition to temperature and precipitation measures, we also calculate other climate measures, such as cooling and heating degree days.
 * We then clean these data, so that they match the observations present in our energy consumption data. 
-    * More documentation of the cleaning process can be found in [0_make_dataset/climate](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/0_make_dataset/climate)
+    * More documentation of the cleaning process can be found in [0_make_dataset/climate](https://github.com/ClimateImpactLab/energy-code-release-2020/tree/master/0_make_dataset/climate)
 
 #### Part 1.C - Population and income data
 
 * We obtain historical values of country-level annual income per capita from within
 the International Energy Agency's World Energy Balances dataset, which in turn sources
 these data from the World Bank. 
-* Cleaning steps undertaken on these variables can be found in [0_make_dataset/pop_and_income](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/0_make_dataset/pop_and_income)
+* Cleaning steps undertaken on these variables can be found in [0_make_dataset/pop_and_income](https://github.com/ClimateImpactLab/energy-code-release-2020/tree/master/0_make_dataset/pop_and_income)
 
 #### Part 1.D - Merge energy final consumption, historical climate, population and income data
 
 * As the final part of our dataset construction, we merge all of the data together. 
-* Codes used in this step can be found in [0_make_dataset/merged](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/0_make_dataset/merged)
+* Codes used in this step can be found in [0_make_dataset/merged](https://github.com/ClimateImpactLab/energy-code-release-2020/tree/master/0_make_dataset/merged)
 
 #### Part 1.E - Clean merged data for econometric analysis 
 
-* Motivated by [tests](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/3_unit_root_test_and_plot.do) 
+* Motivated by [tests](https://github.com/ClimateImpactLab/energy-code-release-2020/blob/master/0_make_dataset/3_unit_root_test_and_plot.do) 
 that showed that our outcome variable has a unit root, we construct first differenced versions of our 
 variables for use in later econometric analysis. 
 * To nonlinearly model income heterogeneity in the energy-temperature response, we construct an income spline variable. We decide on knot location based on in sample income deciles.
@@ -80,7 +80,7 @@ variables for use in later econometric analysis.
 
 ### Outputs of Step 1 
 
-* Step 1 produces datasets ready to run regressions on, and datasets used in later plotting analysis. These can be found in [/data](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/data). Specifically,
+* Step 1 produces datasets ready to run regressions on, and datasets used in later plotting analysis. These can be found in [/data](https://github.com/ClimateImpactLab/energy-code-release-2020/tree/master/data). Specifically,
     * Part 1.D produces `/data/IEA_Merged_long_GMFD.do` -- an intermediate dataset used to construct the final analysis dataset
     * Part 1.E produces: 
         * `/data/GMFD_*_regsort.data` -- the analysis dataset used in `Step 2`
@@ -99,19 +99,19 @@ In this step, we take the cleaned data produced in step 1, run regressions and t
 We run three kinds of regressions in this section: 
 1. Uninteracted global regressions (*Appendix* Equation C.1)
     * These regressions recover the global population weighted average response of energy consumption to temperature variation. 
-    * Code for these regressions can be found in [1_analysis/uninteracted_regression](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/1_analysis/uninteracted_regression)
+    * Code for these regressions can be found in [1_analysis/uninteracted_regression](https://github.com/ClimateImpactLab/energy-code-release-2020/tree/master/1_analysis/uninteracted_regression)
     * This code outputs: 
         * ster files for both the first stage and the FGLS regression: `FD_global_TINV_clim.ster` and `FD_FGLS_global_TINV_clim.ster`, respectively  
         * ***Appendix Figure C1***: `fig_Appendix-C1_product_overlay_TINV_clim_global.pdf`
 2. Decile regressions (*Appendix* Equation C.3)
     * These regressions are run in order to understand how the sensitivity of energy consumption to climate change modulates with incomoe levels. 
-    * Code for these regressions can be found in [1_analysis/decile_regression](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/1_analysis/decile_regression)
+    * Code for these regressions can be found in [1_analysis/decile_regression](https://github.com/ClimateImpactLab/energy-code-release-2020/tree/master/1_analysis/decile_regression)
     * This code outputs:
         * ster files for both the first stage and the FGLS regression: `FD_FGLS_income_decile_TINV_clim.ster` and `FD_FGLS_income_decile_TINV_clim.ster`, respectively
         * ***Figure 1A***: `fig_1A_product_overlay_income_decile_TINV_clim.pdf` 
 3. Interacted regressions (*Appendix* Equations C.4, I.1)
     * In these regressions, we model heterogeneity in the energy-climate relationship, by interacting our models with income and climate covariates.
-    * Code for these regressions can be found in [1_analysis/interacted_regression](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/1_analysis/interacted_regression)
+    * Code for these regressions can be found in [1_analysis/interacted_regression](https://github.com/ClimateImpactLab/energy-code-release-2020/tree/master/1_analysis/interacted_regression)
     * This code outputs: 
         * Ster files for the first stage and the FGLS regression for the main (***TINV_clim***), the excluding imputed data (***TINV_clim_EX***), and temporal trend (***TINV_clim_lininter***) models:
             * `FD_inter_*.ster` and `FD_FGLS_inter_*.ster`
@@ -124,7 +124,15 @@ We run three kinds of regressions in this section:
 ## Step 3 - Project Future Impacts of Climate Change 
 
 In this stage of our analysis, we take the coefficients identified in Step 2, 
-and use them to project future impacts on energy consumption due to climate change 
+and use them to project future impacts on energy consumption due to climate change. 
+
+Running code for in this step is highly computationall intensive. Therefore, we are including the code here that would allow a user to run this step, but we are also providing the outputs of this step that are required for further analysis as stand-alone csv files, should a user wish to run code in steps 4 and 5 without running step 3. 
+
+When complete, we plan to contain in this repo: 
+- Code for converting the regression coefficient estimates from step 2 into a format that our projection system can use.  
+- Code for writing configuration files for running the projection system. 
+- Links to the projection system (external) git repo, and some intructions for how to operate the projection system.
+- Code for converting projection system outputs into the data required for steps 4 and 5. 
 
 Code for this step is not currently in this repo.
 
@@ -132,10 +140,14 @@ Code for this step is not currently in this repo.
 
 In this stage, we take the projected future impacts found in step 3, and use them to construct and emprical damage function. 
 
-Code for this step is not currently in this repo.
+1. As part of this process, we first plot a selection of the projection system outputs, in order to help us understand the spatial and temporal patterns implied by our projections. Codes for this part of our analysis are contained in [3_post_projection/1_visualise_impacts](https://github.com/ClimateImpactLab/energy-code-release-2020/tree/post-projection/3_post_projection/1_visualise_impacts)
+
+2. We then use the global damages implied by our projections to construct damage functions. Code for estiamting these damage functions is contained in [3_post_projection/2_damage_function_estimation](https://github.com/ClimateImpactLab/energy-code-release-2020/tree/post-projection/3_post_projection/2_damage_function_estimation). 
 
 ## Step 5 - Compute Energy-Only Partial Social Cost of Carbon
 
 In the final step of the analysis, we use the empirically derived damage function to calculate an energy-only partial social cost of carbon.
 
-Code for this step is not currently in this repo.
+Code for this step is contained in [3_post_projection/3_SCC](https://github.com/ClimateImpactLab/energy-code-release-2020/tree/post-projection/3_post_projection/3_SCC). 
+
+We are planning to add code that computes the uncertainty of these SCC values, but that is not currently in this repo. 
