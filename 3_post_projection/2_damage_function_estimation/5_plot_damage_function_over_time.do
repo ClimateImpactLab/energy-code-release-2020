@@ -14,9 +14,9 @@ set scheme s1color
 
 glob DB "C:/Users/TomBearpark/SynologyDrive"
 glob DB_data "$DB/GCP_Reanalysis/ENERGY/code_release_data"
-glob dir "$DB_data/damage_function_estimation"
+glob dir "$DB_data/projection_system_outputs/damage_function_estimation"
 
-glob root "C:/Users/TomBearpark/Documents/energy-code-release"
+glob root "C:/Users/TomBearpark/Documents/energy-code-release-2020"
 glob output "$root/figures/"
 
 
@@ -25,7 +25,7 @@ glob output "$root/figures/"
 * **********************************************************************************
 
 * import and reformat the gmst anomaly data, used for defining the range of GMST we plot each damage funciton for 
-insheet using "$DB_data/damage_function_estimation/GMTanom_all_temp_2001_2010.csv", comma names clear
+insheet using "$DB_data/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010.csv", comma names clear
 tempfile GMST_anom
 save `GMST_anom', replace
 preserve
@@ -40,7 +40,7 @@ preserve
 restore
 
 * Load in damage function coefficients, and subset to just price014 (main model) 
-insheet using "$dir/coefficients/df_mean_output_`ssp'.csv", comma names clear
+insheet using "$dir/coefficients/df_mean_output_SSP3.csv", comma names clear
 keep if growth_rate == "price014"
 
 * Create expanded dataset by valuation and by year
@@ -87,4 +87,5 @@ graph tw `gr', yline(0, lwidth(vthin)) ///
 	ylabel(, labsize(small)) 
 
 graph export "$output/fig_Appendix-E1_total_energy_damage_function_evolution_SSP3-price014.pdf", replace 
+x
 graph drop _all

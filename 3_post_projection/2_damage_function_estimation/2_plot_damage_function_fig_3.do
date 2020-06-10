@@ -12,14 +12,14 @@ set scheme s1color
 glob DB "C:/Users/TomBearpark/SynologyDrive"
 
 glob DB_data "$DB/GCP_Reanalysis/ENERGY/code_release_data"
-glob dir "$DB_data/damage_function_estimation/resampled_data"
+glob dir "$DB_data/projection_system_outputs/damage_function_estimation/resampled_data"
 
-glob root "C:/Users/TomBearpark/Documents/energy-code-release"
+glob root "C:/Users/TomBearpark/Documents/energy-code-release-2020"
 glob output "$root/figures/"
 
 
 //Load in GMTanom data file, save as a tempfile 
-insheet using "$DB_data/damage_function_estimation/GMTanom_all_temp_2001_2010.csv", comma names clear
+insheet using "$DB_data/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010.csv", comma names clear
 drop if year < 2015 | year > 2099
 tempfile GMST_anom
 save `GMST_anom', replace

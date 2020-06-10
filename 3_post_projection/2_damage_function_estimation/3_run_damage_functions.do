@@ -25,13 +25,13 @@ set scheme s1color
 
 glob DB "C:/Users/TomBearpark/SynologyDrive"
 glob DB_data "$DB/GCP_Reanalysis/ENERGY/code_release_data"
-glob dir "$DB_data/damage_function_estimation"
+glob dir "$DB_data/projection_system_outputs/damage_function_estimation"
 
 * SSP toggle - options are "SSP2", "SSP3", or "SSP4"
 loc ssp = "SSP3" 
 
 * Model toggle  - options are "main", "lininter", or "lininter_double"
-loc model = "lininter_double"
+loc model = "lininter"
 
 * What year do we use data from for determining DF estimates used for the out of sample extrapolation
 loc subset = 2085
@@ -64,7 +64,7 @@ else if (inlist("`model'", "lininter", "lininter_double")){
 **********************************************************************************
 foreach price in `pricelist' {
 	di "`price'"
-	import delim "$dir/gcm_damages_OTHERIND_total_energy_`price'_`ssp'`model_tag'.csv", clear
+	import delim "$dir/impact_values/gcm_damages_OTHERIND_total_energy_`price'_`ssp'`model_tag'.csv", clear
 	keep rcp year gcm iam mean
 	ren mean `price'
 	tempfile `price'
@@ -81,7 +81,7 @@ foreach price in `pricelist_sub' {
 
 * Merge in GMST anomaly data 
 preserve
-	insheet using "$DB_data/damage_function_estimation/GMTanom_all_temp_2001_2010.csv", comma names clear
+	insheet using "$DB_data/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010.csv", comma names clear
 	tempfile GMST
 	save `GMST', replace
 restore

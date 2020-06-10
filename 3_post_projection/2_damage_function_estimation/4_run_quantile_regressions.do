@@ -25,9 +25,9 @@ set more off
 set scheme s1color
 
 * glob DB "C:/Users/TomBearpark/SynologyDrive"
-glob DB "/mnt/norgay_synology_drive"
+glob DB "C:/Users/TomBearpark/SynologyDrive"
 glob DB_data "$DB/GCP_Reanalysis/ENERGY/code_release_data"
-glob dir "$DB_data/damage_function_estimation"
+glob dir "$DB_data/projection_system_outputs/damage_function_estimation"
 
 * SSP toggle 
 loc ssp = "SSP3" 
@@ -84,7 +84,7 @@ foreach price in `pricelist_sub' {
 
 * Merge in GMST anomaly data 
 preserve
-	insheet using "$DB_data/damage_function_estimation/GMTanom_all_temp_2001_2010.csv", comma names clear
+	insheet using "$DB_data/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010.csv", comma names clear
 	tempfile GMST
 	save `GMST', replace
 restore

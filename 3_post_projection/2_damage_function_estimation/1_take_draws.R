@@ -12,7 +12,7 @@ pacman::p_load(dplyr,
 # Set paths
 DB = "C:/Users/TomBearpark/SynologyDrive/"
 DB_data = paste0(DB, "/GCP_Reanalysis/ENERGY/code_release_data")
-dir = paste0(DB_data, "/damage_function_estimation/")
+dir = paste0(DB_data, "/projection_system_outputs/damage_function_estimation/impact_values/")
 
 
 # This function takes in a csv that contains means and variances of 
@@ -59,7 +59,7 @@ take_draws = function(price, ssp, fuel, num_iterations,
       values_to = paste0(price, "value"),
       values_drop_na = FALSE)
   
-  write_csv(df, paste0(directory, "resampled_data/",
+  write_csv(df, paste0(directory,
                        "gcm_", type, "_OTHERIND_",fuel,
                        price_tag, "_",ssp,"-", num_iterations, "-draws.csv"))
 
