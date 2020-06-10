@@ -87,5 +87,4 @@ graph tw `gr', yline(0, lwidth(vthin)) ///
 	ylabel(, labsize(small)) 
 
 graph export "$output/fig_Appendix-E1_total_energy_damage_function_evolution_SSP3-price014.pdf", replace 
-x
 graph drop _all
