@@ -137,7 +137,7 @@ plot_ts_fig_2C = function(fuel, output, DB_data){
     rcp.value = 'rcp85', ssp.value = 'SSP3', iam.value = 'high-fulluncertainty')+ 
   ggtitle(paste0(fuel, "-high", "-rcp85","-SSP3", "-fulluncertainty")) 
   
-  ggsave(paste0(output, "/fig_2C_", fuel, "time_series.pdf"), p)
+  ggsave(paste0(output, "/fig_2C_", fuel, "_time_series.pdf"), p)
   return(p)
 }
 
