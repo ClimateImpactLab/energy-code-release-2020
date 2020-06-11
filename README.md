@@ -25,6 +25,8 @@ This master readme outlines the process for each step, and each analysis step ha
 
 `sters` - Contains regression output, saved as .ster files 
 
+Codes in step 3 onwards also use data held in an external data repository (currently `/{synology}/GCP_Reanalysis/ENERGY/code_release_data/`). 
+
 ## Step 1 - Historical Energy Consumption and Climate Dataset Construction
 
 Data construction is a multi-faceted process. We clean and merge data on energy consumption from the International Energy Agency's (IEA) World Energy Balances dataset, 
