@@ -7,7 +7,6 @@ clear all
 set more off
 
 //SET UP RELEVANT PATHS
-// TO BE UPDATED !!
 
 glob DB "C:/Users/TomBearpark/synologyDrive"
 loc DB_data "$DB/GCP_Reanalysis/ENERGY/code_release_data"
