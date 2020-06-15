@@ -20,7 +20,7 @@ You will also need to change the `root` variable so that it points to the locati
 There are details of the calculations done in this code in Appendix F of the paper, and in comments inside the code itself. 
 
 #### Code options
-- This code can be run for any of the three models that we project across all GCMs, and present SCC values for in the paper. Please select the model you wish to run at the tom of this code, by changing the `model`
+- This code can be run for any of the three models that we project across all GCMs, and present SCC values for in the paper. Please select the model you wish to run at the tom of this code, by changing the `model` variable in the first cell of the code.
 - These are: 
     * `main`, which can run for SSP2, SSP3, or SSP4. 
     * `lininter` and `lininter_double`, which are run only for SSP3. 
