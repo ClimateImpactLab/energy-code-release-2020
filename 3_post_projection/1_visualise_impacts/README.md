@@ -49,7 +49,7 @@
 
 ### `plot_kernel_density_functions.R`
 - This code generates visualisations of the uncertainty around our projected impacts due to climate change on selected Impact Regions. We do this by taking draws from the distribution of impacts for these impact regions, by loading in the mean and variance of their impacts by GCM for the year 2099. By taking a draws from in each of these distributions in proportion to each GCM's weight (see Appendix Table A.1 for more details), we can calculate the mixture distribution for each Impact Region. 
-- Note - this code sources `0_utils/kernel_densities.R` for a plotting function. 
+- Note - this code sources functions from `0_utils/kernel_densities.R`. 
 - The outputs of this code are used in Figure 3A of the paper.
 - Code inputs:
 	- `/code_release_data/projection_system_outputs/IR_GCM_level_impacts/gcm_damages-main_model-total_energy-SSP3-rcp85-high-fulladapt-price014-2099-select_IRs.csv`: GCM level impacts for selected Impact Regions in the year 2099. 
@@ -59,20 +59,32 @@
 
 ### `plot_maps.R`
 - This code plots all maps presented in the paper, including those present in Figures 2A and 3A. 
-- This code sources the `0_utils/mapping.R` for a plotting function. 
+- This code sources mapping functions from `0_utils/mapping.R`. 
 - Code inputs:
 	- `/code_release_data/shapefiles/world-combo-new-nytimes/.`: shapefile for the world that we use in our global map plots. 
 	- `/code_release_data/projection_system_outputs/mapping_data/main_model-*-SSP3-rcp85-high-fulladapt-impact_pc-2099-map.csv`: projected impacts data for electricity and other energy, used in plotting Figure 2A. 
 	- `/code_release_data/projection_system_outputs/mapping_data/main_model-total_energy-SSP3-rcp85-high-fulladapt-price014-2099-map.csv`: projected impacts for total energy, in dollars, priced using the `price014` price scenario.
-	- `/projection_system_outputs/covariates/SSP3_IR_level_gdppc_pop_2099.csv`: Impact region level GDP data for 2099, allowing us to plot 
+	- `/projection_system_outputs/covariates/SSP3_IR_level_gdppc_pop_2099.csv`: Impact region level GDP data for 2099, allowing us to plot impacts as a percent of each Impact Region's GDP.
 - Code outputs: 
-	- 
+	- `fig_2A_electricity_impacts_map.png`
+	- `fig_3/fig_3A_2099_damages_proportion_gdp_map.png`
 	
 ### `plot_time_series.R`
--
+- This code produces all time series plots shown in the paper. This includes plots presented in Figures 2C and 3B, and also Appendix Figures D1, I1, and I3. 
+- This code sources plotting functions from `0_utils/time_series.R`. 
 - Code inputs:
-	- 
+	- `code_release_data/projection_system_outputs/time_series_data/main_model-*-SSP3-*-high-*-impact_pc.csv` time series of impacts, with uncertainty, for our main model, electricity and other energy, rcp45 and rcp85, and our full adaptation and no-adaptation scenarios. These are used to plot our impacts per capita time series in Figure 2C.
+	- `code_release_data/projection_system_outputs/time_series_data/main_model-total_energy-SSP3-*-high-fulladapt-price014.csv`: main model total energy impacts time series, for rcp45 and rcp85. 
+	- `code_release_data/projection_system_outputs/covariates/SSP3-global-gdp-time_series.csv`: global gdp time series data to plot dollarised impacts as a percent of global gdp. 
+	- `code_release_data/projection_system_outputs/time_series_data/main_model-total_energy-SSP3-*-high-fulladapt-*.csv`: main model time series by each of our price scenarios. 
+	- `code_release_data/projection_system_outputs/time_series_data/CCSM4_single/SA_single-*-SSP3-high-fulladapt-impact_pc.csv`: single climate model (CCSM4) time series of projected impacts for our Slow Adaptation model
+	- `code_release_data/projection_system_outputs/time_series_data/CCSM4_single/main_model_single-*-SSP3-high-fulladapt-impact_pc.csv`: single climate model (CCSM4) time series of projected impacts for our main model. Single climate model time series included here to provide a direct comparison to Slow Adapt single, since we only ran that for a single climate model for computational cost reasons. 
+	- `code_release_data/projection_system_outputs/time_series_data/lininter_model-*-SSP3-rcp85-high-fulladapt-impact_pc.csv`: global time series of impacts for the `lininter` model, by fuel type. 
 - Code outputs: 
-	- 
+	- `fig_2C_*_time_series.pdf`
+	- `fig_3/fig_3b_global_damage_time_series_percent_gdp_SSP3-high.pdf`
+	- `fig_Appendix-D1_global_total_energy_timeseries_all-prices-*.pdf`
+	- `fig_Appendix-I1_Slow_adapt-global_*_timeseries_impact-pc_CCSM4-SSP3-high.pdf`
+	- `fig_Appendix-I3_lininter-global_*_timeseries_impact-pc_SSP3-high-rcp85.pdf`
 	
 
