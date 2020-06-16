@@ -9,6 +9,8 @@
 
 ## Code specific notes
 
+Note: data listed as being in `/data/` is stored in this git repo in the `/data` folder. Data listed as being stored in `/code_release_data/` is stored in an external location. 
+
 ### `bar_chart_fig_2B/`
 - Run `1_prepare_bar_chart_data.do` to clean data from the projection system outputs and prepare it for plotting. 
 - `2_plot_bar_chart.R` takes in the data prepared in `1_prepare_bar_chart_data.do`, and outputs paper Figure 2B. 
