@@ -1,7 +1,7 @@
 # Impacts visualisation
 
 ## Overview 
-- Codes in this repo reproduce figures in the paper that are visualisation of projected impacts in order to show their distribution across space and time. 
+- Codes in this repo reproduce figures in the paper that are visualisation of projected impacts, in order to show their distribution across space and time. 
 
 ## Run instructions
 - To run stata codes in this directory, change the macro `DB_data` such that it points to the location of the `code_release_data` folder, that contains csvs of our projected impacts due to climate change. Change the macro `root` such that it points to the location of this git repo. 
