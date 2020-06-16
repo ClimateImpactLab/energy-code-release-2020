@@ -53,7 +53,7 @@
 - The outputs of this code are used in Figure 3A of the paper.
 - Code inputs:
 	- `/code_release_data/projection_system_outputs/IR_GCM_level_impacts/gcm_damages-main_model-total_energy-SSP3-rcp85-high-fulladapt-price014-2099-select_IRs.csv`: GCM level impacts for selected Impact Regions in the year 2099. 
-	-`/code_release_data/projection_system_outputs/covariates/SSP3-high-IR_level-gdppc_pop-2099.csv`: GDP values for the Impact Regions in the year 2099, in order to convert the units of the plots to percent of GDP. 
+	- `/code_release_data/projection_system_outputs/covariates/SSP3-high-IR_level-gdppc_pop-2099.csv`: GDP values for the Impact Regions in the year 2099, in order to convert the units of the plots to percent of GDP. 
 - Code outputs: 
 	- `/fig_3/fig_3A_kd_plot_*.pdf`
 
@@ -61,7 +61,10 @@
 - This code plots all maps presented in the paper, including those present in Figures 2A and 3A. 
 - This code sources the `0_utils/mapping.R` for a plotting function. 
 - Code inputs:
-	- 
+	- `/code_release_data/shapefiles/world-combo-new-nytimes/.`: shapefile for the world that we use in our global map plots. 
+	- `/code_release_data/projection_system_outputs/mapping_data/main_model-*-SSP3-rcp85-high-fulladapt-impact_pc-2099-map.csv`: projected impacts data for electricity and other energy, used in plotting Figure 2A. 
+	- `/code_release_data/projection_system_outputs/mapping_data/main_model-total_energy-SSP3-rcp85-high-fulladapt-price014-2099-map.csv`: projected impacts for total energy, in dollars, priced using the `price014` price scenario.
+	- `/projection_system_outputs/covariates/SSP3_IR_level_gdppc_pop_2099.csv`: Impact region level GDP data for 2099, allowing us to plot 
 - Code outputs: 
 	- 
 	
