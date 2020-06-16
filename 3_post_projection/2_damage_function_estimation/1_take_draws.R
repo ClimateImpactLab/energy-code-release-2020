@@ -12,7 +12,7 @@ pacman::p_load(dplyr,
 # Set paths
 DB = "C:/Users/TomBearpark/SynologyDrive/"
 DB_data = paste0(DB, "/GCP_Reanalysis/ENERGY/code_release_data")
-dir = paste0(DB_data, "/projection_system_outputs/damage_function_estimation/impact_values/")
+dir = paste0(DB_data, "/projection_system_outputs/damage_function_estimation/")
 
 
 # This function takes in a csv that contains means and variances of 
@@ -38,7 +38,7 @@ take_draws = function(price, ssp, fuel, num_iterations,
   }
   
   # Read in the gcm level means and standard deviations
-  df = read_csv(paste0(directory, 
+  df = read_csv(paste0(directory, "impact_values/",
           "gcm_", type, "_OTHERIND_",fuel ,price_tag, "_",ssp, ".csv"))
   
   
@@ -58,7 +58,7 @@ take_draws = function(price, ssp, fuel, num_iterations,
       names_to = "batch", 
       values_to = paste0(price, "value"),
       values_drop_na = FALSE)
-  
+
   write_csv(df, paste0(directory, "resampled_data/",
                        "gcm_", type, "_OTHERIND_",fuel,
                        price_tag, "_",ssp,"-", num_iterations, "-draws.csv"))
@@ -91,16 +91,3 @@ lapply(pricelist, FUN = take_draws,
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-  
