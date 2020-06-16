@@ -76,11 +76,11 @@ get_df_list_fig_2C = function(DB_data, fuel){
   # Subset and format for plotting
 
   bp_45 = df %>%
-    filter(rcp == "rcp45", adapt_scen == "fulladapt") %>%
+    dplyr::filter(rcp == "rcp45", adapt_scen == "fulladapt") %>%
     get.boxplot.vect(yr = 2099)
   
   bp_85 = df %>%
-    filter(rcp == "rcp85", adapt_scen == "fulladapt") %>%
+    dplyr::filter(rcp == "rcp85", adapt_scen == "fulladapt") %>%
     get.boxplot.vect(yr = 2099 )
   
   u_85 = df %>% 
