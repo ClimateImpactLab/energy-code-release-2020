@@ -152,7 +152,7 @@ In this stage, we take the projected future impacts found in step 3, and use the
          * Appendix figures including 
             * ***Appendix Figure C3***: `/fig_Appendix-C3_sample_overlap_present_future/.`
             * ***Appendix Figure D1***: `fig_Appendix-D1_global_total_energy_timeseries_all-prices-rcp*.pdf`
-            * ***Appendix Figure H1***: `fig_Appendix-H1_SSP3-high_rcp85-total-energy-price014-damages_by_inc_decile.pdf
+            * ***Appendix Figure H1***: `fig_Appendix-H1_SSP3-high_rcp85-total-energy-price014-damages_by_inc_decile.pdf`
             * ***Appendix Figure I2***: `fig_Appendix-I1_Slow_adapt-global_*_timeseries_impact-pc_CCSM4-SSP3-high.pdf`
             * ***Appendix Figure I3.C***: `fig_Appendix-I3_lininter-global_*_timeseries_impact-pc_SSP3-high-rcp85.pdf`
                                                 
