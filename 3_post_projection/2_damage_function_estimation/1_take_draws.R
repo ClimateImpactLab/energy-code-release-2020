@@ -59,7 +59,7 @@ take_draws = function(price, ssp, fuel, num_iterations,
       values_to = paste0(price, "value"),
       values_drop_na = FALSE)
   
-  write_csv(df, paste0(directory,
+  write_csv(df, paste0(directory, "resampled_data/",
                        "gcm_", type, "_OTHERIND_",fuel,
                        price_tag, "_",ssp,"-", num_iterations, "-draws.csv"))
 
