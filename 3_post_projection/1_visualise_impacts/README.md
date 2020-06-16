@@ -39,21 +39,27 @@
 	- `fig_2A_city_response_functions_2015_and_2099.pdf`
 
 ### `plot_damages_by_2012_income_decile.R`
--
+- This code shows how the energy consumption impacts we project are distributed across income deciles. The output is Figure H.1 in the paper. 
 - Code inputs:
-	- 
+	- `/code_release_data/projection_system_outputs/mapping_data/main_model-*-SSP3-rcp85-high-fulladapt-impact_pc-2099-map.csv`: projected impacts per capita at the impact region level for the year 2099.
+	- `/code_release_data/projection_system_outputs/covariates/SSP3-high-IR_level-gdppc-pop-2012.csv`: 2012 income and population data at the impact region level
+	- `/code_release_data/projection_system_outputs/covariates/SSP3-high-IR_level-gdppc-pop-2099.csv`: 2099 income and population data at the impact region level
 - Code outputs: 
-	- 
-	
+	- `fig_Appendix-H1_SSP3-high_rcp85-total-energy-price014-damages_by_inc_decile.pdf`
+
 ### `plot_kernel_density_functions.R`
--
+- This code generates visualisations of the uncertainty around our projected impacts due to climate change on selected Impact Regions. We do this by taking draws from the distribution of impacts for these impact regions, by loading in the mean and variance of their impacts by GCM for the year 2099. By taking a draws from in each of these distributions in proportion to each GCM's weight (see Appendix Table A.1 for more details), we can calculate the mixture distribution for each Impact Region. 
+- Note - this code sources `0_utils/kernel_densities.R` for a plotting function. 
+- The outputs of this code are used in Figure 3A of the paper.
 - Code inputs:
-	- 
+	- `/code_release_data/projection_system_outputs/IR_GCM_level_impacts/gcm_damages-main_model-total_energy-SSP3-rcp85-high-fulladapt-price014-2099-select_IRs.csv`: GCM level impacts for selected Impact Regions in the year 2099. 
+	-`/code_release_data/projection_system_outputs/covariates/SSP3-high-IR_level-gdppc_pop-2099.csv`: GDP values for the Impact Regions in the year 2099, in order to convert the units of the plots to percent of GDP. 
 - Code outputs: 
-	- 
-	
+	- `/fig_3/fig_3A_kd_plot_*.pdf`
+
 ### `plot_maps.R`
--
+- This code plots all maps presented in the paper, including those present in Figures 2A and 3A. 
+- This code sources the `0_utils/mapping.R` for a plotting function. 
 - Code inputs:
 	- 
 - Code outputs: 
