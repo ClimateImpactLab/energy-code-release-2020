@@ -89,7 +89,7 @@ foreach fuel in "total_energy_price014" "other_energy" "electricity" {
 		loc title = "Electricity"
 		loc ytitle = "bn Gigajoules"
 		* Convert to billion GJ
-		replace `fuel' = `fuel' * 0.0036 / 1000000000
+		replace `fuel' = `fuel'/ 1000000000
 
 		if "`scale_type'" == "-not_comm" {
 			loc ystep = 15
@@ -106,7 +106,7 @@ foreach fuel in "total_energy_price014" "other_energy" "electricity" {
 		loc title = "Other Energy"
 		loc ytitle = "bn Gigajoules"
 		* Convert to billion GJ
-		replace `fuel' = `fuel' * 0.0036 / 1000000000
+		replace `fuel' = `fuel' / 1000000000
 		if "`scale_type'" == "-not_comm" {
 			loc ystep = 60
 			loc ymax = 40 
