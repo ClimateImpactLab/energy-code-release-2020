@@ -11,9 +11,9 @@ This script does the following:
 			nonparametrically estimated for each year 't'
 			using data only from the 5 years around 't'
 	* 3) Runs a second regression in which GMST is interacted linearly with time. 
-	* 4) Predicts damage function coefficients for all years 2015-2300, with post-2100 extrapolation 
+	* 4) Predicts quantile regression coefficients for all years 2015-2300, with post-2100 extrapolation 
 			conducted using the linear temporal interaction model and pre-2100 using the nonparametric model
-	* 5) Saves a csv of damage function coefficients to be used by the SCC calculation derived from the FAIR 
+	* 5) Saves a csv of quantile regression coefficients to be used by the SCC uncertainty calculation derived from the FAIR 
 			simple climate model
 */
 **********************************************************************************
@@ -24,7 +24,6 @@ clear all
 set more off
 set scheme s1color
 
-* glob DB "C:/Users/TomBearpark/SynologyDrive"
 glob DB "C:/Users/TomBearpark/SynologyDrive"
 glob DB_data "$DB/GCP_Reanalysis/ENERGY/code_release_data"
 glob dir "$DB_data/projection_system_outputs/damage_function_estimation"
@@ -32,12 +31,8 @@ glob dir "$DB_data/projection_system_outputs/damage_function_estimation"
 * SSP toggle 
 loc ssp = "SSP3" 
 
-* Model toggle 
+* Model toggle: options are "main", "lininter", and "lininter_double"
 loc model = "main"
-
-* What year do we use data from for determining DF estimates used for the out of sample extrapolation
-loc subset = 2085
-
 
 
 ******************************************
@@ -97,6 +92,9 @@ ren temp anomaly
 * STEP 2: Quantile regressions & construction of time-varying damage function coefficients 
 **********************************************************************************
 
+
+* What year do we use data from for determining DF estimates used for the out of sample extrapolation
+loc subset = 2085
 
 **  INITIALIZE FILE WE WILL POST RESULTS TO
 capture postutil clear
