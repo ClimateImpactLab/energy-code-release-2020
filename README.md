@@ -11,7 +11,7 @@ The analysis in the paper proceeds in **five steps**.
 
 This master readme outlines the process for each step, and each analysis step has it’s own readme and set of scripts in a subdirectory.
 
-*Note, the code currently in this repo performs steps 1,2,4 and 5 outlined above. We will update with more replication code in the future. Code used to project impats will be held in a separate git repo.*
+*Note, the code currently in this repo performs steps 1,2,4 and 5 outlined above. We will update with more replication code in the future. Code used to project impacts will be held in a separate git repo.*
 
 ## Description of folders
 
