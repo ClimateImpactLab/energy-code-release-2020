@@ -28,12 +28,9 @@ glob DB "C:/Users/TomBearpark/SynologyDrive"
 glob DB_data "$DB/GCP_Reanalysis/ENERGY/code_release_data"
 glob dir "$DB_data/projection_system_outputs/damage_function_estimation"
 
-* SSP toggle 
-loc ssp = "SSP3" 
-
-* Model toggle: options are "main", "lininter", and "lininter_double"
+* Note: this code is only set up to run quantile regressions for SSP3-main model. 
 loc model = "main"
-
+loc ssp = "SSP3" 
 
 ******************************************
 * Set locals based on options 
