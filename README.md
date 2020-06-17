@@ -128,7 +128,7 @@ We run three kinds of regressions in this section:
 In this stage of our analysis, we take the coefficients identified in Step 2, 
 and use them to project future impacts on energy consumption due to climate change. 
 
-Running code for in this step is highly computationall intensive. Therefore, we are including the inputs from our analysis that would allow a user to run this step, but we are also providing the outputs of this step that are required for further analysis as stand-alone `.csv` files, should a user wish to run code in steps 4 and 5 without running step 3. 
+Running code for in this step is highly computationally intensive. Therefore, we are including the inputs from our analysis that would allow a user to run this step, but we are also providing the outputs of this step that are required for further analysis as stand-alone `.csv` files, should a user wish to run code in steps 4 and 5 without running step 3. 
 
 When complete, we plan to contain in this repo: 
 - Code for converting the regression coefficient estimates from step 2 into a format that our projection system can use.  
@@ -140,24 +140,24 @@ Code for this step is not currently in this repo.
 
 ## Step 4 - Estimate Empirical Damage Function
 
-In this stage, we take the projected future impacts found in step 3, and use them to construct and emprical damage function. 
+In this stage, we take the projected future impacts found in step 3, and use them to construct an empirical damage function. 
 
 1. As part of this process, we first plot a selection of the projection system outputs, in order to help us understand the spatial and temporal patterns implied by our projections. Codes for this part of our analysis are contained in [3_post_projection/1_visualise_impacts](https://github.com/ClimateImpactLab/energy-code-release-2020/tree/post-projection/3_post_projection/1_visualise_impacts). 
       * These codes output take in outputs extracted from the projection system outputs. See readme in Step 3 for more details. 
       * They produce: 
          * ***Figure 2A***: `fig_2A_*_impacts_map.png`. These maps show the spatial distribution of the projected impacts of climate change on energy consumption by fuel types, in the year 2099. We also show the response functions associated with selected impact regions, both historically and in our 2099 projection (`fig_2A_city_response_functions_2015_and_2099.pdf`). 
-         * ***Figure 2B***: `fig_2B_*_consumption_compared_to_2099_impact_bars.pdf`, which show how projected impacts for certain countries compare to their current consumption. 
-         * ***Figure 2C***: `fig_2C_*_time_series.pdf`, which show's aggregated global time series of our projected impacts by fuel and RCP, with uncertainty. 
-         * ***Figure 3*** `/fig_3/.`: figures in this folder present visualisations of monetised damages, combined across fuel types. We present a map of the damages, to highlight the spatial distribution, with visualisations of uncertainty for selected impact regions. We also show an aggregated time series showing total projected damages by year as percent of global gdp. The damage functions in 3C are produced by code in damage function estimation.  
+         * ***Figure 2B***: `fig_2B_*_consumption_compared_to_2099_impact_bars.pdf`, which shows how projected impacts for certain countries compare to their current consumption. 
+         * ***Figure 2C***: `fig_2C_*_time_series.pdf`, which shows aggregated global time series of our projected impacts by fuel type and RCP, with uncertainty. 
+         * ***Figure 3*** `/fig_3/.`: Figures in this folder present visualisations of monetized damages, combined across fuel types. We present a map of the damages, to highlight the spatial distribution, with visualisations of uncertainty for selected impact regions (Figure 3A). We also show an aggregated time series showing total projected damages by year as percent of global gdp (Figure 3B). The damage functions in Figure 3C are produced by code in damage function estimation.  
          * Appendix figures including 
             * ***Appendix Figure C3***: `/fig_Appendix-C3_sample_overlap_present_future/.`
             * ***Appendix Figure D1***: `fig_Appendix-D1_global_total_energy_timeseries_all-prices-rcp*.pdf`
             * ***Appendix Figure H1***: `fig_Appendix-H1_SSP3-high_rcp85-total-energy-price014-damages_by_inc_decile.pdf`
-            * ***Appendix Figure I2***: `fig_Appendix-I1_Slow_adapt-global_*_timeseries_impact-pc_CCSM4-SSP3-high.pdf`
+            * ***Appendix Figure I1***: `fig_Appendix-I1_Slow_adapt-global_*_timeseries_impact-pc_CCSM4-SSP3-high.pdf`
             * ***Appendix Figure I3.C***: `fig_Appendix-I3_lininter-global_*_timeseries_impact-pc_SSP3-high-rcp85.pdf`
                                                 
 
-2. We then use the global damages implied by our projections to construct damage functions. Code for estiamting these damage functions is contained in [3_post_projection/2_damage_function_estimation](https://github.com/ClimateImpactLab/energy-code-release-2020/tree/post-projection/3_post_projection/2_damage_function_estimation). 
+2. We then use the global damages implied by our projections to construct damage functions. Code for estimating these damage functions is contained in [3_post_projection/2_damage_function_estimation](https://github.com/ClimateImpactLab/energy-code-release-2020/tree/post-projection/3_post_projection/2_damage_function_estimation). 
       * This code plots visualisations of our damage functions in the year 2099 for electricity, other fuels, and total energy priced using our price014 price scenario, that are shown in the paper as: 
            * ***Figure 3C***: `fig_3C_damage_function_*_2099_SSP3.pdf` 
            * The code also outputs damage function coefficients for each price scenario, and quantile regression coefficients. 
@@ -165,9 +165,9 @@ In this stage, we take the projected future impacts found in step 3, and use the
 
 ## Step 5 - Compute Energy-Only Partial Social Cost of Carbon
 
-In the final step of the analysis, we use the empirically derived damage function to calculate an energy-only partial social cost of carbon.
+In the final step of the analysis, we use the empirically derived damage function to calculate an energy-only, partial social cost of carbon.
 
-Code for this step is contained in [3_post_projection/3_SCC](https://github.com/ClimateImpactLab/energy-code-release-2020/tree/post-projection/3_post_projection/3_SCC). This code takes in the damage function and quantile regression coefficients generated in Step 4, and outputs SCC values.  
+Code for this step is contained in [3_post_projection/3_SCC](https://github.com/ClimateImpactLab/energy-code-release-2020/tree/post-projection/3_post_projection/3_SCC). This code takes in the damage function coefficients generated in Step 4, and outputs SCC values.  
 
 This code outputs all SCC values used in the tables in the paper. 
 
