@@ -1,11 +1,6 @@
 /*
-Creator: Maya Norman
-Date last modified: 3/26/19 
-Last modified by: Maya Norman
 
-Purpose: Master Do File for Projection Set Up
-
-Create CSVV's - 
+Purpose: Create CSVV's required for projections  
 */
 
 clear all
@@ -24,18 +19,13 @@ global root "C:/Users/TomBearpark/Documents/energy-code-release-2020"
 //install global programs
 do $root/2_projection/0_packages_programs_inputs/projection_set_up/csvv_generation_stacked.do
 
-******** Choose model *****************************
-
-//Model type-- Options: TINV_clim_lininter, TINV_clim_lininter_double
-local model_tt "TINV_clim"
-
 
 ************************************************
-*Step 1: Set up common resources across scripts
+*Step 1: Set up common resources across models
 ************************************************
 
 // ster stem for desired projection 
-local stem = "FD_FGLS_inter"
+local ster_stem = "FD_FGLS_inter"
 
 // path to analysis data 
 local DATA "$root/data"	
@@ -47,41 +37,61 @@ local output_csvv "$root/projection_inputs"
 local break_data "$root/data/break_data_TINV_clim.dta"
 
 
+* Loop over model type - creating csvvs for each type. 
+* Note TINV_clim_lininter_double is exactly the same csvv as TINV_clim_lininter
+* Hence we copy the csvv made for TINV_clim_lininter
+* 
+* foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double"{
+foreach model_tt in "TINV_clim_lininter_double" {
 
-***************************************************
-*Step 2: Generate CSVV
-***************************************************
+	if(inlist("`model_tt'", "TINV_clim", "TINV_clim_lininter")){
 
-// step 1: write csvvs
+		***************************************************
+		*Step 2: Generate CSVV
+		***************************************************
 
-foreach product in "other_energy" "electricity" {
+		// step 1: write csvvs
 
-	write_csvv , datapath("`DATA'")	outpath("`output_csvv'") root("$root") ///
-		model("`model_tt'") clim_data("GMFD") spec_stem("`stem'") ///
-		grouping_test("semi-parametric") product("`product'") bknum("break2") ///
-		zero_case("Exclude") issue_case("_all-issues") data_type("replicated_data")	
-	
-	local coefficientlist_`product' `s(coef_list)'
+		foreach product in "other_energy" "electricity" {
 
+			write_csvv , datapath("`DATA'")	outpath("`output_csvv'") root("$root") ///
+				model("`model_tt'") clim_data("GMFD") spec_stem("`ster_stem'") ///
+				grouping_test("semi-parametric") product("`product'") bknum("break2") ///
+				zero_case("Exclude") issue_case("_all-issues") data_type("replicated_data")	
+			
+			local coefficientlist_`product' `s(coef_list)'
+
+		}
+
+		// step 2: write stacked regression full vcv 
+
+		//get number of coefficients
+		preserve
+
+			load_spec_csv , specpath("$root/2_projection/0_packages_programs_inputs/projection_set_up") model("`model_tt'")
+			local num_coefficients = `r(nc)'
+			local all_coefficients = 2 * `num_coefficients' * 20 // 2 poly order, 10 income deciles, 2 products
+			return clear
+
+		restore
+
+		//write file full vcv. This is combined for electricity and other_energy
+		file open csvv using "`output_csvv'/`model_tt'/`ster_stem'_OTHERIND_`model_tt'.csvv", write replace
+
+		write_vcv , ///
+			coefficientlist(" `coefficientlist_other_energy' `coefficientlist_electricity' ") ///
+			 num_coefficients(`all_coefficients')
+
+		file close csvv
+	}
+	else if("`model_tt'" == "TINV_clim_lininter_double"){
+
+		cap mkdir "`output_csvv'/TINV_clim_lininter_double"
+		
+		foreach product in "_other_energy" "_electricity" ""{
+			copy "`output_csvv'/TINV_clim_lininter/FD_FGLS_inter_OTHERIND`product'_TINV_clim_lininter.csvv" ///
+				"`output_csvv'/TINV_clim_lininter_double/FD_FGLS_inter_OTHERIND`product'_TINV_clim_lininter_double.csvv" 
+		}
+
+	}
 }
-
-// step 2: write stacked regression full vcv 
-
-//get number of coefficients
-preserve
-
-	load_spec_csv , specpath("$root/2_projection/0_packages_programs_inputs/projection_set_up") model("`model_tt'")
-	local num_coefficients = `r(nc)'
-	local all_coefficients = 2 * `num_coefficients' * 20 // 2 poly order, 10 income deciles, 2 products
-	return clear
-
-restore
-
-//write file full vcv. This is combined for electricity and other_energy
-file open csvv using "`output_csvv'/`model_tt'/`stem'_OTHERIND_`model_tt'.csvv", write replace
-
-write_vcv , ///
-	coefficientlist(" `coefficientlist_other_energy' `coefficientlist_electricity' ") ///
-	 num_coefficients(`all_coefficients')
-
-file close csvv

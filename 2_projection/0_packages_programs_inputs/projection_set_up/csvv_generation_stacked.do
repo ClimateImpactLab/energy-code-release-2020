@@ -1,36 +1,12 @@
 /*
 
-Last Modified: Maya Norman 9/23/19
-
 Purpose: 
-1. Produce CSVV files based on Azhar's code gen_csvv.do
+1. Produce CSVV files - ie convert the stata ster files containing regression coefficients 
+into a format that our projection system understands
 2. Produce full stacked vcv for delta method processing (combining impacts across products to construct damages)
 
-Depends on 0_gen_spec_csv.R to generate file with ordered coefficients for a given model 
-- please reference previous versions of this code for info about what those coefficients in the csv should be
+requires download of user written command matselrc: (can run net install http://www.stata.com/stb/stb56/dm79.pkg)
 
-Script status: testing complete for TINV_clime_income_spine
-
-Program parameters:
-note -- definitions are common across functions in this file... if they aren't sorry
-
-product: "other_energy" "electricity"
-data_path: root path to analysis data and ster file
-spec_path: path to csv with coeffient names for a given model
-
-these parameters are for the specification -- 
-if you are running a different specification please confirm the output matches the expected results or alter the functions so it does. Please reference 
-v2 and the orginal csvv writer for information about how I integrated other models into the code. Obviously, the code is now based in fxns instead of a script
-but the logic is still the same.
-
-	model: TINV_clim_income_spline 
-	grouping_test: semi-parametric 
-	bknum: break2
-	clim_data: GMFD
-	stem: ster file specification 
-	zero_case: Exclude
-	issue_case: all-issues
-	data_type: replicated data
 */
 	
 ********************************************************************************
@@ -108,10 +84,10 @@ syntax , model(string) clim_data(string) spec_stem(string) product(string) num_c
 	file write csvv "  incbinN: income bin 1-10 sorted by `ma_inc' log GDP per cap, year 2000 dollars [NA]"_n
 	file write csvv "  climtas-cdd-20: MA15 average yearly CDD 20C [degree-day]"_n 
 	file write csvv "  climtas-hdd-20: MA15 average yearly HDD 20C [degree-day]"_n 
-	if (strpos("`model'", "income_spline") > 0 | strpos("`submodel_name'", "income_spline") > 0) {
-		file write csvv "  loggdppc-shifted: loggdppc - ibar [log(2005 PPP adjusted USD)]" _n
-		file write csvv "  loggdppc: `ma_inc' average log GDP per capita [log(2005 PPP adjusted USD)]"_n
-	}
+
+	file write csvv "  loggdppc-shifted: loggdppc - ibar [log(2005 PPP adjusted USD)]" _n
+	file write csvv "  loggdppc: `ma_inc' average log GDP per capita [log(2005 PPP adjusted USD)]"_n
+
 	file write csvv "  outcome: energy use per capita [kWh/pc]"_n          
 	file write csvv "..." _n
 
@@ -286,20 +262,18 @@ syntax , model(string)
 
 	**Part 4: gammas, lgdppc**
 
-	if (strpos("`model'`submodel_name'", "income_spline") > 0) {
-		file write csvv ","
-		file write csvv "loggdppc-shifted*incbin1, loggdppc-shifted*incbin1, "
-		file write csvv "loggdppc-shifted*incbin2, loggdppc-shifted*incbin2, "
-		file write csvv "loggdppc-shifted*incbin3, loggdppc-shifted*incbin3, "
-		file write csvv "loggdppc-shifted*incbin4, loggdppc-shifted*incbin4, "
-		file write csvv "loggdppc-shifted*incbin5, loggdppc-shifted*incbin5, "
-		file write csvv "loggdppc-shifted*incbin6, loggdppc-shifted*incbin6, "
-		file write csvv "loggdppc-shifted*incbin7, loggdppc-shifted*incbin7, "
-		file write csvv "loggdppc-shifted*incbin8, loggdppc-shifted*incbin8, "
-		file write csvv "loggdppc-shifted*incbin9, loggdppc-shifted*incbin9, "
-		file write csvv "loggdppc-shifted*incbin10, loggdppc-shifted*incbin10"
-	}
-
+	file write csvv ","
+	file write csvv "loggdppc-shifted*incbin1, loggdppc-shifted*incbin1, "
+	file write csvv "loggdppc-shifted*incbin2, loggdppc-shifted*incbin2, "
+	file write csvv "loggdppc-shifted*incbin3, loggdppc-shifted*incbin3, "
+	file write csvv "loggdppc-shifted*incbin4, loggdppc-shifted*incbin4, "
+	file write csvv "loggdppc-shifted*incbin5, loggdppc-shifted*incbin5, "
+	file write csvv "loggdppc-shifted*incbin6, loggdppc-shifted*incbin6, "
+	file write csvv "loggdppc-shifted*incbin7, loggdppc-shifted*incbin7, "
+	file write csvv "loggdppc-shifted*incbin8, loggdppc-shifted*incbin8, "
+	file write csvv "loggdppc-shifted*incbin9, loggdppc-shifted*incbin9, "
+	file write csvv "loggdppc-shifted*incbin10, loggdppc-shifted*incbin10"
+	
 	file write csvv _n
 end
 
@@ -356,7 +330,6 @@ end
 
 // write out variance covariance matrix 
 // inputs coefficientlist output from write_gammas -- list of coefficients in order written 
-// this function could be seriously sped up with a little bit more love
 program define write_vcv
 syntax , coefficientlist(string) num_coefficients(integer)
 
@@ -415,11 +388,10 @@ syntax , datapath(string) outpath(string) root(string) model(string) clim_data(s
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	
 	// part a.1: create locals for dataset and ster file
-	local data "`datapath'/`clim_data'_`model'_regsort.dta"
+	local data "`datapath'/`clim_data'_TINV_clim_regsort.dta"
 	local ster "`root'/sters/`spec_stem'_`model'.ster"
 	
 	// part a.2: insheet projection spec csv and write list of coefficients 
-	// have to use ridiculous loop because levelsof sorts and that screws up my system ... yes a better system wouldn't have this problem but its 630
 	
 	load_spec_csv , specpath("`root'/2_projection/0_packages_programs_inputs/projection_set_up") model("`model'")
 	local num_coefficients = `r(nc)'
