@@ -1,5 +1,7 @@
 # Climate Data Construction
 
+[//]: # (Github doesn't support inline maths, so i used this website to generate links that render as maths: https://www.codecogs.com/latex/eqneditor.php)
+
 As described in Appendix A.2.4, we link GMFD gridded daily historical climate data to country-year-level energy consumption data by aggregating daily grid cell 
 information to the country year level. Nonlinear transformations of temperature and rainfall are computed at the grid cell level before averaging values 
 across space using population weights and finally summing over days within a year. 
@@ -36,13 +38,13 @@ Below we describe the climate variable transformations we perform at the grid ce
 * temp1_GMFD, temp2_GMFD, temp3_GMFD, and temp4_GMFD
     * These variables are polynomials of the daily average temperature. For example, temp2_GMFD is a pop-weighted average 
     of a second order polynomial of pixel level daily average temperature for a given country summed to the year.
-    These variables constitute the elements of the vector <a href="https://www.codecogs.com/eqnedit.php?latex=\boldsymbol{T}_{jt}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\boldsymbol{T}_{jt}" title="\boldsymbol{T}_{jt}" /></a>  for country <a href="https://www.codecogs.com/eqnedit.php?latex=j" target="_blank"><img src="https://latex.codecogs.com/gif.latex?j" title="j" /></a>, year <a href="https://www.codecogs.com/eqnedit.php?latex=t" target="_blank"><img src="https://latex.codecogs.com/gif.latex?t" title="t" /></a> (*Appendix* A.2.4; C.1).
+    * These variables constitute the elements of the vector <a href="https://www.codecogs.com/eqnedit.php?latex=\boldsymbol{T}_{jt}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\boldsymbol{T}_{jt}" title="\boldsymbol{T}_{jt}" /></a>  for country <a href="https://www.codecogs.com/eqnedit.php?latex=j" target="_blank"><img src="https://latex.codecogs.com/gif.latex?j" title="j" /></a>, year <a href="https://www.codecogs.com/eqnedit.php?latex=t" target="_blank"><img src="https://latex.codecogs.com/gif.latex?t" title="t" /></a> (*Appendix* A.2.4; C.1).
 * precip1_GMFD, precip2_GMFD
-    * Similarly, these terms are polynomials of precipitation. They constitute the elements of the vector $`\boldsymbol{P}_{jt}`$ (*Appendix* A.2.4; C.1).
+    * Similarly, these terms are polynomials of precipitation. They constitute the elements of the vector <a href="https://www.codecogs.com/eqnedit.php?latex=\boldsymbol{P}_{jt}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\boldsymbol{P}_{jt}" title="\boldsymbol{P}_{jt}" /></a>(*Appendix* A.2.4; C.1).
 * polyAbove1_GMFD, polyAbove2_GMFD
-    *  These terms are respectively $`\sum_{d \in t}(T_{jd}-20)\mathbf{I}_{T_{jd}\geq20}`$ and $`\sum_{d \in t}(T^{2}_{jd}-20^{2})\mathbf{I}_{T_{jd}\geq20}`$ from Appendix Equation C.4.
+    *  These terms are respectively <a href="https://www.codecogs.com/eqnedit.php?latex=\sum_{d&space;\in&space;t}(T_{jd}-20)\mathbf{I}_{T_{jd}\geq20}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\sum_{d&space;\in&space;t}(T_{jd}-20)\mathbf{I}_{T_{jd}\geq20}" title="\sum_{d \in t}(T_{jd}-20)\mathbf{I}_{T_{jd}\geq20}" /></a> and <a href="https://www.codecogs.com/eqnedit.php?latex=\sum_{d&space;\in&space;t}(T^{2}_{jd}-20^{2})\mathbf{I}_{T_{jd}\geq20}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\sum_{d&space;\in&space;t}(T^{2}_{jd}-20^{2})\mathbf{I}_{T_{jd}\geq20}" title="\sum_{d \in t}(T^{2}_{jd}-20^{2})\mathbf{I}_{T_{jd}\geq20}" /></a> from Appendix Equation C.4.
 * polyBelow1_GMFD, polyBelow2_GMFD
-    *  These terms are respectively $`\sum_{d \in t}(20-T_{jd})\mathbf{I}_{T_{jd}<20}`$ and $`\sum_{d \in t}(20^{2}-T^{2}_{jd})\mathbf{I}_{T_{jd}<20}`$ from Appendix Equation C.4
+    *  These terms are respectively <a href="https://www.codecogs.com/eqnedit.php?latex=\sum_{d&space;\in&space;t}(20-T_{jd})\mathbf{I}_{T_{jd}<20}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\sum_{d&space;\in&space;t}(20-T_{jd})\mathbf{I}_{T_{jd}<20}" title="\sum_{d \in t}(20-T_{jd})\mathbf{I}_{T_{jd}<20}" /></a> and <a href="https://www.codecogs.com/eqnedit.php?latex=\sum_{d&space;\in&space;t}(20^{2}-T^{2}_{jd})\mathbf{I}_{T_{jd}<20}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\sum_{d&space;\in&space;t}(20^{2}-T^{2}_{jd})\mathbf{I}_{T_{jd}<20}" title="\sum_{d \in t}(20^{2}-T^{2}_{jd})\mathbf{I}_{T_{jd}<20}" /></a> from Appendix Equation C.4
 * cdd20_GMFD
     * cooling degree days (*Appendix* C.3)
 * hdd20_GMFD
