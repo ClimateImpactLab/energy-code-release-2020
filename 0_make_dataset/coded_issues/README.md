@@ -7,7 +7,7 @@ Using the IEA World Energy Balances 2017 Edition Database Documentation, we clea
 * country geographic definitions
 * non-standard definitions of a year
 
-To accomplish this task, we first read the documentation and encoded the relevant issues into this [dataset](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/coded_issues/cleaned_coded_issues.csv). Then, using these coded issues, we cleaned the dataset and constructed reporting regimes. Below, I will outline both of these steps. 
+To accomplish this task, we first read the documentation and encoded the relevant issues into this [dataset](https://github.com/ClimateImpactLab/energy-code-release-2020/blob/master/0_make_dataset/coded_issues/cleaned_coded_issues.csv). Then, using these coded issues, we cleaned the dataset and constructed reporting regimes. Below, I will outline both of these steps. 
 
 ## Encoding IEA World Balance Documentation
 
@@ -45,13 +45,13 @@ To accomplish this task, we first read the documentation and encoded the relevan
 * `fiscal_year`: = 1 if the issue indicates data is not recordered on a Jan.-Dec. calendar year
 * `ex_ex`: = 1 if the issue is classified as “extrapolation” and the issue description indicates that the data was exclusively estimated. In other words, the only data source is imputation. (*Appendix* I.2) 
 
-Please note, there are some instances where `flag_drop` and `grey` are used to drop data with issues classified outside of the definitions specified above. Please reference [cleaned_coded_issues.csv](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/coded_issues/cleaned_coded_issues.csv) for examples of these exceptions.
+Please note, there are some instances where `flag_drop` and `grey` are used to drop data with issues classified outside of the definitions specified above. Please reference [cleaned_coded_issues.csv](https://github.com/ClimateImpactLab/energy-code-release-2020/blob/master/0_make_dataset/coded_issues/cleaned_coded_issues.csv) for examples of these exceptions.
 
 ## Addressing Encoded Issues in Data Cleaning and Analysis
 
 Using the 5 dummy variables assigned in `Step 2` above we accomplish the following tasks:
 1. construct country x year climate data which accurately reflect the calendar year and geographic regions associated with each energy consumption observation
-    * please reference this [readme](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/climate/README.md) for more information about how climate data gets constructed with these issues in mind
+    * please reference this [readme](https://github.com/ClimateImpactLab/energy-code-release-2020/blob/master/0_make_dataset/climate/README.md) for more information about how climate data gets constructed with these issues in mind
 2. drop untrustworthy observations
     * Using the `flag_drop` and `grey` indicator variables defined above, we drop observations. If an energy consumption observation corresponds to non-zero values of either indicator variable, we will drop that observation.
 3. create reporting regimes as described in Appendix Section A.1

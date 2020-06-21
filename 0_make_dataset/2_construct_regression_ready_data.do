@@ -23,7 +23,7 @@ pause off
 
 // path to energy-code-release repo 
 
-global root "/Users/`c(username)'/Documents/repos/energy-code-release"
+global root "/Users/`c(username)'/Documents/repos/energy-code-release-2020"
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
