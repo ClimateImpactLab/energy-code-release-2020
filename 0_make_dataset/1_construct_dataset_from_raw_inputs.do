@@ -33,7 +33,7 @@ cap ssc install rangestat
 /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////
 
 // path to energy-code-release repo 
-local root "/Users/`c(username)'/Documets/repos/energy-code-release"
+local root "/Users/`c(username)'/Documets/repos/energy-code-release-2020"
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
