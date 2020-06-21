@@ -96,12 +96,12 @@ The shapefile specific programs below clean yearly climate data for specific cou
     * Note from documentation: The statistical data for Israel are supplied by and under the responsibility of the relevant Israeli authorities. The use of such data by the OECD is without prejudice to the status of the Golan Heights, East Jerusalem and Israeli settlements in the West Bank under the terms of international law
 * [programs/clean_ITA_SMR_VAT.do](https://github.com/ClimateImpactLab/energy-code-release-2020/blob/master/0_make_dataset/climate/programs/clean_ITA_SMR_VAT.do):
     * Italy data includes San Marino and the Holy See
-    * `shapefile/ITA_SMR_VAT`
+    * `shapefiles/ITA_SMR_VAT`
 * [programs/clean_MDA_other.do](https://github.com/ClimateImpactLab/energy-code-release-2020/blob/master/0_make_dataset/climate/programs/clean_MDA_other.do):
     * For Moldova, official figures on natural gas imports, natural gas inputs to power plants, electricity production and consumption are modified by the IEA Secretariat to include estimates for supply and demand for the autonomous region of Stînga Nistrului (also known as the Pridnestrovian Moldavian Republic or Transnistria). 
     * Other energy production or consumption from this region is not included in the Moldovan data.
-    * `shapefile/MDA_other`
-* [programs/clean_SRB_MNE.do](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/climate/programs/clean_SRB_MNE.do):
+    * `shapefiles/MDA_other`
+* [programs/clean_SRB_MNE.do](https://github.com/ClimateImpactLab/energy-code-release-2020/blob/master/0_make_dataset/climate/programs/clean_SRB_MNE.do):
     * Serbia data includes Montenegro and only Montenegro from 1999 to 2004
     * `shapefiles/SRB_MNE`
 * [programs/clean_SRB_MNE_XKO.do](https://github.com/ClimateImpactLab/energy-code-release-2020/blob/master/0_make_dataset/climate/programs/clean_SRB_MNE_XKO.do):
