@@ -11,7 +11,7 @@ We account for these two types of energy consumption data features by constructi
 definitions baked into each energy consumption observation. For example:
 * We construct yearly Australian climate data with the following definition of year: July t to June t + 1.  
 * We use a shapefile for Italy which includes San Marino and the Holy See.
-Please reference this [readme](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/blob/master/0_make_dataset/coded_issues/README.md) 
+Please reference this [readme](https://github.com/ClimateImpactLab/energy-code-release-2020/tree/master/0_make_dataset/coded_issues) 
 for more information about the IEA dataset documentation and how we incorporated it into our analysis.
 
 The code and shapefiles in this directory demonstrate how we construct our climated data, accounting for non-standard definitions of country boundaries and years
@@ -36,7 +36,7 @@ Below we describe the climate variable transformations we perform at the grid ce
 * temp1_GMFD, temp2_GMFD, temp3_GMFD, and temp4_GMFD
     * These variables are polynomials of the daily average temperature. For example, temp2_GMFD is a pop-weighted average 
     of a second order polynomial of pixel level daily average temperature for a given country summed to the year.
-    These variables constitute the elements of the vector $`\boldsymbol{T}_{jt}`$  for country $`j`$, year $`t`$ (*Appendix* A.2.4; C.1).
+    These variables constitute the elements of the vector <a href="https://www.codecogs.com/eqnedit.php?latex=\boldsymbol{T}_{jt}" target="_blank"><img src="https://latex.codecogs.com/gif.latex?\boldsymbol{T}_{jt}" title="\boldsymbol{T}_{jt}" /></a>  for country <a href="https://www.codecogs.com/eqnedit.php?latex=j" target="_blank"><img src="https://latex.codecogs.com/gif.latex?j" title="j" /></a>, year <a href="https://www.codecogs.com/eqnedit.php?latex=t" target="_blank"><img src="https://latex.codecogs.com/gif.latex?t" title="t" /></a> (*Appendix* A.2.4; C.1).
 * precip1_GMFD, precip2_GMFD
     * Similarly, these terms are polynomials of precipitation. They constitute the elements of the vector $`\boldsymbol{P}_{jt}`$ (*Appendix* A.2.4; C.1).
 * polyAbove1_GMFD, polyAbove2_GMFD
