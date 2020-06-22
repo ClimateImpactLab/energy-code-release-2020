@@ -64,7 +64,7 @@ local grouping_test "semi-parametric"
 //Issue Fix	
 local IF "_all-issues" //second-reading-issues revised-first-reading-issues matched-issues all-issues face-value first-reading-issues
 
-//Model type-- Options: TINV_clim, TINV_both, TINV_clim_EX
+//Model type-- Options: TINV_clim_income_spline, TINV_clim_income_spline_lininter, TINV_clim_income_spline_lininter_double
 local model_tt "TINV_clim_income_spline"
 
 //Climate Data type
