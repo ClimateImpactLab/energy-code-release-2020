@@ -1,6 +1,6 @@
 - ***Please note - the code in `2_projection` does not need to be run in order for a user to work with codes later in the process.
 We have included the outputs of this projection step as csv files in the data repository associated with this repo***
-- Running projection codes is highly computationally intensive - and should only be done on a server (it would probably take years on a laptop - it takes weeks on out powerful Climate Impact Lab servers)
+- Running projection codes is highly computationally intensive - and should only be done on a server (it would probably take months on a laptop - it takes weeks on out powerful Climate Impact Lab servers)
 - If attempting to run a projection - you will need to follow some extensive set up instructions, and have access to all projection system data (this isn't currently saved in the
 code release data repository). You will also need to modify the codes in this folder to reflect the paths and set up on your server.
 
