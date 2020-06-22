@@ -9,7 +9,7 @@ macro drop _all
 pause off
 
 * Download a command for dealing with matrices 
-* qui net install http://www.stata.com/stb/stb56/dm79.pkg
+qui net install http://www.stata.com/stb/stb56/dm79.pkg
 
 //SET UP RELEVANT PATHS
 // path to energy-code-release repo 
@@ -31,19 +31,18 @@ local ster_stem = "FD_FGLS_inter"
 local DATA "$root/data"	
 
 // path to csvv output
-local output_csvv "$root/projection_inputs"
+local output_csvv "$root/projection_inputs/csvv"
+cap mkdir "`output_csvv'"
 
 // path to dataset with information about income deciles and income spline knot location
 local break_data "$root/data/break_data_TINV_clim.dta"
-
 
 * Loop over model type - creating csvvs for each type. 
 * Note TINV_clim_lininter_double is exactly the same csvv as TINV_clim_lininter
 * Hence we copy the csvv made for TINV_clim_lininter
 * 
-* foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double"{
-foreach model_tt in "TINV_clim_lininter_double" {
-
+foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double"{
+	
 	if(inlist("`model_tt'", "TINV_clim", "TINV_clim_lininter")){
 
 		***************************************************
