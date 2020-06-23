@@ -26,8 +26,11 @@
 if we end up changing the configs.
 
 - To use the config writer to point to csvs in this repo, you will need to:
-  - Update it so that it pops out module configs that are pointing to the csvv you produced using this repo, rather than the one currently on the server 
-  - Update any logic in the `write_projection_file.do` config writer that depends on the name of the model or csvv. 
+  - Update it so that it pops out module configs that are pointing to the csvv you produced using this repo, rather than the one currently on the server. This should be really easy - it's an option you pass into the code (csvv_location).
+  - Update any logic in the `write_projection_file.do` config writer that depends on the name of the model or csvv. This might take a bit of work - there is quite a bit of logic that depends on 
+ the name of the model including the string "income_spline". 
+ 
+ - Note - if you change the existing configs (specifically the extraction configs), then `load_projection` won't work on the current set of projection results on sac. 
 
 # End of stuff that's just a message for Ashwin / Rae
   
