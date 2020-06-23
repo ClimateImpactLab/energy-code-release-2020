@@ -2,7 +2,7 @@
 Extract and load data using quantiles.py or load already extracted data from csvs. Currently the system is only set up to query median and delta method output... more functionality to come. 
 
 ## Necessary steps for using this system: 
-1. Create a bash script similar to `example.sh`, which extracts a specific file specified by a set of parameters. Please reference `bash-extraction-script.md` for documentation on necessary syntax for creating a bash script which will integrate with the data querying code. 
+1. Create a bash script similar to `example.sh`, which extracts a specific file specified by a set of parameters. Please reference `bash-extraction-script.md` for documentation on necessary syntax for creating a bash script which will integrate with the data querying code. Note - the bash script that is actually used in this code is in this folder and is called `extraction_quantiles.sh`.
 2. Write necessary configs for all desired extraction calls from `quantiles.py` (a code in an external repo used for extracting quantiles across projection system outputs).
 3. Add a get.*.code.paths() function to tell the querying system where your extraction bash script created in step 1 lives.
 4. Source all functions in this directory.
@@ -72,8 +72,6 @@ For first time users, these are the functions I predict you will need to adapt t
 * *get.shell.file.parameters()* - Get list of parameters that need to be defined when calling extraction bash script as well as information about that parameter
     * this function relies on very specific syntax in the extraction bash script. I document the syntax specifics [here](https://gitlab.com/ClimateImpactLab/Impacts/gcp-energy/blob/simp_load_projection/rationalized/2_projection/2_processing/packages/load_projection/bash-extraction-script.md). 
 * *parse.config.structure()* - Convert an extraction config's file-structure parameter to the file prefix outputted from the extraction config
-
-### load_single.R - functions in this file are not ready from use... if you want to get it up and running [be my guest](https://www.youtube.com/watch?v=afzmwAKUppU)
 
 
 
