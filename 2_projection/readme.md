@@ -6,7 +6,7 @@ code release data repository). You will also need to modify the codes in this fo
 
 ## Overview
 
-Codes in this repo perform two kinds of tasks: 
+Codes in this repo show users how we complete three types of projection related tasks: 
 
 ### 1. Prepare projection system input files.
 - We convert regression coeffiecients saved in stata .ster files into `csvv` files which are the input to our projection system. 
@@ -14,5 +14,9 @@ Codes in this repo perform two kinds of tasks:
 - We provide some example commands for how a projection is run. Note - these commands require access to three external repos, which are not currently public. 
   - ***This should be updated in the future when James has moved all code to github***
 
-### 2. Extract projection system output files
+### 2. Run projections
+- We provide examples of how to run a projection. This requires some extensive set up and computational resources, and is probably not suitable for most users. 
+
+### 3. Extract projection  outputs
 - We provide code that converts the projection system outputs from it's native format (netcdf files) into the csv files that are used in later analysis. 
+
