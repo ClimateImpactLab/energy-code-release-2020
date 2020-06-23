@@ -39,7 +39,7 @@ get.energy.code.paths <- function(uncertainty = NULL,...) {
   }
 
   # writing paths
-  shell.path = glue::glue('{energy.repo}/2_projection/0_packages_programs_inputs/projection_set_up')
+  shell.path = glue::glue('{energy.repo}/2_projection/0_packages_programs_inputs/extract_projection_outputs/load_projection')
   
   if (uncertainty != 'single') {
   	extraction.shell.name = 'extraction_quantiles.sh'
