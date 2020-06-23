@@ -1,4 +1,5 @@
 # Prepare code release data, and save it on Dropbox / Synology...
+# Note - you need to be in the `risingverse-py27` conda environment to run this code for the first time (ie to extract impacts using quantiles.py)
 
 rm(list = ls())
 library(readr)
@@ -41,10 +42,10 @@ miceadds::source.all(paste0(projection.packages,"load_projection/"))
 # 2. 15 draws from uncertainty for each GCM-rcp combination - but we can do this in a separate step 
 		# since we want that to be part of the code release 
 
-# 1. GMST anomolies:
-gmst_dir = "/mnt/norgay_synology_drive/Global ACP/damage_function/GMST_anomaly"
-gmst_df = read_csv(paste0(gmst_dir, "/GMTanom_all_temp_2001_2010.csv"))
-write_csv(gmst_df, paste0(output, "/GMTanom_all_temp_2001_2010.csv"))
+# 1. GMST anomolies: moving from our server into a shared directory
+# gmst_dir = "/mnt/norgay_synology_drive/Global ACP/damage_function/GMST_anomaly"
+# gmst_df = read_csv(paste0(gmst_dir, "/GMTanom_all_temp_2001_2010.csv"))
+# write_csv(gmst_df, paste0(output, "/GMTanom_all_temp_2001_2010.csv"))
 
 # 2. Values csvs to allow for draws from uncertainty 
 
