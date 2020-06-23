@@ -2,12 +2,14 @@
 Extract and load data using quantiles.py or load already extracted data from csvs. Currently the system is only set up to query median and delta method output... more functionality to come. 
 
 ## Necessary steps for using this system: 
-1. Create a bash script similar to [example.sh](https://gitlab.com/ClimateImpactLab/Impacts/gcp-energy/blob/simp_load_projection/rationalized/2_projection/2_processing/packages/load_projection/example.sh), which extracts a specific file specified by a set of parameters. Please reference [bash-extraction-script.md](https://gitlab.com/ClimateImpactLab/Impacts/gcp-energy/blob/simp_load_projection/rationalized/2_projection/2_processing/packages/load_projection/bash-extraction-script.md) for documentation on necessary syntax for creating a bash script which will integrate with the data querying code. 
-2. Write necessary configs for all desired extraction calls from quantiles.py
+1. Create a bash script similar to `example.sh`, which extracts a specific file specified by a set of parameters. Please reference `bash-extraction-script.md` for documentation on necessary syntax for creating a bash script which will integrate with the data querying code. 
+2. Write necessary configs for all desired extraction calls from `quantiles.py` (a code in an external repo used for extracting quantiles across projection system outputs).
 3. Add a get.*.code.paths() function to tell the querying system where your extraction bash script created in step 1 lives.
 4. Source all functions in this directory.
-5. Query Data - please reference [load-projection-parameters.md](https://gitlab.com/ClimateImpactLab/Impacts/gcp-energy/blob/simp_load_projection/rationalized/2_projection/2_processing/packages/load_projection/load-projection-parameters.md). Also here's a code snippet for how to querying data  (syntax courtesey of Dylan):
+5. Query Data - please reference `load-projection-parameters.md`. Also here's a code snippet for how to go about querying data:
 ```
+projection.packages = {path_to_load_projection}
+
 miceadds::source.all(paste0(projection.packages,"load_projection/"))
 args <- list(
     conda_env = 'projection',
