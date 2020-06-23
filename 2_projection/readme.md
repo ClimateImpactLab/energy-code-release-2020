@@ -28,7 +28,8 @@ if we end up changing the configs.
 - To use the config writer to point to csvs in this repo, you will need to:
   - Update it so that it pops out module configs that are pointing to the csvv you produced using this repo, rather than the one currently on the server 
   - Update any logic in the `write_projection_file.do` config writer that depends on the name of the model or csvv. 
-  
+
+# End of stuff that's just a message for Ashwin / Rae
   
 ## User suitability 
 
