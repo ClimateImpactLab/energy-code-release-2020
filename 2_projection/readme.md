@@ -11,7 +11,7 @@
   - It also means that they point the csvvs (held on sac) that we actually used to run projections, which have units in Kwh rather than GJ.
   - Similarly, the extraction codes in this repo, and the `load_projection` package will extract from files that are on our servers. 
   - If we move these files to a public repository, we should redirect these codes to point to this public repository eventually. 
-  - This will also require updates to the config writer - so that the paths in those configs point to wherever the output is stored. 
+  - This will also require updates to the config writer - and the codes used for post-projection extraction  so that the paths in those configs and codes point to wherever the output is stored. 
 
 ## User suitability 
 
