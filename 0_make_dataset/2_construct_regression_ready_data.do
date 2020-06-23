@@ -25,7 +25,6 @@ pause off
 
 global root "/Users/`c(username)'/Documents/repos/energy-code-release-2020"
 
-
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 ******Set Script Toggles********************************************************
@@ -121,6 +120,8 @@ replace hdd20_TINV_GMFD = hdd20_other_TINV_GMFD if inlist(product,"other_energy"
 		qui egen avgCDD_tpid=mean(cdd20_TINV_GMFD), by(tpid) //average CDD in each cell
 		qui egen avgHDD_tpid=mean(hdd20_TINV_GMFD), by(tpid) //average HDD in each cell
 		qui egen avgInc_tgpid=mean(lgdppc_MA15), by(tgpid) //average lgdppc in each cell
+
+		qui egen maxInc_gpid=max(lgdppc_MA15), by(gpid) //max lgdppc in each cell - this is needed for configs 
 
 		//max lggdppc for each large income group for each cell
 		foreach var in "other_energy" "electricity" {
