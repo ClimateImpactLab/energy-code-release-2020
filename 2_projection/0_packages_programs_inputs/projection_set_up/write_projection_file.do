@@ -1,9 +1,6 @@
 /*
 
-Last Modified: Maya Norman 9/23/19
-Adapted from Yuqi Song's Config and Shell generators 
 
-Script status: testing completed but always more testing can be done... need to change where stored because has functions to write shells and configs
 Purpose: Generate projection, extraction and aggregation configs to use with James's generate.py, aggregate.py and quantiles.py in the impact-calculations repo
 
 Program parameters:
@@ -133,7 +130,7 @@ syntax , sys(string) config_output(string) uname(string)
 	local repo_root `s(rr)'
 	return clear
 
-	local config_server_path = substr("`config_output'", strpos("`config_output'","-") - 3, .)
+	local config_server_path = substr("`config_output'", strpos("`config_output'","-") - 6, .)
 	local config_server_path = "`repo_root'/`config_server_path'"
 	sreturn local csp "`config_server_path'" 
 end
@@ -361,6 +358,13 @@ syntax , product(string) proj_type(string) [ proj_mode(string) ] break_data(stri
 	file write yml "   length: 15" _n
 	file write yml "loggdppc-delta: `loggdppc_delta_`product''" _n
 	
+	if (strpos("`proj_mode'", "dm") > 0) {
+		file write yml "timeout: 30" _n
+	}
+	if("`proj_model'" == "TINV_clim_income_spline_lininter_double"){
+		file write yml "yearcovarscale: 2" _n
+	}
+
 	file close yml
 end
 

@@ -17,7 +17,7 @@ or add the functionality to get the code to conform to your needs... i'm happy w
 clear all
 set more off
 macro drop _all
-pause on
+pause off
 
 // path to energy-code-release repo 
 * global root "C:/Users/TomBearpark/Documents/energy-code-release-2020"
@@ -137,7 +137,8 @@ foreach model_tt in "TINV_clim_income_spline" "TINV_clim_income_spline_lininter"
 		foreach proj_mode in "_dm" "" {
 
 			foreach proj_type in "median" "diagnostics" {
-				foreach sys in "sacagawea" {
+
+				foreach sys in "sacagawea" /* "laika"*/ {
 
 					di "Writing run configs..."
 

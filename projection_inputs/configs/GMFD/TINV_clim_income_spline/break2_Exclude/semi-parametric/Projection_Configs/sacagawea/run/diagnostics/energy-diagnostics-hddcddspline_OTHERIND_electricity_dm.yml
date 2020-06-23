@@ -1,4 +1,4 @@
-module: /home/tbearpark/repos/rgy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim_income_spline/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/model/hddcddspline_OTHERIND_electricity.yml
+module: /home/tbearpark/repos/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim_income_spline/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/model/hddcddspline_OTHERIND_electricity.yml
 mode: writecalcs
 outputdir: /shares/gcp/outputs/energy/impacts-blueghost
 singledir: single-OTHERIND_electricity_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_income_spline_GMFD_dm
@@ -12,3 +12,4 @@ climcovar:
    class: mean
    length: 15
 loggdppc-delta: 9.087
+timeout: 30
