@@ -12,6 +12,8 @@
   - Similarly, the extraction codes in this repo, and the `load_projection` package will extract from files that are on our servers. 
   - If we move these files to a public repository, we should redirect these codes to point to this public repository eventually. 
   - This will also require updates to the config writer - and the codes used for post-projection extraction  so that the paths in those configs and codes point to wherever the output is stored. 
+  - Since the `load_projection` depends on the configs (ie it reads the config files to work out where a given projection output lives), load_projection will also probably need tweaking
+if we end up changing the configs.
 
 ## User suitability 
 
