@@ -20,14 +20,16 @@ macro drop _all
 pause on
 
 // path to energy-code-release repo 
-global root "C:/Users/TomBearpark/Documents/energy-code-release-2020"
+* global root "C:/Users/TomBearpark/Documents/energy-code-release-2020"
+global root "/home/tbearpark/repos/energy-code-release-2020"
+
 loc uname "tbearpark"
 
 * Set root location where config and shell files will be generated
 loc GIT $root/projection_inputs
 
 //install global programs
-do $root/2_projection/0_packages_programs_inputs/projection_set_up/write_projection_file.do
+qui do $root/2_projection/0_packages_programs_inputs/projection_set_up/write_projection_file.do
 
 // which ssps do you want to project results for?
 local ssp_list  "SSP3" //"[SSP2, SSP4] " //"'SSP3'"
@@ -75,6 +77,7 @@ local clim_data "GMFD"
 ************************************************
 *Step 1: Set up common resources across scripts
 ************************************************
+local CSVVpath_output_sacagawea "/shares/gcp/social/parameters/energy/incspline0719/`clim_data'/`model_tt'" 
 
 // ster stem for desired projection 
 local stem = "FD_FGLS_inter_clim`clim_data'_`case'`IF'_`bknum'_`grouping_test'_poly2"
@@ -101,6 +104,10 @@ foreach file_type in "configs" "shells" {
 }
 
 // path to dataset with information about income deciles and income spline knot location
+local DATA "`DROPBOX'/GCP_Reanalysis/ENERGY/IEA_Replication/Data/Analysis/`clim_data'/rationalized_code/`data_type'/"	
+local break_data "`DATA'/data/break10_clim`clim_data'_`case'`IF'_`bknum'_`grouping_test'_TINV_clim_`data_type'.dta"
+
+pause
 
 // path to dataset with information about income deciles and income spline knot location
 local break_data "$root/data/break_data_TINV_clim.dta"
