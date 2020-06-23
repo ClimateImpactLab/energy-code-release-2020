@@ -31,15 +31,15 @@ get.energy.code.paths <- function(uncertainty = NULL,...) {
   gecn.args = append(kwargs,args)
 
   uname = Sys.getenv("LOGNAME")
-  energy.repo = glue::glue('/home/{uname}/repos/gcp-energy')
+  energy.repo = glue::glue('/home/{uname}/repos/energy-code-release-2020')
   
   # if energy.repo doesn't exist in the right place aborrt mission
   if (!dir.exists(energy.repo)){
-    stop('You need to save the energy repo at /home/{your username}/repos. aborting mission. code wont execute properly')
+    stop('You need to save the energy code release repo at /home/{your username}/repos. aborting mission. code wont execute properly')
   }
 
   # writing paths
-  shell.path = glue::glue('{energy.repo}/rationalized/2_projection/1_setup_generation_aggregation_extraction/shells')
+  shell.path = glue::glue('{energy.repo}/2_projection/0_packages_programs_inputs/projection_set_up')
   
   if (uncertainty != 'single') {
   	extraction.shell.name = 'extraction_quantiles.sh'
