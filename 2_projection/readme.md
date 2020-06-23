@@ -1,10 +1,20 @@
 # PLEASE READ - note for ashwin / rae - to be updated, and this header and it's below bullet points to be deleted eventually
 - Currently, the csvv writer will write a csvv using the ster files generated in this repo. 
   - This means that the units of the csvv are in GJ - which is the units of the plots and analysis in the paper. 
-  - However, the units we actually ran all our projections in is KWh. To convert between them, multiply KWh impacts by 0.0036.
+  - However, the units we actually ran all our projections in is KWh. So the CSVV on the server are in that unit . 
+  - The csvvs are outputted here in this repo:
+    - `energy-code-release-2020/projection_inputs/csvv/`
+  - And the versions on the server are here: 
+    - `/shares/gcp/social/parameters/energy/incspline0719/GMFD/` 
+  - To convert between them, multiply KWh impacts by 0.0036 (or 0.0036^2 for values in the vcv).
   - Also, the name of the csvvs that this writer produces are not the same as the name of the csvvs we actually used to run our projections. 
     - This means that the names of the output files that would be produced if you ran a projection using this csvv are different from the names of the projection files that we actually produced
-    
+  - THis is because the code release repos uses a simplified naming scheme. 
+  - Ie - we refer to:
+    - `TINV_clim_income_spline` as `TINV_clim`
+    - `TINV_clim_income_spline_lininter` as `TINV_clim_lininter`
+    - `TINV_clim_income_spline_lininter_double` as `TINV_clim_lininter_double`
+
 - All other codes in this directory, on the other hand, ***do*** reflect the way we actually ran projections. 
   - So, for example, the config writer produces the actual configs we used to run projections (but it outputs them to this repo, rather than to the gcp-energy repo). 
   - This means that those configs point to paths on our own servers - not to the eventual paths that a user would want to . 
