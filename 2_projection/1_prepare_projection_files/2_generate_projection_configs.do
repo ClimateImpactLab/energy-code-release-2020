@@ -17,7 +17,7 @@ or add the functionality to get the code to conform to your needs... i'm happy w
 clear all
 set more off
 macro drop _all
-pause off
+pause on
 
 // path to energy-code-release repo 
 * global root "C:/Users/TomBearpark/Documents/energy-code-release-2020"
@@ -68,7 +68,7 @@ local clim_data "GMFD"
 
 //Model type-- Options: TINV_clim_income_spline, TINV_clim_income_spline_lininter, TINV_clim_income_spline_lininter_double
 
-foreach model_tt in TINV_clim_income_spline TINV_clim_income_spline_lininter TINV_clim_income_spline_lininter_double {
+foreach model_tt in "TINV_clim_income_spline" "TINV_clim_income_spline_lininter" "TINV_clim_income_spline_lininter_double" {
 
 
 	if("`model_tt'" == "TINV_clim_income_spline"){
@@ -99,6 +99,7 @@ foreach model_tt in TINV_clim_income_spline TINV_clim_income_spline_lininter TIN
 		
 		local OUTPUT "`GIT'/`file_type'"
 		cap mkdir "`OUTPUT'"
+		di  "`OUTPUT'"
 		
 		foreach file in "clim_data" "model_tt" "model_bc" "grouping_test" {
 			di "`file'"

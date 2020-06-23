@@ -1,0 +1,7 @@
+outputdir: outputs/energy/impacts-blueghost
+levels-weighting: population * social/baselines/energy/REMIND17CEMICS_rcp85_Prices_COMPILE.dta:country:year:electricitycompile_price
+targetdir: /shares/gcp/outputs/energy/impacts-blueghost/single-OTHERIND_electricity_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_income_spline_GMFD/rcp85/CCSM4/high/SSP3
+aggregate-weighting-numerator: population * social/baselines/energy/REMIND17CEMICS_rcp85_Prices_COMPILE.dta:country:year:electricitycompile_price
+aggregate-weighting-denominator: sum-to-1
+infix: REMIND17CEMICS_rcp85
+rcp: rcp85
