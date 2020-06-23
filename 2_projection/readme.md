@@ -25,6 +25,11 @@
   - Since the `load_projection` depends on the configs (ie it reads the config files to work out where a given projection output lives), load_projection will also probably need tweaking
 if we end up changing the configs.
 
+- To use the config writer to point to csvs in this repo, you will need to:
+  - Update it so that it pops out module configs that are pointing to the csvv you produced using this repo, rather than the one currently on the server 
+  - Update any logic in the `write_projection_file.do` config writer that depends on the name of the model or csvv. 
+  
+  
 ## User suitability 
 
 - ***Please note - the code in `2_projection` does not need to be run in order for a user to work with codes later in the process.
