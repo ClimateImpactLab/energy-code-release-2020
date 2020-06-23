@@ -47,7 +47,7 @@ code release data repository). You will also need to modify the codes in this fo
 
 ## Overview
 
-Codes in this repo show users how we complete three types of projection related tasks: 
+Codes in this repo show users how we complete three types of projection related tasks. See notes inside each subfolder for more details on each part of the process, and some run instructions. 
 
 ### 1. Prepare projection system input files.
 - We convert regression coeffiecients saved in stata .ster files into `csvv` files which are the input to our projection system. 
