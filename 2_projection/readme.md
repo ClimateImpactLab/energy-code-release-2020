@@ -1,3 +1,20 @@
+# PLEASE READ - note for ashwin / rae - to be updated, and this header and it's below bullet points to be deleted eventually
+- Currently, the csvv writer will write a csvv using the ster files generated in this repo. 
+  - This means that the units of the csvv are in GJ - which is the units of the plots and analysis in the paper. 
+  - However, the units we actually ran all our projections in is KWh. To convert between them, multiply KWh impacts by 0.0036.
+  - Also, the name of the csvvs that this writer produces are not the same as the name of the csvvs we actually used to run our projections. 
+    - This means that the names of the output files that would be produced if you ran a projection using this csvv are different from the names of the projection files that we actually produced
+    
+- All other codes in this directory, on the other hand, ***do*** reflect the way we actually ran projections. 
+  - So, for example, the config writer produces the actual configs we used to run projections (but it outputs them to this repo, rather than to the gcp-energy repo). 
+  - This means that those configs point to paths on our own servers - not to the eventual paths that a user would want to . 
+  - It also means that they point the csvvs (held on sac) that we actually used to run projections, which have units in Kwh rather than GJ.
+  - Similarly, the extraction codes in this repo, and the `load_projection` package will extract from files that are on our servers. 
+  - If we move these files to a public repository, we should redirect these codes to point to this public repository eventually. 
+  - This will also require updates to the config writer - so that the paths in those configs point to wherever the output is stored. 
+
+## User suitability 
+
 - ***Please note - the code in `2_projection` does not need to be run in order for a user to work with codes later in the process.
 We have included the outputs of this projection step as csv files in the data repository associated with this repo***
 - Running projection codes is highly computationally intensive - and should only be done on a server (it would probably take months on a laptop - it takes weeks on out powerful Climate Impact Lab servers)
