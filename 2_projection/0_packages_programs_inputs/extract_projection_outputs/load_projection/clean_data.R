@@ -9,8 +9,6 @@
 #'  convert.to.2019 - based on whether we want to 2005 or 2019 dollars, converts (both for means and variances)
 #'
 
-library(haven)
-
 #' Based on data query and data frame add more identifying names to df
 #' 	criteria for adding a column with information about data
 #' 		* if argument type not already column in data frame 
@@ -48,11 +46,10 @@ assign.names <- function(df = NULL, adapt_scen = 'fulladapt',
   return(df)
 }
 
-convert.to.2019 <- function(df, proj_mode, 
-  inflate_source = "/mnt/norgay_synology_drive/Global ACP/MORTALITY/Replication_2018/3_Output/7_valuation/1_values/adjustments/vsl_adjustments.dta") {
-  
-  con_df = read_dta(inflate_source) 
-  conversion_value = con_df$inf_adj[1]
+convert.to.2019 <- function(df, proj_mode) {
+
+  # Value taken from mortality paper conversion - converts from 2005 to 2019 dollars 
+  conversion_value = 1.273526
 
   # If we have variance dataframe, need to convert by multiplying by the square 
 
