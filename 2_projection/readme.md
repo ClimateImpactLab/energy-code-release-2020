@@ -32,6 +32,9 @@ if we end up changing the configs.
  
  - Note - if you change the existing configs (specifically the extraction configs), then `load_projection` won't work on the current set of projection results on sac. 
 
+- Note for aggregation: price units are currently in $/Kwh. Change this (by either updating the price files, or by pointing the aggregation configs to new price files) if you run a projection 
+in units of GJ rather than KWh.
+
 # End of stuff that's just a message for Ashwin / Rae
   
 ## User suitability 
