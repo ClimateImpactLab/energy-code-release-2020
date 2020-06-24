@@ -164,18 +164,33 @@ foreach model_tt in "TINV_clim_income_spline" "TINV_clim_income_spline_lininter"
 					 	 	di "Writing aggregation configs..."
 
 							if (("`price_scen'" != "" & strpos("`unit'", "damage") > 0) |  (strpos("`unit'", "impact") > 0 & "`price_scen'" == "")) {
-
-								write_aggregate_config ,  product("`product'") sys("`sys'") proj_type("`proj_type'") proj_model("`model_tt'") unit("`unit'") ///
-								 price_scen("`price_scen'") proj_mode("`proj_mode'") config_output("`projection_config_output'") /// 
-								 uname("`uname'") single_folder("`single_folder'") median_folder("`median_folder'")
+								* Aggregation happens on sac / battuta
+								if ("`sys'" == "sacagawea"){
+									write_aggregate_config ,  product("`product'") sys("`sys'") proj_type("`proj_type'") proj_model("`model_tt'") unit("`unit'") ///
+									 price_scen("`price_scen'") proj_mode("`proj_mode'") config_output("`projection_config_output'") /// 
+									 uname("`uname'") single_folder("`single_folder'") median_folder("`median_folder'")
+								}
 							}
-					 	 }
-					 }
+						}
+					}
 
 					di "Writing model configs..."
 					write_model_config , product("`product'") proj_type("`proj_type'") proj_mode("`proj_mode'") break_data("`break_data'") ///
 					 csvv("`csvv'") proj_model("`model_tt'") config_output("`projection_config_output'") ///
 					 csvv_path("`CSVVpath_output_`sys''") brief_output("TRUE")
+					
+					* Write out projection slurm scripts for median runs 
+					if ("`sys'" == "laika" & "`proj_type'" == "median") {
+						foreach partition in "savio3" "savio2_bigmem" {
+							
+							di "Writing projection slurm script..."
+							
+							write_projection_slurm_script , product("`product'") proj_model("`model_tt'") partition("`partition'") ///
+							config_output("`projection_config_output'") shell_output("$OUTPUT_shells/Projection_Shells") ///
+							proj_mode("`proj_mode'") uname("`uname'")
+
+						}
+					}
 
 				}
 			}
