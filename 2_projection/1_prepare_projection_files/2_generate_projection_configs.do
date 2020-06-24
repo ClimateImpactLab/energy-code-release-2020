@@ -86,6 +86,13 @@ foreach model_tt in "TINV_clim_income_spline" "TINV_clim_income_spline_lininter"
 	* Location of csvv files on sac
 	local CSVVpath_output_sacagawea "/shares/gcp/social/parameters/energy/incspline0719/`clim_data'/`model_tt'" 
 
+	* location of csvv files on BRC
+	local CSVVpath_output_laika "/global/scratch/`uname'/Energy/Projection/Median/`model_tt'/`clim_data'"
+
+	* note - you can transfer from sac to BRC using a command like: 
+	* rsync -avz `uname'@sacagawea.gspp.berkeley.edu:${CSVVpath_output_sac}/FD* /global/scratch/`uname'/Energy/Projection/Median/`model_tt'/`clim_data'
+
+
 	// ster stem for desired projection 
 	local stem = "FD_FGLS_inter_clim`clim_data'_`case'`IF'_`bknum'_`grouping_test'_poly2"
 
@@ -138,7 +145,7 @@ foreach model_tt in "TINV_clim_income_spline" "TINV_clim_income_spline_lininter"
 
 			foreach proj_type in "median" "diagnostics" {
 
-				foreach sys in "sacagawea" /* "laika"*/ {
+				foreach sys in "sacagawea" "laika" {
 
 					di "Writing run configs..."
 
