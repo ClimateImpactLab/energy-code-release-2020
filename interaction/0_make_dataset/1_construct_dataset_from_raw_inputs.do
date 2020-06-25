@@ -33,7 +33,7 @@ cap ssc install rangestat
 /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////
 
 // path to energy-code-release repo 
-local root "/home/liruixue/projection_repos/energy-code-release-2020"
+local root "/home/liruixue/projection_repos/energy-code-release-2020/interaction"
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -52,9 +52,20 @@ local DATA "`root'/data"
 ********************************************************************************************************************************************
 
 //Part A: Climate Data Construction
-do "$dataset_construction/climate/1_clean_climate_data.do"
 
+program drop _all
+do "$dataset_construction/climate/1_clean_climate_data.do"
 clean_climate_data, clim("GMFD") programs_path("$dataset_construction/climate/programs")
+
+// *****************************
+// a chunk of temporary code to check the difference between pixel-level vs normal interacted terms
+// gen old_interaction = pB20_1_GMFD * cdd20_GMFD
+// gen new_interaction = pB20_1_x_cdd_GMFD
+// gen diff = new_interaction - old_interaction
+// gen diff_pct = diff / old_interaction
+// sum old_interaction new_interaction diff*
+// *****************************
+
 tempfile climate_data
 save `climate_data', replace
 
