@@ -1,5 +1,7 @@
 # Prepare code release data, and save it on Dropbox...
-# Note - all maps in the paper are for 2099, ssp3, rcp85, high, so these are hard coded 
+# Note - all maps in the paper are for 2099, SSP3, rcp85, high, so these are hard coded 
+# This code should be run from inside the risingverse-py27 conda environment 
+
 rm(list = ls())
 library(readr)
 library(dplyr)
@@ -22,7 +24,6 @@ git = paste0("/home/", user,"/repos")
 projection.packages <- paste0(git,"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
 setwd('/home/tbearpark/repos/')
 
-
 # Source codes that help us load projection system outputs
 miceadds::source.all(paste0(projection.packages,"load_projection/"))
 
@@ -36,9 +37,9 @@ miceadds::source.all(paste0(projection.packages,"load_projection/"))
 
 
 
-
-# 1. Impacts maps for figure 2A
-
+###############################################
+# Impacts maps for figure 2A
+###############################################
 
 get_main_model_impacts_maps = function(fuel, price_scen, unit, year, output){
 	
@@ -82,7 +83,6 @@ df = lapply(fuels, get_main_model_impacts_maps,
 ###############################################
 # Get time series data for figure 2C
 ###############################################
-######################
 
 fuels = c("electricity", "other_energy")
 rcps = c("rcp85", "rcp45")
@@ -130,7 +130,8 @@ mcmapply(get_main_model_impacts_ts,
 ###############################################
 # Figure 3
 ###############################################
-# 3A - 
+
+# 3A  
 # Need GDP data, at IR level, damages in 2099, and values csvs for each featured IR
 # GDP data: 
 
@@ -162,6 +163,8 @@ write_csv(impacts,
 		paste0(output, '/projection_system_outputs/mapping_data/', 
 			'main_model-total_energy-SSP3-rcp85-high-fulladapt-price014-2099-map.csv'))
 
+
+###########################################
 # Get values csvs for the kernel density plots
 
 IR_list = c("USA.14.608", "SWE.15", "CHN.2.18.78", "CHN.6.46.280", "IND.21.317.1249", "BRA.25.5235.9888")
@@ -271,8 +274,9 @@ df = df[,c("gcm", "norm_weight_rcp45", "norm_weight_rcp85")]
 write_csv(df, paste0(output, '/miscellaneous/gcm_weights.csv'))
 
 
+###############################################
+ # 2 Load the impacts data for figure 3 time series as percent GDP
 
- # 2 Load the impacts data
 args = list(
     conda_env = "risingverse-py27",
     # proj_mode = '', # '' and _dm are the two options
@@ -304,12 +308,16 @@ get_df_ts_main_model_total_energy = function(rcp, args) {
 rcps = c("rcp45", "rcp85")
 lapply(rcps, get_df_ts_main_model_total_energy, args = args) 
 
+
+
+
+
+##########################
+# Covariate data for blob plots: 
 ##########################
 
-# Covariate data for blob plots: 
 
 # set path variables
-
 covariates <- paste0("/mnt/norgay_synology_drive", 
   "/GCP_Reanalysis/ENERGY/IEA_Replication/Data/", 
   "Projection/covariates/",
@@ -327,7 +335,10 @@ write_csv(covars,
 
 
 
+
+####################################################
  # Get time series data for global by rcp plots in figure D1
+####################################################
 
 get_df_by_price_rcp = function(rcp, price) {
 
@@ -382,7 +393,7 @@ mapply(get_df_by_price_rcp, price=options$price, rcp = options$rcp, SIMPLIFY = F
 
 ############################################################
 # Slow adapt time series - ccsm 4 - extract a time series of global impacts-pc
-
+############################################################
 
 get_file_name = function(type, fuel=NULL, double = NULL, histclim= NULL, rcp, dm = NULL) {
 	
@@ -486,8 +497,8 @@ save_csv_single = function(type, fuel, pop_df){
 }
 
 
-pop_df = read_csv(paste0(output,'/projection_system_outputs/covariates/' ,
-	'SSP3_IR_level_population.csv')) %>%
+pop_df1 = read_csv(paste0(output,'/projection_system_outputs/covariates/' ,
+	'SSP3_IR_level_population.csv'))%>%
 	group_by(region) %>%
 	tidyr::complete(year = seq(2010,2100,1)) %>%
     fill(pop) %>%
@@ -500,8 +511,10 @@ save_csv_single(type = "main_model_single", pop_df = pop_df, fuel = "electricity
 
 
 
-######################################################
+
+############################################################
 # lininter time series - for appendix figure I3
+############################################################
 
 get_plot_df = function(adapt="fulladapt", spec, rcp, model) {
 

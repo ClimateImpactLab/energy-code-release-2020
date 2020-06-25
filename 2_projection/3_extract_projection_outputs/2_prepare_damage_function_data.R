@@ -12,8 +12,10 @@ library(tidyr)
 
 
 db = '/mnt/norgay_synology_drive/'
+data_dir = paste0(db,'GCP_Reanalysis/ENERGY/code_release_data/')
 
-output = paste0(db, 'GCP_Reanalysis/ENERGY/code_release_data/projection_system_outputs/damage_function_estimation')
+output = paste0(db, 
+	'GCP_Reanalysis/ENERGY/code_release_data/projection_system_outputs/damage_function_estimation')
 dir = paste0('/shares/gcp/social/parameters/energy/extraction/',
 				'multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/')
 
@@ -21,7 +23,8 @@ user= 'tbearpark'
 git = paste0("/home/", user,"/repos")
 
 # Make sure you are in the risingverse-py27 for this... 
-projection.packages <- paste0(git,"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
+projection.packages <- paste0(git,
+	"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
 
 
 # Source codes that help us load projection system outputs
@@ -46,7 +49,7 @@ miceadds::source.all(paste0(projection.packages,"load_projection/"))
 
 # Get population values, so we can convert PC impacts to impacts
 
-pop_df = read_csv(paste0(output,'/projection_system_outputs/covariates/' ,
+pop_df = read_csv(paste0(data_dir,'/projection_system_outputs/covariates/' ,
 	'SSP3_IR_level_population.csv')) %>% 
   group_by(year) %>%
   summarize(pop = sum(pop)) %>%
@@ -206,7 +209,7 @@ write_csv(df, paste0(output, '/gcm_damages_OTHERIND_total_energy_price014_SSP3.c
 
 
 
-# Loop festival, for getting the values csvs needed for all damage functions in the paper for SSP3: 
+# Loop over each price scenario, for getting the values csvs needed for all damage functions in the paper for SSP3: 
 pricelist = c("price014", "price0", "price03", "WITCHGLOBIOM42", 
 	"MERGEETL60", "REMINDMAgPIE1730", "REMIND17CEMICS", "REMIND17") 
 

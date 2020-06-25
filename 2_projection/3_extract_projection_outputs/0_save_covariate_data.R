@@ -1,5 +1,11 @@
 # Prepare code release covariates data
 # Note - all maps in the paper are for 2099, ssp3, rcp85, high, so these are hard coded 
+# Note - this code should be run from the risingverse (python 3)
+
+# This code moves some of our projection results from our usual location on sac 
+# and Dropbox to the code release data storage 
+
+
 rm(list = ls())
 library(readr)
 library(dplyr)
@@ -27,9 +33,10 @@ source_python(paste0(projection.packages, "future_gdp_pop_data.py"))
 
 
 
+###########################################
 # 1 Data for plotting city response functions for figure 2A
 
-# Min and max temperature for each city
+# Min and max temperature for each city - this is just for plotting aesthetics 
 min_max_temp = read_csv(paste0(db, 
 	'IEA_Replication/Data/Miscellaneous/Cities_12_MinMax.csv'), skip = 4) %>%
 		dplyr::filter(city %in% c("Guangzhou", "Stockholm")) %>%
@@ -40,7 +47,8 @@ city_list = read_csv(paste0(db,
 		dplyr::filter(city %in% c("Guangzhou", "Stockholm")) %>%
 		dplyr::rename(region = hierid) %>%
 		write_csv(paste0(output, '/miscellaneous/stockholm_guangzhou_region_names_key.csv'))
-		
+
+# Covariates are from a single run allcalcs file
 covariates = read_csv(paste0(db,
 	'IEA_Replication/Data/Projection/covariates/', 
 	'FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_income_spline.csv'))%>%
@@ -49,10 +57,10 @@ covariates = read_csv(paste0(db,
 		write_csv(paste0(output, '/miscellaneous/stockholm_guangzhou_covariates_2015_2099.csv'))
 
 
+###########################################
 
-# Data for figure 2B bar chart
-# Just need population for each impact region (since we have KWh/capita info above)
-
+# 2 Data for figure 2B bar chart
+# Just need population for each impact region (since we have KWh/capita info from the projection)
 
 pop = get_pop() 
 pop_df = pop %>% 
@@ -63,22 +71,21 @@ write_csv(pop_df, paste0(output,'/projection_system_outputs/covariates/' ,
 	'SSP3_IR_level_population.csv'))
 
 
-
-
-
 # Get population and gdp values: 
 inf = paste0("/mnt/norgay_synology_drive", 
 	"/Global ACP/MORTALITY/Replication_2018/3_Output/7_valuation/1_values/adjustments/vsl_adjustments.dta")
 con_df = read_dta(inf) 
 conversion_value = con_df$inf_adj[1]
 
+###########################################
+# 3 Data for figure 3A map
 
-
-# source_python(paste0(projection.packages, "future_gdp_pop_data.py"))
 gdppc = get_gdppc_all_regions('high', 'SSP3') %>%
 	mutate(gdppc = gdppc * conversion_value)
 
-pop = get_pop() 
+# Population values are every 5 years. We use flat interpolation (a step function)
+# in between. So the 2099 population is assigned to the value we have in 2095. 
+
 
 pop99 = pop %>% 
 	dplyr::filter(ssp == "SSP3") %>%
@@ -98,9 +105,8 @@ write_csv(covs, paste0(output, '/projection_system_outputs/covariates/',
 	'SSP3-high-IR_level-gdppc_pop-2099.csv.csv'))
 
 
-
-# Figure 3B Time series data 
- # 1 get the aggregated gdp data
+###########################################
+# 4 Figure 3B Time series data 
 gdppc = get_gdppc_all_regions('high', 'SSP3')
 
 gdp = convert_global_gdp(gdppc) 
@@ -113,18 +119,16 @@ write_csv(gdp, paste0(output,
 	'/projection_system_outputs/covariates/SSP3-global-gdp-time_series.csv'))
 
 
-
 ############################################################
-# Get data needed for income decile plot 
+# 5 Get data needed for income decile plot 
 
 gdppc = get_gdppc_all_regions('high', 'SSP3') %>%
 	mutate(gdppc = gdppc * conversion_value) 
 
-df = gdppc %>% dplyr::filter(year == 2012)
+df = gdppc %>% 
+	dplyr::filter(year == 2012)
 
 # Get 2012 population projections
-pop = get_pop() 
-
 pop12 = pop %>% 
 	dplyr::filter(ssp == "SSP3") %>%
 	dplyr::filter(year == 2010) %>% 
