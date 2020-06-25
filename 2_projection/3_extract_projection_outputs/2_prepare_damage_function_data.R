@@ -10,7 +10,6 @@ library(miceadds)
 library(haven)
 library(tidyr)
 
-user= 'tbearpark'
 
 db = '/mnt/norgay_synology_drive/'
 
@@ -18,17 +17,12 @@ output = paste0(db, 'GCP_Reanalysis/ENERGY/code_release_data/projection_system_o
 dir = paste0('/shares/gcp/social/parameters/energy/extraction/',
 				'multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/')
 
-db = '/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/'
-
+user= 'tbearpark'
 git = paste0("/home/", user,"/repos")
 
-# Make sure you are in the risingverse for this... 
-projection.packages <- paste0(git,"/energy-code-release-2020/2_projection/0_packages_programs_inputs/projection_set_up/")
-setwd(paste0('/home/', user, '/repos/'))
+# Make sure you are in the risingverse-py27 for this... 
+projection.packages <- paste0(git,"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
 
-# Source a python code that lets us load SSP data directly from the SSPs. Make sure you are in 
-# the risingverse to run this !
-source_python(paste0(projection.packages, "future_gdp_pop_data.py"))
 
 # Source codes that help us load projection system outputs
 miceadds::source.all(paste0(projection.packages,"load_projection/"))
@@ -51,10 +45,9 @@ miceadds::source.all(paste0(projection.packages,"load_projection/"))
 
 
 # Get population values, so we can convert PC impacts to impacts
-pop = get_pop()	
 
-pop_df = pop %>% 
-  dplyr::filter(ssp == "SSP3") %>% 
+pop_df = read_csv(paste0(output,'/projection_system_outputs/covariates/' ,
+	'SSP3_IR_level_population.csv')) %>% 
   group_by(year) %>%
   summarize(pop = sum(pop)) %>%
   tidyr::complete(year = seq(2010,2100,1)) %>%
