@@ -6,7 +6,7 @@
     - `energy-code-release-2020/projection_inputs/csvv/`
   - And the versions on the server are here: 
     - `/shares/gcp/social/parameters/energy/incspline0719/GMFD/` 
-  - To convert between them, multiply KWh impacts by 0.0036 (or 0.0036^2 for values in the vcv).
+  - To convert between them, multiply KWh coefficients by 0.0036 (or 0.0036^2 for values in the vcv).
   - Also, the name of the csvvs that this writer produces are not the same as the name of the csvvs we actually used to run our projections. 
     - This means that the names of the output files that would be produced if you ran a projection using this csvv are different from the names of the projection files that we actually produced
   - THis is because the code release repos uses a simplified naming scheme. 
@@ -62,4 +62,6 @@ Codes in this repo show users how we complete three types of projection related 
 
 ### 3. Extract projection outputs
 - We provide code that converts the projection system outputs from it's native format (netcdf files) into the csv files that are used in later analysis. 
+
+
 
