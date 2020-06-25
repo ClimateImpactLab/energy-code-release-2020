@@ -8,8 +8,8 @@
     - `/shares/gcp/social/parameters/energy/incspline0719/GMFD/` 
   - To convert between them, multiply KWh coefficients by 0.0036 (or 0.0036^2 for values in the vcv).
   - Also, the name of the csvvs that this writer produces are not the same as the name of the csvvs we actually used to run our projections. 
-    - This means that the names of the output files that would be produced if you ran a projection using this csvv are different from the names of the projection files that we actually produced
-  - THis is because the code release repos uses a simplified naming scheme. 
+    - This means that the names of the output files that would be produced if you ran a projection using this csvv are different from the names of the projection files that we actually produced (since the projection system outputs files with the same name as the csvv).
+  - This is because the code release repos uses a simplified naming scheme. 
   - Ie - we refer to:
     - `TINV_clim_income_spline` as `TINV_clim`
     - `TINV_clim_income_spline_lininter` as `TINV_clim_lininter`
