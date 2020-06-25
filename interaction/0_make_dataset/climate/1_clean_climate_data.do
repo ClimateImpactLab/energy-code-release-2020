@@ -215,12 +215,11 @@ syntax , clim(string) programs_path(string) //note functionality only set up for
 	rename tmax_cdd_20C_* cdd20_*_`clim'
 	rename tmax_hdd_20C_* hdd20_*_`clim'
 
-	rename tavg_polyAbove20_* pA20_*_`clim'
-	rename tavg_polyBelow20_* pB20_*_`clim'
+	rename tavg_polyAbove20_* polyAbove*_`clim'
+	rename tavg_polyBelow20_* polyBelow*_`clim'
 	* TO-DO: ask Maya what's this variable
 
 	
-	sort country year temp* pA* pB* precip*
-
+	sort country year temp* cdd* hdd* polyAbove* polyBelow* precip*
 end
 di "program complete"

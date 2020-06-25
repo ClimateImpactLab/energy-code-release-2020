@@ -20,7 +20,7 @@ program define clean_SRB_MNE_XKO
 	generate_other
 
 	**generating MA**
-	*longrun_climate_measures
+	longrun_climate_measures
 
 	**leave gaps for fill**
 	* TO-DO: ask Maya why there's tmax*

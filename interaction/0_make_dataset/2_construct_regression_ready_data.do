@@ -15,6 +15,7 @@ Step 5) Construct First Differenced Interacted Variables
 
 clear all
 set more off
+qui ssc inst egenmore
 macro drop _all
 pause off
 
@@ -23,7 +24,7 @@ pause off
 
 // path to energy-code-release repo 
 
-local root "/home/liruixue/projection_repos/energy-code-release-2020/interaction"
+global root "/home/liruixue/projection_repos/energy-code-release-2020/interaction"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -37,7 +38,7 @@ local model $model
 * Step 1) Construct FE regimes and drop data according to specification
 *************************************************************************
 
-do "`root'/0_make_dataset/merged/1_issue_fix_v2.do"
+do "$root/0_make_dataset/merged/1_issue_fix_v2.do"
 
 //rename COMPILE -- OTHERIND and make sure only have desired flows and products for spec
 // OTHERIND = TOTOTHER + TOTIND
@@ -117,9 +118,12 @@ replace hdd20_TINV_GMFD = hdd20_other_TINV_GMFD if inlist(product,"other_energy"
 		keep cdd20_TINV_GMFD hdd20_TINV_GMFD country year lgdppc_MA15 gpid tpid tgpid large*
 
 		// generate average variables for climate and income quantiles for plotting
-		qui egen avgCDD_tpid=mean(cdd20_TINV_GMFD), by(tpid) //average CDD in each cell
-		qui egen avgHDD_tpid=mean(hdd20_TINV_GMFD), by(tpid) //average HDD in each cell
-		qui egen avgInc_tgpid=mean(lgdppc_MA15), by(tgpid) //average lgdppc in each cell
+		//average CDD in each cell
+		qui egen avgCDD_tpid=mean(cdd20_TINV_GMFD), by(tpid) 
+		//average HDD in each cell
+		qui egen avgHDD_tpid=mean(hdd20_TINV_GMFD), by(tpid) 
+		//average lgdppc in each cell
+		qui egen avgInc_tgpid=mean(lgdppc_MA15), by(tgpid) 
 
 		//max lggdppc for each large income group for each cell
 		foreach var in "other_energy" "electricity" {
