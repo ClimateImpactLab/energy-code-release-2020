@@ -23,8 +23,7 @@ pause off
 
 // path to energy-code-release repo 
 
-global root "/Users/`c(username)'/Documents/repos/energy-code-release-2020"
-
+local root "/home/liruixue/projection_repos/energy-code-release-2020/interaction"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -38,7 +37,7 @@ local model $model
 * Step 1) Construct FE regimes and drop data according to specification
 *************************************************************************
 
-do "$root/0_make_dataset/merged/1_issue_fix_v2.do"
+do "`root'/0_make_dataset/merged/1_issue_fix_v2.do"
 
 //rename COMPILE -- OTHERIND and make sure only have desired flows and products for spec
 // OTHERIND = TOTOTHER + TOTIND

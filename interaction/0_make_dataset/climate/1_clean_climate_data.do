@@ -24,7 +24,7 @@ syntax , clim(string) programs_path(string) //note functionality only set up for
 	local climvar_list_polyBelow "tavg_polyBelow20_1 tavg_polyBelow20_2 tavg_polyBelow20_3 tavg_polyBelow20_4"
 	
 	//local shpfile_list "WORLD WORLDpre SRB_MNE_XKO SRB_MNE MDA_other ITA_SMR_VAT ISR_PSE CUW_BES_ABW FRA_MCO"
-	local shapefile_list CUW_BES_ABW SRB_MNE_XKO
+	local shpfile_list SRB_MNE_XKO
 	//Note: when generate the climate datas, one must follow the exact folder in this code in order for the cleaning code to be running 
 
 	***************************************************************************************
@@ -34,6 +34,7 @@ syntax , clim(string) programs_path(string) //note functionality only set up for
 	do "`programs_path'/helper_functions.do"
 
 	foreach shp in `shpfile_list' {
+		di "cleaning shapefile `shp'"
 		do "`programs_path'/clean_`shp'.do"
 	}
 
@@ -56,12 +57,15 @@ syntax , clim(string) programs_path(string) //note functionality only set up for
 
 		local climvar_counter = 0
 
-		foreach climvar in `climvar_list' {
+		foreach climvar in `climvar_list' `climvar_list_polyAbove' `climvar_list_polyBelow' {
 			
 			local climvar_counter = `climvar_counter' + 1
 			//Define year chunks given shp file and climate variable
 
-			if ("`shp'" == "WORLD" & inlist("`climvar'", "tmax_cdd_20C", "tmax_hdd_20C", "tavg_poly_1", "tavg_poly_2", "tavg_poly_3", "tavg_poly_4")) | ///
+			if inlist("`climvar'", "tavg_polyAbove20_1", "tavg_polyAbove20_2", "tavg_polyAbove20_3", "tavg_polyAbove20_4",  "tavg_polyBelow20_1", "tavg_polyBelow20_2", "tavg_polyBelow20_3", "tavg_polyBelow20_4") {
+				local yearspan_list " 1971_1971 1972_1974 1975_1977 1978_1980 1981_1983 1984_1986 1987_1989 1990_1992 1993_1995 1996_1998 1999_2001 2002_2004 2005_2007 2008_2010 "
+			}
+			else if ("`shp'" == "WORLD" & inlist("`climvar'", "tmax_cdd_20C", "tmax_hdd_20C", "tavg_poly_1", "tavg_poly_2", "tavg_poly_3", "tavg_poly_4")) | ///
 			("`shp'" == "WORLDpre" & inlist("`climvar'", "tmax_cdd_20C", "tavg_poly_1", "tavg_poly_2", "tavg_poly_3", "tavg_poly_4")) {
 
 				local yearspan_list " 1950_1952 1953_1962 1963_1972 1973_1982 1983_1992 1993_2002 2003_2010 "
@@ -120,16 +124,14 @@ syntax , clim(string) programs_path(string) //note functionality only set up for
 				local yearspan_counter = `yearspan_counter' + 1
 
 				* TO-DO: fix the file names in climate data generate code and get rid of this part 
-				if inlist("`climvar'", `climvar_list_polyAbove') {
-					di "polyAbove"
-					local temp_unit `temp_unit'_x_hdd_20C
+				local temp_unit_filename `temp_unit'
+				if inlist("`climvar'", "tavg_polyAbove20_1", "tavg_polyAbove20_2", "tavg_polyAbove20_3", "tavg_polyAbove20_4") {
+					local temp_unit_filename `temp_unit'_x_hdd_20C
 				} 
-				if inlist("`climvar'", `climvar_list_polyAbove') {
-					di "polyBelow"
-					local temp_unit `temp_unit'_x_hdd_20C
+				if inlist("`climvar'", "tavg_polyBelow20_1", "tavg_polyBelow20_2", "tavg_polyBelow20_3", "tavg_polyBelow20_4") {
+					local temp_unit_filename `temp_unit'_x_cdd_20C
 				} 
-
-				qui insheet using "``shp'_path'/csv_`temp_unit'/`clim'/`clim'_`climvar'_v2_`yearspan'_`temp_unit'_popwt.csv", comma names clear
+				qui insheet using "``shp'_path'/csv_`temp_unit'/`clim'/`clim'_`climvar'_v2_`yearspan'_`temp_unit_filename'_popwt.csv", comma names clear
 
 
 				process_`temp_unit'
@@ -202,14 +204,14 @@ syntax , clim(string) programs_path(string) //note functionality only set up for
 
 	rename tavg_poly_* temp*_`clim'
 	rename prcp_poly_* precip*_`clim'
-	rename tavg_polyAbove20_* polyAbove*_`clim'
-	rename tavg_polyBelow20_* polyBelow*_`clim'
-	rename tmax_cdd_20C_* cdd20_*_`clim'
-	rename tmax_hdd_20C_* hdd20_*_`clim'
-	rename tmax_cdd_20C cdd20_`clim'
-	rename tmax_hdd_20C hdd20_`clim'
+	rename tavg_polyAbove20_* polyAbove*_x_hdd_`clim'
+	rename tavg_polyBelow20_* polyBelow*_x_cdd_`clim'
+	* TO-DO: ask Maya what's this variable
 
-	sort country year temp* cdd* hdd* polyAbove* polyBelow* precip*
+	* rename tmax_cdd_20C_* cdd20_*_`clim' 
+	* rename tmax_hdd_20C_* hdd20_*_`clim'
+	
+	sort country year temp* polyAbove* polyBelow* precip*
 
 end
 di "program complete"

@@ -37,6 +37,7 @@ end
 program define collapse_monthly_to_yearly
 
 	**collapse**
+	* removed tmax* because we don't have separate hdd/cdd anymore
 	foreach var of varlist tmax* tavg* prcp* {
 		qui generate tagmis=(`var'==.)
 		qui bysort country year: egen testmis=sum(tagmis)
@@ -56,9 +57,11 @@ program define longrun_climate_measures
 end
 
 program define generate_other
-
-	foreach var of varlist tmax* tavg* prcp* {
+* removed tmax*
+	di "generate_other"
+	foreach var of varlist tavg* prcp* {
 		qui generate double `var'_other=`var'
 	}
+	di "end generate_other"
 
 end
