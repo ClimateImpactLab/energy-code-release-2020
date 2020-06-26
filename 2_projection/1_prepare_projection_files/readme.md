@@ -23,7 +23,7 @@ Please see documentation in the `impacts-calculation` projection system repo for
 # Code contents and run instructions
 
 ### `1_generate_csvv.do`
-- This code prepares a csvv file, which is an input to our projection system. 
+- This code prepares a csvv file, which is an input to our projection system. The csvv files is a file containing regression coefficients, and their variance matrices.
 - It uses programs from `2_projection/0_packages_programs_inputs/csvv_generation_stacked.do`, and requires an input `.csv` file containing information on the coefficients for a given model. This csv file is stored here `2_projection/0_packages_programs_inputs/projection_specifications.csv`. 
 
 #### Run instructions
@@ -36,10 +36,15 @@ Please see documentation in the `impacts-calculation` projection system repo for
     - This `.csv` file contains information on which variables are in each model. 
 #### Code outputs
 - CSVV files for three models: 
-  - The three models are `TINV_clim`, "TINV_clim_lininter", and "TINV_clim_lininter_double". 
-  - Please note - the csvvs for the "TINV_clim_lininter" and "TINV_clim_lininter_double" models are identical, as both pull in the same regression coefficients, and have the same model specifications. They have different config files, however. 
-  - Note also, the `slow_adapt` scenario projection presented in Appendix I.1 uses the same csvv as main model (TINV_clim). Similarly, this is because this model uses the same coefficients as the main model - we just limit the adaptation in the configuration file when running the projection.
-  
+  - The three models are `TINV_clim`, `TINV_clim_lininter`, and `TINV_clim_lininter_double`. 
+  - Please note - the csvvs for the `TINV_clim_lininter` and `TINV_clim_lininter_double` models are identical, as both pull in the same regression coefficients, and have the same model specifications. They have different config files, however. 
+  - Note also, the `slow_adapt` scenario projection presented in Appendix I.1 uses the same csvv as main model (`TINV_clim`). Similarly, this is because this model uses the same coefficients as the main model - we just limit the adaptation in the configuration file when running the projection.
+- For each model, we generate three `csvv` files. 
+  1. A `csvv` for the `electricity` projection.
+  1. A `csvv` for the `other_energy` projection.
+  1. A `csvv` for the variance covariance matrix from the stacked regression of both products. 
+- These csvv files are outputted to this git repo, and are stored in `energy-code-release-2020/projection_inputs/csvv`
+
 ### `2_generate_projection_configs.do`
 - This code generates config files that are used to run projections. 
 - It uses programs from `/2_projection/0_packages_programs_inputs/projection_set_up/write_projection_file.do`. 
