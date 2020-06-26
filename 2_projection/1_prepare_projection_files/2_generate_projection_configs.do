@@ -32,17 +32,11 @@ loc GIT $root/projection_inputs
 //install global programs
 qui do $root/2_projection/0_packages_programs_inputs/projection_set_up/write_projection_file.do
 
+******Set Script Toggles********************************************************
+
 // which ssps do you want to project results for?
 local ssp_list  "SSP3" //"[SSP2, SSP4] " //"'SSP3'"
 
-
-******Set Script Toggles********************************************************
-
-// do you want to write module/model, run, and aggregation configs?
-local write_projection_files "TRUE"
-
-// do you want to write extraciton configs?
-local write_extraction_files "TRUE"
 
 ******** Set parameters for model specification *****************************
 
