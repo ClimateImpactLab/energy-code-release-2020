@@ -25,7 +25,7 @@ Please see documentation in the `impacts-calculation` projection system repo for
 
 ### `1_generate_csvv.do`
 - This code prepares a csvv file, which is an input to our projection system. The csvv files is a file containing regression coefficients, and their variance matrices.
-- It uses programs from `2_projection/0_packages_programs_inputs/csvv_generation_stacked.do`, and requires an input `.csv` file containing information on the coefficients for a given model. This csv file is stored here `2_projection/0_packages_programs_inputs/projection_specifications.csv`. 
+- It uses programs from `2_projection/0_packages_programs_inputs/csvv_generation_stacked.do`.
 
 #### Run instructions
 - Change the macro "root" to the location of the code release repo on your machine.
