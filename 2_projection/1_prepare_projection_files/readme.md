@@ -7,7 +7,8 @@ Please note - codes in this repo prepare the necessary projection inputs. For de
 
 The configuration files that our projection system needs to run fall broadly into three categories: 
   - ***Projection***: 
-    - Projection configuration files tell the projection system how to run a given projection specification. There are two config files needed to run a projection
+    - Projection configuration files tell the projection system how to run a given projection specification. 
+    - There are two config files needed to run a projection
         1. A `run` config. This contains information on where the output of the projection will be stored. It also contains information on the type of projection that will be run (ie the socioeconomic scenario), and the adaptation scenarios. It also determines whether a given projection outputs impact projections or projections of the variance of these impacts (derived from the variance of the estimated regression coefficients).
         2. A `model` config. This contains information on the projection model. It tells the projection system where to find the csvv, and provides information on how the projected model is constructed. 
   - ***Aggregation***:
