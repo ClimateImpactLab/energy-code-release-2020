@@ -12,22 +12,22 @@ projection.packages = {path_to_load_projection}
 
 miceadds::source.all(paste0(projection.packages,"load_projection/"))
 args <- list(
-    conda_env = 'projection',
-    proj_mode = '_dm', # '' and _dm are the two options
-    region = "ARE.5", # needs to be specified for 
+    conda_env = 'risingverse-py27', # your conda environment
+    proj_mode = '_dm', # '' and _dm are the two options. Determines if we are extracting means(`''`) or variances (`'_dm'`)
+    region = "ARE.5", # needs to be specified for delta method outputs. A region for which we have a projection result (can be an aggregated region)
     rcp = NULL, 
     ssp = "SSP3", 
     price_scen = 'price014', # have this as NULL, "price014", "MERGEETL", ...
-    unit =  "damage", # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
+    unit =  "damage", # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc). Must be impactpc if price scenario is NULL
     uncertainty = "values", # full, climate, values
-    geo_level = "levels", # aggregated (ir agglomerations) or 'levels' (single irs)
+    geo_level = "levels", # aggregated (ir agglomerations such as countries or the "global" region) or 'levels' (single IRs)
     model = "TINV_clim_income_spline", # energy specific
-    adapt_scen = "fulladapt", 
+    adapt_scen = "fulladapt", # adaptation scenario - can be "fulladapt", "noadapt", or "incadapt"
     clim_data = "GMFD", # energy specific
-    iam = NULL,
+    iam = "high",
     yearlist = as.character(seq(1980,2100,1)),  
-    spec = "OTHERIND_total_energy",
-    dollar_convert = "yes", 
+    spec = "OTHERIND_total_energy",  # can be "OTHERIND_total_energy", "OTHERIND_electricity", or "OTHERIND_other_energy"
+    dollar_convert = "yes", # determines whether to convert dollar outputs from 2005 USD to billions of 2019 USD.  
     grouping_test = "semi-parametric") # energy specific)
 
 df = do.call(load.median, args)
