@@ -1,5 +1,5 @@
 # Query Projection Output Data 
-Extract and load data using quantiles.py or load already extracted data from csvs. Currently the system is only set up to query point estimate and delta method output (i.e. variance of projected impact estimates, see Appendix Scetion C.5)... more functionality to come. 
+Extract and load data using quantiles.py or load already extracted data from csvs. Currently the system is only set up to query point estimate and delta method output (i.e. variance of projected impact estimates, see Appendix Section C.5)... more functionality to come. 
 
 ## Necessary steps for using this system: 
 1. Create a bash script similar to `example.sh`, which extracts a specific file specified by a set of parameters. Please reference `bash-extraction-script.md` for documentation on necessary syntax for creating a bash script which will integrate with the data querying code. Note - the bash script that is actually used in this code is in this folder and is called `extraction_quantiles.sh`.
