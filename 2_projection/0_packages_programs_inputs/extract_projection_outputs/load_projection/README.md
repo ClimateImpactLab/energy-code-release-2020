@@ -49,7 +49,7 @@ For first time users, these are the functions I predict you will need to adapt t
 * *extract()* - Perform extraction while monitoring memory use 
 * *check.file.complete()* - Check to see if a file is complete based on time last touched
 
-### load_median.R - Query data from Medain Run
+### load_median.R - Query data from Median Run
 
 * *load.median.check.params()* - Check data query parameters are valid (always a work in progress :)
 * *convert.to.2019* - changes means and variances from 2005 to 2019 dollars
@@ -70,7 +70,7 @@ For first time users, these are the functions I predict you will need to adapt t
 * *get.line.var()* - look through a specific string for a specific parameter's definition
 * *get.file.var()* - Scroll through all lines of a file and get value of a specific variable defined at some point in the file
 * *get.shell.file.parameters()* - Get list of parameters that need to be defined when calling extraction bash script as well as information about that parameter
-    * this function relies on very specific syntax in the extraction bash script. I document the syntax specifics [here](https://gitlab.com/ClimateImpactLab/Impacts/gcp-energy/blob/simp_load_projection/rationalized/2_projection/2_processing/packages/load_projection/bash-extraction-script.md). 
+    * this function relies on very specific syntax in the extraction bash script. I document the syntax specifics [here](https://github.com/ClimateImpactLab/energy-code-release-2020/blob/projection/2_projection/0_packages_programs_inputs/extract_projection_outputs/load_projection/bash-extraction-script.md). 
 * *parse.config.structure()* - Convert an extraction config's file-structure parameter to the file prefix outputted from the extraction config
 
 
