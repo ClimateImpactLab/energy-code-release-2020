@@ -9,6 +9,6 @@
 - To run this code, you will need to be inside the `risingverse` conda environment. Please see the readme in `2_projection/2_running_projections/` for more details. 
 - Functions retrieve the following outputs from the projection system: 
   - future population data for each impact region for all years 
-  - future income per capita data for each impact region for all years
   - global gdp time series into the future
+  - future income per capita data for each impact region for all years
 
