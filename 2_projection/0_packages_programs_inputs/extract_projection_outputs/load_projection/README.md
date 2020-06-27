@@ -1,5 +1,14 @@
 # Query Projection Output Data 
-Extract and load data using quantiles.py or load already extracted data from csvs. Currently the system is only set up to query point estimate and delta method output (i.e. variance of projected impact estimates, see Appendix Section C.5)... more functionality to come. 
+
+- The purpose of the codes in this directory is to extract and load projection system outputs. 
+- The projection system outputs ncdf files, which are GCM specific. 
+- In order to calculate quantiles and means of the impacts across these GCMs, we run a code called `quantiles.py` from the `open-estimate` repo (not currently released). This code outputs a csv of impacts, where the impacts are calculated as means or quantiles of the impacts from each of the GCMs.
+- When running the `load.median()` function from this package, we: 
+    - First check if the desired csv of quantiles of our impacts already exists.
+    - If it does exist, we load it. 
+    - If it doesn't exist, we run a wrapper for `quantiles.py` that extracts the desired output csv from the ncdf files, and the loads it.
+- Please note, in order to extract the outputs, this package reads the necessary extraction configs in this repo, to work out which extraction command is needed for a given query. 
+- Currently the system is only set up to query point estimate and delta method output (i.e. variance of projected impact estimates, see Appendix Section C.5). If you would like to query single run outputs, you will need to add more functionality.
 
 ## Necessary steps for using this system: 
 1. Create a bash script similar to `example.sh`, which extracts a specific file specified by a set of parameters. Please reference `bash-extraction-script.md` for documentation on necessary syntax for creating a bash script which will integrate with the data querying code. Note - the bash script that is actually used in this code is in this folder and is called `extraction_quantiles.sh`.
