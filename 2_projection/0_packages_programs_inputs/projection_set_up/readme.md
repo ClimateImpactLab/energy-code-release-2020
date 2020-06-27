@@ -17,6 +17,6 @@ Files in this folder are used by codes that generate projection configuration an
 
 
 # Note for Ashwin and Rae - to be deleted: 
-  - Note, these configs are currently generated in the way that we used them to run the projections. They point to csvv files, dat, and configs on the CIL servers. 
+  - Note, these configs are currently generated in the way that we used them to run the projections. They point to csvv files, data, and configs on the CIL servers. 
 They also depend on the name of the models that we used when we ran the projections initially. 
   - If you are running a new projection, with the model naming convention used in this repo, then you will need to update some of the logic in this code (eg to make some of the logic not dependent on the model name including the string "income_spline", since all of the models in the paper have an income spline, but we did not contain that string in the names of the models in this repo).
