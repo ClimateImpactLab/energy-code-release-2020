@@ -51,13 +51,13 @@ For first time users, these are the functions I predict you will need to adapt t
 
 ### load_median.R - Query data from Median Run
 
-* *load.median.check.params()* - Check data query parameters are valid (always a work in progress :)
-* *convert.to.2019* - changes means and variances from 2005 to 2019 dollars
+* *load.median.check.params()* - Check data query parameters are valid (always a work in progress :) - more should be added whenever anyone has time!)
+* *load.median()* * - loads a csv of results if it exists, and if not, runs an extraction
 
 ### clean_data.R - Clean queried data
 
 * *assign.names()* - based on data query and data frame add more variables to df to define what the contents of the data frame is
-* *assign.names()* - based on data query and data frame add more variables to df to define what the contents of the data frame is
+* *convert.to.2019* - changes means and variances from 2005 to 2019 dollars
 
 ### get_paths.R - Functions for getting desired paths and file names from query}
 
