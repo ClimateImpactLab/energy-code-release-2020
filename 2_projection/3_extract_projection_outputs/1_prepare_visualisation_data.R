@@ -14,15 +14,16 @@ library(tidyr)
 
 user= 'tbearpark'
 
+db = '/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/'
 output = '/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/code_release_data/'
 dir = paste0('/shares/gcp/social/parameters/energy/extraction/',
 				'multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/')
-db = '/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/'
+
 git = paste0("/home/", user,"/repos")
 
 # Make sure you are in the risingverse-py27 for this... 
 projection.packages <- paste0(git,"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
-setwd('/home/tbearpark/repos/')
+setwd(paste0('/home/',user, '/repos/')
 
 # Source codes that help us load projection system outputs
 miceadds::source.all(paste0(projection.packages,"load_projection/"))
