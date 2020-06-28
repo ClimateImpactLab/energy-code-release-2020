@@ -36,8 +36,7 @@ miceadds::source.all(paste0(projection.packages,"load_projection/"))
 
 # Data needed: 
 # 1. GMST anomalies
-# 2. 15 draws from uncertainty for each GCM-rcp combination - but we can do this in a separate step 
-		# since we want that to be part of the code release 
+# 2. Values csvs for each SSP/Price scenario we want to calculate a damage function for.
 
 # 1. GMST anomolies: moving from our server into a shared directory
 # gmst_dir = "/mnt/norgay_synology_drive/Global ACP/damage_function/GMST_anomaly"
@@ -45,8 +44,6 @@ miceadds::source.all(paste0(projection.packages,"load_projection/"))
 # write_csv(gmst_df, paste0(output, "/GMTanom_all_temp_2001_2010.csv"))
 
 # 2. Values csvs to allow for draws from uncertainty 
-
-
 # Get population values, so we can convert PC impacts to impacts
 
 pop_df = read_csv(paste0(data_dir,'/projection_system_outputs/covariates/' ,
