@@ -104,6 +104,14 @@ The command used to run this projection is:
 - After running projections, the next step is to aggregate these them. This means converting them into units of dollars rather than energy consumption per capita, for a range of pricing scenarios, and aggregating across space to get global time series. 
 - To run an aggregation, you need to be in the `risingverse` conda environment, and have the projection repos set up. 
 
+The generic syntax for running an aggregation is to run (from inside the impact-calculations projection repo): 
+```
+./aggregate.sh {path to aggregation config}/{aggregation config name} {number of processes}
+```
+
+Please note - running aggregation generates large data files! 
+
+To run aggregations for all permutations of scenarios in the paper, run `energy_aggregation.sh`, after editing the `uname` variable such that the `repo_root` variable points to the location of the energy code release repo on your machine.
 
 ## Extracting results
 - See the readme in `2_projection/3_extract_projection_outputs/`.
