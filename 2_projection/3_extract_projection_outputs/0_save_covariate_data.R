@@ -1,5 +1,4 @@
 # Prepare code release covariates data
-# Note - all maps in the paper are for 2099, ssp3, rcp85, high, so these are hard coded 
 # Note - this code should be run from the risingverse (python 3)
 
 # This code moves some of our projection results from our usual location on sac 
@@ -17,16 +16,15 @@ library(ncdf4)
 library(tidyr)
 
 user= 'tbearpark'
+git = paste0("/home/", user,"/repos")
+setwd(git)
 
 output = '/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/code_release_data/'
-dir = paste0('/shares/gcp/social/parameters/energy/extraction/',
-				'multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/')
 db = '/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/'
-git = paste0("/home/", user,"/repos")
 
 # Make sure you are in the risingverse for this... 
 projection.packages <- paste0(git,"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
-setwd('/home/tbearpark/repos/')
+
 
 # Source a python code that lets us load SSP data directly from the SSPs
 source_python(paste0(projection.packages, "future_gdp_pop_data.py"))
