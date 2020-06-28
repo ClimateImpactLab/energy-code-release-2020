@@ -4,15 +4,11 @@
 # This code moves some of our projection results from our usual location on our servers 
 # and Dropbox/Synology to the code release data storage 
 
-
 rm(list = ls())
 library(readr)
 library(dplyr)
 library(reticulate)
-library(parallel)
-library(miceadds)
 library(haven)
-library(ncdf4)
 library(tidyr)
 
 user= 'tbearpark'
