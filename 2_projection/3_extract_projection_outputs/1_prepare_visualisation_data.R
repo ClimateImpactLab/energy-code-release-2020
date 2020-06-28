@@ -169,7 +169,7 @@ write_csv(impacts,
 # Get values csvs for the kernel density plots
 
 IR_list = c("USA.14.608", "SWE.15", "CHN.2.18.78", "CHN.6.46.280", "IND.21.317.1249", "BRA.25.5235.9888")
-# IR_list_names = c("Chicago", "Stockholm", "Beijing", "Guangzhou", "Mumbai", "Sao Paulo")
+IR_list_names = c("Chicago", "Stockholm", "Beijing", "Guangzhou", "Mumbai", "Sao Paulo")
 
 get.dfs <- function(env, IR, ssp, iam, rcp, price = NULL, unit, year, fuel) {
   
@@ -235,7 +235,6 @@ get.dfs <- function(env, IR, ssp, iam, rcp, price = NULL, unit, year, fuel) {
 
 
 get_IR_values_csv = function(IR) {
-	# This useful wrapper funtion is frmo the "uncertainty_functions" code sourced 
 	df_joined <- get.dfs(env="risingverse-py27", IR=IR, 
 					ssp="SSP3", price="price014", unit="damage", 
 					year=2099, fuel="OTHERIND_total_energy", rcp="rcp85", iam="high") %>%
@@ -253,7 +252,7 @@ write_csv(df, paste0(output, '/projection_system_outputs/IR_GCM_level_impacts/',
 
 ###############################################
 # Get GCM list, and their respective weights, for use in the kernel density plots
-
+# NOte - this pulls a gcm_weights csv from the mortality dropbox
 get.normalized.weights <- function (rcp='rcp85') {
 
   df = read_csv('/mnt/norgay_synology_drive/Global ACP/damage_function/GMST_anomaly/gcm_weights.csv') 
@@ -311,12 +310,11 @@ lapply(rcps, get_df_ts_main_model_total_energy, args = args)
 
 
 
-
-
 ##########################
 # Covariate data for blob plots: 
 ##########################
-
+      
+# Note - this is the output from a single run, since that produces an allcalcs file
 
 # set path variables
 covariates <- paste0("/mnt/norgay_synology_drive", 
@@ -333,8 +331,6 @@ covars = as.data.frame(readr::read_csv(covariates)) %>%
 write_csv(covars, 
 	paste0(output,'/projection_system_outputs/covariates/', 
 	 'covariates-SSP3-rcp85-high-2010_2090-CCSM4.csv'))
-
-
 
 
 ####################################################
@@ -385,8 +381,8 @@ rcps = c("rcp45", "rcp85")
 pricelist = c("price0", "price03", "WITCHGLOBIOM42", 
 	"MERGEETL60", "REMINDMAgPIE1730", "REMIND17CEMICS", "REMIND17") 
 
+# Run across all price scenarios
 options = expand.grid(rcp = rcps, price = pricelist)
-
 mapply(get_df_by_price_rcp, price=options$price, rcp = options$rcp, SIMPLIFY = FALSE)
 
 
@@ -395,7 +391,9 @@ mapply(get_df_by_price_rcp, price=options$price, rcp = options$rcp, SIMPLIFY = F
 ############################################################
 # Slow adapt time series - ccsm 4 - extract a time series of global impacts-pc
 ############################################################
-
+      
+# Note - we pull these impacts straight from the ncdf projection system output
+      
 get_file_name = function(type, fuel=NULL, double = NULL, histclim= NULL, rcp, dm = NULL) {
 	
 	if(!is.null(histclim)){
