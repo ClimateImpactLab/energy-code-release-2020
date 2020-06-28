@@ -1,8 +1,8 @@
 # Prepare code release covariates data
 # Note - this code should be run from the risingverse (python 3)
 
-# This code moves some of our projection results from our usual location on sac 
-# and Dropbox to the code release data storage 
+# This code moves some of our projection results from our usual location on our servers 
+# and Dropbox/Synology to the code release data storage 
 
 
 rm(list = ls())
@@ -28,8 +28,6 @@ projection.packages <- paste0(git,"/energy-code-release-2020/2_projection/0_pack
 
 # Source a python code that lets us load SSP data directly from the SSPs
 source_python(paste0(projection.packages, "future_gdp_pop_data.py"))
-
-
 
 ###########################################
 # 1 Data for plotting city response functions for figure 2A
