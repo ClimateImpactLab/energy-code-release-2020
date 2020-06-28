@@ -39,8 +39,8 @@ gmst_df = read_csv(paste0(gmst_dir, "/GMTanom_all_temp_2001_2010.csv"))
 write_csv(gmst_df, paste0(output, "/GMTanom_all_temp_2001_2010.csv"))
 
 # 2. Values csvs to allow for draws from uncertainty 
-# Get population values, so we can convert PC impacts to impacts
 
+# 2.1 Get population values, so we can convert PC impacts to impacts
 pop_df = read_csv(paste0(data_dir,'/projection_system_outputs/covariates/' ,
 	'SSP3_IR_level_population.csv')) %>% 
   group_by(year) %>%
@@ -48,6 +48,7 @@ pop_df = read_csv(paste0(data_dir,'/projection_system_outputs/covariates/' ,
   tidyr::complete(year = seq(2010,2100,1)) %>%
   tidyr::fill(pop)
 
+# 2.2 Extract and load values csvs
 get_values_csv = function(price, fuel, years = NULL, pop_df= NULL, ssp = "SSP3", save = TRUE, 
 	include_variance = TRUE, model = "TINV_clim_income_spline") {
 	
