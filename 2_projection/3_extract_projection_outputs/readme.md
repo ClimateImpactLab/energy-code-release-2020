@@ -1,5 +1,6 @@
 ### Note for Rae and Ashwin: codes in this repo were used to extract results from the projection system. Since we ran everything in units of KWh, there are unit conversions going on where we convert impacts into GJ, as the inputs to the next stage of analysis assumes that all extracted csvs are in GJ. 
-## These codes are meant to be a record of how we get the post-projection data from our servers into the the code release storage location. 
+### These codes are meant to be a record of how we get the post-projection data from our servers into the the code release storage location. 
+### Also note - we extract data from an allcalcs file in `0_save_covariate_data.R` for use in the blob plot. However, we do not include the single that was used to create this allcalcs file as one of the projections in the projection instructions, just because this is an extra projection and it seems confusing to include it.
 
 # Overview
 - Scripts in this repo extract projection system outputs, and save them as `.csv` files that are used in later analysis (i.e. in data visualisation, estimating damage functions, and calculating an SCC.)
@@ -12,6 +13,7 @@
 
 ## `0_save_covariate_data.R`
 - This code saves covariate data from our projection system onto the code release storage location (currently `/{synology}/GCP_Reanalysis/ENERGY/code_release_data/`).
+  - The covariates that we extract and save include information on GDP and population projections taken from the SSPs. We also extract some projected climate data that is used to plot Figure C.3 in the appendix.  
 - It also moves some data from our servers that is used for plotting aesthetics. 
 - To run this code - make sure you are in the [`risingverse`](https://github.com/ClimateImpactLab/risingverse) python 3 conda environment. Also make sure that you have downloaded all projection system repos and followed their install intructions.
 - Note: this code sources `energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/future_gdp_pop_data.py`
