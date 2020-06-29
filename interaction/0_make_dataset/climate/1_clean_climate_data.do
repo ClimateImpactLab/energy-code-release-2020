@@ -19,11 +19,11 @@ syntax , clim(string) programs_path(string) //note functionality only set up for
 
 	//Define loop lists
 	local climvar_list "tmax_cdd_20C tmax_hdd_20C tavg_poly_1 tavg_poly_2 tavg_poly_3 tavg_poly_4 tavg_polyBelow20_1 tavg_polyBelow20_2 tavg_polyBelow20_3 tavg_polyBelow20_4 tavg_polyAbove20_1 tavg_polyAbove20_2 tavg_polyAbove20_3 tavg_polyAbove20_4 prcp_poly_1 prcp_poly_2"
-	local climvar_list_polyAbove "tavg_polyAbove20_1_x_hdd tavg_polyAbove20_2_x_hdd tavg_polyAbove20_3_x_hdd tavg_polyAbove20_4_x_hdd"
-	local climvar_list_polyBelow "tavg_polyBelow20_1_x_cdd tavg_polyBelow20_2_x_cdd tavg_polyBelow20_3_x_cdd tavg_polyBelow20_4_x_cdd"
+	local climvar_list_polyAbove "tavg_polyAbove20_1_x_cdd_20C tavg_polyAbove20_2_x_cdd_20C tavg_polyAbove20_3_x_cdd_20C tavg_polyAbove20_4_x_cdd_20C"
+	local climvar_list_polyBelow "tavg_polyBelow20_1_x_hdd_20C tavg_polyBelow20_2_x_hdd_20C tavg_polyBelow20_3_x_hdd_20C tavg_polyBelow20_4_x_hdd_20C"
 	
-	*//local shpfile_list "WORLD WORLDpre SRB_MNE_XKO SRB_MNE MDA_other ITA_SMR_VAT ISR_PSE CUW_BES_ABW FRA_MCO"
-	local shpfile_list SRB_MNE_XKO
+	local shpfile_list "WORLD WORLDpre SRB_MNE_XKO SRB_MNE MDA_other ITA_SMR_VAT ISR_PSE CUW_BES_ABW FRA_MCO"
+	//local shpfile_list SRB_MNE_XKO
 	//Note: when generate the climate datas, one must follow the exact folder in this code in order for the cleaning code to be running 
 
 	***************************************************************************************
@@ -61,7 +61,7 @@ syntax , clim(string) programs_path(string) //note functionality only set up for
 			local climvar_counter = `climvar_counter' + 1
 			//Define year chunks given shp file and climate variable
 
-			if inlist("`climvar'", "tavg_polyAbove20_1_x_hdd", "tavg_polyAbove20_2_x_hdd", "tavg_polyAbove20_3_x_hdd", "tavg_polyAbove20_4_x_hdd",  "tavg_polyBelow20_1_x_cdd", "tavg_polyBelow20_2_x_cdd", "tavg_polyBelow20_3_x_cdd", "tavg_polyBelow20_4_x_cdd") {
+			if inlist("`climvar'", "tavg_polyAbove20_1_x_cdd_20C", "tavg_polyAbove20_2_x_cdd_20C", "tavg_polyAbove20_3_x_cdd_20C", "tavg_polyAbove20_4_x_cdd_20C",  "tavg_polyBelow20_1_x_hdd_20C", "tavg_polyBelow20_2_x_hdd_20C", "tavg_polyBelow20_3_x_hdd_20C", "tavg_polyBelow20_4_x_hdd_20C") {
 				local yearspan_list " 1971_1971 1972_1974 1975_1977 1978_1980 1981_1983 1984_1986 1987_1989 1990_1992 1993_1995 1996_1998 1999_2001 2002_2004 2005_2007 2008_2010 "
 			}
 			else if ("`shp'" == "WORLD" & inlist("`climvar'", "tmax_cdd_20C", "tmax_hdd_20C", "tavg_poly_1", "tavg_poly_2", "tavg_poly_3", "tavg_poly_4")) | ///
@@ -122,18 +122,8 @@ syntax , clim(string) programs_path(string) //note functionality only set up for
 
 				local yearspan_counter = `yearspan_counter' + 1
 
-				* TO-DO: fix the file names in climate data generate code and get rid of this part 
-				local temp_unit_filename `temp_unit'
-				local climvar_filename `climvar'
-				if inlist("`climvar'", "tavg_polyAbove20_1_x_hdd", "tavg_polyAbove20_2_x_hdd", "tavg_polyAbove20_3_x_hdd", "tavg_polyAbove20_4_x_hdd") {
-					local temp_unit_filename `temp_unit'_x_hdd_20C
-					local climvar_filename = substr("`climvar'", 1, 18)
-				} 
-				if inlist("`climvar'", "tavg_polyBelow20_1_x_cdd", "tavg_polyBelow20_2_x_cdd", "tavg_polyBelow20_3_x_cdd", "tavg_polyBelow20_4_x_cdd") {
-					local temp_unit_filename `temp_unit'_x_cdd_20C
-					local climvar_filename = substr("`climvar'", 1, 18)
-				} 
-				qui insheet using "``shp'_path'/csv_`temp_unit'/`clim'/`clim'_`climvar_filename'_v2_`yearspan'_`temp_unit_filename'_popwt.csv", comma names clear
+
+				qui insheet using "``shp'_path'/csv_`temp_unit'/`clim'/`clim'_`climvar'_v2_`yearspan'_`temp_unit'_popwt.csv", comma names clear
 
 				if inlist("`climvar'", "tavg_polyAbove20_1_x_hdd", "tavg_polyAbove20_2_x_hdd", "tavg_polyAbove20_3_x_hdd", "tavg_polyAbove20_4_x_hdd") {
 					di "pausing"
@@ -142,7 +132,12 @@ syntax , clim(string) programs_path(string) //note functionality only set up for
 
 				process_`temp_unit'
 				
-				rename y `climvar'
+				// the full name will be too long after renaming and adding _other, so we remove the last few characters
+				if inlist("`climvar'", "tavg_polyAbove20_1_x_cdd_20C", "tavg_polyAbove20_2_x_cdd_20C", "tavg_polyAbove20_3_x_cdd_20C", "tavg_polyAbove20_4_x_cdd_20C",  "tavg_polyBelow20_1_x_hdd_20C", "tavg_polyBelow20_2_x_hdd_20C", "tavg_polyBelow20_3_x_hdd_20C", "tavg_polyBelow20_4_x_hdd_20C") {
+					local climvar_short = substr("`climvar'",1,24)
+					rename y `climvar_short'
+				}
+				else rename y `climvar'
 
 				if (`yearspan_counter' == 1 & `climvar_counter' == 1) {
 					qui tempfile `shp'

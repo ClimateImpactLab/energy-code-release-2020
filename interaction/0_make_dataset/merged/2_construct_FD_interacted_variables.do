@@ -110,10 +110,16 @@ forval i=1/4 {
 forval i=1/4 {
 	
 	qui gen double FD_cdd20_TINVtemp`i'_GMFD_p = ///
-			polyAbove`i'_x_hdd_GMFD - polyAbove`i'_x_hdd_GMFD  )
+			polyAbove`i'_x_cdd_GMFD - L1.polyAbove`i'_x_cdd_GMFD
 	
 	qui gen double FD_hdd20_TINVtemp`i'_GMFD_p = ///
-			( hdd20_TINV_GMFD * polyBelow`i'_GMFD ) - ///
-			( hdd20_TINV_GMFD * L1.polyBelow`i'_GMFD )
+			polyBelow`i'_x_hdd_GMFD - L1.polyBelow`i'_x_hdd_GMFD
 }
+
+
+// see difference between old and new interactions
+gen old_interaction = cdd20_TINV_GMFD * polyAbove1_GMFD
+gen new_interaction = polyAbove1_x_cdd_GMFD
+gen diff = new_interaction - old_interaction
+gen pct_diff = diff / old_interaction
 

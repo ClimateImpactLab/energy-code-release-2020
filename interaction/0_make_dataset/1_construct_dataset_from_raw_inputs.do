@@ -68,7 +68,7 @@ clean_climate_data, clim("GMFD") programs_path("$dataset_construction/climate/pr
 
 tempfile climate_data
 save `climate_data', replace
-
+save "`DATA'/climate_data", replace
 //Part B: Population and Income Data Construction
 
 do "$dataset_construction/pop_and_income/1_extract_and_clean.do"
@@ -100,6 +100,35 @@ drop _merge
 merge m:1 year country using `climate_data'
 keep if _merge!=2
 drop _merge
+// TO-DO: check if this looks right!
+
+/*
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                         3,651
+        from master                       400  (_merge==1)
+        from using                      3,251  (_merge==2)
+
+    matched                             6,720  (_merge==3)
+    -----------------------------------------
+
+. keep if _merge!=2
+(3,251 observations deleted)
+
+. drop _merge
+
+. merge m:1 year country using `climate_data'
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                         5,680
+        from master                     1,240  (_merge==1)
+        from using                      4,440  (_merge==2)
+
+    matched                             5,880  (_merge==3)
+    -----------------------------------------
+*/
+
 
 
 //Part B: Construct Per Capita and log_pc

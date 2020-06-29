@@ -213,3 +213,8 @@ replace subregionname = "Southern Europe" if country=="XKO"
 program drop _all
 do "$root/0_make_dataset/merged/2_construct_FD_interacted_variables.do"
 save "$root/data/GMFD_`model'_regsort.dta", replace
+
+
+
+// see difference between old and new interactions
+
