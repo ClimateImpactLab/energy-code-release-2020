@@ -117,9 +117,4 @@ forval i=1/4 {
 }
 
 
-// see difference between old and new interactions
-gen old_interaction = cdd20_TINV_GMFD * polyAbove1_GMFD
-gen new_interaction = polyAbove1_x_cdd_GMFD
-gen diff = new_interaction - old_interaction
-gen pct_diff = diff / old_interaction
 
