@@ -163,7 +163,7 @@ fi
 
 if [[ ( "${geo_level}" == "aggregated" ) && ( "${uncertainty}" == "values" ) ]]; then
 
-	region_restriction=--regions=${region}
+	region_restriction=--region=${region}
 
 fi
 
@@ -171,7 +171,7 @@ fi
 # (this is different from above because I want an error to get thrown if you try to extract aggregated values without specifying a region)
 
 if [[ ( ${region} ) &&  ( "${uncertainty}" == "values" ) ]]; then
-    region_restriction=--regions=${region}
+    region_restriction=--region=${region}
     region_log_tag=${region}_
 fi
 
