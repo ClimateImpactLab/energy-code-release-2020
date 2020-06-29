@@ -1,6 +1,5 @@
 # Note to ashwin and rae - change out the configs here to whatever are used in the final version. 
 
-
 # Overview
 
 - In this folder, we briefly describe how we run projections. 
@@ -12,6 +11,7 @@
 - To run projections, you will also need access to two conda environments: 
   - `risingverse`: a python 3 conda environment used for running and aggregating projections (where aggregation refers to conversion of impacts into units of dollars rather than energy consumption per capita, for a range of pricing scenarios, and aggregating across space to get global time series of impacts). See [here](https://github.com/ClimateImpactLab/risingverse) for install instructions
   - `risingverse-py27`: a python 2 conda environment used for extracting projection system outputs. See [here](https://github.com/ClimateImpactLab/risingverse-py27) for install instructions. 
+    - By "extraction", we mean converting our climate model specific projection `.ncdf` outputs into `.csv` files containing means and quantiles of the impacts across these climate model specific projections. 
 - You will also need access to the climate and socioeconomic data used by the projection system. 
 - Finally, you will need to have used the config writer `2_projection/1_prepare_projection_files/2_generate_projection_configs.do`, and made sure that the configs produced reflect the set up on your server. 
 
