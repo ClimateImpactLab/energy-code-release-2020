@@ -496,7 +496,7 @@ save_csv_single = function(type, fuel, pop_df){
 }
 
 
-pop_df1 = read_csv(paste0(output,'/projection_system_outputs/covariates/' ,
+pop_df = read_csv(paste0(output,'/projection_system_outputs/covariates/' ,
 	'SSP3_IR_level_population.csv'))%>%
 	group_by(region) %>%
 	tidyr::complete(year = seq(2010,2100,1)) %>%
