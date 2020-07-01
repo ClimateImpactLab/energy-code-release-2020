@@ -23,7 +23,6 @@ syntax , clim(string) programs_path(string) //note functionality only set up for
 	local climvar_list_polyBelow "tavg_polyBelow20_1_x_hdd_20C tavg_polyBelow20_2_x_hdd_20C tavg_polyBelow20_3_x_hdd_20C tavg_polyBelow20_4_x_hdd_20C"
 	
 	local shpfile_list "WORLD WORLDpre SRB_MNE_XKO SRB_MNE MDA_other ITA_SMR_VAT ISR_PSE CUW_BES_ABW FRA_MCO"
-	//local shpfile_list SRB_MNE_XKO
 	//Note: when generate the climate datas, one must follow the exact folder in this code in order for the cleaning code to be running 
 
 	***************************************************************************************
@@ -125,11 +124,6 @@ syntax , clim(string) programs_path(string) //note functionality only set up for
 
 				qui insheet using "``shp'_path'/csv_`temp_unit'/`clim'/`clim'_`climvar'_v2_`yearspan'_`temp_unit'_popwt.csv", comma names clear
 
-				if inlist("`climvar'", "tavg_polyAbove20_1_x_hdd", "tavg_polyAbove20_2_x_hdd", "tavg_polyAbove20_3_x_hdd", "tavg_polyAbove20_4_x_hdd") {
-					di "pausing"
-				} 
-
-
 				process_`temp_unit'
 				
 				// the full name will be too long after renaming and adding _other, so we remove the last few characters
@@ -181,6 +175,7 @@ syntax , clim(string) programs_path(string) //note functionality only set up for
 		clean_`shp'
 		save ``shp'', replace
 		di "`shp'"
+		
 		//pause
 		
 		if (`shp_counter' == 1) {
@@ -209,10 +204,8 @@ syntax , clim(string) programs_path(string) //note functionality only set up for
 	rename tmax_hdd_20C hdd20_`clim'
 	rename tmax_cdd_20C_* cdd20_*_`clim'
 	rename tmax_hdd_20C_* hdd20_*_`clim'
-
 	rename tavg_polyAbove20_* polyAbove*_`clim'
 	rename tavg_polyBelow20_* polyBelow*_`clim'
-	* TO-DO: ask Maya what's this variable
 
 	
 	sort country year temp* cdd* hdd* polyAbove* polyBelow* precip*

@@ -43,7 +43,6 @@ local root "/home/liruixue/projection_repos/energy-code-release-2020/interaction
 // code path referenced by multiple files
 global dataset_construction "`root'/0_make_dataset/"
 
-
 // output data path
 local DATA "`root'/data"
 
@@ -53,12 +52,11 @@ local DATA "`root'/data"
 
 //Part A: Climate Data Construction
 
-program drop _all
 do "$dataset_construction/climate/1_clean_climate_data.do"
 clean_climate_data, clim("GMFD") programs_path("$dataset_construction/climate/programs")
 
 // *****************************
-// a chunk of temporary code to check the difference between pixel-level vs normal interacted terms
+// code to check the difference between pixel-level vs normal interacted terms
 // gen old_interaction = pB20_1_GMFD * cdd20_GMFD
 // gen new_interaction = pB20_1_x_cdd_GMFD
 // gen diff = new_interaction - old_interaction
@@ -70,6 +68,7 @@ tempfile climate_data
 save `climate_data', replace
 save "`DATA'/climate_data", replace
 //Part B: Population and Income Data Construction
+use "`DATA'/climate_data", clear
 
 do "$dataset_construction/pop_and_income/1_extract_and_clean.do"
 
@@ -100,36 +99,6 @@ drop _merge
 merge m:1 year country using `climate_data'
 keep if _merge!=2
 drop _merge
-// TO-DO: check if this looks right!
-
-/*
-    Result                           # of obs.
-    -----------------------------------------
-    not matched                         3,651
-        from master                       400  (_merge==1)
-        from using                      3,251  (_merge==2)
-
-    matched                             6,720  (_merge==3)
-    -----------------------------------------
-
-. keep if _merge!=2
-(3,251 observations deleted)
-
-. drop _merge
-
-. merge m:1 year country using `climate_data'
-
-    Result                           # of obs.
-    -----------------------------------------
-    not matched                         5,680
-        from master                     1,240  (_merge==1)
-        from using                      4,440  (_merge==2)
-
-    matched                             5,880  (_merge==3)
-    -----------------------------------------
-*/
-
-
 
 //Part B: Construct Per Capita and log_pc
 
@@ -145,5 +114,4 @@ do "$dataset_construction/merged/0_break2_clean.do"
 
 di "mission complete :)"
 save "`DATA'/IEA_Merged_long_GMFD.dta", replace
-
 

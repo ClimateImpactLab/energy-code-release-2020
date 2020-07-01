@@ -218,7 +218,6 @@ save "$root/data/GMFD_`model'_regsort.dta", replace
 // see difference between old and new interactions
 //use "$root/data/GMFD_`model'_regsort.dta", replace
 use "${root}/data/climate_data.dta", clear
-keep *interaction *diff* cdd20_TINV_GMFD polyAbove1_GMFD polyAbove1_x_cdd_GMFD country
 gen old_interaction = cdd20_TINV_GMFD * polyAbove1_GMFD
 gen new_interaction = polyAbove1_x_cdd_GMFD
 gen diff = new_interaction - old_interaction
@@ -229,6 +228,7 @@ corr old_interaction new_interaction
 keep if inlist(country, "MAF") 
 //two-pixel country
 list *interaction *diff* cdd20_TINV_GMFD polyAbove1_GMFD polyAbove1_x_cdd_GMFD country
+keep *interaction *diff* cdd20_TINV_GMFD polyAbove1_GMFD polyAbove1_x_cdd_GMFD country year
  */
 /* some checks For MAF
 segment weights
@@ -248,5 +248,4 @@ long run climate in these two pixels at pixel level
      +--------------------------------+
 which, if aggregated with popwt, equals 
  */
-
 
