@@ -16,6 +16,15 @@ library(haven)
 library(ncdf4)
 library(tidyr)
 
+# Load in the required packages, installing them if necessary 
+if(!require("pacman")){install.packages(("pacman"))}
+pacman::p_load(ggplot2, 
+               dplyr,
+               readr, 
+               DescTools,
+               RColorBrewer)
+
+
 user= 'liruixue'
 
 db = '/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/'
@@ -23,7 +32,12 @@ output = '/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/code_release_data/'
 dir = paste0('/shares/gcp/social/parameters/energy/extraction/',
                     'multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/')
 
+# Set paths
 git = paste0("/home/", user,"/repos")
+# Source time series plotting codes
+source(paste0(git, "/energy-code-release-2020/3_post_projection/0_utils/time_series.R"))
+
+
 
 # Make sure you are in the risingverse-py27 for this... 
 projection.packages <- paste0(git,"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
@@ -74,6 +88,82 @@ df_pct = df_dmg %>%
 write_csv(df_pct, 
      paste0(output, '/projection_system_outputs/21jul2020_pre_data/', 
           'main_model-', "OTHERIND_total_energy", '-SSP3-high-fulladapt-',"price014" ,'-2010_2099-pct-gdp-timeseries.csv'))
+
+
+
+
+
+# plot it like figure 3B
+
+#########################################
+# 2. Figure 3B
+
+DB_data = output
+
+# Load in the impacts data
+df_impacts = read_csv(paste0(DB_data, '/projection_system_outputs/time_series_data/', 
+                   'main_model-total_energy-SSP3-rcp45-high-fulladapt-price014.csv'))%>% 
+mutate(rcp = "rcp45") %>% 
+bind_rows(
+ read_csv(paste0(DB_data, '/projection_system_outputs/time_series_data/', 
+                 'main_model-total_energy-SSP3-rcp85-high-fulladapt-price014.csv')) %>% 
+   mutate(rcp = "rcp85")
+)
+
+
+# Get separate dataframes for rcp45 and rcp85, for plotting
+format_df = function(rcp, df_impacts, df_gdp){
+     df = df_impacts %>% 
+      dplyr::filter(rcp == !!rcp) %>% 
+      left_join(df_gdp, by = "year")%>% 
+      mutate(mean = mean * 1000000000, q95 = q95 *1000000000 , q5 = q5* 1000000000) %>% #convert from billions of dollars 
+      mutate(percent_gdp = (mean/gdp) *100, 
+             ub = (q95/gdp) *100, 
+             lb = (q5/gdp) *100)
+
+     df_mean = df %>% 
+      dplyr::select(year, percent_gdp)
+
+     return(list(df, df_mean))
+}
+
+df_45 = format_df(rcp = 'rcp45', df_impacts= df_impacts, df_gdp = df_gdp)
+df_85 = format_df(rcp = 'rcp85', df_impacts= df_impacts, df_gdp = df_gdp)
+unique_gcms = unique(df_dmg[['gcm']])
+
+
+
+# Call the ggtimeseries function, and also add on extra ribbons
+p <- ggtimeseries(df.list = list(as.data.frame(df_45[2]), as.data.frame(df_85[2])), 
+               df.x = "year",
+               x.limits = c(2010, 2100),                               
+               y.limits=c(-0.8,0.2),
+               y.label = "% GDP", 
+               legend.title = "RCP", legend.breaks = c("RCP 4.5", "RCP 8.5"), 
+               legend.values = c('blue', 'red')) + 
+geom_ribbon(data = df_45[[1]], aes(x=df_45[[1]]$year, ymin=df_45[[1]]$ub, ymax=df_45[[1]]$lb), 
+           fill = "blue", alpha=0.1, show.legend = FALSE) +
+geom_ribbon(data = df_85[[1]], aes(x=df_85[[1]]$year, ymin=df_85[[1]]$ub, ymax=df_85[[1]]$lb), 
+           fill = "red",  alpha=0.1, show.legend = FALSE) + 
+ggplot()
+ggtitle("Damages as a percent of global gdp, ssp3-high")
+ggsave(p, file = paste0(output, 
+     "/projection_system_outputs/21jul2020_pre_data/fig_3b_global_damage_time_series_percent_gdp_SSP3-high.pdf"), width = 8, height = 6)
+
+# need to check what style we want!
+p_test <- ggplot(df_pct, aes(x = year, y = percent_gdp, colour = gcm)) +
+     geom_line(aes(group = gcm)) 
+ggsave(p_test, file = paste0(output, 
+     "/projection_system_outputs/21jul2020_pre_data/test.pdf"))
+
+
+
+
+
+
+
+
+
 
 
 
