@@ -132,6 +132,11 @@ df_85 = format_df(rcp = 'rcp85', df_impacts= df_impacts, df_gdp = df_gdp)
 unique_gcms = unique(df_dmg[['gcm']])
 
 
+df_pct_45 <- df_pct %>% 
+      dplyr::filter(rcp == "rcp45")
+df_pct_85 <- df_pct %>% 
+      dplyr::filter(rcp == "rcp85")
+
 
 # Call the ggtimeseries function, and also add on extra ribbons
 p <- ggtimeseries(df.list = list(as.data.frame(df_45[2]), as.data.frame(df_85[2])), 
@@ -139,22 +144,20 @@ p <- ggtimeseries(df.list = list(as.data.frame(df_45[2]), as.data.frame(df_85[2]
                x.limits = c(2010, 2100),                               
                y.limits=c(-0.8,0.2),
                y.label = "% GDP", 
-               legend.title = "RCP", legend.breaks = c("RCP 4.5", "RCP 8.5"), 
-               legend.values = c('blue', 'red')) + 
+               legend.title = "RCP", legend.breaks = c("RCP 4.5", "RCP 8.5", "RCP 4.5", "RCP 8.5"), 
+               legend.values = c('blue', 'red',"yellow","green")) + 
 geom_ribbon(data = df_45[[1]], aes(x=df_45[[1]]$year, ymin=df_45[[1]]$ub, ymax=df_45[[1]]$lb), 
            fill = "blue", alpha=0.1, show.legend = FALSE) +
 geom_ribbon(data = df_85[[1]], aes(x=df_85[[1]]$year, ymin=df_85[[1]]$ub, ymax=df_85[[1]]$lb), 
            fill = "red",  alpha=0.1, show.legend = FALSE) + 
-ggplot()
+geom_line(data = df_pct_45, aes(x = year, y = percent_gdp, group = gcm), 
+  alpha = 0.3, show.legend = FALSE,colour = "blue") +
+geom_line(data = df_pct_85, aes(x = year, y = percent_gdp, group = gcm), 
+  alpha = 0.3, show.legend = FALSE, colour = "red") +
 ggtitle("Damages as a percent of global gdp, ssp3-high")
-ggsave(p, file = paste0(output, 
-     "/projection_system_outputs/21jul2020_pre_data/fig_3b_global_damage_time_series_percent_gdp_SSP3-high.pdf"), width = 8, height = 6)
 
-# need to check what style we want!
-p_test <- ggplot(df_pct, aes(x = year, y = percent_gdp, colour = gcm)) +
-     geom_line(aes(group = gcm)) 
-ggsave(p_test, file = paste0(output, 
-     "/projection_system_outputs/21jul2020_pre_data/test.pdf"))
+ggsave(p, file = paste0(output, 
+     "/projection_system_outputs/21jul2020_pre_data/all_gcm_plot.pdf"))
 
 
 
