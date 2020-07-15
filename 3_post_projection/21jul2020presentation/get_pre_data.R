@@ -67,13 +67,13 @@ df_dmg = load.median(conda_env = "risingverse-py27",
                spec = "OTHERIND_total_energy",
                dollar_convert = "yes",
                grouping_test = "semi-parametric") %>%
-	dplyr::select(year, rcp, iam, gcm, value) %>%
-	dplyr::filter(iam == "high")
+  dplyr::select(year, rcp, iam, gcm, value) %>%
+  dplyr::filter(iam == "high")
 
 
 write_csv(df_dmg, 
-	paste0(output, '/projection_system_outputs/21jul2020_pre_data/', 
-		'main_model-', "OTHERIND_total_energy", '-SSP3-high-fulladapt-',"price014" ,'-2010_2099-damages-timeseries.csv'))
+  paste0(output, '/projection_system_outputs/21jul2020_pre_data/', 
+    'main_model-', "OTHERIND_total_energy", '-SSP3-high-fulladapt-',"price014" ,'-2010_2099-damages-timeseries.csv'))
 
 # get GDP
 df_gdp = read_csv(paste0(output, '/projection_system_outputs/covariates/', 
@@ -96,9 +96,16 @@ DB_data = output
 
 # get anomalies
 GMST_anom <- read_csv(glue("{DB_data}/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010.csv"))
-GMST_anom <- GMST_anom %>% dplyr::filter(year == 2099) %>% dplyr::select(-year)
+GMST_anom <- GMST_anom %>% 
+  dplyr::filter(year == 2099) %>% 
+  dplyr::select(-year) %>% 
+  dplyr::rename(anom_2099 = temp)
 
 df_pct <- merge(df_pct, GMST_anom, by = c("gcm","rcp"))
+
+write_csv(df_pct, 
+  paste0(output, '/projection_system_outputs/21jul2020_pre_data/', 
+    'main_model-', "OTHERIND_total_energy", '-SSP3-high-fulladapt-',"price014" ,'-2010_2099-pct-timeseries-with-anom.csv'))
 
 # plot it like figure 3B
 
@@ -138,19 +145,26 @@ df_85 = format_df(rcp = 'rcp85', df_impacts= df_impacts, df_gdp = df_gdp)
 unique_gcms = unique(df_dmg[['gcm']])
 
 
-df_pct_45 <- df_pct %>% 
-      dplyr::filter(rcp == "rcp45")
-df_pct_85 <- df_pct %>% 
-      dplyr::filter(rcp == "rcp85")
+df_pct <- df_pct %>% 
+  dplyr::mutate(
+    rcp = replace(rcp, rcp=="rcp45", "RCP 4.5"),
+    rcp = replace(rcp, rcp=="rcp85", "RCP 8.5")
+  )
 
-max_anom_45 <- max(df_pct_45$temp)
-max_anom_85 <- max(df_pct_85$temp)
+df_pct_45 <- df_pct %>% 
+      dplyr::filter(rcp == "RCP 4.5")
+df_pct_85 <- df_pct %>% 
+      dplyr::filter(rcp == "RCP 8.5")
+
+max_anom_45 <- max(df_pct_45$anom_2099)
+max_anom_85 <- max(df_pct_85$anom_2099)
 
 
 # standardize alpha values to 0-1
-df_pct_45$alpha_values <- 1 - df_pct_45$temp / max_anom_45
-df_pct_85$alpha_values <- df_pct_85$temp / max_anom_85
+df_pct_45$alpha_values <- 1 - df_pct_45$anom_2099 / max_anom_45
+df_pct_85$alpha_values <- df_pct_85$anom_2099 / max_anom_85
 
+df_pct <- rbind(df_pct_45,df_pct_85)
 
 # Call the ggtimeseries function, and also add on extra ribbons and the gcms
 p <- ggtimeseries(df.list = list(as.data.frame(df_45[2]), as.data.frame(df_85[2])), 
@@ -208,10 +222,87 @@ geom_ribbon(data = df_45[[1]], aes(x=df_45[[1]]$year, ymin=df_45[[1]]$ub, ymax=d
 geom_ribbon(data = df_85[[1]], aes(x=df_85[[1]]$year, ymin=df_85[[1]]$ub, ymax=df_85[[1]]$lb), 
            fill = "red",  alpha=0.1, show.legend = FALSE) + 
 geom_line(data = df_pct_45, aes(x = year, y = percent_gdp, group = gcm, alpha = alpha_values), 
-  show.legend = FALSE, colour = "blue")  +
+  show.legend = TRUE, legend = levels(gcm), colour = "blue")  +
 geom_line(data = df_pct_85, aes(x = year, y = percent_gdp, group = gcm, alpha = alpha_values), 
-  show.legend = FALSE, colour = "red")  + scale_alpha(range = c(0, 0.7)) +
+  show.legend = TRUE, legend = levels(gcm),colour = "red")  + scale_alpha(range = c(0, 0.7)) +
 ggtitle("Damages as a percent of global gdp, ssp3-high")
+
+
+ggsave(p, file = paste0(output, 
+     "/projection_system_outputs/21jul2020_pre_data/all_gcm_gradient_with_mean.pdf"))
+
+
+
+
+
+alpha_sets_45 <- df_pct_45 %>% select(c(gcm, alpha_values, anom_2099)) %>% distinct() %>%
+  mutate(label = paste0("rcp45 ",gcm))
+alpha_sets_85 <- df_pct_85 %>% select(c(gcm, alpha_values, anom_2099)) %>% distinct() %>%
+  mutate(label = paste0("rcp85 ",gcm))
+
+alpha_sets <- rbind(alpha_sets_45, alpha_sets_85) %>% select(c(alpha_values, anom_2099, label))
+
+
+p <- ggtimeseries(df.list = list(as.data.frame(df_45[2]), as.data.frame(df_85[2])), 
+               df.x = "year",
+               x.limits = c(2010, 2100),                               
+               y.limits=c(-0.8,0.2),
+               y.label = "% GDP", 
+               legend.title = "RCP", legend.breaks = c("RCP 4.5", "RCP 8.5"), 
+               legend.values = c('blue', 'red')) + 
+geom_ribbon(data = df_45[[1]], aes(x=df_45[[1]]$year, ymin=df_45[[1]]$ub, ymax=df_45[[1]]$lb), 
+           fill = "blue", alpha=0.1, show.legend = FALSE) +
+geom_ribbon(data = df_85[[1]], aes(x=df_85[[1]]$year, ymin=df_85[[1]]$ub, ymax=df_85[[1]]$lb), 
+           fill = "red",  alpha=0.1, show.legend = FALSE) + 
+geom_line(data = df_pct_45, aes(x = year, y = percent_gdp, group = gcm, alpha = as.factor(alpha_values)), 
+  show.legend = TRUE, colour = "blue")  + 
+geom_line(data = df_pct_85, aes(x = year, y = percent_gdp, group = gcm, alpha = as.factor(alpha_values)), 
+  show.legend = TRUE, colour = "red")  + 
+scale_alpha_discrete(limits = as.factor(alpha_sets$alpha_values), labels = alpha_sets$label) +
+ggtitle("Damages as a percent of global gdp, ssp3-high") + 
+
+
+ggsave(p, file = paste0(output, 
+     "/projection_system_outputs/21jul2020_pre_data/all_gcm_gradient_with_mean.pdf"))
+
+# +++++++++++++++++++++
+
+
+
+p <- ggtimeseries(df.list = list(as.data.frame(df_45[2]), as.data.frame(df_85[2])), 
+               df.x = "year",
+               x.limits = c(2010, 2100),                               
+               y.limits=c(-0.8,0.2),
+               y.label = "% GDP", 
+               legend.title = "RCP", legend.breaks = c("RCP 4.5", "RCP 8.5"), 
+               legend.values = c('blue', 'red')) + 
+geom_ribbon(data = df_45[[1]], aes(x=df_45[[1]]$year, ymin=df_45[[1]]$ub, ymax=df_45[[1]]$lb), 
+           fill = "blue", alpha=0.1, show.legend = FALSE) +
+geom_line(data = df_pct_45, aes(x = year, y = percent_gdp, 
+          group = gcm, alpha = gcm), show.legend = TRUE) +
+scale_alpha(name = "GCP", limits = $alpha_values, labels = alpha_sets$label)
+
+
+
+
+
+
+ggsave(p, file = paste0(output, 
+     "/projection_system_outputs/21jul2020_pre_data/all_gcm_gradient_with_mean.pdf"))
+
+# +++++++++++++++++++++
+
+
+
+geom_line(data = df_pct_45, aes(x = year, y = percent_gdp, group = gcm, colour = "rcp45"), 
+  show.legend = TRUE)  + 
+geom_line(data = df_pct_85, aes(x = year, y = percent_gdp, group = gcm, colour = "rcp85"), 
+  show.legend = TRUE)  + 
+scale_color_manual(name = "RCPs", values = c("rcp45"="blue", "rcp85"="red"))
+
+
+scale_alpha_discrete(limits = as.factor(alpha_sets$alpha_values), labels = alpha_sets$label) +
+ggtitle("Damages as a percent of global gdp, ssp3-high") + 
 
 
 ggsave(p, file = paste0(output, 
@@ -225,4 +316,9 @@ ggsave(p, file = paste0(output,
 
 
 
-	
+
+
+
+
+
+  
