@@ -15,7 +15,10 @@ library(miceadds)
 library(haven)
 library(ncdf4)
 library(tidyr)
-source("imgcat.R")
+library(ggplot2)
+source("/home/liruixue/projection_repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
+
+
 
 # Load in the required packages, installing them if necessary 
 if(!require("pacman")){install.packages(("pacman"))}
@@ -24,7 +27,6 @@ pacman::p_load(ggplot2,
                readr, 
                DescTools,
                RColorBrewer)
-
 
 
 
@@ -39,8 +41,6 @@ dir = paste0('/shares/gcp/social/parameters/energy/extraction/',
 git = paste0("/home/", user,"/repos")
 # Source time series plotting codes
 source(paste0(git, "/energy-code-release-2020/3_post_projection/0_utils/time_series.R"))
-
-
 
 # Make sure you are in the risingverse-py27 for this... 
 projection.packages <- paste0(git,"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
@@ -69,6 +69,9 @@ df_dmg = load.median(conda_env = "risingverse-py27",
                grouping_test = "semi-parametric") %>%
   dplyr::select(year, rcp, iam, gcm, value) %>%
   dplyr::filter(iam == "high")
+
+
+df_dmg_45 <- df_dmg %>% filter(rcp == "rcp45")
 
 
 write_csv(df_dmg, 
@@ -159,12 +162,102 @@ df_pct_85 <- df_pct %>%
 max_anom_45 <- max(df_pct_45$anom_2099)
 max_anom_85 <- max(df_pct_85$anom_2099)
 
-
 # standardize alpha values to 0-1
 df_pct_45$alpha_values <- 1 - df_pct_45$anom_2099 / max_anom_45
 df_pct_85$alpha_values <- df_pct_85$anom_2099 / max_anom_85
 
-df_pct <- rbind(df_pct_45,df_pct_85)
+df_pct_all <- rbind(df_pct_45,df_pct_85)%>%
+                    mutate(lab = paste0(rcp, " - ", gcm))
+distinct_colours = df_pct_all %>% select(gcm,rcp,alpha_values,lab) %>%distinct() 
+
+df_45_plot <- df_45[[2]] %>% mutate(rcp = "RCP 4.5", gcm = "global", lab = "RCP 4.5 - Global Mean") 
+df_85_plot <- df_85[[2]] %>% mutate(rcp = "RCP 8.5", gcm = "global", lab = "RCP 8.5 - Global Mean") 
+df_all_plot <- df_pct_all%>% select(year, percent_gdp, rcp, gcm, lab) 
+
+df_pct_all_w_mean <- do.call("rbind", list(df_all_plot, df_45_plot, df_85_plot))
+
+
+# only plot the GDMs
+p <- ggplot(data = df_pct_all, aes(x = year, y = percent_gdp, 
+          group = lab, colour = lab), show.legend = TRUE,  legend.title = "RCP - GCM") +geom_line() + 
+          scale_colour_manual(name = "legend", values = c(
+
+"RCP 4.5 - ACCESS1-0" = alpha("blue", 0.5120153),                      
+"RCP 4.5 - bcc-csm1-1"= alpha("blue", 0.7123560),
+"RCP 4.5 - BNU-ESM"= alpha("blue", 0.5549285),
+"RCP 4.5 - CanESM2"= alpha("blue", 0.4917690),
+"RCP 4.5 - CCSM4"= alpha("blue", 0.6559215),
+"RCP 4.5 - CESM1-BGC"= alpha("blue", 0.6962213),
+"RCP 4.5 - CNRM-CM5"= alpha("blue", 0.6064683),
+"RCP 4.5 - CSIRO-Mk3-6-0"= alpha("blue", 0.4946302),
+"RCP 4.5 - GFDL-CM3"= alpha("blue", 0.3785487),
+"RCP 4.5 - GFDL-ESM2G"= alpha("blue", 0.8458004),
+"RCP 4.5 - GFDL-ESM2M"= alpha("blue", 0.7633897),
+"RCP 4.5 - inmcm4"= alpha("blue", 0.7163151),
+"RCP 4.5 - IPSL-CM5A-LR"= alpha("blue", 0.4687884),
+"RCP 4.5 - IPSL-CM5A-MR"= alpha("blue", 0.5058260),
+"RCP 4.5 - MIROC5"= alpha("blue", 0.6208987),
+"RCP 4.5 - MIROC-ESM-CHEM"= alpha("blue", 0.4500579),
+"RCP 4.5 - MIROC-ESM"= alpha("blue", 0.4281735),
+"RCP 4.5 - MPI-ESM-LR"= alpha("blue", 0.6623592),
+"RCP 4.5 - MPI-ESM-MR"= alpha("blue", 0.6725359),
+"RCP 4.5 - MRI-CGCM3"= alpha("blue", 0.6039329),
+"RCP 4.5 - NorESM1-M"= alpha("blue", 0.6371774),
+"RCP 4.5 - surrogate_CanESM2_89"= alpha("blue", 0.3507029),
+"RCP 4.5 - surrogate_CanESM2_94"= alpha("blue", 0.2617547),
+"RCP 4.5 - surrogate_CanESM2_99"= alpha("blue", 0.0000000),
+"RCP 4.5 - surrogate_GFDL-CM3_89"= alpha("blue", 0.3507029),
+"RCP 4.5 - surrogate_GFDL-CM3_94"= alpha("blue", 0.2617547),
+"RCP 4.5 - surrogate_GFDL-CM3_99"= alpha("blue", 0.0000000),
+"RCP 4.5 - surrogate_GFDL-ESM2G_01"= alpha("blue", 0.8327678),
+"RCP 4.5 - surrogate_GFDL-ESM2G_11"= alpha("blue", 0.7799322),
+"RCP 4.5 - surrogate_MRI-CGCM3_01"= alpha("blue", 0.8327678),
+"RCP 4.5 - surrogate_MRI-CGCM3_06"= alpha("blue", 0.7971401),
+"RCP 4.5 - surrogate_MRI-CGCM3_11"= alpha("blue", 0.7799322),
+"RCP 8.5 - ACCESS1-0" = alpha("red", 0.4635836) ,
+"RCP 8.5 - bcc-csm1-1" = alpha("red", 0.3784361),
+"RCP 8.5 - BNU-ESM" = alpha("red", 0.4655724),
+"RCP 8.5 - CanESM2" = alpha("red", 0.4975567),
+"RCP 8.5 - CCSM4" = alpha("red", 0.3970815),
+"RCP 8.5 - CESM1-BGC" = alpha("red", 0.3854496),
+"RCP 8.5 - CNRM-CM5" = alpha("red", 0.3860531),
+"RCP 8.5 - CSIRO-Mk3-6-0" = alpha("red", 0.4655853),
+"RCP 8.5 - GFDL-CM3" = alpha("red", 0.5142154),
+"RCP 8.5 - GFDL-ESM2G" = alpha("red", 0.3107868),
+"RCP 8.5 - GFDL-ESM2M" = alpha("red", 0.3008806),
+"RCP 8.5 - inmcm4" = alpha("red", 0.2994252),
+"RCP 8.5 - IPSL-CM5A-LR" = alpha("red", 0.5143264),
+"RCP 8.5 - IPSL-CM5A-MR" = alpha("red", 0.5058648),
+"RCP 8.5 - MIROC5" = alpha("red", 0.3611091),
+"RCP 8.5 - MIROC-ESM-CHEM" = alpha("red", 0.5843797),
+"RCP 8.5 - MIROC-ESM" = alpha("red", 0.5368475),
+"RCP 8.5 - MPI-ESM-LR" = alpha("red", 0.4042531),
+"RCP 8.5 - MPI-ESM-MR" = alpha("red", 0.4053162),
+"RCP 8.5 - MRI-CGCM3" = alpha("red", 0.3754158),
+"RCP 8.5 - NorESM1-M" = alpha("red", 0.3480407),
+"RCP 8.5 - surrogate_CanESM2_89" = alpha("red", 0.6490317),
+"RCP 8.5 - surrogate_CanESM2_94" = alpha("red", 0.7202207),
+"RCP 8.5 - surrogate_CanESM2_99" = alpha("red", 1.0000000),
+"RCP 8.5 - surrogate_GFDL-CM3_89" = alpha("red", 0.6490317),
+"RCP 8.5 - surrogate_GFDL-CM3_94" = alpha("red", 0.7202207),
+"RCP 8.5 - surrogate_GFDL-CM3_99" = alpha("red", 1.0000000),
+"RCP 8.5 - surrogate_GFDL-ESM2G_01" = alpha("red", 0.2403981),
+"RCP 8.5 - surrogate_GFDL-ESM2G_06" = alpha("red", 0.2685275),
+"RCP 8.5 - surrogate_GFDL-ESM2G_11" = alpha("red", 0.2829168),
+"RCP 8.5 - surrogate_MRI-CGCM3_01" = alpha("red", 0.2403981),
+"RCP 8.5 - surrogate_MRI-CGCM3_06" = alpha("red", 0.2685275),
+"RCP 8.5 - surrogate_MRI-CGCM3_11" = alpha("red", 0.2829168)
+)
+, labels = distinct_colours$lab)
+
+
+
+ggsave(p, height = 7, width = 20, file = paste0(output, 
+     "/projection_system_outputs/21jul2020_pre_data/all_gcm_gradient_with_mean.pdf"))
+
+
+
+
 
 # Call the ggtimeseries function, and also add on extra ribbons and the gcms
 p <- ggtimeseries(df.list = list(as.data.frame(df_45[2]), as.data.frame(df_85[2])), 
@@ -184,141 +277,98 @@ geom_line(data = df_pct_85, aes(x = year, y = percent_gdp, group = gcm),
   alpha = 0.3, show.legend = FALSE, colour = "red") +
 ggtitle("Damages as a percent of global gdp, ssp3-high")
 
-
 ggsave(p, file = paste0(output, 
      "/projection_system_outputs/21jul2020_pre_data/all_gcm_plot_with_mean.pdf"))
 
 
-p_45 <- ggplot(data = df_pct_45, aes(x = year, y = percent_gdp, group = gcm, alpha = alpha_values), 
-  show.legend = FALSE) + geom_line(colour = "blue") + coord_cartesian(ylim = c(-0.8,0.2), xlim = c(2010, 2100))  +
-ggtitle("Damages as a percent of global gdp, ssp3-high")
-
-p_85 <- ggplot(data = df_pct_85, aes(x = year, y = percent_gdp, group = gcm, alpha = alpha_values), 
-  show.legend = FALSE) + geom_line(colour = "red") + coord_cartesian(ylim = c(-0.8,0.2), xlim = c(2010, 2100))  +
-ggtitle("Damages as a percent of global gdp, ssp3-high")
-
-
-
-ggsave(p_45, file = paste0(output, 
-     "/projection_system_outputs/21jul2020_pre_data/p_45.pdf"))
-
-ggsave(p_85, file = paste0(output, 
-     "/projection_system_outputs/21jul2020_pre_data/p_85.pdf"))
-
-
-# color the lines with different shades, the warmest being the darkest shade of red 
-# and the coldest being the darkest shade of blue
-
-
-p <- ggtimeseries(df.list = list(as.data.frame(df_45[2]), as.data.frame(df_85[2])), 
+# Call the ggtimeseries function, and also add on extra ribbons and the gcms
+p <- ggtimeseries(df.list = NULL, 
                df.x = "year",
                x.limits = c(2010, 2100),                               
                y.limits=c(-0.8,0.2),
                y.label = "% GDP", 
-               legend.title = "RCP", legend.breaks = c("RCP 4.5", "RCP 8.5"), 
-               legend.values = c('blue', 'red')) + 
+               legend.title = "legend", legend.breaks = c("RCP 4.5", "RCP 8.5")) + 
 geom_ribbon(data = df_45[[1]], aes(x=df_45[[1]]$year, ymin=df_45[[1]]$ub, ymax=df_45[[1]]$lb), 
            fill = "blue", alpha=0.1, show.legend = FALSE) +
 geom_ribbon(data = df_85[[1]], aes(x=df_85[[1]]$year, ymin=df_85[[1]]$ub, ymax=df_85[[1]]$lb), 
-           fill = "red",  alpha=0.1, show.legend = FALSE) + 
-geom_line(data = df_pct_45, aes(x = year, y = percent_gdp, group = gcm, alpha = alpha_values), 
-  show.legend = TRUE, legend = levels(gcm), colour = "blue")  +
-geom_line(data = df_pct_85, aes(x = year, y = percent_gdp, group = gcm, alpha = alpha_values), 
-  show.legend = TRUE, legend = levels(gcm),colour = "red")  + scale_alpha(range = c(0, 0.7)) +
-ggtitle("Damages as a percent of global gdp, ssp3-high")
+           fill = "red",  alpha=0.1, show.legend = FALSE)  + 
+geom_line(data = df_pct_all_w_mean, aes(x = year, y = percent_gdp, 
+          group = lab, colour = lab, size = lab), show.legend = TRUE) + 
+          scale_colour_manual(guide = "legend", values = c(
+"RCP 4.5 - ACCESS1-0" = alpha("blue", 0.5120153),                      
+"RCP 4.5 - bcc-csm1-1"= alpha("blue", 0.7123560),
+"RCP 4.5 - BNU-ESM"= alpha("blue", 0.5549285),
+"RCP 4.5 - CanESM2"= alpha("blue", 0.4917690),
+"RCP 4.5 - CCSM4"= alpha("blue", 0.6559215),
+"RCP 4.5 - CESM1-BGC"= alpha("blue", 0.6962213),
+"RCP 4.5 - CNRM-CM5"= alpha("blue", 0.6064683),
+"RCP 4.5 - CSIRO-Mk3-6-0"= alpha("blue", 0.4946302),
+"RCP 4.5 - GFDL-CM3"= alpha("blue", 0.3785487),
+"RCP 4.5 - GFDL-ESM2G"= alpha("blue", 0.8458004),
+"RCP 4.5 - GFDL-ESM2M"= alpha("blue", 0.7633897),
+"RCP 4.5 - inmcm4"= alpha("blue", 0.7163151),
+"RCP 4.5 - IPSL-CM5A-LR"= alpha("blue", 0.4687884),
+"RCP 4.5 - IPSL-CM5A-MR"= alpha("blue", 0.5058260),
+"RCP 4.5 - MIROC5"= alpha("blue", 0.6208987),
+"RCP 4.5 - MIROC-ESM-CHEM"= alpha("blue", 0.4500579),
+"RCP 4.5 - MIROC-ESM"= alpha("blue", 0.4281735),
+"RCP 4.5 - MPI-ESM-LR"= alpha("blue", 0.6623592),
+"RCP 4.5 - MPI-ESM-MR"= alpha("blue", 0.6725359),
+"RCP 4.5 - MRI-CGCM3"= alpha("blue", 0.6039329),
+"RCP 4.5 - NorESM1-M"= alpha("blue", 0.6371774),
+"RCP 4.5 - surrogate_CanESM2_89"= alpha("blue", 0.3507029),
+"RCP 4.5 - surrogate_CanESM2_94"= alpha("blue", 0.2617547),
+"RCP 4.5 - surrogate_CanESM2_99"= alpha("blue", 0.0000000),
+"RCP 4.5 - surrogate_GFDL-CM3_89"= alpha("blue", 0.3507029),
+"RCP 4.5 - surrogate_GFDL-CM3_94"= alpha("blue", 0.2617547),
+"RCP 4.5 - surrogate_GFDL-CM3_99"= alpha("blue", 0.0000000),
+"RCP 4.5 - surrogate_GFDL-ESM2G_01"= alpha("blue", 0.8327678),
+"RCP 4.5 - surrogate_GFDL-ESM2G_11"= alpha("blue", 0.7799322),
+"RCP 4.5 - surrogate_MRI-CGCM3_01"= alpha("blue", 0.8327678),
+"RCP 4.5 - surrogate_MRI-CGCM3_06"= alpha("blue", 0.7971401),
+"RCP 4.5 - surrogate_MRI-CGCM3_11"= alpha("blue", 0.7799322),
+"RCP 8.5 - ACCESS1-0" = alpha("red", 0.4635836) ,
+"RCP 8.5 - bcc-csm1-1" = alpha("red", 0.3784361),
+"RCP 8.5 - BNU-ESM" = alpha("red", 0.4655724),
+"RCP 8.5 - CanESM2" = alpha("red", 0.4975567),
+"RCP 8.5 - CCSM4" = alpha("red", 0.3970815),
+"RCP 8.5 - CESM1-BGC" = alpha("red", 0.3854496),
+"RCP 8.5 - CNRM-CM5" = alpha("red", 0.3860531),
+"RCP 8.5 - CSIRO-Mk3-6-0" = alpha("red", 0.4655853),
+"RCP 8.5 - GFDL-CM3" = alpha("red", 0.5142154),
+"RCP 8.5 - GFDL-ESM2G" = alpha("red", 0.3107868),
+"RCP 8.5 - GFDL-ESM2M" = alpha("red", 0.3008806),
+"RCP 8.5 - inmcm4" = alpha("red", 0.2994252),
+"RCP 8.5 - IPSL-CM5A-LR" = alpha("red", 0.5143264),
+"RCP 8.5 - IPSL-CM5A-MR" = alpha("red", 0.5058648),
+"RCP 8.5 - MIROC5" = alpha("red", 0.3611091),
+"RCP 8.5 - MIROC-ESM-CHEM" = alpha("red", 0.5843797),
+"RCP 8.5 - MIROC-ESM" = alpha("red", 0.5368475),
+"RCP 8.5 - MPI-ESM-LR" = alpha("red", 0.4042531),
+"RCP 8.5 - MPI-ESM-MR" = alpha("red", 0.4053162),
+"RCP 8.5 - MRI-CGCM3" = alpha("red", 0.3754158),
+"RCP 8.5 - NorESM1-M" = alpha("red", 0.3480407),
+"RCP 8.5 - surrogate_CanESM2_89" = alpha("red", 0.6490317),
+"RCP 8.5 - surrogate_CanESM2_94" = alpha("red", 0.7202207),
+"RCP 8.5 - surrogate_CanESM2_99" = alpha("red", 1.0000000),
+"RCP 8.5 - surrogate_GFDL-CM3_89" = alpha("red", 0.6490317),
+"RCP 8.5 - surrogate_GFDL-CM3_94" = alpha("red", 0.7202207),
+"RCP 8.5 - surrogate_GFDL-CM3_99" = alpha("red", 1.0000000),
+"RCP 8.5 - surrogate_GFDL-ESM2G_01" = alpha("red", 0.2403981),
+"RCP 8.5 - surrogate_GFDL-ESM2G_06" = alpha("red", 0.2685275),
+"RCP 8.5 - surrogate_GFDL-ESM2G_11" = alpha("red", 0.2829168),
+"RCP 8.5 - surrogate_MRI-CGCM3_01" = alpha("red", 0.2403981),
+"RCP 8.5 - surrogate_MRI-CGCM3_06" = alpha("red", 0.2685275),
+"RCP 8.5 - surrogate_MRI-CGCM3_11" = alpha("red", 0.2829168),
+"RCP 4.5 - Global Mean" = alpha("blue", 1),
+"RCP 8.5 - Global Mean" = alpha("red", 1)
+)
+, breaks = c(distinct_colours$lab, c("RCP 4.5 - Global Mean","RCP 8.5 - Global Mean"))) + 
+scale_size_manual(
+  values = c(rep(0.5, 65), 1,1) ,
+  breaks =  c(distinct_colours$lab, c("RCP 4.5 - Global Mean","RCP 8.5 - Global Mean")))
 
 
-ggsave(p, file = paste0(output, 
-     "/projection_system_outputs/21jul2020_pre_data/all_gcm_gradient_with_mean.pdf"))
+ggsave(p, height = 7, width = 20, file = paste0(output, 
+     "/projection_system_outputs/21jul2020_pre_data/combined.pdf"))
 
-
-
-
-
-alpha_sets_45 <- df_pct_45 %>% select(c(gcm, alpha_values, anom_2099)) %>% distinct() %>%
-  mutate(label = paste0("rcp45 ",gcm))
-alpha_sets_85 <- df_pct_85 %>% select(c(gcm, alpha_values, anom_2099)) %>% distinct() %>%
-  mutate(label = paste0("rcp85 ",gcm))
-
-alpha_sets <- rbind(alpha_sets_45, alpha_sets_85) %>% select(c(alpha_values, anom_2099, label))
-
-
-p <- ggtimeseries(df.list = list(as.data.frame(df_45[2]), as.data.frame(df_85[2])), 
-               df.x = "year",
-               x.limits = c(2010, 2100),                               
-               y.limits=c(-0.8,0.2),
-               y.label = "% GDP", 
-               legend.title = "RCP", legend.breaks = c("RCP 4.5", "RCP 8.5"), 
-               legend.values = c('blue', 'red')) + 
-geom_ribbon(data = df_45[[1]], aes(x=df_45[[1]]$year, ymin=df_45[[1]]$ub, ymax=df_45[[1]]$lb), 
-           fill = "blue", alpha=0.1, show.legend = FALSE) +
-geom_ribbon(data = df_85[[1]], aes(x=df_85[[1]]$year, ymin=df_85[[1]]$ub, ymax=df_85[[1]]$lb), 
-           fill = "red",  alpha=0.1, show.legend = FALSE) + 
-geom_line(data = df_pct_45, aes(x = year, y = percent_gdp, group = gcm, alpha = as.factor(alpha_values)), 
-  show.legend = TRUE, colour = "blue")  + 
-geom_line(data = df_pct_85, aes(x = year, y = percent_gdp, group = gcm, alpha = as.factor(alpha_values)), 
-  show.legend = TRUE, colour = "red")  + 
-scale_alpha_discrete(limits = as.factor(alpha_sets$alpha_values), labels = alpha_sets$label) +
-ggtitle("Damages as a percent of global gdp, ssp3-high") + 
-
-
-ggsave(p, file = paste0(output, 
-     "/projection_system_outputs/21jul2020_pre_data/all_gcm_gradient_with_mean.pdf"))
-
-# +++++++++++++++++++++
-
-
-
-p <- ggtimeseries(df.list = list(as.data.frame(df_45[2]), as.data.frame(df_85[2])), 
-               df.x = "year",
-               x.limits = c(2010, 2100),                               
-               y.limits=c(-0.8,0.2),
-               y.label = "% GDP", 
-               legend.title = "RCP", legend.breaks = c("RCP 4.5", "RCP 8.5"), 
-               legend.values = c('blue', 'red')) + 
-geom_ribbon(data = df_45[[1]], aes(x=df_45[[1]]$year, ymin=df_45[[1]]$ub, ymax=df_45[[1]]$lb), 
-           fill = "blue", alpha=0.1, show.legend = FALSE) +
-geom_line(data = df_pct_45, aes(x = year, y = percent_gdp, 
-          group = gcm, alpha = gcm), show.legend = TRUE) +
-scale_alpha(name = "GCP", limits = $alpha_values, labels = alpha_sets$label)
-
-
-
-
-
-
-ggsave(p, file = paste0(output, 
-     "/projection_system_outputs/21jul2020_pre_data/all_gcm_gradient_with_mean.pdf"))
-
-# +++++++++++++++++++++
-
-
-
-geom_line(data = df_pct_45, aes(x = year, y = percent_gdp, group = gcm, colour = "rcp45"), 
-  show.legend = TRUE)  + 
-geom_line(data = df_pct_85, aes(x = year, y = percent_gdp, group = gcm, colour = "rcp85"), 
-  show.legend = TRUE)  + 
-scale_color_manual(name = "RCPs", values = c("rcp45"="blue", "rcp85"="red"))
-
-
-scale_alpha_discrete(limits = as.factor(alpha_sets$alpha_values), labels = alpha_sets$label) +
-ggtitle("Damages as a percent of global gdp, ssp3-high") + 
-
-
-ggsave(p, file = paste0(output, 
-     "/projection_system_outputs/21jul2020_pre_data/all_gcm_gradient_with_mean.pdf"))
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
