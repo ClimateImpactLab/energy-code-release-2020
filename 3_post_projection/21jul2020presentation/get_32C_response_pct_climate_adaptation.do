@@ -101,119 +101,6 @@ foreach gp of varlist largegpid_electricity largegpid_other_energy {
 	restore
 }
 
-* iii) assign income groups using income group cutoffs from i and future covariate data from ii
-
-cap program drop calculate_response
-program define calculate_response 
-
-	foreach var in `product_list' {
-		gen deltacut_subInc_`var' = .
-		qui gen lg_`var' = .
-		qui replace lg_`var'=1 if loggdppc<=`largegpid_`var'_bound1'
-		qui replace lg_`var'=2 if loggdppc>`largegpid_`var'_bound1' & loggdppc`yr'<=`largegpid_`var'_bound2'
-		qui replace lg_`var'=2 if loggdppc>`largegpid_`var'_bound2'
-		assert lg_`var' != .
-
-		di "`var'"
-		di "group 1 `largegpid_`var'_bound1'"
-		di "group 2 `largegpid_`var'_bound2'"
-
-		replace deltacut_subInc_`var' = loggdppc - `largegpid_`var'_bound1'
-	}
-
-
-	**************************************************************************************
-	*Step 2: Generate Impact Region Response to Reference Temp
-	**************************************************************************************
-
-	*load ster file
-	di "`analysis_data'/sters/FD_FGLS/FD_FGLS_inter_clim`clim_data'_`case'`IF'_`bknum'_`grouping_test'_poly2_`model_name'.ster"
-	estimates use "`analysis_data'/sters/FD_FGLS/FD_FGLS_inter_clim`clim_data'_`case'`IF'_`bknum'_`grouping_test'_poly2_`model_name'.ster"
-
-
-	*generate temp variables 
-
-	gen temp = .
-	gen temp20 = 20 
-	* this is weird not sure why it was here... easier to just keep #pathdependencywinning
-	gen abovetwenty = .
-	gen belowtwenty = .
-
-
-	*generate product specific response to a given temperature
-
-	foreach reftemp of num 32 0 {
-
-		replace temp = `reftemp'
-		replace abovetwenty = (temp >= 20)
-	    replace belowtwenty = (temp < 20)
-
-	 
-		*generate response
-		foreach var in "other_energy" "electricity" {
-			
-			*assign product and flow locals
-
-			local fg = 1 
-			*only one flow
-			
-			if "`var'"=="electricity" local pg=1
-			if "`var'"=="other_energy" local pg=2
-
-			gen response`var'`reftemp' = .
-
-			* Loop over income groups 
-			forval lg= 1(1)2 { 
-
-				if ("`submodel'" == "income_spline") {
-
-					di "------------- `model_name' -----------------"
-					di "lg_`var'"
-					di "`lg'"
-
-					replace response`var'`reftemp' = ///
-						 _b[c.indp`pg'#c.indf`fg'#c.FD_temp1_`clim_data'] * (temp - temp20) ///
-						+ _b[c.indp`pg'#c.indf`fg'#c.FD_temp2_`clim_data'] * (temp^2 - temp20^2) ///
-						+ _b[c.indp`pg'#c.indf`fg'#c.FD_dc1_lgdppc_MA15I`lg'temp1] * deltacut_subInc_`var' * (temp - temp20) ///
-						+ _b[c.indp`pg'#c.indf`fg'#c.FD_dc1_lgdppc_MA15I`lg'temp2] * deltacut_subInc_`var' * (temp^2 - temp20^2) ///
-						+ abovetwenty *_b[c.indp`pg'#c.indf`fg'#c.FD_cdd20_TINVtemp1_GMFD] * climtascdd20 * (temp - temp20) ///
-						+ abovetwenty *_b[c.indp`pg'#c.indf`fg'#c.FD_cdd20_TINVtemp2_GMFD] * climtascdd20 * (temp^2 - temp20^2) ///
-						+ belowtwenty *_b[c.indp`pg'#c.indf`fg'#c.FD_hdd20_TINVtemp1_GMFD] * climtashdd20 * (temp20 - temp) ///
-						+ belowtwenty *_b[c.indp`pg'#c.indf`fg'#c.FD_hdd20_TINVtemp2_GMFD] * climtashdd20 * (temp20^2 - temp20) if lg_`var' == `lg'
-				}
-
-				else{
-					replace response`var'`reftemp' = 
-					_b[c.indp`pg'#c.indf`fg'#c.FD_I`lg'temp1_`clim_data'] * (temp - temp20) ///
-						+ abovetwenty*_b[c.indp`pg'#c.indf`fg'#c.FD_cdd20_`ma_clim'I`lg'temp1_`clim_data'] * climtascdd20 * (temp - temp20) ///
-						+ belowtwenty *_b[c.indp`pg'#c.indf`fg'#c.FD_hdd20_`ma_clim'I`lg'temp1_`clim_data']* climtashdd20 * (temp20 - temp) ///
-						+ _b[c.indp`pg'#c.indf`fg'#c.FD_I`lg'temp2_`clim_data'] * (temp^2 - temp20^2) ///
-						+ abovetwenty*_b[c.indp`pg'#c.indf`fg'#c.FD_cdd20_`ma_clim'I`lg'temp2_`clim_data'] * climtascdd20 * (temp^2 - temp20^2) ///
-						+ belowtwenty *_b[c.indp`pg'#c.indf`fg'#c.FD_hdd20_`ma_clim'I`lg'temp2_`clim_data']* climtashdd20 * (temp20^2 - temp^2) if lg_`var' == `lg'
-
-					if (("`model'" == "TINV_clim_ui" | "`submodel'" == "ui") & `lg' == 2) {
-						replace response`var'`reftemp' = response`var'`reftemp' ///
-						+ _b[c.indp`pg'#c.indf`fg'#c.FD_lgdppc_`ma_inc'I`lg'temp1_`clim_data']* loggdppc * (temp - temp20) ///
-						+ _b[c.indp`pg'#c.indf`fg'#c.FD_lgdppc_`ma_inc'I`lg'temp2_`clim_data']* loggdppc * (temp^2 - temp20^2) if lg_`var' == `lg'
-					}
-				}
-			}
-		}
-	}
-
-	//clean up shop
-
-	keep region year response*
-	reshape long responseother_energy responseelectricity, i(region year) j(temp)
-	reshape long response, i(region year temp) j(product) string
-
-end
-
-
-* old file: used for checking format
-*local misc_data "/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/IEA_Replication/Data/Miscellaneous"
-*insheet using "`misc_data'/FD_FGLS_inter_climGMFD_Exclude_all-issues_break2_semi-parametric_poly2_TINV_clim_income_spline_beta_maps.csv"
-
 
 
 * ii) load future covariates and calculate
@@ -224,7 +111,124 @@ end
 qui insheet using "`covariates'", comma names clear
 keep region year loggdppc climtashdd20 climtascdd20
 keep if inlist(year,2015,2099)
-calculate_response
+
+
+**************
+*************
+*************
+
+* iii) assign income groups using income group cutoffs from i and future covariate data from ii
+
+
+foreach var in `product_list' {
+	gen deltacut_subInc_`var' = .
+	qui gen lg_`var' = .
+	qui replace lg_`var'=1 if loggdppc<=`largegpid_`var'_bound1'
+	qui replace lg_`var'=2 if loggdppc>`largegpid_`var'_bound1' & loggdppc`yr'<=`largegpid_`var'_bound2'
+	qui replace lg_`var'=2 if loggdppc>`largegpid_`var'_bound2'
+	assert lg_`var' != .
+
+	di "`var'"
+	di "group 1 `largegpid_`var'_bound1'"
+	di "group 2 `largegpid_`var'_bound2'"
+
+	replace deltacut_subInc_`var' = loggdppc - `largegpid_`var'_bound1'
+}
+
+
+**************************************************************************************
+*Step 2: Generate Impact Region Response to Reference Temp
+**************************************************************************************
+
+*load ster file
+di "`analysis_data'/sters/FD_FGLS/FD_FGLS_inter_clim`clim_data'_`case'`IF'_`bknum'_`grouping_test'_poly2_`model_name'.ster"
+estimates use "`analysis_data'/sters/FD_FGLS/FD_FGLS_inter_clim`clim_data'_`case'`IF'_`bknum'_`grouping_test'_poly2_`model_name'.ster"
+
+
+*generate temp variables 
+
+gen temp = .
+gen temp20 = 20 
+* this is weird not sure why it was here... easier to just keep #pathdependencywinning
+gen abovetwenty = .
+gen belowtwenty = .
+
+
+*generate product specific response to a given temperature
+
+foreach reftemp of num 32 0 {
+
+	replace temp = `reftemp'
+	replace abovetwenty = (temp >= 20)
+    replace belowtwenty = (temp < 20)
+
+ 
+	*generate response
+	foreach var in "other_energy" "electricity" {
+		
+		*assign product and flow locals
+
+		local fg = 1 
+		*only one flow
+		
+		if "`var'"=="electricity" local pg=1
+		if "`var'"=="other_energy" local pg=2
+
+		gen response`var'`reftemp' = .
+
+		* Loop over income groups 
+		forval lg= 1(1)2 { 
+
+			if ("`submodel'" == "income_spline") {
+
+				di "------------- `model_name' -----------------"
+				di "lg_`var'"
+				di "`lg'"
+
+				replace response`var'`reftemp' = ///
+					 _b[c.indp`pg'#c.indf`fg'#c.FD_temp1_`clim_data'] * (temp - temp20) ///
+					+ _b[c.indp`pg'#c.indf`fg'#c.FD_temp2_`clim_data'] * (temp^2 - temp20^2) ///
+					+ _b[c.indp`pg'#c.indf`fg'#c.FD_dc1_lgdppc_MA15I`lg'temp1] * deltacut_subInc_`var' * (temp - temp20) ///
+					+ _b[c.indp`pg'#c.indf`fg'#c.FD_dc1_lgdppc_MA15I`lg'temp2] * deltacut_subInc_`var' * (temp^2 - temp20^2) ///
+					+ abovetwenty *_b[c.indp`pg'#c.indf`fg'#c.FD_cdd20_TINVtemp1_GMFD] * climtascdd20 * (temp - temp20) ///
+					+ abovetwenty *_b[c.indp`pg'#c.indf`fg'#c.FD_cdd20_TINVtemp2_GMFD] * climtascdd20 * (temp^2 - temp20^2) ///
+					+ belowtwenty *_b[c.indp`pg'#c.indf`fg'#c.FD_hdd20_TINVtemp1_GMFD] * climtashdd20 * (temp20 - temp) ///
+					+ belowtwenty *_b[c.indp`pg'#c.indf`fg'#c.FD_hdd20_TINVtemp2_GMFD] * climtashdd20 * (temp20^2 - temp20) if lg_`var' == `lg'
+			}
+
+			else{
+				replace response`var'`reftemp' = 
+				_b[c.indp`pg'#c.indf`fg'#c.FD_I`lg'temp1_`clim_data'] * (temp - temp20) ///
+					+ abovetwenty*_b[c.indp`pg'#c.indf`fg'#c.FD_cdd20_`ma_clim'I`lg'temp1_`clim_data'] * climtascdd20 * (temp - temp20) ///
+					+ belowtwenty *_b[c.indp`pg'#c.indf`fg'#c.FD_hdd20_`ma_clim'I`lg'temp1_`clim_data']* climtashdd20 * (temp20 - temp) ///
+					+ _b[c.indp`pg'#c.indf`fg'#c.FD_I`lg'temp2_`clim_data'] * (temp^2 - temp20^2) ///
+					+ abovetwenty*_b[c.indp`pg'#c.indf`fg'#c.FD_cdd20_`ma_clim'I`lg'temp2_`clim_data'] * climtascdd20 * (temp^2 - temp20^2) ///
+					+ belowtwenty *_b[c.indp`pg'#c.indf`fg'#c.FD_hdd20_`ma_clim'I`lg'temp2_`clim_data']* climtashdd20 * (temp20^2 - temp^2) if lg_`var' == `lg'
+
+				if (("`model'" == "TINV_clim_ui" | "`submodel'" == "ui") & `lg' == 2) {
+					replace response`var'`reftemp' = response`var'`reftemp' ///
+					+ _b[c.indp`pg'#c.indf`fg'#c.FD_lgdppc_`ma_inc'I`lg'temp1_`clim_data']* loggdppc * (temp - temp20) ///
+					+ _b[c.indp`pg'#c.indf`fg'#c.FD_lgdppc_`ma_inc'I`lg'temp2_`clim_data']* loggdppc * (temp^2 - temp20^2) if lg_`var' == `lg'
+				}
+			}
+		}
+	}
+}
+
+//clean up shop
+
+keep region year response*
+reshape long responseother_energy responseelectricity, i(region year) j(temp)
+reshape long response, i(region year temp) j(product) string
+**************
+*************
+*************
+
+* old file: used for checking format
+*local misc_data "/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/IEA_Replication/Data/Miscellaneous"
+*insheet using "`misc_data'/FD_FGLS_inter_climGMFD_Exclude_all-issues_break2_semi-parametric_poly2_TINV_clim_income_spline_beta_maps.csv"
+
+
 outsheet using "`misc_data'/fulladapt.csv", comma names replace
 
 
@@ -242,6 +246,119 @@ reshape wide loggdppc climtascdd20 climtashdd20, i(region) j(year)
 replace climtascdd202099 = climtascdd202015
 replace climtashdd202099 = climtashdd202015
 reshape long loggdppc climtascdd20 climtashdd20, i(region) j(year)
-calculate_response
+
+**************
+*************
+*************
+
+* iii) assign income groups using income group cutoffs from i and future covariate data from ii
+
+
+foreach var in `product_list' {
+	gen deltacut_subInc_`var' = .
+	qui gen lg_`var' = .
+	qui replace lg_`var'=1 if loggdppc<=`largegpid_`var'_bound1'
+	qui replace lg_`var'=2 if loggdppc>`largegpid_`var'_bound1' & loggdppc`yr'<=`largegpid_`var'_bound2'
+	qui replace lg_`var'=2 if loggdppc>`largegpid_`var'_bound2'
+	assert lg_`var' != .
+
+	di "`var'"
+	di "group 1 `largegpid_`var'_bound1'"
+	di "group 2 `largegpid_`var'_bound2'"
+
+	replace deltacut_subInc_`var' = loggdppc - `largegpid_`var'_bound1'
+}
+
+
+**************************************************************************************
+*Step 2: Generate Impact Region Response to Reference Temp
+**************************************************************************************
+
+*load ster file
+di "`analysis_data'/sters/FD_FGLS/FD_FGLS_inter_clim`clim_data'_`case'`IF'_`bknum'_`grouping_test'_poly2_`model_name'.ster"
+estimates use "`analysis_data'/sters/FD_FGLS/FD_FGLS_inter_clim`clim_data'_`case'`IF'_`bknum'_`grouping_test'_poly2_`model_name'.ster"
+
+
+*generate temp variables 
+
+gen temp = .
+gen temp20 = 20 
+* this is weird not sure why it was here... easier to just keep #pathdependencywinning
+gen abovetwenty = .
+gen belowtwenty = .
+
+
+*generate product specific response to a given temperature
+
+foreach reftemp of num 32 0 {
+
+	replace temp = `reftemp'
+	replace abovetwenty = (temp >= 20)
+    replace belowtwenty = (temp < 20)
+
+ 
+	*generate response
+	foreach var in "other_energy" "electricity" {
+		
+		*assign product and flow locals
+
+		local fg = 1 
+		*only one flow
+		
+		if "`var'"=="electricity" local pg=1
+		if "`var'"=="other_energy" local pg=2
+
+		gen response`var'`reftemp' = .
+
+		* Loop over income groups 
+		forval lg= 1(1)2 { 
+
+			if ("`submodel'" == "income_spline") {
+
+				di "------------- `model_name' -----------------"
+				di "lg_`var'"
+				di "`lg'"
+
+				replace response`var'`reftemp' = ///
+					 _b[c.indp`pg'#c.indf`fg'#c.FD_temp1_`clim_data'] * (temp - temp20) ///
+					+ _b[c.indp`pg'#c.indf`fg'#c.FD_temp2_`clim_data'] * (temp^2 - temp20^2) ///
+					+ _b[c.indp`pg'#c.indf`fg'#c.FD_dc1_lgdppc_MA15I`lg'temp1] * deltacut_subInc_`var' * (temp - temp20) ///
+					+ _b[c.indp`pg'#c.indf`fg'#c.FD_dc1_lgdppc_MA15I`lg'temp2] * deltacut_subInc_`var' * (temp^2 - temp20^2) ///
+					+ abovetwenty *_b[c.indp`pg'#c.indf`fg'#c.FD_cdd20_TINVtemp1_GMFD] * climtascdd20 * (temp - temp20) ///
+					+ abovetwenty *_b[c.indp`pg'#c.indf`fg'#c.FD_cdd20_TINVtemp2_GMFD] * climtascdd20 * (temp^2 - temp20^2) ///
+					+ belowtwenty *_b[c.indp`pg'#c.indf`fg'#c.FD_hdd20_TINVtemp1_GMFD] * climtashdd20 * (temp20 - temp) ///
+					+ belowtwenty *_b[c.indp`pg'#c.indf`fg'#c.FD_hdd20_TINVtemp2_GMFD] * climtashdd20 * (temp20^2 - temp20) if lg_`var' == `lg'
+			}
+
+			else{
+				replace response`var'`reftemp' = 
+				_b[c.indp`pg'#c.indf`fg'#c.FD_I`lg'temp1_`clim_data'] * (temp - temp20) ///
+					+ abovetwenty*_b[c.indp`pg'#c.indf`fg'#c.FD_cdd20_`ma_clim'I`lg'temp1_`clim_data'] * climtascdd20 * (temp - temp20) ///
+					+ belowtwenty *_b[c.indp`pg'#c.indf`fg'#c.FD_hdd20_`ma_clim'I`lg'temp1_`clim_data']* climtashdd20 * (temp20 - temp) ///
+					+ _b[c.indp`pg'#c.indf`fg'#c.FD_I`lg'temp2_`clim_data'] * (temp^2 - temp20^2) ///
+					+ abovetwenty*_b[c.indp`pg'#c.indf`fg'#c.FD_cdd20_`ma_clim'I`lg'temp2_`clim_data'] * climtascdd20 * (temp^2 - temp20^2) ///
+					+ belowtwenty *_b[c.indp`pg'#c.indf`fg'#c.FD_hdd20_`ma_clim'I`lg'temp2_`clim_data']* climtashdd20 * (temp20^2 - temp^2) if lg_`var' == `lg'
+
+				if (("`model'" == "TINV_clim_ui" | "`submodel'" == "ui") & `lg' == 2) {
+					replace response`var'`reftemp' = response`var'`reftemp' ///
+					+ _b[c.indp`pg'#c.indf`fg'#c.FD_lgdppc_`ma_inc'I`lg'temp1_`clim_data']* loggdppc * (temp - temp20) ///
+					+ _b[c.indp`pg'#c.indf`fg'#c.FD_lgdppc_`ma_inc'I`lg'temp2_`clim_data']* loggdppc * (temp^2 - temp20^2) if lg_`var' == `lg'
+				}
+			}
+		}
+	}
+}
+
+//clean up shop
+
+keep region year response*
+reshape long responseother_energy responseelectricity, i(region year) j(temp)
+reshape long response, i(region year temp) j(product) string
+**************
+*************
+*************
 keep if year == 2099
 outsheet using "`misc_data'/incadapt.csv", comma names replace
+
+
+
