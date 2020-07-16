@@ -361,4 +361,31 @@ keep if year == 2099
 outsheet using "`misc_data'/incadapt.csv", comma names replace
 
 
+* reshape and calculate
+insheet using "/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/code_release_data/projection_system_outputs/21jul2020_pre_data//incadapt.csv", clear
+keep if product == "electricity" & temp == 32
+drop product year temp
+rename response incadapt2099
+save incadapt2099, replace
 
+
+insheet using "/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/code_release_data/projection_system_outputs/21jul2020_pre_data//fulladapt.csv", clear
+keep if year == 2015
+keep if product == "electricity" & temp == 32
+drop product year temp
+rename response fulladapt2015
+save fulladapt2015, replace
+
+insheet using "/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/code_release_data/projection_system_outputs/21jul2020_pre_data//fulladapt.csv", clear
+keep if year == 2099
+keep if product == "electricity" & temp == 32
+drop product year temp
+rename response fulladapt2099
+save fulladapt2099, replace
+
+use fulladapt2099, clear
+merge 1:1 region using fulladapt2015, nogen
+merge 1:1 region using incadapt2099, nogen
+gen pct = (fulladapt2099 - incadapt2099) / (fulladapt2099 - fulladapt2015)
+
+mean(pct)
