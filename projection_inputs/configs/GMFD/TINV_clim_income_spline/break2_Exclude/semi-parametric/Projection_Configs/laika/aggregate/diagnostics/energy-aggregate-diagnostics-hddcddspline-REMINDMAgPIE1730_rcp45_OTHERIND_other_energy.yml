@@ -1,0 +1,7 @@
+outputdir: outputs/energy/impacts-blueghost
+levels-weighting: population * social/baselines/energy/REMINDMAgPIE1730_rcp45_Prices_COMPILE.dta:country:year:other_energycompile_price
+targetdir: /global/scratch/tbearpark/outputs/energy/impacts-blueghost/single-OTHERIND_other_energy_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_income_spline_GMFD/rcp45/CCSM4/high/SSP3
+aggregate-weighting-numerator: population * social/baselines/energy/REMINDMAgPIE1730_rcp45_Prices_COMPILE.dta:country:year:other_energycompile_price
+aggregate-weighting-denominator: sum-to-1
+infix: REMINDMAgPIE1730_rcp45
+rcp: rcp45
