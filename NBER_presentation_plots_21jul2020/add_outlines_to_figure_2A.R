@@ -50,6 +50,7 @@ plot_2A = function(fuel, bound, DB_data, map=mymap, USA_border = my_USA_border, 
   # Set scaling factor for map color bar
   scale_v = c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1)
   rescale_value <- scale_v*bound
+  browser()
   
   p = join.plot.map(map.df = map, 
                      df = df, 

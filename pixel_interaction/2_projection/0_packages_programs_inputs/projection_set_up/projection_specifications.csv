@@ -1,0 +1,11 @@
+model_name,coefficient_names
+TINV_clim,
+TINV_clim,cdd20_TINV
+TINV_clim,hdd20_TINV
+TINV_clim,dc1_lgdppc_MA15I
+TINV_clim_lininter,
+TINV_clim_lininter,year
+TINV_clim_lininter,cdd20_TINV
+TINV_clim_lininter,hdd20_TINV
+TINV_clim_lininter,dc1_lgdppc_MA15yearI
+TINV_clim_lininter,dc1_lgdppc_MA15I
