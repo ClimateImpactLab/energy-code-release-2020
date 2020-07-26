@@ -13,7 +13,7 @@ qui net install http://www.stata.com/stb/stb56/dm79.pkg
 
 //SET UP RELEVANT PATHS
 // path to energy-code-release repo 
-global root "/home/liruixue/repos/energy-code-release-2020/interaction"
+global root "/home/liruixue/repos/energy-code-release-2020/pixel_interaction"
 
 
 //install global programs
