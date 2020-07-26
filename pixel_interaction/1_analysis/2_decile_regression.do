@@ -11,7 +11,7 @@ macro drop _all
 
 * path to energy-code-release repo:
 
-global root "/home/liruixue/projection_repos/energy-code-release-2020/interaction"
+global root "/home/liruixue/projection_repos/energy-code-release-2020/pixel_interaction"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
