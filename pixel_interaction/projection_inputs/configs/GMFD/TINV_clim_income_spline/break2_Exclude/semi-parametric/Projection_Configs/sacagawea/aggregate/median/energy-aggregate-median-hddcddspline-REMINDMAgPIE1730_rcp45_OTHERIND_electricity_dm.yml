@@ -1,6 +1,0 @@
-outputdir: outputs/energy/impacts-blueghost/median_OTHERIND_electricity_TINV_clim_income_spline_GMFD_dm
-levels-weighting: population * social/baselines/energy/REMINDMAgPIE1730_rcp45_Prices_COMPILE.dta:country:year:electricitycompile_price
-aggregate-weighting-numerator: population * social/baselines/energy/REMINDMAgPIE1730_rcp45_Prices_COMPILE.dta:country:year:electricitycompile_price
-aggregate-weighting-denominator: sum-to-1
-infix: REMINDMAgPIE1730_rcp45
-rcp: rcp45

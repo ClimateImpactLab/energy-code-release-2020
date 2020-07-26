@@ -125,6 +125,8 @@ replace hdd20_TINV_GMFD = hdd20_other_TINV_GMFD if inlist(product,"other_energy"
 		//average lgdppc in each cell
 		qui egen avgInc_tgpid=mean(lgdppc_MA15), by(tgpid) 
 
+		qui egen maxInc_gpid=max(lgdppc_MA15), by(gpid) //max lgdppc in each cell - this is needed for configs
+		
 		//max lggdppc for each large income group for each cell
 		foreach var in "other_energy" "electricity" {
 			qui egen maxInc_largegpid_`var'=max(lgdppc_MA15), by(largegpid_`var') 
@@ -210,7 +212,6 @@ replace subregionname = "Southern Europe" if country=="XKO"
 ***********************************************************************************************************************
 * Step 5) Construct First Differenced Interacted Variables
 ***********************************************************************************************************************
-program drop _all
 do "$root/0_make_dataset/merged/2_construct_FD_interacted_variables.do"
 save "$root/data/GMFD_`model'_regsort.dta", replace
 
