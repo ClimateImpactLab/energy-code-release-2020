@@ -33,7 +33,7 @@ cap ssc install rangestat
 /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////
 
 // path to energy-code-release repo 
-local root "/home/liruixue/projection_repos/energy-code-release-2020/pixel_interaction"
+local root "/home/liruixue/repos/energy-code-release-2020/pixel_interaction"
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
