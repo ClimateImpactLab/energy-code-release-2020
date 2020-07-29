@@ -2,7 +2,7 @@
 # adapted from https://gitlab.com/ClimateImpactLab/Impacts/gcp-energy/-/blob/master/rationalized/2_projection/1_setup_generation_aggregation_extraction/shells/extract_single.sh
 
 #Activate env and ensure in correct repo
-source activate risingverse-py27
+# conda activate risingverse-py27
 cd /home/liruixue/repos/prospectus-tools/gcp/extract
 
 #load parameters passed through command
@@ -11,9 +11,9 @@ model="TINV_clim"
 zero_case=Exclude
 flow_break=break2
 grouping_test="semi-parametric"
-val=$4
-SSP=$5
-proj_type=$6
+val="rebased"
+SSP="SSP3"
+proj_type=""
 price=$7
 date=719
 
@@ -36,17 +36,18 @@ if [ -z "${val}" ]; then
   exit 1
 fi
 
-for product in "electricity" "other_energy"; do
+# for product in "electricity" "other_energy"; do
+for product in "electricity"; do
   for flow in "OTHERIND"; do
 
     singles_folder=single-${flow}_${product}_FD_FGLS_${date}_${zero_case}_all-issues_${flow_break}_${grouping_test}_${model}_${climate_data}${proj_type}
-    root=FD_FGLS_inter_clim${climate_data}_${zero_case}_all-issues_${flow_break}_${grouping_test}_poly2_${flow}_${product}_${model}
+    root=FD_FGLS_inter_${flow}_${product}_${model}
     #singles_folder=single-${flow}_${product}_FD_FGLS_${date}_${zero_case}_IssueFix_${flow_break}_${model}_${climate_data}${proj_type}
     #root=FD_FGLS_inter_clim${climate_data}_${zero_case}_IssueFix_${flow_break}_poly2_${flow}_${product}_${model}
 
-    inputdir=/shares/gcp/outputs/energy/impacts-blueghost/
+    inputdir=/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost/
 
-    outputdir=/shares/gcp/social/parameters/energy/extraction/${singles_folder}
+    outputdir=/shares/gcp/social/parameters/energy_pixel_interaction/extraction/${singles_folder}
 
 
     # Check directories exist
@@ -66,7 +67,7 @@ for product in "electricity" "other_energy"; do
       for type in "${type_na}" -aggregated; do
         
         # extracting delta method
-        if ["${proj_type}" == "_dm"]; then
+        if [ "${proj_type}" == "_dm" ]; then
           
           echo "extracting delta method"
 
@@ -97,7 +98,9 @@ for product in "electricity" "other_energy"; do
 
           echo "extracting impacts"
 
-          for adapt in "" -histclim -incadapt -incadapt-histclim -noadapt -noadapt-histclim; do 
+          # TO-DO: ask maya what are -incadapt-histclim and -noadapt-histclim
+          # for adapt in "" -histclim -incadapt -incadapt-histclim -noadapt -noadapt-histclim; do 
+          for adapt in "" -histclim -incadapt -noadapt; do 
             input_file=${inputdir}/${singles_folder}/rcp85/CCSM4/high/${ssp}/${root}${adapt}${price}${type}.nc4
             output_file=${outputdir}/single${type}_energy_rcp85_ccsm4_high_${ssp}_${flow}_${product}_FD_FGLS${adapt}${price}_${val}.csv
             
