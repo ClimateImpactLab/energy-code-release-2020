@@ -26,3 +26,7 @@ cd ${projection_repo_root}/impact-calculations
 config="${aggregate_config_path}/energy-aggregate-diagnostics-hddcddspline_OTHERIND_electricity.yml"
 echo "aggregating ${config}..."
 ./aggregate.sh ${config} 
+
+config="${aggregate_config_path}/energy-aggregate-diagnostics-hddcddspline_OTHERIND_other_energy.yml"
+echo "aggregating ${config}..."
+./aggregate.sh ${config} 

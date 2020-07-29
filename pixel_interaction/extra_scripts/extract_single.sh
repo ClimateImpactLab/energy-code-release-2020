@@ -36,8 +36,7 @@ if [ -z "${val}" ]; then
   exit 1
 fi
 
-# for product in "electricity" "other_energy"; do
-for product in "electricity"; do
+for product in "electricity" "other_energy"; do
   for flow in "OTHERIND"; do
 
     singles_folder=single-${flow}_${product}_FD_FGLS_${date}_${zero_case}_all-issues_${flow_break}_${grouping_test}_${model}_${climate_data}${proj_type}

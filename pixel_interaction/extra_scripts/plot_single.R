@@ -57,7 +57,22 @@ plot_2A = function(fuel, bound, data, map=mymap, USA_border = my_USA_border, IND
                                     "_TINV_clim_income_spline_SSP3-rcp85_impactpc_high_fulladapt_2099"))
 
   ggsave(paste0(output, "/fig_2A_", fuel, "_impacts_map.pdf"), p)
-  p
+
+  p = join.plot.map(map.df = mymap, 
+                   df = df, 
+                   df.key = "region", 
+                   plot.var = "value", 
+                   topcode = F, 
+                   breaks_labels_val = seq(-bound, bound, bound/3),
+                   color.scheme = "div", 
+                   rescale_val = rescale_value,
+                   colorbar.title = paste0(fuel, " imapacts, GJ PC, 2099"), 
+                   map.title = paste0(fuel, 
+                                  "_TINV_clim_income_spline_SSP3-rcp85_impactpc_high_fulladapt_2099"))
+
+  ggsave(paste0(output, "/fig_2A_", fuel, "_impacts_map_not_topcoded.pdf"), p)
+
+
 }
 
 plot_2A(fuel = "electricity", bound = 3, data = data)
