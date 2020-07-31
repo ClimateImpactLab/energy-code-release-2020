@@ -11,17 +11,19 @@ library(reticulate)
 library(haven)
 library(tidyr)
 
-user= 'tbearpark'
+user= 'liruixue'
 git = paste0("/home/", user,"/repos")
 setwd(git)
 
-db = '/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/'
-output = '/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/code_release_data/'
+setwd(paste0(git,"/energy-code-release-2020/"))
+
+db = '/mnt/CIL_energy/'
+output = '/mnt/CIL_energy/pixel_interaction/'
 
 
 # Source a python code that lets us load SSP data directly from the SSPs
 # Make sure you are in the risingverse conda environment for this... 
-projection.packages <- paste0(git,"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
+projection.packages <- paste0(git,"/energy-code-release-2020/pixel_interaction/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
 source_python(paste0(projection.packages, "future_gdp_pop_data.py"))
 
 ###########################################
@@ -52,6 +54,7 @@ covariates = read_csv(paste0(db,
 
 # 2 Data for figure 2B bar chart
 # Just need population for each impact region (since we have KWh/capita info from the projection)
+# this has to be run where "../server.yml" exists
 
 pop = get_pop() 
 pop_df = pop %>% 
@@ -63,8 +66,8 @@ write_csv(pop_df, paste0(output,'/projection_system_outputs/covariates/' ,
 
 
 # Get population and gdp values: 
-inf = paste0("/mnt/norgay_synology_drive", 
-	"/Global ACP/MORTALITY/Replication_2018/3_Output/7_valuation/1_values/adjustments/vsl_adjustments.dta")
+inf = paste0("/mnt/Global_ACP/MORTALITY", 
+	"/Replication_2018/3_Output/7_valuation/1_values/adjustments/vsl_adjustments.dta")
 con_df = read_dta(inf) 
 conversion_value = con_df$inf_adj[1]
 

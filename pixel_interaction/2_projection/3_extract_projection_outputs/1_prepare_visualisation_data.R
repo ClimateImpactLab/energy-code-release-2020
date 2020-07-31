@@ -12,11 +12,12 @@ library(haven)
 library(ncdf4)
 library(tidyr)
 
-user= 'tbearpark'
+user= 'liruixue'
 
-db = '/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/'
-output = '/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/code_release_data/'
-dir = paste0('/shares/gcp/social/parameters/energy/extraction/',
+db = '/mnt/CIL_energy/'
+output = '/mnt/CIL_energy/pixel_interaction/'
+
+dir = paste0('/shares/gcp/social/parameters/energy_pixel_interaction/extraction/',
 				'multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/')
 
 git = paste0("/home/", user,"/repos")
