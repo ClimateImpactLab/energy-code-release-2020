@@ -23,8 +23,8 @@ dir = paste0('/shares/gcp/social/parameters/energy_pixel_interaction/extraction/
 git = paste0("/home/", user,"/repos")
 
 # Make sure you are in the risingverse-py27 for this... 
-projection.packages <- paste0(git,"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
-setwd(paste0('/home/',user, '/repos/')
+projection.packages <- paste0(git,"/energy-code-release-2020/pixel_interaction/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
+setwd(paste0('/home/',user, '/repos/'))
 
 # Source codes that help us load projection system outputs
 miceadds::source.all(paste0(projection.packages,"load_projection/"))
@@ -56,7 +56,7 @@ get_main_model_impacts_maps = function(fuel, price_scen, unit, year, output){
                     uncertainty = "climate", # full, climate, values
                     geo_level = "levels", # aggregated (ir agglomerations) or 'levels' (single irs)
                     iam = "high", 
-                    model = "TINV_clim_income_spline", 
+                    model = "TINV_clim", 
                     adapt_scen = "fulladapt", 
                     clim_data = "GMFD", 
                     yearlist = year,  

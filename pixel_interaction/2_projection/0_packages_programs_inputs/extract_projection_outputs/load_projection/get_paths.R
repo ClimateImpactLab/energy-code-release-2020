@@ -31,7 +31,7 @@ get.energy.code.paths <- function(uncertainty = NULL,...) {
   gecn.args = append(kwargs,args)
 
   uname = Sys.getenv("LOGNAME")
-  energy.repo = glue::glue('/home/{uname}/repos/energy-code-release-2020')
+  energy.repo = glue::glue('/home/{uname}/repos/energy-code-release-2020/pixel_interaction')
   
   # if energy.repo doesn't exist in the right place aborrt mission
   if (!dir.exists(energy.repo)){

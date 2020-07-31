@@ -42,6 +42,7 @@ city_list = read_csv(paste0(db,
 		write_csv(paste0(output, '/miscellaneous/stockholm_guangzhou_region_names_key.csv'))
 
 # Covariates are from a single run allcalcs file
+# TO-DO: need to change!
 covariates = read_csv(paste0(db,
 	'IEA_Replication/Data/Projection/covariates/', 
 	'FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_income_spline.csv'))%>%
