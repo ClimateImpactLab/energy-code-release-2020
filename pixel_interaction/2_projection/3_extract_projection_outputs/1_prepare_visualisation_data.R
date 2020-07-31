@@ -73,7 +73,10 @@ get_main_model_impacts_maps = function(fuel, price_scen, unit, year, output){
 			'main_model-', fuel, '-SSP3-rcp85-high-fulladapt-',price_tag ,'-2099-map.csv'))
 }
 
-fuels = c("electricity", "other_energy")
+# TO-DO: change back when both projections are run
+# fuels = c("electricity", "other_energy")
+fuels = c("electricity")
+
 df = lapply(fuels, get_main_model_impacts_maps, 
 	price_scen = NULL, unit = "impactpc", year = 2099, output = output)
 
@@ -86,7 +89,10 @@ df = lapply(fuels, get_main_model_impacts_maps,
 # Get time series data for figure 2C
 ###############################################
 
-fuels = c("electricity", "other_energy")
+# TO-DO: change back when both projections are run
+# fuels = c("electricity", "other_energy")
+fuels = c("electricity")
+
 rcps = c("rcp85", "rcp45")
 adapt = c("fulladapt", "noadapt")
 options = expand.grid(fuels = fuels, rcps = rcps, adapt= adapt)
