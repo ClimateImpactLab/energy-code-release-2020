@@ -113,6 +113,7 @@ call.shell.script <- function(shell.file = '', parameters = '', ...) {
     print(glue::glue('parameters feeding script: {parameters}'))
     
     command = paste0("bash ",shell.file, " ", '"', parameters,'"')
+    print("#########################################################")
     print(command)
 
     output.text = system(command, intern = TRUE)
