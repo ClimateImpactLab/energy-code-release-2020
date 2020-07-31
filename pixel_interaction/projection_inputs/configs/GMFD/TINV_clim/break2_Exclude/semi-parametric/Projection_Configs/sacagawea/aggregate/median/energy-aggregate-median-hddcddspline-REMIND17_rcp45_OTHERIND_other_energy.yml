@@ -4,3 +4,4 @@ aggregate-weighting-numerator: population * social/baselines/energy/REMIND17_rcp
 aggregate-weighting-denominator: sum-to-1
 infix: REMIND17_rcp45
 rcp: rcp45
+only-farmers: ['', 'histclim']

@@ -4,3 +4,4 @@ aggregate-weighting-numerator: population * social/baselines/energy/REMIND17CEMI
 aggregate-weighting-denominator: population
 infix: REMIND17CEMICS_rcp85pc
 rcp: rcp85
+only-farmers: ['', 'histclim']

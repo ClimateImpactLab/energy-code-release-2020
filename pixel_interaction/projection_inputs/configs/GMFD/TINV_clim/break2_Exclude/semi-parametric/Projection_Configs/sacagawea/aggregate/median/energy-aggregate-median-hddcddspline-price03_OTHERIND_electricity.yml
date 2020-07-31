@@ -3,3 +3,4 @@ levels-weighting: population * social/baselines/energy/IEA_Price_FIN_Clean_gr03_
 aggregate-weighting-numerator: population * social/baselines/energy/IEA_Price_FIN_Clean_gr03_GLOBAL_COMPILE.dta:country:year:electricitycompile_price
 aggregate-weighting-denominator: sum-to-1
 infix: price03
+only-farmers: ['', 'histclim']
