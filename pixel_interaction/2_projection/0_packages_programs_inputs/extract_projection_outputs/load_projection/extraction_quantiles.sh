@@ -81,7 +81,7 @@ get_input_file() {
 		as_tag=-${as}
 	fi
 
-	stem=FD_FGLS_inter_clim${clim_data}_Exclude_all-issues_break2_${grouping_test}_poly2_${product}_${model}
+	stem=FD_FGLS_inter_OTHERIND_${product}_${model}
 	input_file=${stem}${as_tag}${price_scen_tag}${geo_level_tag}
 
         if [[ -z ${input_file} ]]; then
