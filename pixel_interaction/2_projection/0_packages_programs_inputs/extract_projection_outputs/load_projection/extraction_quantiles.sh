@@ -254,6 +254,7 @@ setup_log_file ${ecp} ${log_file} "${command}"
 
 if ${extract}; then
 	# execute command
+	echo "${command}"
 	eval ${command}
 	echo "pid:$!"
 fi
