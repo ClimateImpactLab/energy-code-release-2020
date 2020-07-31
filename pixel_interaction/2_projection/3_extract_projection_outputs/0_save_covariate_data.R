@@ -45,7 +45,7 @@ city_list = read_csv(paste0(db,
 # TO-DO: need to change!
 covariates = read_csv(paste0(db,
 	'IEA_Replication/Data/Projection/covariates/', 
-	'FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_income_spline.csv'))%>%
+	'FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim.csv'))%>%
 		dplyr::filter(year %in% c(2015, 2099))%>%
 		dplyr::right_join(city_list, by = "region") %>%
 		write_csv(paste0(output, '/miscellaneous/stockholm_guangzhou_covariates_2015_2099.csv'))

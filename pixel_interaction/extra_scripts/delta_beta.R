@@ -11,7 +11,7 @@ squish_function <- stringr::str_squish
 # Edit these lines to change what the delta beta will pop out! Also check the args below make sense, combined with these 
 
 model <- "TINV_clim" #poly or spline
-model_long <- "TINV_clim_income_spline"
+model_long <- "TINV_clim"
 clim_data <- "GMFD" #BEST
 product.list <- c("other_energy","electricity")
 flow <- "OTHERIND"

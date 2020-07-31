@@ -1,5 +1,5 @@
 results-root: /shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost/median_OTHERIND_electricity_TINV_clim_lininter_double_GMFD_dm
-output-dir: /shares/gcp/social/parameters/energy/extraction/multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/TINV_clim_lininter_double_GMFD/median_OTHERIND_electricity_TINV_clim_lininter_double_GMFD/price014pc
+output-dir: /shares/gcp/social/parameters/energy_pixel_interaction/extraction/multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/TINV_clim_lininter_double_GMFD/median_OTHERIND_electricity_TINV_clim_lininter_double_GMFD/price014pc
 file-organize: [ssp, region]
 do-montecarlo: no
 only-rcp: null

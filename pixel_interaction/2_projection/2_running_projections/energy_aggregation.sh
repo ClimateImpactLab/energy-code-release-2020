@@ -24,7 +24,7 @@ done
 
 # Lininter model
 
-model="TINV_clim_income_spline_lininter"
+model="TINV_clim_lininter"
 aggregate_config_path="${config_path}/${model}/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/aggregate/median/"
 
 for config in ${aggregate_config_path}/energy-aggregate-median-*y.yml; do
@@ -34,7 +34,7 @@ done
 
 # Lininter double model 
 
-model="TINV_clim_income_spline_lininter_double"
+model="TINV_clim_lininter_double"
 aggregate_config_path="${config_path}/${model}/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/aggregate/median/"
 
 for config in ${aggregate_config_path}/energy-aggregate-median-*y.yml; do

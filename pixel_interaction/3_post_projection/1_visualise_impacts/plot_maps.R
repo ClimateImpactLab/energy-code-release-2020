@@ -47,7 +47,7 @@ plot_2A = function(fuel, bound, DB_data, map=mymap) {
                      rescale_val = rescale_value,
                      colorbar.title = paste0(fuel, " imapacts, GJ PC, 2099"), 
                      map.title = paste0(fuel, 
-                                    "_TINV_clim_income_spline_SSP3-rcp85_impactpc_high_fulladapt_2099"))
+                                    "_TINV_clim_SSP3-rcp85_impactpc_high_fulladapt_2099"))
   
   ggsave(paste0(output, "/fig_2A_", fuel, "_impacts_map.png"), p)
 }

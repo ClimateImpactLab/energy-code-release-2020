@@ -16,7 +16,7 @@ data_dir = paste0(db,'GCP_Reanalysis/ENERGY/code_release_data/')
 
 output = paste0(db, 
 	'GCP_Reanalysis/ENERGY/code_release_data/projection_system_outputs/damage_function_estimation')
-dir = paste0('/shares/gcp/social/parameters/energy/extraction/',
+dir = paste0('/shares/gcp/social/parameters/energy_pixel_interaction/extraction/',
 				'multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/')
 
 user= 'tbearpark'
@@ -50,7 +50,7 @@ pop_df = read_csv(paste0(data_dir,'/projection_system_outputs/covariates/' ,
 
 # 2.2 Extract and load values csvs
 get_values_csv = function(price, fuel, years = NULL, pop_df= NULL, ssp = "SSP3", save = TRUE, 
-	include_variance = TRUE, model = "TINV_clim_income_spline") {
+	include_variance = TRUE, model = "TINV_clim") {
 	
 	# Function loads in mean and variances for a given price scenario
 	# Deals with three cases: 
@@ -66,11 +66,11 @@ get_values_csv = function(price, fuel, years = NULL, pop_df= NULL, ssp = "SSP3",
 		type = "damages"
 		price_tag = paste0("_", price)
 	}
-	if(model == "TINV_clim_income_spline"){
+	if(model == "TINV_clim"){
 		model_tag = ""
-	}else if (model == "TINV_clim_income_spline_lininter") {
+	}else if (model == "TINV_clim_lininter") {
 		model_tag = "_lininter"
-	}else if (model == "TINV_clim_income_spline_lininter_double"){
+	}else if (model == "TINV_clim_lininter_double"){
 		model_tag = "_lininter_double"
 	}
 
@@ -221,10 +221,10 @@ get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP4",
 ####################################################
 # Get values csvs for SSP2 and SSP4, which are used to calculate SCCs after estimating damage functions
 get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP3", 
-	save = TRUE, include_variance = FALSE, model = "TINV_clim_income_spline_lininter")
+	save = TRUE, include_variance = FALSE, model = "TINV_clim_lininter")
 
 get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP3", 
-	save = TRUE, include_variance = FALSE, model = "TINV_clim_income_spline_lininter_double")
+	save = TRUE, include_variance = FALSE, model = "TINV_clim_lininter_double")
 
 
 

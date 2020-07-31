@@ -30,7 +30,7 @@ args <- list(
     unit =  "damage", # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc). Must be impactpc if price scenario is NULL
     uncertainty = "values", # full, climate, values
     geo_level = "levels", # aggregated (ir agglomerations such as countries or the "global" region) or 'levels' (single IRs)
-    model = "TINV_clim_income_spline", # energy specific
+    model = "TINV_clim", # energy specific
     adapt_scen = "fulladapt", # adaptation scenario - can be "fulladapt", "noadapt", or "incadapt"
     clim_data = "GMFD", # energy specific
     iam = "high",

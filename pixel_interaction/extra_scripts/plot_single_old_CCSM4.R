@@ -15,7 +15,7 @@ pacman::p_load(ggplot2,
                dplyr,
                readr)
 
-data = '/shares/gcp/social/parameters/energy/extraction/'
+data = '/shares/gcp/social/parameters/energy_pixel_interaction/extraction/'
 
 root =  "/home/liruixue/repos/energy-code-release-2020/pixel_interaction"
 output = "/mnt/CIL_energy/code_release_data/projection_system_outputs/plot_single/"
@@ -37,7 +37,7 @@ plot_2A = function(fuel, bound, data, map=mymap, USA_border = my_USA_border, IND
 
   # Load in the impacts-pc data, and convert it to GJ
   df= read_csv(glue(
-   "{data}/single-OTHERIND_{fuel}_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_income_spline_GMFD/single_energy_rcp85_ccsm4_high_SSP3_OTHERIND_{fuel}_FD_FGLS.csv")) 
+   "{data}/single-OTHERIND_{fuel}_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_GMFD/single_energy_rcp85_ccsm4_high_SSP3_OTHERIND_{fuel}_FD_FGLS.csv")) 
   df = df%>%dplyr::filter(year == 2099)%>%dplyr::mutate(value = value * 0.0036)
   # Set scaling factor for map color bar
   scale_v = c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1)
@@ -54,7 +54,7 @@ plot_2A = function(fuel, bound, data, map=mymap, USA_border = my_USA_border, IND
                      rescale_val = rescale_value,
                      colorbar.title = paste0(fuel, " imapacts, GJ PC, 2099"), 
                      map.title = paste0(fuel, 
-                                    "_TINV_clim_income_spline_SSP3-rcp85_impactpc_high_fulladapt_2099"))
+                                    "_TINV_clim_SSP3-rcp85_impactpc_high_fulladapt_2099"))
 
   ggsave(paste0(output, "/fig_2A_", fuel, "_impacts_map_old.pdf"), p)
 
@@ -69,7 +69,7 @@ plot_2A = function(fuel, bound, data, map=mymap, USA_border = my_USA_border, IND
                      rescale_val = rescale_value,
                      colorbar.title = paste0(fuel, " imapacts, GJ PC, 2099"), 
                      map.title = paste0(fuel, 
-                                    "_TINV_clim_income_spline_SSP3-rcp85_impactpc_high_fulladapt_2099"))
+                                    "_TINV_clim_SSP3-rcp85_impactpc_high_fulladapt_2099"))
 
   ggsave(paste0(output, "/fig_2A_", fuel, "_impacts_map_old_not_topcoded.pdf"), p)
 
@@ -102,7 +102,7 @@ get_df_list_fig_2C = function(data, fuel){
   
   # Load in the impacts data: 
   df= read_csv(glue(
-  "{data}/single-OTHERIND_{fuel}_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_income_spline_GMFD/single-aggregated_energy_rcp85_ccsm4_high_SSP3_OTHERIND_{fuel}_FD_FGLS.csv")) 
+  "{data}/single-OTHERIND_{fuel}_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_GMFD/single-aggregated_energy_rcp85_ccsm4_high_SSP3_OTHERIND_{fuel}_FD_FGLS.csv")) 
   df = df %>% filter(is.na(region)) %>% dplyr::select(c("year","value")) %>% dplyr::mutate(value = value * 0.0036)
   # browser()
   return(df)

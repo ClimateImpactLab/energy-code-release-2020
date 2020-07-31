@@ -231,7 +231,7 @@ foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double"
 								  geo_level("`geo_level'") uncertainty("`uncertainty'") unit("`unit'") proj_model("`model_tt'") ///
 								  config_output("`extraction_config_output'") ///
 								  csvv("`csvv'") ///
-								  extraction_output("/shares/gcp/social/parameters/energy/extraction/multi-models/rationalized_code/`bknum'_`case'`IF'_`grouping_test'/`model_tt'_`clim_data'/`median_folder'") ///
+								  extraction_output("/shares/gcp/social/parameters/energy_pixel_interaction/extraction/multi-models/rationalized_code/`bknum'_`case'`IF'_`grouping_test'/`model_tt'_`clim_data'/`median_folder'") ///
 								  evalqvals("`evalqvals'")
 						}
 					}
@@ -276,7 +276,7 @@ foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double"
 						  geo_level("`geo_level'") uncertainty("`uncertainty'") unit("`unit'") proj_model("`model_tt'") ///
 						  config_output("`extraction_config_output'") two_product("TRUE") ///
 						  csvv("`csvv'") csvv_path("`CSVVpath_output_sacagawea'") ///
-						  extraction_output("/shares/gcp/social/parameters/energy/extraction/multi-models/rationalized_code/`bknum'_`case'`IF'_`grouping_test'/`model_tt'_`clim_data'/total_energy") ///
+						  extraction_output("/shares/gcp/social/parameters/energy_pixel_interaction/extraction/multi-models/rationalized_code/`bknum'_`case'`IF'_`grouping_test'/`model_tt'_`clim_data'/total_energy") ///
 						  evalqvals("`evalqvals'")
 					}
 				}
