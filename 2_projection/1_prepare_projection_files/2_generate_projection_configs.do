@@ -21,7 +21,7 @@ pause off
 cilpath
 // path to energy-code-release repo 
 * global root "C:/Users/TomBearpark/Documents/energy-code-release-2020"
-global root "${DB}/energy-code-release-2020"
+global root "$REPO/energy-code-release-2020"
 
 * This is used to  
 loc uname "liruixue"
