@@ -11,8 +11,8 @@ library(miceadds)
 library(haven)
 library(ncdf4)
 library(tidyr)
+cilpath.r:::cilpath()
 
-user= 'liruixue'
 
 db = '/mnt/CIL_energy/'
 output = '/mnt/CIL_energy/pixel_interaction/'
@@ -20,11 +20,11 @@ output = '/mnt/CIL_energy/pixel_interaction/'
 dir = paste0('/shares/gcp/social/parameters/energy_pixel_interaction/extraction/',
 				'multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/')
 
-git = paste0("/home/", user,"/repos")
+git = REPO
 
 # Make sure you are in the risingverse-py27 for this... 
 projection.packages <- paste0(git,"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
-setwd(paste0('/home/',user, '/repos/'))
+setwd(paste0(REPO)
 
 # Source codes that help us load projection system outputs
 miceadds::source.all(paste0(projection.packages,"load_projection/"))

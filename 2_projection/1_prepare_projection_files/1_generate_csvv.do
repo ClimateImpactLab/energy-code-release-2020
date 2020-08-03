@@ -7,13 +7,13 @@ clear all
 set more off
 macro drop _all
 pause off
-
+cilpath
 * Download a command for dealing with matrices 
 qui net install http://www.stata.com/stb/stb56/dm79.pkg
 
 //SET UP RELEVANT PATHS
 // path to energy-code-release repo 
-global root "/home/liruixue/repos/energy-code-release-2020"
+global root "${REPO}/energy-code-release-2020"
 
 
 //install global programs

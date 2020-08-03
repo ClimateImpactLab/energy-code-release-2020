@@ -9,6 +9,7 @@ library(parallel)
 library(miceadds)
 library(haven)
 library(tidyr)
+cilpath.r:::cilpath()
 
 
 db = '/mnt/norgay_synology_drive/'
@@ -19,8 +20,7 @@ output = paste0(db,
 dir = paste0('/shares/gcp/social/parameters/energy_pixel_interaction/extraction/',
 				'multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/')
 
-user= 'tbearpark'
-git = paste0("/home/", user,"/repos")
+git = paste0(REPO)
 
 # Source codes that help us load projection system outputs
 # Make sure you are in the risingverse-py27 for this... 

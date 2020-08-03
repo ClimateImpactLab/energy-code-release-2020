@@ -10,10 +10,9 @@ library(dplyr)
 library(reticulate)
 library(haven)
 library(tidyr)
+cilpath.r:::cilpath()
 
-user= 'liruixue'
-git = paste0("/home/", user,"/repos")
-setwd(git)
+git = REPO
 
 setwd(paste0(git,"/energy-code-release-2020/"))
 
