@@ -2,16 +2,18 @@
 
 rm(list = ls())
 
+source("/home/liruixue/projection_repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
+
 # Load in the required packages, installing them if necessary 
 if(!require("pacman")){install.packages(("pacman"))}
 pacman::p_load(ggplot2, 
                dplyr,
                readr)
 
-DB = "C:/Users/TomBearpark/synologyDrive"
+DB = "/mnt/CIL_energy"
 
-DB_data = paste0(DB, "/GCP_Reanalysis/ENERGY/code_release_data")
-root =  "C:/Users/TomBearpark/Documents/energy-code-release-2020"
+DB_data = paste0(DB, "/pixel_interaction")
+root =  "/home/liruixue/repos/energy-code-release-2020/pixel_interaction"
 output = paste0(root, "/figures")
 
 source(paste0(root, "/3_post_projection/0_utils/mapping.R"))
@@ -32,6 +34,7 @@ plot_2A = function(fuel, bound, DB_data, map=mymap) {
   df= read_csv(
     paste0(DB_data, '/projection_system_outputs/mapping_data/', 
            'main_model-', fuel, '-SSP3-rcp85-high-fulladapt-impact_pc-2099-map.csv')) 
+  df = df %>% dplyr::mutate(mean = 1 / 0.0036 * mean)
   # Set scaling factor for map color bar
   scale_v = c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1)
   rescale_value <- scale_v*bound
@@ -47,9 +50,8 @@ plot_2A = function(fuel, bound, DB_data, map=mymap) {
                      rescale_val = rescale_value,
                      colorbar.title = paste0(fuel, " imapacts, GJ PC, 2099"), 
                      map.title = paste0(fuel, 
-                                    "_TINV_clim_income_spline_SSP3-rcp85_impactpc_high_fulladapt_2099"))
-  
-  ggsave(paste0(output, "/fig_2A_", fuel, "_impacts_map.png"), p)
+                                    "_TINV_clim_SSP3-rcp85_impactpc_high_fulladapt_2099"))
+  ggsave(paste0(output, "/fig_2A_", fuel, "_impacts_map.pdf"), p)
 }
 plot_2A(fuel = "electricity", bound = 3, DB_data = DB_data)
 plot_2A(fuel = "other_energy", bound = 18, DB_data = DB_data)

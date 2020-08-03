@@ -56,7 +56,8 @@ forval i=1/4 {
 	qui gen double FD_yeartemp`i'_GMFD = (year * temp`i'_GMFD) - (L1.year * L1.temp`i'_GMFD)
 
 	// temp x decade
-	forval dg=1/4 {
+	// TO-DO: now only have first 2 decind
+	forval dg=1/2 {
 		qui gen double FD_D`dg'temp`i'_GMFD = (decind`dg' * temp`i'_GMFD) - (L1.decind`dg' * L1.temp`i'_GMFD)
 	}
 
@@ -90,15 +91,30 @@ forval lg=1/2 {
 	}
 }
 
-** First difference dd20 x polyBreak** 
+** First difference dd20 x polyBreak ** 
+
+forval i=1/4 {
+	
+	qui gen double FD_cdd20_TINVtemp`i'_GMFD_old = ///
+			( cdd20_TINV_GMFD * polyAbove`i'_GMFD ) - ///
+			( cdd20_TINV_GMFD * L1.polyAbove`i'_GMFD )
+	
+	qui gen double FD_hdd20_TINVtemp`i'_GMFD_old = ///
+			( hdd20_TINV_GMFD * polyBelow`i'_GMFD ) - ///
+			( hdd20_TINV_GMFD * L1.polyBelow`i'_GMFD )
+}
+
+
+** First difference dd20 x polyBreak at pixel level ** 
 
 forval i=1/4 {
 	
 	qui gen double FD_cdd20_TINVtemp`i'_GMFD = ///
-			( cdd20_TINV_GMFD * polyAbove`i'_GMFD ) - ///
-			( cdd20_TINV_GMFD * L1.polyAbove`i'_GMFD )
+			polyAbove`i'_x_cdd_GMFD - L1.polyAbove`i'_x_cdd_GMFD
 	
 	qui gen double FD_hdd20_TINVtemp`i'_GMFD = ///
-			( hdd20_TINV_GMFD * polyBelow`i'_GMFD ) - ///
-			( hdd20_TINV_GMFD * L1.polyBelow`i'_GMFD )
+			polyBelow`i'_x_hdd_GMFD - L1.polyBelow`i'_x_hdd_GMFD
 }
+
+
+

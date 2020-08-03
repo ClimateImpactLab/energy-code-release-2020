@@ -12,18 +12,19 @@ library(haven)
 library(ncdf4)
 library(tidyr)
 
-user= 'tbearpark'
+user= 'liruixue'
 
-db = '/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/'
-output = '/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/code_release_data/'
-dir = paste0('/shares/gcp/social/parameters/energy/extraction/',
+db = '/mnt/CIL_energy/'
+output = '/mnt/CIL_energy/pixel_interaction/'
+
+dir = paste0('/shares/gcp/social/parameters/energy_pixel_interaction/extraction/',
 				'multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/')
 
 git = paste0("/home/", user,"/repos")
 
 # Make sure you are in the risingverse-py27 for this... 
-projection.packages <- paste0(git,"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
-setwd(paste0('/home/',user, '/repos/')
+projection.packages <- paste0(git,"/energy-code-release-2020/pixel_interaction/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
+setwd(paste0('/home/',user, '/repos/'))
 
 # Source codes that help us load projection system outputs
 miceadds::source.all(paste0(projection.packages,"load_projection/"))
@@ -55,7 +56,7 @@ get_main_model_impacts_maps = function(fuel, price_scen, unit, year, output){
                     uncertainty = "climate", # full, climate, values
                     geo_level = "levels", # aggregated (ir agglomerations) or 'levels' (single irs)
                     iam = "high", 
-                    model = "TINV_clim_income_spline", 
+                    model = "TINV_clim", 
                     adapt_scen = "fulladapt", 
                     clim_data = "GMFD", 
                     yearlist = year,  
@@ -72,7 +73,10 @@ get_main_model_impacts_maps = function(fuel, price_scen, unit, year, output){
 			'main_model-', fuel, '-SSP3-rcp85-high-fulladapt-',price_tag ,'-2099-map.csv'))
 }
 
-fuels = c("electricity", "other_energy")
+# TO-DO: change back when both projections are run
+# fuels = c("electricity", "other_energy")
+fuels = c("electricity")
+
 df = lapply(fuels, get_main_model_impacts_maps, 
 	price_scen = NULL, unit = "impactpc", year = 2099, output = output)
 
@@ -85,7 +89,10 @@ df = lapply(fuels, get_main_model_impacts_maps,
 # Get time series data for figure 2C
 ###############################################
 
-fuels = c("electricity", "other_energy")
+# TO-DO: change back when both projections are run
+# fuels = c("electricity", "other_energy")
+fuels = c("electricity")
+
 rcps = c("rcp85", "rcp45")
 adapt = c("fulladapt", "noadapt")
 options = expand.grid(fuels = fuels, rcps = rcps, adapt= adapt)
@@ -107,7 +114,7 @@ get_main_model_impacts_ts = function(fuel, rcp, adapt) {
                     uncertainty = "full", # full, climate, values
                     geo_level = "aggregated", # aggregated (ir agglomerations) or 'levels' (single irs)
                     iam = "high", 
-                    model = "TINV_clim_income_spline", 
+                    model = "TINV_clim", 
                     adapt_scen = adapt, 
                     clim_data = "GMFD", 
                     yearlist = as.character(seq(1980,2099,1)),  
@@ -148,7 +155,7 @@ args = list(
       uncertainty = "climate", # full, climate, values
       geo_level = "levels", # aggregated (ir agglomerations) or 'levels' (single irs)
       iam = "high", 
-      model = "TINV_clim_income_spline", 
+      model = "TINV_clim", 
       adapt_scen = "fulladapt", 
       clim_data = "GMFD", 
       dollar_convert = "yes",
@@ -190,7 +197,7 @@ get.dfs <- function(env, IR, ssp, iam, rcp, price = NULL, unit, year, fuel) {
     uncertainty = "values", # full, climate, values
     geo_level = geo_level, # aggregated (ir agglomerations) or 'levels' (single irs)
     iam = NULL, 
-    model = "TINV_clim_income_spline", 
+    model = "TINV_clim", 
     adapt_scen = "fulladapt", 
     clim_data = "GMFD", 
     yearlist = year,  
@@ -212,7 +219,7 @@ get.dfs <- function(env, IR, ssp, iam, rcp, price = NULL, unit, year, fuel) {
     uncertainty = "values", # full, climate, values
     geo_level = geo_level, # aggregated (ir agglomerations) or 'levels' (single irs)
     iam = NULL, 
-    model = "TINV_clim_income_spline", 
+    model = "TINV_clim", 
     adapt_scen = "fulladapt", 
     clim_data = "GMFD", 
     yearlist = year,  
@@ -288,7 +295,7 @@ args = list(
     uncertainty = "full", # full, climate, values
     geo_level = "aggregated", # aggregated (ir agglomerations) or 'levels' (single irs)
     iam = "high", 
-    model = "TINV_clim_income_spline", 
+    model = "TINV_clim", 
     adapt_scen = "fulladapt", 
     clim_data = "GMFD", 
     yearlist = as.character(seq(2010,2100,1)),  
@@ -320,7 +327,7 @@ lapply(rcps, get_df_ts_main_model_total_energy, args = args)
 covariates <- paste0("/mnt/norgay_synology_drive", 
   "/GCP_Reanalysis/ENERGY/IEA_Replication/Data/", 
   "Projection/covariates/",
-  "FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_income_spline.csv")
+  "FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim.csv")
 
 # load and clean data
 covars = as.data.frame(readr::read_csv(covariates)) %>% 
@@ -354,7 +361,7 @@ get_df_by_price_rcp = function(rcp, price) {
 	    uncertainty = "full", # full, climate, values
 	    geo_level = "aggregated", # aggregated (ir agglomerations) or 'levels' (single irs)
 	    iam = "high", 
-	    model = "TINV_clim_income_spline", 
+	    model = "TINV_clim", 
 	    adapt_scen = "fulladapt", 
 	    clim_data = "GMFD", 
 	    yearlist = as.character(seq(1980,2100,1)),  
@@ -403,18 +410,18 @@ get_file_name = function(type, fuel=NULL, double = NULL, histclim= NULL, rcp, dm
 	dir = "/mnt/battuta_shares/gcp/outputs/energy/impacts-blueghost/"
 
 	if(type == "SA_single") {
-		folder = paste0("single-OTHERIND_", fuel, "_FD_FGLS_1401_TINV_clim_income_spline_GMFD_slow_adapt/", 
+		folder = paste0("single-OTHERIND_", fuel, "_FD_FGLS_1401_TINV_clim_GMFD_slow_adapt/", 
 			rcp, "/CCSM4/high/SSP3/")
 		name = paste0("FD_FGLS_inter_climGMFD_Exclude_all-issues_break2_semi-parametric_poly2_OTHERIND_", 
-			fuel , "_TINV_clim_income_spline")
+			fuel , "_TINV_clim")
 
 		file = paste0(dir, folder, name, histclim, ".nc4")	
 	}	
 	if(type == "main_model_single") {
-		folder_stem = paste0("median_OTHERIND_", fuel, "_TINV_clim_income_spline")
+		folder_stem = paste0("median_OTHERIND_", fuel, "_TINV_clim")
 		extra_folder_stem = paste0("_GMFD/median/",rcp,"/CCSM4/high/SSP3/")
 		name = paste0("FD_FGLS_inter_climGMFD_Exclude_all-issues_break2_semi-parametric_poly2_OTHERIND_",  
-			fuel, "_TINV_clim_income_spline")
+			fuel, "_TINV_clim")
 
 		file = paste0(dir, folder_stem, extra_folder_stem, name, histclim, ".nc4")	
 	}	
@@ -546,13 +553,13 @@ get_plot_df = function(adapt="fulladapt", spec, rcp, model) {
 }
 
 df_full85_elec = get_plot_df(adapt = "fulladapt", 
-	spec = "OTHERIND_electricity", rcp = "rcp85", model = "TINV_clim_income_spline_lininter")
+	spec = "OTHERIND_electricity", rcp = "rcp85", model = "TINV_clim_lininter")
 write_csv(df_full85_elec, 
 	paste0(output, '/projection_system_outputs/time_series_data/',
 		'lininter_model-electricity-SSP3-rcp85-high-fulladapt-impact_pc.csv'))
 
 df_full85_oe_elec = get_plot_df(adapt = "fulladapt", 
-	spec = "OTHERIND_other_energy", rcp = "rcp85", model = "TINV_clim_income_spline_lininter")
+	spec = "OTHERIND_other_energy", rcp = "rcp85", model = "TINV_clim_lininter")
 write_csv(df_full85_oe_elec, 
 	paste0(output, '/projection_system_outputs/time_series_data/',
 		'lininter_model-other_energy-SSP3-rcp85-high-fulladapt-impact_pc.csv'))

@@ -28,7 +28,6 @@ ggtimeseries <- function(df.list = NULL,
   p <- ggplot() +
     geom_hline(yintercept=0, size=.2) + #zerolin* e
     scale_x_continuous(expand=c(0, 0), limits=c(start.yr, end.yr)) +
-    # scale_colour_manual(name=c("test1","test2","test3","test4"), breaks=c("test1","test2","test3","test4"), values=c("red",)) +    
     scale_colour_manual(name=legend.title, breaks=legend.breaks, values=legend.values) +
     scale_alpha_manual(name="", values=c(.7)) +
     theme_bw() +

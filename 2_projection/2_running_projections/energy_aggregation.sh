@@ -5,9 +5,9 @@
 uname="USER"
 repo_root="/home/${uname}/repos"
 
-config_path="${repo_root}/energy-code-release-2020/projection_inputs/configs/GMFD"
+config_path="${repo_root}/energy-code-release-2020/pixel_interaction/projection_inputs/configs/GMFD"
 
-model="TINV_clim_income_spline"
+model="TINV_clim"
 aggregate_config_path="${config_path}/${model}/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/aggregate/median/"
 
 cd ${repo_root}/impact-calculations
@@ -24,7 +24,7 @@ done
 
 # Lininter model
 
-model="TINV_clim_income_spline_lininter"
+model="TINV_clim_lininter"
 aggregate_config_path="${config_path}/${model}/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/aggregate/median/"
 
 for config in ${aggregate_config_path}/energy-aggregate-median-*y.yml; do
@@ -34,7 +34,7 @@ done
 
 # Lininter double model 
 
-model="TINV_clim_income_spline_lininter_double"
+model="TINV_clim_lininter_double"
 aggregate_config_path="${config_path}/${model}/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/aggregate/median/"
 
 for config in ${aggregate_config_path}/energy-aggregate-median-*y.yml; do

@@ -1,0 +1,7 @@
+outputdir: outputs/energy_pixel_interaction/impacts-blueghost/median_OTHERIND_other_energy_TINV_clim_GMFD
+levels-weighting: population * social/baselines/energy/REMIND17CEMICS_rcp45_Prices_COMPILE.dta:country:year:other_energycompile_price
+aggregate-weighting-numerator: population * social/baselines/energy/REMIND17CEMICS_rcp45_Prices_COMPILE.dta:country:year:other_energycompile_price
+aggregate-weighting-denominator: sum-to-1
+infix: REMIND17CEMICS_rcp45
+rcp: rcp45
+only-farmers: ['', 'histclim']

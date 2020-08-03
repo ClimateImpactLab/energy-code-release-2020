@@ -56,9 +56,11 @@ program define longrun_climate_measures
 end
 
 program define generate_other
-
+* removed tmax*
+	di "generate_other"
 	foreach var of varlist tmax* tavg* prcp* {
 		qui generate double `var'_other=`var'
 	}
+	di "end generate_other"
 
 end

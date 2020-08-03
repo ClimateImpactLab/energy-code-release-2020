@@ -9,7 +9,7 @@ note -- definitions are common across functions in this file... if they aren't s
 product: "other_energy" "electricity"
 proj_type: "median" "diagnostics"
 break_data: path to break dataset produced with 0_make_dataset/1_construct_regression_ready_data.do 
-proj_model: Projection Model ("TINV_clim_income_spline")
+proj_model: Projection Model ("TINV_clim")
 sys: "sacagawea" or "laika"
 config_output: root of path for generated config storage
 proj_mode: "_dm" "_hilo" "" -- delta method, hot cold and normal
@@ -37,7 +37,7 @@ evalqvals: which quantiles you want to extract
 program define get_config_tag, sclass
 syntax , proj_model(string)
 
-	if strpos("`proj_model'", "income_spline") {
+	if strpos("`proj_model'", "clim") {
 		local config_tag = "hddcddspline"
 	}
 	else {
@@ -92,7 +92,7 @@ end
 
 program define get_impacts_folder, sclass
 syntax , proj_model(string)
-	if strpos("`proj_model'", "income_spline") {
+	if strpos("`proj_model'", "clim") {
 		local impact_folder = "impacts-blueghost"
 	}
 	else {
@@ -110,8 +110,8 @@ syntax , sys(string) proj_model(string) [ uname(string) ]
 	local impact_folder `s(ifol)'
 	return clear
 	
-	if "`sys'" != "laika" local proj_output = "/shares/gcp/outputs/energy/`impact_folder'"
-	else local proj_output = "/global/scratch/`uname'/outputs/energy/`impact_folder'"
+	if "`sys'" != "laika" local proj_output = "/shares/gcp/outputs/energy_pixel_interaction/`impact_folder'"
+	else local proj_output = "/global/scratch/`uname'/outputs/energy_pixel_interaction/`impact_folder'"
 
 	sreturn local po "`proj_output'"
 end
@@ -272,7 +272,7 @@ syntax , product(string) proj_type(string) [ proj_mode(string) ] break_data(stri
 	di "Executing write_run_config program..."
 
 	//have not set up hilo projection for income spline model
-	assert(strpos("`proj_model'", "income_spline") > 0 & strpos("`proj_mode'", "hilo") == 0)
+	assert(strpos("`proj_model'", "clim") > 0 & strpos("`proj_mode'", "hilo") == 0)
 
 	//get path to projection output
 
@@ -307,7 +307,7 @@ syntax , product(string) proj_type(string) [ proj_mode(string) ] break_data(stri
 	return clear
 
 	//retrieve loggdppc-delta == loggdppc upper bound for lareg income group 1 
-	if (strpos("`proj_model'", "income_spline")) {
+	if (strpos("`proj_model'", "clim")) {
 		qui use "`break_data'", clear 
 		qui keep if largegpid_`product' == 1 
 		qui tostring maxInc_largegpid_`product', force replace format(%12.3f)
@@ -361,7 +361,7 @@ syntax , product(string) proj_type(string) [ proj_mode(string) ] break_data(stri
 	if (strpos("`proj_mode'", "dm") > 0) {
 		file write yml "timeout: 30" _n
 	}
-	if("`proj_model'" == "TINV_clim_income_spline_lininter_double"){
+	if("`proj_model'" == "TINV_clim_lininter_double"){
 		file write yml "yearcovarscale: 2" _n
 	}
 
@@ -450,11 +450,11 @@ syntax ,  product(string) sys(string) proj_type(string) proj_model(string) unit(
 	
 	**Model config files**
 	if "`proj_type'"=="median" {
-		file write yml "outputdir: outputs/energy/`impact_folder'/`median_folder'`proj_mode'" _n
+		file write yml "outputdir: outputs/energy_pixel_interaction/`impact_folder'/`median_folder'`proj_mode'" _n
 		file write yml "`weighting'" _n 
 	}
 	else if "`proj_type'"=="diagnostics" {
-		file write yml "outputdir: outputs/energy/`impact_folder'" _n
+		file write yml "outputdir: outputs/energy_pixel_interaction/`impact_folder'" _n
 		file write yml "`weighting'" _n
 		file write yml "targetdir: `proj_output'/`single_folder'`proj_mode'/`rcp'/CCSM4/high/SSP3" _n
 	}
@@ -468,6 +468,7 @@ syntax ,  product(string) sys(string) proj_type(string) proj_model(string) unit(
 	if strpos("`price_scen'", "rcp") > 0 {
 		file write yml "rcp: `rcp'" _n
 	} 
+		file write yml "only-farmers: ['', 'histclim']" _n
 	
 	file close yml
 end
@@ -476,7 +477,7 @@ program define write_model_config
 syntax , product(string) proj_type(string) [ proj_mode(string) ] break_data(string) csvv(string) proj_model(string) config_output(string) csvv_path(string) [ brief_output(string) ]
 	
 	//have not set up hilo projection for income spline model
-	assert(strpos("`proj_model'", "income_spline") > 0 & strpos("`proj_mode'", "hilo") == 0)
+	assert(strpos("`proj_model'", "clim") > 0 & strpos("`proj_mode'", "hilo") == 0)
 
 	**generate file path for config output
 	
@@ -528,27 +529,27 @@ syntax , product(string) proj_type(string) [ proj_mode(string) ] break_data(stri
 		local filename=`"  - csvvs: "`csvv_path'/`csvv'.csvv""' 
 		file write yml `"`filename'"' _n
 		file write yml "    covariates:" _n
-	    file write yml "      - incbin: `INCbin'" _n
+	    file write yml "      - incbin.country: `INCbin'" _n
 			
 		if (strpos("`proj_model'", "lininter") > 0) {
-			file write yml "      - year*incbin: `INCbin'" _n
+			file write yml "      - year*incbin.country: `INCbin'" _n
 		}
 		
 		file write yml "      - climtas-cdd-20" _n
 		file write yml "      - climtas-hdd-20" _n
-	    file write yml "      - climtas-cdd-20*incbin: `INCbin'" _n
-	    file write yml "      - climtas-hdd-20*incbin: `INCbin'" _n
+	    file write yml "      - climtas-cdd-20*incbin.country: `INCbin'" _n
+	    file write yml "      - climtas-hdd-20*incbin.country: `INCbin'" _n
 
-	    if (strpos("`proj_model'","income_spline") > 0 ) {
-	    	file write yml "      - loggdppc-shifted*incbin: `INCbin'" _n
+	    if (strpos("`proj_model'","clim") > 0 ) {
+	    	file write yml "      - loggdppc-shifted.country*incbin.country: `INCbin'" _n
 	    }
 	    if (strpos("`proj_model'","lininter") > 0 ) {
-	    	file write yml "      - loggdppc-shifted*year*incbin: `INCbin'" _n
+	    	file write yml "      - loggdppc-shifted.country*year*incbin.country: `INCbin'" _n
 	    }
 		
 		if (strpos("`proj_model'","ui") > 0) {
 			file write yml "      - loggdppc" _n
-			file write yml "      - loggdppc*incbin: `INCbin'" _n
+			file write yml "      - loggdppc*incbin.country: `INCbin'" _n
 		}
 			
 		file write yml "    clipping: false" _n
@@ -620,11 +621,11 @@ syntax , product(string) proj_type(string) [ proj_mode(string) ] break_data(stri
 		local filename=`"  - csvvs: "`csvv_path'/`csvv'""' 
 		file write yml `"`filename'"' _n
 		file write yml "    covariates:" _n
-		file write yml "      - incbin: `INCbin'" _n
+		file write yml "      - incbin.country: `INCbin'" _n
 		file write yml "      - climtas-cdd-20" _n
 		file write yml "      - climtas-hdd-20" _n
-		file write yml "      - climtas-cdd-20*incbin: `INCbin'" _n
-		file write yml "      - climtas-hdd-20*incbin: `INCbin'" _n
+		file write yml "      - climtas-cdd-20*incbin.country: `INCbin'" _n
+		file write yml "      - climtas-hdd-20*incbin.country: `INCbin'" _n
 		file write yml "    clipping: false" _n
 		file write yml "    description: Change in energy usage driven by a single day's mean temperature" _n
 		file write yml "    depenunit: kWh/pc" _n

@@ -33,7 +33,7 @@ cap ssc install rangestat
 /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////
 
 // path to energy-code-release repo 
-local root "/Users/`c(username)'/Documets/repos/energy-code-release-2020"
+local root "/home/liruixue/repos/energy-code-release-2020/pixel_interaction"
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -43,7 +43,6 @@ local root "/Users/`c(username)'/Documets/repos/energy-code-release-2020"
 // code path referenced by multiple files
 global dataset_construction "`root'/0_make_dataset/"
 
-
 // output data path
 local DATA "`root'/data"
 
@@ -52,13 +51,69 @@ local DATA "`root'/data"
 ********************************************************************************************************************************************
 
 //Part A: Climate Data Construction
-do "$dataset_construction/climate/1_clean_climate_data.do"
 
+do "$dataset_construction/climate/1_clean_climate_data.do"
 clean_climate_data, clim("GMFD") programs_path("$dataset_construction/climate/programs")
+
+// *****************************
+// code to check the difference between pixel-level vs normal interacted terms
+gen old_polyBelow1_x_hdd = polyBelow1_GMFD * hdd20_GMFD
+gen old_polyBelow2_x_hdd = polyBelow2_GMFD * hdd20_GMFD
+
+gen old_polyAbove1_x_cdd = polyAbove1_GMFD * cdd20_GMFD
+gen old_polyAbove2_x_cdd = polyAbove2_GMFD * cdd20_GMFD
+
+gen new_polyBelow1_x_hdd = polyBelow1_x_hdd_GMFD
+gen new_polyBelow2_x_hdd = polyBelow2_x_hdd_GMFD
+
+gen new_polyAbove1_x_cdd = polyAbove1_x_cdd_GMFD
+gen new_polyAbove2_x_cdd = polyAbove2_x_cdd_GMFD
+
+
+
+foreach v in polyBelow1_x_hdd polyBelow2_x_hdd polyAbove1_x_cdd polyAbove2_x_cdd {
+	di "variable: `v'"
+	qui corr old_`v' new_`v'
+	di "all: `r(rho)'"
+	qui corr old_`v' new_`v' if country == "USA"
+	di "USA: `r(rho)'"
+	qui corr old_`v' new_`v' if country == "CHN"
+	di "CHN: `r(rho)'"
+	qui corr old_`v' new_`v' if country == "FRA"
+	di "FRA: `r(rho)'"
+	qui corr old_`v' new_`v' if country == "RUS"
+	di "RUS: `r(rho)'"
+	qui corr old_`v' new_`v' if country == "JPN"
+	di "JPN: `r(rho)'"
+	qui corr old_`v' new_`v' if country == "IND"
+	di "IND: `r(rho)'"
+	qui corr old_`v' new_`v' if country == "MEX"
+	di "MEX: `r(rho)'"
+	qui corr old_`v' new_`v' if country == "BRA"
+	di "BRA: `r(rho)'"
+	qui corr old_`v' new_`v' if country == "CAN"
+	di "CAN: `r(rho)'"
+	qui corr old_`v' new_`v' if country == "FIN"
+	di "FIN: `r(rho)'"
+	qui corr old_`v' new_`v' if country == "GRL"
+	di "GRL: `r(rho)'"
+	qui corr old_`v' new_`v' if country == "DNK"
+	di "DNK: `r(rho)'"
+	
+	di ""
+
+}
+
+//gen diff = new_interaction - old_interaction
+//gen diff_pct = diff / old_interaction
+//sum old_interaction new_interaction diff*
+// *****************************
+
 tempfile climate_data
 save `climate_data', replace
-
+save "`DATA'/climate_data", replace
 //Part B: Population and Income Data Construction
+use "`DATA'/climate_data", clear
 
 do "$dataset_construction/pop_and_income/1_extract_and_clean.do"
 
@@ -84,13 +139,11 @@ use `energy_load_data', clear
 
 merge m:1 country year using `population_and_income_data'
 keep if _merge!=2
-pause
 drop _merge
 **climate**
 merge m:1 year country using `climate_data'
 keep if _merge!=2
 drop _merge
-
 
 //Part B: Construct Per Capita and log_pc
 

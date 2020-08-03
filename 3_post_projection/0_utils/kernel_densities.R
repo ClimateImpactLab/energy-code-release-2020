@@ -3,7 +3,7 @@
 # This function returns a kernel density plot from a specific impact region from projection impacts
 
 #----------------------------------------------------------------------------------
-if(!require("ggplot2")){install.packages(("ggplot2"))}
+
 library(ggplot2)
 
 #create function that plots kernel density

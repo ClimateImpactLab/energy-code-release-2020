@@ -11,6 +11,7 @@
 # 0. Set up
 
 rm(list = ls())
+source("/home/liruixue/projection_repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 
 # Load in the required packages, installing them if necessary 
 if(!require("pacman")){install.packages(("pacman"))}
@@ -22,10 +23,10 @@ pacman::p_load(ggplot2,
 
 
 # Set paths
-DB = "C:/Users/TomBearpark/synologyDrive"
+DB = "/mnt/CIL_energy"
 
-DB_data = paste0(DB, "/GCP_Reanalysis/ENERGY/code_release_data")
-root =  "C:/Users/TomBearpark/Documents/energy-code-release-2020"
+DB_data = paste0(DB, "/pixel_interaction")
+root =  "/home/liruixue/repos/energy-code-release-2020/pixel_interaction"
 output = paste0(root, "/figures")
 
 # Source time series plotting codes

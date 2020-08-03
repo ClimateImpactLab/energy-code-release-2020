@@ -3,6 +3,7 @@
 # load.map() loads map shapefile, and returns a dataframe 
 # join.plot.map() joins your impact-region level data to the map & plots the data
 
+# Updated 4 Jun 2019 by Trinetta Chong 
 #---------------------------------------------------------------------------------------------
 #Packages to install: 
 #install.packages(c("rgdal", "rgeos", "raster", "rnaturalearth", "RColorBrewer", "scales")) #packages specific to this mapping code

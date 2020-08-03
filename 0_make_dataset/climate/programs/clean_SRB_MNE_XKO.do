@@ -23,7 +23,8 @@ program define clean_SRB_MNE_XKO
 	longrun_climate_measures
 
 	**leave gaps for fill**
-	foreach var of varlist tmax* tavg* prcp* {
+	* TO-DO: ask Maya why there's tmax*
+	foreach var of varlist tavg* prcp* {
 		qui replace `var' = . if year > 1999 | year <= 1989
 	}
 

@@ -15,6 +15,7 @@ Step 5) Construct First Differenced Interacted Variables
 
 clear all
 set more off
+qui ssc inst egenmore
 macro drop _all
 pause off
 
@@ -23,7 +24,7 @@ pause off
 
 // path to energy-code-release repo 
 
-global root "/Users/`c(username)'/Documents/repos/energy-code-release-2020"
+global root "/home/liruixue/repos/energy-code-release-2020/pixel_interaction"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -117,12 +118,15 @@ replace hdd20_TINV_GMFD = hdd20_other_TINV_GMFD if inlist(product,"other_energy"
 		keep cdd20_TINV_GMFD hdd20_TINV_GMFD country year lgdppc_MA15 gpid tpid tgpid large*
 
 		// generate average variables for climate and income quantiles for plotting
-		qui egen avgCDD_tpid=mean(cdd20_TINV_GMFD), by(tpid) //average CDD in each cell
-		qui egen avgHDD_tpid=mean(hdd20_TINV_GMFD), by(tpid) //average HDD in each cell
-		qui egen avgInc_tgpid=mean(lgdppc_MA15), by(tgpid) //average lgdppc in each cell
+		//average CDD in each cell
+		qui egen avgCDD_tpid=mean(cdd20_TINV_GMFD), by(tpid) 
+		//average HDD in each cell
+		qui egen avgHDD_tpid=mean(hdd20_TINV_GMFD), by(tpid) 
+		//average lgdppc in each cell
+		qui egen avgInc_tgpid=mean(lgdppc_MA15), by(tgpid) 
 
-		qui egen maxInc_gpid=max(lgdppc_MA15), by(gpid) //max lgdppc in each cell - this is needed for configs 
-
+		qui egen maxInc_gpid=max(lgdppc_MA15), by(gpid) //max lgdppc in each cell - this is needed for configs
+		
 		//max lggdppc for each large income group for each cell
 		foreach var in "other_energy" "electricity" {
 			qui egen maxInc_largegpid_`var'=max(lgdppc_MA15), by(largegpid_`var') 
@@ -208,6 +212,41 @@ replace subregionname = "Southern Europe" if country=="XKO"
 ***********************************************************************************************************************
 * Step 5) Construct First Differenced Interacted Variables
 ***********************************************************************************************************************
-
 do "$root/0_make_dataset/merged/2_construct_FD_interacted_variables.do"
 save "$root/data/GMFD_`model'_regsort.dta", replace
+
+/* 
+// see difference between old and new interactions
+//use "$root/data/GMFD_`model'_regsort.dta", replace
+use "${root}/data/climate_data.dta", clear
+gen old_interaction = cdd20_TINV_GMFD * polyAbove1_GMFD
+gen new_interaction = polyAbove1_x_cdd_GMFD
+gen diff = new_interaction - old_interaction
+gen pct_diff = diff / old_interaction
+sum *interaction *diff*
+corr old_interaction new_interaction
+//keep if inlist(country, "VAT") //one-pixel country
+keep if inlist(country, "MAF") 
+//two-pixel country
+list *interaction *diff* cdd20_TINV_GMFD polyAbove1_GMFD polyAbove1_x_cdd_GMFD country
+keep *interaction *diff* cdd20_TINV_GMFD polyAbove1_GMFD polyAbove1_x_cdd_GMFD country year
+ */
+/* some checks For MAF
+segment weights
+     +-------------------------------------------------------------------------------------------------------+
+     | iso       area   pix_ce~x   pix_ce~y     pop   areato~l   poptotal     areawt     popwt         shpid |
+     |-------------------------------------------------------------------------------------------------------|
+  1. | MAF   .0046577    -63.125     18.125   27385   .0047939      27389   .9715909   .999854   gadm28_adm0 |
+  2. | MAF   .0001362    -62.875     18.125       4   .0047939      27389   .0284091   .000146   gadm28_adm0 |
+     +-------------------------------------------------------------------------------------------------------+
+
+long run climate in these two pixels at pixel level
+     +--------------------------------+
+     | pix_ce~x   pix_ce~y    lr_clim |
+     |--------------------------------|
+  1. |  -63.125     18.125   2138.848 |
+  2. |  -62.875     18.125   846.4422 |
+     +--------------------------------+
+which, if aggregated with popwt, equals 
+ */
+

@@ -13,19 +13,19 @@ eval "$1" # fetch parameters from the command line
 
 ## extract full uncertainty impactspc for the global region --
 #### bash extraction_quantiles.sh "conda_env=projection;proj_type=median;
-#### clim_data=GMFD;model=TINV_clim_income_spline;grouping_test=semi-parametric;
+#### clim_data=GMFD;model=TINV_clim;grouping_test=semi-parametric;
 #### unit=impactpc;adapt_scen=fulladapt;geo_level=aggregated;spec=OTHERIND_other_energy;region=global;uncertainty=full"
 
 ## extract a variance value csv impactspc for the global region --
 #### bash extraction_quantiles.sh "conda_env=projection;proj_type=median;
-#### clim_data=GMFD;model=TINV_clim_income_spline;grouping_test=semi-parametric;
+#### clim_data=GMFD;model=TINV_clim;grouping_test=semi-parametric;
 #### unit=impactpc;adapt_scen=fulladapt;geo_level=aggregated;spec=OTHERIND_other_energy;
 #### region=global;uncertainty=values;proj_mode=_dm"
 
 # Parameters:
 ## note -- parameters are written with a very specific syntax so they can be read into R please stick to the syntax below if you are adding or changing parameters
 ## / parameter:grouping_test / options:semi-parametric, visual / required:yes /
-## / parameter:model / options:TINV_clim_income_spline, TINV_clim_income_spline_lininter, TINV_clim_income_spline_lininter_double / required:yes /
+## / parameter:model / options:TINV_clim, TINV_clim_lininter, TINV_clim_lininter_double / required:yes /
 ### or etc. (look to other scripts for info on other models... you should just be able to plop whatever model name in here)
 ## / parameter:clim_data / options:GMFD, BEST / required:yes /
 ## / parameter:conda_env / options:UNDEFINED / required:yes /
@@ -54,7 +54,7 @@ eval "$1" # fetch parameters from the command line
 ############################################################################################################
 
 repo_root=/home/$USER/repos
-extraction_config_path=energy-code-release-2020/projection_inputs/configs/${clim_data}/${model}/break2_Exclude/${grouping_test}/Extraction_Configs/sacagawea
+extraction_config_path=energy-code-release-2020/pixel_interaction/projection_inputs/configs/${clim_data}/${model}/break2_Exclude/${grouping_test}/Extraction_Configs/sacagawea
 log_file_path=/home/${USER}/extraction_shell_logs
 
 ############################################################################################################
@@ -81,7 +81,7 @@ get_input_file() {
 		as_tag=-${as}
 	fi
 
-	stem=FD_FGLS_inter_clim${clim_data}_Exclude_all-issues_break2_${grouping_test}_poly2_${product}_${model}
+	stem=FD_FGLS_inter_${product}_${model}
 	input_file=${stem}${as_tag}${price_scen_tag}${geo_level_tag}
 
         if [[ -z ${input_file} ]]; then
@@ -254,6 +254,7 @@ setup_log_file ${ecp} ${log_file} "${command}"
 
 if ${extract}; then
 	# execute command
+	echo "${command}"
 	eval ${command}
 	echo "pid:$!"
 fi

@@ -21,10 +21,10 @@ pause off
 
 // path to energy-code-release repo 
 * global root "C:/Users/TomBearpark/Documents/energy-code-release-2020"
-global root "/home/tbearpark/repos/energy-code-release-2020"
+global root "/home/liruixue/repos/energy-code-release-2020/pixel_interaction"
 
 * This is used to  
-loc uname "tbearpark"
+loc uname "liruixue"
 
 * Set root location where config and shell files will be generated
 loc GIT $root/projection_inputs
@@ -60,12 +60,12 @@ local IF "_all-issues" //second-reading-issues revised-first-reading-issues matc
 //Climate Data type
 local clim_data "GMFD"
 
-//Model type-- Options: TINV_clim_income_spline, TINV_clim_income_spline_lininter, TINV_clim_income_spline_lininter_double
+//Model type-- Options: TINV_clim, TINV_clim_lininter, TINV_clim_lininter_double
 
-foreach model_tt in "TINV_clim_income_spline" "TINV_clim_income_spline_lininter" "TINV_clim_income_spline_lininter_double" {
+foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double" {
 
 
-	if("`model_tt'" == "TINV_clim_income_spline"){
+	if("`model_tt'" == "TINV_clim"){
 		// which prices do you want to generate aggregation and extraction configs for? 
 		local price_list = " price014 price0 price03 WITCHGLOBIOM42_rcp45 WITCHGLOBIOM42_rcp85 REMINDMAgPIE1730_rcp85 REMINDMAgPIE1730_rcp45 REMIND17CEMICS_rcp85 REMIND17CEMICS_rcp45 REMIND17_rcp85 REMIND17_rcp45 MERGEETL60_rcp85 MERGEETL60_rcp45 "
 	}
@@ -78,7 +78,7 @@ foreach model_tt in "TINV_clim_income_spline" "TINV_clim_income_spline_lininter"
 	************************************************
 
 	* Location of csvv files on sac
-	local CSVVpath_output_sacagawea "/shares/gcp/social/parameters/energy/incspline0719/`clim_data'/`model_tt'" 
+	local CSVVpath_output_sacagawea "$root/projection_inputs/csvv/`model_tt'" 
 
 	* location of csvv files on BRC
 	local CSVVpath_output_laika "/global/scratch/`uname'/Energy/Projection/Median/`model_tt'/`clim_data'"
@@ -88,7 +88,7 @@ foreach model_tt in "TINV_clim_income_spline" "TINV_clim_income_spline_lininter"
 
 
 	// ster stem for desired projection 
-	local stem = "FD_FGLS_inter_clim`clim_data'_`case'`IF'_`bknum'_`grouping_test'_poly2"
+	local stem = "FD_FGLS_inter"
 
 	// path to analysis data 
 	local DATA "$root/data"	
@@ -231,7 +231,7 @@ foreach model_tt in "TINV_clim_income_spline" "TINV_clim_income_spline_lininter"
 								  geo_level("`geo_level'") uncertainty("`uncertainty'") unit("`unit'") proj_model("`model_tt'") ///
 								  config_output("`extraction_config_output'") ///
 								  csvv("`csvv'") ///
-								  extraction_output("/shares/gcp/social/parameters/energy/extraction/multi-models/rationalized_code/`bknum'_`case'`IF'_`grouping_test'/`model_tt'_`clim_data'/`median_folder'") ///
+								  extraction_output("/shares/gcp/social/parameters/energy_pixel_interaction/extraction/multi-models/rationalized_code/`bknum'_`case'`IF'_`grouping_test'/`model_tt'_`clim_data'/`median_folder'") ///
 								  evalqvals("`evalqvals'")
 						}
 					}
@@ -276,7 +276,7 @@ foreach model_tt in "TINV_clim_income_spline" "TINV_clim_income_spline_lininter"
 						  geo_level("`geo_level'") uncertainty("`uncertainty'") unit("`unit'") proj_model("`model_tt'") ///
 						  config_output("`extraction_config_output'") two_product("TRUE") ///
 						  csvv("`csvv'") csvv_path("`CSVVpath_output_sacagawea'") ///
-						  extraction_output("/shares/gcp/social/parameters/energy/extraction/multi-models/rationalized_code/`bknum'_`case'`IF'_`grouping_test'/`model_tt'_`clim_data'/total_energy") ///
+						  extraction_output("/shares/gcp/social/parameters/energy_pixel_interaction/extraction/multi-models/rationalized_code/`bknum'_`case'`IF'_`grouping_test'/`model_tt'_`clim_data'/total_energy") ///
 						  evalqvals("`evalqvals'")
 					}
 				}

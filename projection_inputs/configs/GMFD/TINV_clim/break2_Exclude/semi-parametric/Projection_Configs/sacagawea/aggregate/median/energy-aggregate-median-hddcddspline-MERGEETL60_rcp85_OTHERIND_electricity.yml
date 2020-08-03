@@ -1,0 +1,7 @@
+outputdir: outputs/energy_pixel_interaction/impacts-blueghost/median_OTHERIND_electricity_TINV_clim_GMFD
+levels-weighting: population * social/baselines/energy/MERGEETL60_rcp85_Prices_COMPILE.dta:country:year:electricitycompile_price
+aggregate-weighting-numerator: population * social/baselines/energy/MERGEETL60_rcp85_Prices_COMPILE.dta:country:year:electricitycompile_price
+aggregate-weighting-denominator: sum-to-1
+infix: MERGEETL60_rcp85
+rcp: rcp85
+only-farmers: ['', 'histclim']
