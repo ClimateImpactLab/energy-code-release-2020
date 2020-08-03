@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "STEP 1"
-#stata-mp  do 1_construct_dataset_from_raw_inputs.do
+stata-mp  do 1_construct_dataset_from_raw_inputs.do
 echo "STEP 2"
 stata-mp  do 2_construct_regression_ready_data.do
 echo "STEP 3"

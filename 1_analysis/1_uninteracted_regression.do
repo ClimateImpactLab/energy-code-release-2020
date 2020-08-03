@@ -5,12 +5,12 @@ Purpose: Estimate and Plot stacked global energy-temperature response
 clear all
 set more off
 macro drop _all
-
+cilpath
 /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////
 
 // path to energy-code-release repo 
 
-global root "/home/liruixue/repos/energy-code-release-2020"
+global root "${REPO}/energy-code-release-2020"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
