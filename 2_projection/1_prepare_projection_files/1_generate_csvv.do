@@ -89,7 +89,7 @@ foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double"
 		
 		foreach product in "_other_energy" "_electricity" ""{
 			copy "`output_csvv'/TINV_clim_lininter/FD_FGLS_inter_OTHERIND`product'_TINV_clim_lininter.csvv" ///
-				"`output_csvv'/TINV_clim_lininter_double/FD_FGLS_inter_OTHERIND`product'_TINV_clim_lininter_double.csvv" 
+				"`output_csvv'/TINV_clim_lininter_double/FD_FGLS_inter_OTHERIND`product'_TINV_clim_lininter_double.csvv", replace 
 		}
 
 	}
