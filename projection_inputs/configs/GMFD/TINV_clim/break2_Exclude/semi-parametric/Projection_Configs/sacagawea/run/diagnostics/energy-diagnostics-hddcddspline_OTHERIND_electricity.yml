@@ -1,4 +1,4 @@
-module: /home/liruixue/repos/energy-code-release-2020/pixel_interaction/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/model/hddcddspline_OTHERIND_electricity.yml
+module: /home/liruixue/repos/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/model/hddcddspline_OTHERIND_electricity.yml
 mode: writecalcs
 outputdir: /shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost
 singledir: single-OTHERIND_electricity_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_GMFD

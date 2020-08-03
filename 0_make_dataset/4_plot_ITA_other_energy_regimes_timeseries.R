@@ -6,7 +6,9 @@ rm(list = ls())
 if (!require(tidyverse)) { install.packages("tidyverse"); library(tidyverse) } 
 if (!require(haven)) { install.packages("haven"); library(haven) } 
 
-root = "/Users/{YOUR_USERNAME}/Documents/repos/energy-code-release-2020"
+cilpath.r:::cilpath()
+
+root = paste0(REPO, "/energy-code-release-2020")
 
 # load data and select only relevant variables==
 df <- read_dta(paste0(root, "/data/GMFD_TINV_clim_regsort.dta")) %>%

@@ -26,7 +26,7 @@ pacman::p_load(ggplot2,
 DB = "/mnt/CIL_energy"
 
 DB_data = paste0(DB, "/pixel_interaction")
-root =  "/home/liruixue/repos/energy-code-release-2020/pixel_interaction"
+root =  "/home/liruixue/repos/energy-code-release-2020"
 output = paste0(root, "/figures")
 
 # Source time series plotting codes

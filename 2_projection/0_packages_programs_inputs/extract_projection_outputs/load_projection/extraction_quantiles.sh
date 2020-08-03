@@ -54,7 +54,7 @@ eval "$1" # fetch parameters from the command line
 ############################################################################################################
 
 repo_root=/home/$USER/repos
-extraction_config_path=energy-code-release-2020/pixel_interaction/projection_inputs/configs/${clim_data}/${model}/break2_Exclude/${grouping_test}/Extraction_Configs/sacagawea
+extraction_config_path=energy-code-release-2020/projection_inputs/configs/${clim_data}/${model}/break2_Exclude/${grouping_test}/Extraction_Configs/sacagawea
 log_file_path=/home/${USER}/extraction_shell_logs
 
 ############################################################################################################

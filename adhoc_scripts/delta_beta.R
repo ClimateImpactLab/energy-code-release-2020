@@ -50,8 +50,8 @@ source(paste0(git,'/gcp-energy/rationalized/2_projection/2_processing/packages/r
 
 
 # Set location of files needed for the code to run (covs, csvv climate output)
-csvv.dir = '/home/liruixue/repos/energy-code-release-2020/pixel_interaction/projection_inputs/csvv/TINV_clim/'
-config.path <- paste0(git,"/energy-code-release-2020/pixel_interaction/projection_inputs/configs/",clim_data,"/",model,"/break2_Exclude/", grouping_test,"/Projection_Configs/sacagawea/run/diagnostics/")
+csvv.dir = '/home/liruixue/repos/energy-code-release-2020/projection_inputs/csvv/TINV_clim/'
+config.path <- paste0(git,"/energy-code-release-2020/projection_inputs/configs/",clim_data,"/",model,"/break2_Exclude/", grouping_test,"/Projection_Configs/sacagawea/run/diagnostics/")
 cov.dir <- paste0("/mnt/CIL_energy/IEA_Replication/Data/Projection/covariates/FD_FGLS_719_Exclude_all-issues_break2_",grouping_test,"_",model,"_income_spline.csv")
 tas.path <- paste0("/shares/gcp/climate/BCSD/hierid/popwt/daily/") #location of input impact files
 output.dir <- output

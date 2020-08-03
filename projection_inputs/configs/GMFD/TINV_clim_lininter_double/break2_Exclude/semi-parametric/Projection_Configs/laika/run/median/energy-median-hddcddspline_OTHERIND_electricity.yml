@@ -1,4 +1,4 @@
-module: /global/scratch/liruixue/repos/energy-code-release-2020/pixel_interaction/projection_inputs/configs/GMFD/TINV_clim_lininter_double/break2_Exclude/semi-parametric/Projection_Configs/laika/model/hddcddspline_OTHERIND_electricity.yml
+module: /global/scratch/liruixue/repos/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim_lininter_double/break2_Exclude/semi-parametric/Projection_Configs/laika/model/hddcddspline_OTHERIND_electricity.yml
 mode: median
 outputdir: /global/scratch/liruixue/outputs/energy_pixel_interaction/impacts-blueghost/median_OTHERIND_electricity_TINV_clim_lininter_double_GMFD
 do_farmers: true

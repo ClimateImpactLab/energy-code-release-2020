@@ -18,13 +18,13 @@ set more off
 qui ssc inst egenmore
 macro drop _all
 pause off
-
+cilpath
 
 /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////
 
 // path to energy-code-release repo 
 
-global root "/home/liruixue/repos/energy-code-release-2020/pixel_interaction"
+global root "$REPO/energy-code-release-2020"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -216,6 +216,7 @@ do "$root/0_make_dataset/merged/2_construct_FD_interacted_variables.do"
 save "$root/data/GMFD_`model'_regsort.dta", replace
 
 /* 
+TO-DO: delete this part before releasing
 // see difference between old and new interactions
 //use "$root/data/GMFD_`model'_regsort.dta", replace
 use "${root}/data/climate_data.dta", clear

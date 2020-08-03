@@ -6,7 +6,7 @@ uname="liruixue"
 repo_root="/home/${uname}/repos"
 projection_repo_root="/home/${uname}/projection_repos"
 
-config_path="${repo_root}/energy-code-release-2020/pixel_interaction/projection_inputs/configs/GMFD"
+config_path="${repo_root}/energy-code-release-2020/projection_inputs/configs/GMFD"
 
 model="TINV_clim"
 aggregate_config_path="${config_path}/${model}/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/aggregate/diagnostics/"

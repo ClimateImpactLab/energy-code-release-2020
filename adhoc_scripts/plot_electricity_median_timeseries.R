@@ -21,7 +21,7 @@ dir = paste0('/shares/gcp/social/parameters/energy_pixel_interaction/extraction/
 git = paste0("/home/", user,"/repos")
 
 # Make sure you are in the risingverse-py27 for this... 
-projection.packages <- paste0(git,"/energy-code-release-2020/pixel_interaction/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
+projection.packages <- paste0(git,"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
 setwd(paste0('/home/',user, '/repos/'))
 
 # Source codes that help us load projection system outputs
@@ -29,7 +29,7 @@ miceadds::source.all(paste0(projection.packages,"load_projection/"))
 
 data = '/shares/gcp/social/parameters/energy_pixel_interaction/extraction/'
 
-root =  "/home/liruixue/repos/energy-code-release-2020/pixel_interaction"
+root =  "/home/liruixue/repos/energy-code-release-2020"
 output = "/mnt/CIL_energy/pixel_interaction/projection_system_outputs/plot_single/"
 
 source("/home/liruixue/projection_repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 

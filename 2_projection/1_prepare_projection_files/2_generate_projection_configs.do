@@ -21,7 +21,7 @@ pause off
 
 // path to energy-code-release repo 
 * global root "C:/Users/TomBearpark/Documents/energy-code-release-2020"
-global root "/home/liruixue/repos/energy-code-release-2020/pixel_interaction"
+global root "/home/liruixue/repos/energy-code-release-2020"
 
 * This is used to  
 loc uname "liruixue"

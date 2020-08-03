@@ -30,10 +30,11 @@ macro drop _all
 pause on
 cap ssc install rangestat
 
+cilpath
 /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////
 
 // path to energy-code-release repo 
-local root "/home/liruixue/repos/energy-code-release-2020/pixel_interaction"
+local root "$REPO/energy-code-release-2020"
 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////

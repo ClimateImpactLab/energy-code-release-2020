@@ -23,7 +23,7 @@ output = '/mnt/CIL_energy/pixel_interaction/'
 
 # Source a python code that lets us load SSP data directly from the SSPs
 # Make sure you are in the risingverse conda environment for this... 
-projection.packages <- paste0(git,"/energy-code-release-2020/pixel_interaction/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
+projection.packages <- paste0(git,"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
 source_python(paste0(projection.packages, "future_gdp_pop_data.py"))
 
 ###########################################
