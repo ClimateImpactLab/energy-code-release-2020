@@ -12,7 +12,8 @@ clear all
 set more off
 
 * Set up the paths:
-global root "/Users/`c(username)'/Documents/repos/energy-code-release-2020"
+cilpath
+global root "$REPO/energy-code-release-2020"
 
 global DATA "$root/data"
 global OUT "$root/figures"
