@@ -20,11 +20,9 @@ output = '/mnt/CIL_energy/pixel_interaction/'
 dir = paste0('/shares/gcp/social/parameters/energy_pixel_interaction/extraction/',
 				'multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/')
 
-git = REPO
-
 # Make sure you are in the risingverse-py27 for this... 
-projection.packages <- paste0(git,"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
-setwd(paste0(REPO)
+projection.packages <- paste0(REPO,"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
+setwd(paste0(REPO))
 
 # Source codes that help us load projection system outputs
 miceadds::source.all(paste0(projection.packages,"load_projection/"))
@@ -73,9 +71,7 @@ get_main_model_impacts_maps = function(fuel, price_scen, unit, year, output){
 			'main_model-', fuel, '-SSP3-rcp85-high-fulladapt-',price_tag ,'-2099-map.csv'))
 }
 
-# TO-DO: change back when both projections are run
-# fuels = c("electricity", "other_energy")
-fuels = c("electricity")
+fuels = c("electricity", "other_energy")
 
 df = lapply(fuels, get_main_model_impacts_maps, 
 	price_scen = NULL, unit = "impactpc", year = 2099, output = output)

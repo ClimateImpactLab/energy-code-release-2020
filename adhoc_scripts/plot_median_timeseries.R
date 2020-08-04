@@ -11,7 +11,6 @@ library(tidyr)
 cilpath.r:::cilpath()
 
 db = '/mnt/CIL_energy/'
-output = '/mnt/CIL_energy/pixel_interaction/'
 
 
 dir = paste0('/shares/gcp/social/parameters/energy_pixel_interaction/extraction/',
@@ -41,9 +40,7 @@ source(paste0(root, "/3_post_projection/0_utils/time_series.R"))
 # Get time series data for figure 2C
 ###############################################
 
-# TO-DO: change back when both projections are run
-# fuels = c("electricity", "other_energy")
-fuels = c("electricity")
+fuels = c("electricity", "other_energy")
 
 rcps = c("rcp85", "rcp45")
 adapt = c("fulladapt", "noadapt")
@@ -110,8 +107,6 @@ get_df_list_fig_2C = function(fuel, rcp, adapt){
   return(df)
 }
 
-plot_df = get_df_list_fig_2C(fuel = "electricity", rcp = "rcp85", adapt = "noadapt")
-
 # Plotting function, for replicating Figure 2C. Note - coloring in the paper requires 
 
 # post processing in illustrator 
@@ -140,8 +135,8 @@ plot_ts_fig_2C = function(fuel, output){
   return(p)
 }
 
-# p = plot_ts_fig_2C(data = data, fuel = "other_energy", output = output)
 q = plot_ts_fig_2C(fuel = "electricity", output = output)
+p = plot_ts_fig_2C(fuel = "other_energy", output = output)
 
 
 
