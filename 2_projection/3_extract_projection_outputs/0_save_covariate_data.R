@@ -12,9 +12,8 @@ library(haven)
 library(tidyr)
 cilpath.r:::cilpath()
 
-git = REPO
 
-setwd(paste0(git,"/energy-code-release-2020/"))
+setwd(paste0(REPO,"/energy-code-release-2020/"))
 
 db = '/mnt/CIL_energy/'
 output = '/mnt/CIL_energy/pixel_interaction/'
@@ -22,7 +21,7 @@ output = '/mnt/CIL_energy/pixel_interaction/'
 
 # Source a python code that lets us load SSP data directly from the SSPs
 # Make sure you are in the risingverse conda environment for this... 
-projection.packages <- paste0(git,"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
+projection.packages <- paste0(REPO,"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
 source_python(paste0(projection.packages, "future_gdp_pop_data.py"))
 
 ###########################################
@@ -44,8 +43,10 @@ city_list = read_csv(paste0(db,
 # TO-DO: shorten the long path?
 cov_electricity_single= read_csv("/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost/single-OTHERIND_electricity_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_GMFD/rcp85/CCSM4/high/SSP3/hddcddspline_OTHERIND_electricity-allcalcs-FD_FGLS_inter_OTHERIND_electricity_TINV_clim.csv",
   skip = 114) %>% 
-   dplyr::select(year, region, "climtas-cdd-20", "climtas-hdd-20", loggdppc)
+	write_csv(paste0(output, '/miscellaneous/covariates_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim.csv'))
+
 covariates = cov_electricity_single %>%
+		dplyr::select(year, region, "climtas-cdd-20", "climtas-hdd-20", loggdppc) %>%
 		dplyr::filter(year %in% c(2015, 2099))%>%
 		dplyr::right_join(city_list, by = "region") %>%
 		write_csv(paste0(output, '/miscellaneous/stockholm_guangzhou_covariates_2015_2099.csv'))

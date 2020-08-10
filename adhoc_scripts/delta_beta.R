@@ -34,7 +34,7 @@ regions = c("GBR.1.10")
 
 
 #set directories
-output = "/mnt/CIL_energy/code_release_data/projection_system_outputs/plot_single/"
+output = "/mnt/CIL_energy/code_release_data_pixel_interaction/projection_system_outputs/plot_single/"
 git <- "/home/liruixue/repos"
 
 

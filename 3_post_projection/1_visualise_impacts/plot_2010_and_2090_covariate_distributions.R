@@ -16,7 +16,7 @@ pacman::p_load(ggplot2,
 
 DB = "C:/Users/TomBearpark/synologyDrive"
 
-DB_data = paste0(DB, "/GCP_Reanalysis/ENERGY/code_release_data")
+DB_data = paste0(DB, "/GCP_Reanalysis/ENERGY/code_release_data_pixel_interaction")
 root =  "C:/Users/TomBearpark/Documents/energy-code-release-2020"
 output = paste0(root, "/figures/fig_Appendix-C3_sample_overlap_present_future")
 

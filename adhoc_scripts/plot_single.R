@@ -18,7 +18,7 @@ pacman::p_load(ggplot2,
 data = '/shares/gcp/social/parameters/energy_pixel_interaction/extraction/'
 
 root =  "/home/liruixue/repos/energy-code-release-2020"
-output = "/mnt/CIL_energy/code_release_data/projection_system_outputs/plot_single/"
+output = "/mnt/CIL_energy/code_release_data_pixel_interaction/projection_system_outputs/plot_single/"
 
 source(paste0(root, "/3_post_projection/0_utils/mapping.R"))
 source(paste0(root, "/3_post_projection/0_utils/time_series.R"))
@@ -27,7 +27,7 @@ source(paste0(root, "/3_post_projection/0_utils/time_series.R"))
 # 1. Load in a world shapefile, containing Impact Region boundaries, and convert to a 
 #     dataframe for plotting
 
-mymap = load.map(shploc = "/mnt/CIL_energy/code_release_data/shapefiles/world-combo-new-nytimes")
+mymap = load.map(shploc = "/mnt/CIL_energy/code_release_data_pixel_interaction/shapefiles/world-combo-new-nytimes")
 
 
 #############################################

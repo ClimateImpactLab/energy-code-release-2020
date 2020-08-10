@@ -68,7 +68,7 @@ di "`model_name'"
 
 *Setting path shortcuts
 
-local misc_data "/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/code_release_data/projection_system_outputs/21jul2020_pre_data/"
+local misc_data "/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/code_release_data_pixel_interaction/projection_system_outputs/21jul2020_pre_data/"
 local analysis_data "`DROPBOX'/GCP_Reanalysis/ENERGY/IEA_Replication/Data/Analysis/`clim_data'/rationalized_code/replicated_data/"
 local projection_data "`DROPBOX'/GCP_Reanalysis/ENERGY/IEA_Replication/Projection/elver_projection/data/covariates"
 
@@ -362,21 +362,21 @@ outsheet using "`misc_data'/incadapt.csv", comma names replace
 
 
 * reshape and calculate
-insheet using "/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/code_release_data/projection_system_outputs/21jul2020_pre_data//incadapt.csv", clear
+insheet using "/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/code_release_data_pixel_interaction/projection_system_outputs/21jul2020_pre_data//incadapt.csv", clear
 keep if product == "electricity" & temp == 32
 drop product year temp
 rename response incadapt2099
 save incadapt2099, replace
 
 
-insheet using "/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/code_release_data/projection_system_outputs/21jul2020_pre_data//fulladapt.csv", clear
+insheet using "/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/code_release_data_pixel_interaction/projection_system_outputs/21jul2020_pre_data//fulladapt.csv", clear
 keep if year == 2015
 keep if product == "electricity" & temp == 32
 drop product year temp
 rename response fulladapt2015
 save fulladapt2015, replace
 
-insheet using "/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/code_release_data/projection_system_outputs/21jul2020_pre_data//fulladapt.csv", clear
+insheet using "/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/code_release_data_pixel_interaction/projection_system_outputs/21jul2020_pre_data//fulladapt.csv", clear
 keep if year == 2099
 keep if product == "electricity" & temp == 32
 drop product year temp

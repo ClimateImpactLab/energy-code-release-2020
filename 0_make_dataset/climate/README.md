@@ -82,7 +82,7 @@ The shapefile specific programs below construct yearly climate data for specific
 
 ### Non-Standard Geographic Boundary Definitions
 
-The shapefile specific programs below clean yearly climate data for specific countries and time periods based on the following country definitions. Shapefiles used in the analysis are stored in the external data repository, under `/code_release_data/shapefiles`
+The shapefile specific programs below clean yearly climate data for specific countries and time periods based on the following country definitions. Shapefiles used in the analysis are stored in the external data repository, under `/code_release_data_pixel_interaction/shapefiles`
 
 * [programs/clean_CUW_BES_ABW.do](https://github.com/ClimateImpactLab/energy-code-release-2020/blob/master/0_make_dataset/climate/programs/clean_CUW_BES_ABW.do):
     * Prior to 2012, Curaçao data cover the entire territory of the former Netherland Antilles

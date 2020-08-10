@@ -11,7 +11,7 @@ pacman::p_load(dplyr,
 
 # Set paths
 DB = "C:/Users/TomBearpark/SynologyDrive/"
-DB_data = paste0(DB, "/GCP_Reanalysis/ENERGY/code_release_data")
+DB_data = paste0(DB, "/GCP_Reanalysis/ENERGY/code_release_data_pixel_interaction")
 dir = paste0(DB_data, "/projection_system_outputs/damage_function_estimation/")
 
 

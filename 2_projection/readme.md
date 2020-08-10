@@ -35,7 +35,7 @@ if we end up changing the configs.
  - Note - if you change the existing configs (specifically the extraction configs), then `load_projection` won't work on the current set of projection results on sac. 
 
 - Note for aggregation: price units are currently in $/Kwh. Change this (by either updating the price files, or by pointing the aggregation configs to new price files) if you run a projection 
-in units of GJ rather than KWh. The files in the code release data (stored here `/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/code_release_data/price_scenarios`) are in $/GJ, so you could just update the configs to point to here. 
+in units of GJ rather than KWh. The files in the code release data (stored here `/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/code_release_data_pixel_interaction/price_scenarios`) are in $/GJ, so you could just update the configs to point to here. 
 
 # End of stuff that's just a message for Ashwin / Rae
   

@@ -12,19 +12,19 @@ library(tidyr)
 cilpath.r:::cilpath()
 
 
-db = '/mnt/norgay_synology_drive/'
-data_dir = paste0(db,'GCP_Reanalysis/ENERGY/code_release_data/')
+db = '/mnt/CIL_energy/'
+output = '/mnt/CIL_energy/pixel_interaction/'
+
+data_dir = paste0(db,'/code_release_data_pixel_interaction/')
 
 output = paste0(db, 
-	'GCP_Reanalysis/ENERGY/code_release_data/projection_system_outputs/damage_function_estimation')
+	'/code_release_data_pixel_interaction/projection_system_outputs/damage_function_estimation')
 dir = paste0('/shares/gcp/social/parameters/energy_pixel_interaction/extraction/',
 				'multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/')
 
-git = paste0(REPO)
-
 # Source codes that help us load projection system outputs
 # Make sure you are in the risingverse-py27 for this... 
-projection.packages <- paste0(git,
+projection.packages <- paste0(REPO,
 	"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
 miceadds::source.all(paste0(projection.packages,"load_projection/"))
 
@@ -34,7 +34,7 @@ miceadds::source.all(paste0(projection.packages,"load_projection/"))
 # 2. Values csvs for each SSP/Price scenario we want to calculate a damage function for.
 
 # 1. GMST anomolies: moving from our server into a shared directory
-gmst_dir = "/mnt/norgay_synology_drive/Global ACP/damage_function/GMST_anomaly"
+gmst_dir = "/mnt/Global_ACP/damage_function/GMST_anomaly"
 gmst_df = read_csv(paste0(gmst_dir, "/GMTanom_all_temp_2001_2010.csv"))
 write_csv(gmst_df, paste0(output, "/GMTanom_all_temp_2001_2010.csv"))
 

@@ -17,7 +17,7 @@ cilpath.r:::cilpath()
 db = '/mnt/CIL_energy/'
 output = '/mnt/CIL_energy/pixel_interaction/'
 
-dir = paste0('/shares/gcp/social/parameters/energy_pixel_interaction/extraction/',
+dir = paste0('/shares/gcp/social               nn  //eters/energy_pixel_interaction/extraction/',
 				'multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/')
 
 # Make sure you are in the risingverse-py27 for this... 
@@ -85,10 +85,7 @@ df = lapply(fuels, get_main_model_impacts_maps,
 # Get time series data for figure 2C
 ###############################################
 
-# TO-DO: change back when both projections are run
-# fuels = c("electricity", "other_energy")
-fuels = c("electricity")
-
+fuels = c("electricity", "other_energy")
 rcps = c("rcp85", "rcp45")
 adapt = c("fulladapt", "noadapt")
 options = expand.grid(fuels = fuels, rcps = rcps, adapt= adapt)
@@ -320,10 +317,8 @@ lapply(rcps, get_df_ts_main_model_total_energy, args = args)
 # Note - this is the output from a single run, since that produces an allcalcs file
 
 # set path variables
-covariates <- paste0("/mnt/norgay_synology_drive", 
-  "/GCP_Reanalysis/ENERGY/IEA_Replication/Data/", 
-  "Projection/covariates/",
-  "FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim.csv")
+covariates <- paste0(output, 
+  '/miscellaneous/covariates_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim.csv')
 
 # load and clean data
 covars = as.data.frame(readr::read_csv(covariates)) %>% 

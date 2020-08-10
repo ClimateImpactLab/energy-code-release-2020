@@ -12,7 +12,7 @@ local clim_data "GMFD"
 //SET UP RELEVANT PATHS
 
 glob DB "C:/Users/TomBearpark/synologyDrive"
-loc DB_data "$DB/GCP_Reanalysis/ENERGY/code_release_data"
+loc DB_data "$DB/GCP_Reanalysis/ENERGY/code_release_data_pixel_interaction"
 
 glob root "C:/Users/TomBearpark/Documents/energy-code-release-2020"
 loc data "$root/data"

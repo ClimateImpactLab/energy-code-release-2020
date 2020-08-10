@@ -28,7 +28,7 @@ Details of the calculations done in this code can be found in Appendix Section F
 - There is an option to generate plots that may help users visualise the calculation process. Set `generate_plots = True` in the first cell of the code to produce extra plots using this code (these are not directly used in the paper). 
 
 #### Code inputs
-- Damage function coefficients, which are stored in: `code_release_data/projection_system_outputs/damage_function_estimation/`.
+- Damage function coefficients, which are stored in: `code_release_data_pixel_interaction/projection_system_outputs/damage_function_estimation/`.
 
 #### Code outputs
 - The output of this code are csv files containing SCC values for different scenarios. These csv files are manually processed into the latex tables shown in the paper. 

@@ -10,7 +10,7 @@ pacman::p_load(ggplot2, # plotting functions
                readr)   # read_csv()
 
 DB = "C:/Users/TomBearpark/synologyDrive"
-DB_data = paste0(DB, "/GCP_Reanalysis/ENERGY/code_release_data")
+DB_data = paste0(DB, "/GCP_Reanalysis/ENERGY/code_release_data_pixel_interaction")
 data = paste0(DB_data, "/outputs")
 
 root =  "C:/Users/TomBearpark/Documents/energy-code-release-2020"
