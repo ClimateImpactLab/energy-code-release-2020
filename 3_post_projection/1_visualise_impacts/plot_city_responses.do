@@ -11,10 +11,10 @@ local clim_data "GMFD"
 
 //SET UP RELEVANT PATHS
 
-glob DB "C:/Users/TomBearpark/synologyDrive"
-loc DB_data "$DB/GCP_Reanalysis/ENERGY/code_release_data_pixel_interaction"
+glob DB "/mnt"
+loc DB_data "$DB/CIL_energy/code_release_data_pixel_interaction"
 
-glob root "C:/Users/TomBearpark/Documents/energy-code-release-2020"
+glob root "/home/liruixue/repos/energy-code-release-2010"
 loc data "$root/data"
 loc output "$root/figures"
 

@@ -28,7 +28,7 @@ miceadds::source.all(paste0(projection.packages,"load_projection/"))
 data = '/shares/gcp/social/parameters/energy_pixel_interaction/extraction/'
 
 root =  paste0(REPO, "/energy-code-release-2020")
-output = "/mnt/CIL_energy/pixel_interaction/projection_system_outputs/"
+output = "/mnt/CIL_energy/code_release_data_pixel_interaction/projection_system_outputs/"
 
 source("/home/liruixue/projection_repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 source(paste0(root, "/3_post_projection/0_utils/time_series.R"))

@@ -24,7 +24,7 @@ pacman::p_load(ggplot2,
 data = '/shares/gcp/social/parameters/energy_pixel_interaction/extraction/'
 
 root =  paste0(REPO, "/energy-code-release-2020")
-output = "/mnt/CIL_energy/pixel_interaction/projection_system_outputs/plot_single/"
+output = "/mnt/CIL_energy/code_release_data_pixel_interaction/projection_system_outputs/plot_single/"
 
 source(paste0(root, "/3_post_projection/0_utils/mapping.R"))
 source(paste0(root, "/3_post_projection/0_utils/time_series.R"))

@@ -13,7 +13,7 @@ cilpath.r:::cilpath()
 
 
 db = '/mnt/CIL_energy/'
-output = '/mnt/CIL_energy/pixel_interaction/'
+output = '/mnt/CIL_energy/code_release_data_pixel_interaction/'
 
 data_dir = paste0(db,'/code_release_data_pixel_interaction/')
 

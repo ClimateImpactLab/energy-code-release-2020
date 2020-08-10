@@ -16,7 +16,7 @@ cilpath.r:::cilpath()
 setwd(paste0(REPO,"/energy-code-release-2020/"))
 
 db = '/mnt/CIL_energy/'
-output = '/mnt/CIL_energy/pixel_interaction/'
+output = '/mnt/CIL_energy/code_release_data_pixel_interaction/'
 
 
 # Source a python code that lets us load SSP data directly from the SSPs

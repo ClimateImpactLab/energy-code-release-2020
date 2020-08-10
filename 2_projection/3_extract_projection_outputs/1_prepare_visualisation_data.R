@@ -15,9 +15,9 @@ cilpath.r:::cilpath()
 
 
 db = '/mnt/CIL_energy/'
-output = '/mnt/CIL_energy/pixel_interaction/'
+output = '/mnt/CIL_energy/code_release_data_pixel_interaction/'
 
-dir = paste0('/shares/gcp/social               nn  //eters/energy_pixel_interaction/extraction/',
+dir = paste0('/shares/gcp/social/parameters/energy_pixel_interaction/extraction/',
 				'multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/')
 
 # Make sure you are in the risingverse-py27 for this... 

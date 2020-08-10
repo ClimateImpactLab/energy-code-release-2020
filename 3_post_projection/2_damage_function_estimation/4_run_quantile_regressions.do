@@ -24,8 +24,8 @@ clear all
 set more off
 set scheme s1color
 
-glob DB "C:/Users/TomBearpark/SynologyDrive"
-glob DB_data "$DB/GCP_Reanalysis/ENERGY/code_release_data_pixel_interaction"
+glob DB "/mnt"
+glob DB_data "$DB/CIL_energy/code_release_data_pixel_interaction"
 glob dir "$DB_data/projection_system_outputs/damage_function_estimation"
 
 * Note: this code is only set up to run quantile regressions for SSP3-main model. 

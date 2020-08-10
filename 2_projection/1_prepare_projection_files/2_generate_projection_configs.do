@@ -20,7 +20,7 @@ macro drop _all
 pause off
 cilpath
 // path to energy-code-release repo 
-* global root "C:/Users/TomBearpark/Documents/energy-code-release-2020"
+* global root "/home/liruixue/repos/energy-code-release-2010"
 global root "$REPO/energy-code-release-2020"
 
 * This is used to  

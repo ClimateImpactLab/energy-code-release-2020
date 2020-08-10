@@ -14,10 +14,10 @@ pacman::p_load(ggplot2,
                scales, 
                grid)
 
-DB = "C:/Users/TomBearpark/synologyDrive"
+DB = "/mnt"
 
 DB_data = paste0(DB, "/GCP_Reanalysis/ENERGY/code_release_data_pixel_interaction")
-root =  "C:/Users/TomBearpark/Documents/energy-code-release-2020"
+root =  "/home/liruixue/repos/energy-code-release-2010"
 output = paste0(root, "/figures/fig_Appendix-C3_sample_overlap_present_future")
 
 covariates <- paste0(DB_data, "/projection_system_outputs/covariates/",
