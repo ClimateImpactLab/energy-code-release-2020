@@ -22,24 +22,26 @@ done
 # For lininter and lininter_double models, only run point estimate aggregations, for price014 scenario
 # and non-price aggregations
 
+# TO-DO: run aggregation after the projections are run
 # Lininter model
 
-model="TINV_clim_lininter"
-aggregate_config_path="${config_path}/${model}/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/aggregate/median/"
+# model="TINV_clim_lininter"
+# aggregate_config_path="${config_path}/${model}/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/aggregate/median/"
 
-for config in ${aggregate_config_path}/energy-aggregate-median-*y.yml; do
-	echo "aggregating ${config}..."
-	./aggregate.sh ${config} 
-done
+# for config in ${aggregate_config_path}/energy-aggregate-median-*y.yml; do
+# 	echo "aggregating ${config}..."
+# 	./aggregate.sh ${config} 
+# done
 
-# Lininter double model 
 
-model="TINV_clim_lininter_double"
-aggregate_config_path="${config_path}/${model}/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/aggregate/median/"
+# # Lininter double model 
 
-for config in ${aggregate_config_path}/energy-aggregate-median-*y.yml; do
-	echo "aggregating ${config}..."
-	./aggregate.sh ${config} 
-done
+# model="TINV_clim_lininter_double"
+# aggregate_config_path="${config_path}/${model}/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/aggregate/median/"
+
+# for config in ${aggregate_config_path}/energy-aggregate-median-*y.yml; do
+# 	echo "aggregating ${config}..."
+# 	./aggregate.sh ${config} 
+# done
 
 

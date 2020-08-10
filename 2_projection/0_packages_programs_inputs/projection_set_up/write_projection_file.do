@@ -468,6 +468,11 @@ syntax ,  product(string) sys(string) proj_type(string) proj_model(string) unit(
 	if strpos("`price_scen'", "rcp") > 0 {
 		file write yml "rcp: `rcp'" _n
 	} 
+	* add an option to aggregate only fulladapt and histclim
+	* for projections other than main model point estimate
+	if ("`proj_type'"=="median") & (strpos("`proj_mode'", "_dm") == 0) &  {
+		file write yml "only-farmers: ['', 'histclim']" _n
+	}
 	
 	file close yml
 end
