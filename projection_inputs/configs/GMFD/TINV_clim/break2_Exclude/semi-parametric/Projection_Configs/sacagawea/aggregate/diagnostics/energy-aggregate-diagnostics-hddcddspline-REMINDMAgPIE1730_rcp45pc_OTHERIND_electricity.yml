@@ -5,3 +5,4 @@ aggregate-weighting-numerator: population * social/baselines/energy/REMINDMAgPIE
 aggregate-weighting-denominator: population
 infix: REMINDMAgPIE1730_rcp45pc
 rcp: rcp45
+only-farmers: ['', 'histclim']

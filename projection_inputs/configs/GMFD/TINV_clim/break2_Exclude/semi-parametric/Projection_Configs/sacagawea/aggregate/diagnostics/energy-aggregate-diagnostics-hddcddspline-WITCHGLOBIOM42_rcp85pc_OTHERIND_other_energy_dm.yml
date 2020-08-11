@@ -5,3 +5,4 @@ aggregate-weighting-numerator: population * social/baselines/energy/WITCHGLOBIOM
 aggregate-weighting-denominator: population
 infix: WITCHGLOBIOM42_rcp85pc
 rcp: rcp85
+only-farmers: ['', 'histclim']
