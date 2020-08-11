@@ -81,7 +81,7 @@ foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double"
 	local CSVVpath_output_sacagawea "$root/projection_inputs/csvv/`model_tt'" 
 
 	* location of csvv files on BRC
-	local CSVVpath_output_laika "/global/scratch/`uname'/Energy/Projection/Median/`model_tt'/`clim_data'"
+	local CSVVpath_output_laika "/global/scratch/`uname'/repos/energy-code-release-2020/projection_inputs/csvv/`model_tt'"
 
 	* note - you can transfer from sac to BRC using a command like: 
 	* rsync -avz `uname'@sacagawea.gspp.berkeley.edu:${CSVVpath_output_sac}/FD* /global/scratch/`uname'/Energy/Projection/Median/`model_tt'/`clim_data'
