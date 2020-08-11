@@ -14,4 +14,4 @@
 
 export SINGULARITY_BINDPATH=/global/scratch2/groups/co_laika/
 
-/global/scratch2/groups/co_laika/gcp-generate.img /global/scratch/liruixue/repos/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Projection_Configs/run/median/energy-median-hddcddspline_OTHERIND_other_energy_dm.yml 12
+/global/scratch2/groups/co_laika/gcp-generate.img /global/scratch/liruixue/repos/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Projection_Configs/laika/run/median/energy-median-hddcddspline_OTHERIND_other_energy_dm.yml 12
