@@ -2,7 +2,7 @@
 
 #!/bin/bash
 
-uname="USER"
+uname="$USER"
 repo_root="/home/${uname}/repos"
 
 config_path="${repo_root}/energy-code-release-2020/projection_inputs/configs/GMFD"
