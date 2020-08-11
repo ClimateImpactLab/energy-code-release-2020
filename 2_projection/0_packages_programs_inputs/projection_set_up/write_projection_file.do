@@ -746,7 +746,7 @@ syntax , product(string) proj_model(string) partition(string) config_output(stri
 	file write sh _n
 	file write sh "export SINGULARITY_BINDPATH=/global/scratch2/groups/co_laika/" _n
 	file write sh _n
-	file write sh "/global/scratch2/groups/co_laika/gcp-generate.img `config_server_path'/run/median/`run_config_name' `cpus'"
+	file write sh "/global/scratch2/groups/co_laika/gcp-generate.img `config_server_path'/laika/run/median/`run_config_name' `cpus'"
 
 	file close sh
 end
