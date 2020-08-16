@@ -17,6 +17,8 @@ cd ${repo_root}/impact-calculations
 for config in ${aggregate_config_path}/energy-aggregate-median-*other_energy_dm.yml; do
 	echo "aggregating ${config}..."
 	./aggregate.sh ${config} 30
+	./aggregate.sh ${config}
+	sleep 1m
 done
 
 
