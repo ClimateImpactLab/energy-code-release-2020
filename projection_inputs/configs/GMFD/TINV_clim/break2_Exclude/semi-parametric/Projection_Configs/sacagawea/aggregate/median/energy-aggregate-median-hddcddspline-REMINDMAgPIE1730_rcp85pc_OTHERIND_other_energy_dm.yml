@@ -5,3 +5,4 @@ aggregate-weighting-denominator: population
 infix: REMINDMAgPIE1730_rcp85pc
 rcp: rcp85
 only-farmers: ['', 'histclim']
+ssp: SSP3

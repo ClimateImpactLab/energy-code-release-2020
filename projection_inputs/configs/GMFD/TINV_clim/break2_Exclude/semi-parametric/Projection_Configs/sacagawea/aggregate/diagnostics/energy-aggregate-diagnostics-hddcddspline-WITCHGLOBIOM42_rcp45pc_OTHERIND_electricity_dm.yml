@@ -6,3 +6,4 @@ aggregate-weighting-denominator: population
 infix: WITCHGLOBIOM42_rcp45pc
 rcp: rcp45
 only-farmers: ['', 'histclim']
+ssp: SSP3

@@ -4,3 +4,4 @@ aggregate-weighting-numerator: population * social/baselines/energy/REMIND17_rcp
 aggregate-weighting-denominator: population
 infix: REMIND17_rcp85pc
 rcp: rcp85
+ssp: SSP3

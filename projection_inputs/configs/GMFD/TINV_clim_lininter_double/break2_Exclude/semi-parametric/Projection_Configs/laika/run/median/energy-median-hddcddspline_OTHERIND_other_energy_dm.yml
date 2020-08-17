@@ -4,7 +4,7 @@ outputdir: /global/scratch/liruixue/outputs/energy_pixel_interaction/impacts-blu
 do_farmers: true
 do_historical: true
 deltamethod: yes
-only-ssp: [SSP2, SSP4]
+only-ssp: SSP3
 econcovar:
    class: mean
    length: 15
