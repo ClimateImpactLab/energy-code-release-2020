@@ -30,7 +30,7 @@ action=print
 # time_limit=""
 time_limit=" -mtime +1 "
 
-# check number of status-*.txt files
+# clean status-*.txt files
 for type in global generate; 
 do
 	files=$(find . -name "status-${type}.txt" ${time_limit} -${action})
@@ -42,6 +42,7 @@ done
 # check the files for each adaptation scenario
 # if the file size is large enough, consider it complete
 # otherwise consider it incomplete
+# delete or print incomplete files
 for scenario in fulladapt incadapt noadapt histclim; 
 do 
 	if [ ${scenario} = "fulladapt" ];
@@ -50,7 +51,6 @@ do
 	else
 		filename_suffix="-${scenario}"
 	fi
-	complete=$(find . -name "${filename_stem}${filename_suffix}.nc4" -size +${output_file_size_above}M ${time_limit} -${action})
 	incomplete=$(find . -name "${filename_stem}${filename_suffix}.nc4" -size -${output_file_size_above}M ${time_limit} -${action})
 	printf "\n===================================\n"
 	printf "${scenario}: \n"
@@ -63,8 +63,4 @@ done
 # printf "\nFiles with HDF errors:"
 # HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
 # echo "${HDF_errors}"
-
-# if needed, modify the following command to find folders that doesn't contain a certain file
-# find . -type d -mindepth 4  '!' -exec test -e "{}/${filename_stem}.nc4" ';' -print
-
 
