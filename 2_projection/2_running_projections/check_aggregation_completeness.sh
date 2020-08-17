@@ -11,7 +11,7 @@ aggregated_file_size_above=2
 # 130 for one SSP
 n_folders_total=130
 
-aggregation_scenario=price014pc
+aggregation_scenario=price014
 filename_stem="FD_FGLS_inter_OTHERIND_electricity_TINV_clim"
 
 cd "${output_root}/${output_dir}"
@@ -37,7 +37,7 @@ do
 		file_type_suffix="-levels"
 	fi
 
-	printf "============================================="
+	printf "=============================================\n"
 	printf "Checking ${file_type} files: \n"
 
 	for scenario in fulladapt incadapt noadapt histclim; 
@@ -48,11 +48,13 @@ do
 		else
 			filename_suffix="-${scenario}"
 		fi
-		echo "${filename_stem}${filename_suffix}-${aggregation_scenario}${file_type_suffix}"
+		# echo "${filename_stem}${filename_suffix}-${aggregation_scenario}${file_type_suffix}"
 		n_complete=$(find . -name "${filename_stem}${filename_suffix}-${aggregation_scenario}${file_type_suffix}.nc4" -size +${output_file_size_above}M| wc -l)
 		n_incomplete=$(find . -name "${filename_stem}${filename_suffix}-${aggregation_scenario}${file_type_suffix}.nc4" -size -${output_file_size_above}M | wc -l)
+		n_total=$(find . -name "${filename_stem}${filename_suffix}-${aggregation_scenario}${file_type_suffix}.nc4" | wc -l)
+		
 		printf "${scenario}: \n"
-		echo "${n_complete}/${n_folders_total} completed, ${n_incomplete} incomplete"
+		echo "${n_complete} complete, ${n_incomplete} incomplete, total ${n_total}/${n_folders_total} files"
 	done
 done
 

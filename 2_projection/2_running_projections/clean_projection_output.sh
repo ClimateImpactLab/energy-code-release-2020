@@ -3,7 +3,7 @@
 
 # set some paths and parameters
 output_root="/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost"
-output_dir="median_OTHERIND_electricity_TINV_clim_GMFD_dm" 
+output_dir="median_OTHERIND_electricity_TINV_clim_GMFD" 
 
 # the size of files above which we consider complete
 # look at the completed output files to determine this size
@@ -16,6 +16,8 @@ cd "${output_root}/${output_dir}"
 
 filename_stem="FD_FGLS_inter_OTHERIND_electricity_TINV_clim"
 
+# action=delete
+action=print
 # check number of status-*.txt files
 for type in global generate; 
 do
@@ -36,10 +38,8 @@ do
 	fi
 	n_complete=$(find . -name "${filename_stem}${filename_suffix}.nc4" -size +${output_file_size_above}M| wc -l)
 	n_incomplete=$(find . -name "${filename_stem}${filename_suffix}.nc4" -size -${output_file_size_above}M | wc -l)
-	n_total=$(find . -name "${filename_stem}${filename_suffix}.nc4" | wc -l)
-	
 	printf "${scenario}: \n"
-	echo "${n_complete} complete, ${n_incomplete} incomplete, total ${n_total}/${n_folders_total} files"
+	echo "${n_complete}/${n_folders_total} completed, ${n_incomplete} incomplete"
 done
 
 # look for files with HDF error
