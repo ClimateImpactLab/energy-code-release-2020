@@ -42,10 +42,10 @@ do
 	echo "${n_complete} complete, ${n_incomplete} incomplete, total ${n_total}/${n_folders_total} files"
 done
 
-# look for files with HDF error
-printf "\nFiles with HDF errors:"
-HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
-echo "${HDF_errors}"
+# uncomment to look for files with HDF error
+# printf "\nFiles with HDF errors:"
+# HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
+# echo "${HDF_errors}"
 
 # if needed, modify the following command to find folders that doesn't contain a certain file
 # find . -type d -mindepth 4  '!' -exec test -e "{}/${filename_stem}.nc4" ';' -print
