@@ -1,5 +1,6 @@
 #!/bin/bash
 # this is a piece of code that helps us check the completeness of projection output
+# can be run from anywhere, just set the correct paths
 
 # set some paths and parameters
 output_root="/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost"
