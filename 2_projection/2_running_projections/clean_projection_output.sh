@@ -28,12 +28,12 @@ action=print
 # if no process is running, set time_limit to empty string
 # so that all incomplete files can be deleted
 # time_limit=""
-time_limit=" -mtime +1 "
+time_limit=" -mtime +0 "
 
 # clean status-*.txt files
 for type in global generate; 
 do
-	files=$(find . -name "status-${type}.txt" ${time_limit} -${action})
+	files=$(find . -name "status-${type}.txt" -${action})
 	printf "\n===================================\n"
 	echo "${action}ing status-${type}.txt "
 	echo "${files}"

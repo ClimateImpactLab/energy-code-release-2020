@@ -49,6 +49,7 @@ done
 # echo "${HDF_errors}"
 
 # if needed, modify the following command to find folders that doesn't contain a certain file
-# find . -type d -mindepth 4  '!' -exec test -e "{}/${filename_stem}.nc4" ';' -print
+# find . -mindepth 5 -type d  '!' -exec test -e "{}/${filename_stem}.nc4" ';' -print
 
-
+# use the following command to view the folders and their sizes
+# du --separate-dirs -h . |sort -h
