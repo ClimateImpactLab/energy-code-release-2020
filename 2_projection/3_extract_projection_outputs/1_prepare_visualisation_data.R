@@ -38,8 +38,8 @@ miceadds::source.all(paste0(projection.packages,"load_projection/"))
 
 
 ###############################################
-# Impacts maps for figure 2A
-###############################################
+# Impacts maps for figure 2A 
+######################done#########################
 
 get_main_model_impacts_maps = function(fuel, price_scen, unit, year, output){
 	
@@ -84,7 +84,7 @@ df = lapply(fuels, get_main_model_impacts_maps,
 
 ###############################################
 # Get time series data for figure 2C
-###############################################
+################### error ############################
 
 fuels = c("electricity", "other_energy")
 rcps = c("rcp85", "rcp45")
@@ -131,7 +131,7 @@ mcmapply(get_main_model_impacts_ts,
 
 ###############################################
 # Figure 3
-###############################################
+######################done#########################
 
 # 3A  
 # Need GDP data, at IR level, damages in 2099, and values csvs for each featured IR
@@ -166,7 +166,7 @@ write_csv(impacts,
 			'main_model-total_energy-SSP3-rcp85-high-fulladapt-price014-2099-map.csv'))
 
 
-###########################################
+#####################ValueError: could not convert string to float: gammavcv######################
 # Get values csvs for the kernel density plots
 
 IR_list = c("USA.14.608", "SWE.15", "CHN.2.18.78", "CHN.6.46.280", "IND.21.317.1249", "BRA.25.5235.9888")
@@ -243,7 +243,7 @@ get_IR_values_csv = function(IR) {
 	return(df_joined)
 }
 
-
+# TO-Do: error: could not convert string to float
 df = lapply(IR_list, get_IR_values_csv) %>% 
 	bind_rows() %>% as.data.frame()
 
@@ -251,12 +251,12 @@ write_csv(df, paste0(output, '/projection_system_outputs/IR_GCM_level_impacts/',
 	'gcm_damages-main_model-total_energy-SSP3-rcp85-high-fulladapt-price014-2099-select_IRs.csv'))
 
 
-###############################################
+######################done#########################
 # Get GCM list, and their respective weights, for use in the kernel density plots
 # NOte - this pulls a gcm_weights csv from the mortality dropbox
 get.normalized.weights <- function (rcp='rcp85') {
 
-  df = read_csv('/mnt/norgay_synology_drive/Global_ACP/damage_function/GMST_anomaly/gcm_weights.csv') 
+  df = read_csv('/mnt/Global_ACP/damage_function/GMST_anomaly/gcm_weights.csv') 
 
   if (rcp == 'rcp45'){
   	df$weight[df$gcm == "surrogate_GFDL-ESM2G_06"] = 0
@@ -275,7 +275,7 @@ df = df[,c("gcm", "norm_weight_rcp45", "norm_weight_rcp85")]
 write_csv(df, paste0(output, '/miscellaneous/gcm_weights.csv'))
 
 
-###############################################
+######################ValueError: could not convert string to float: gammavcv#########################
  # 2 Load the impacts data for figure 3 time series as percent GDP
 
 args = list(
@@ -313,7 +313,7 @@ lapply(rcps, get_df_ts_main_model_total_energy, args = args)
 
 ##########################
 # Covariate data for blob plots: 
-##########################
+#############done#############
       
 # Note - this is the output from a single run, since that produces an allcalcs file
 
