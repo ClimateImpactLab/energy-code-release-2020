@@ -1,6 +1,6 @@
 results-root:
-  FD_FGLS_inter_OTHERIND_other_energy_TINV_clim.*: /shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost/median_OTHERIND_other_energy_TINV_clim__dm
-  FD_FGLS_inter_OTHERIND_electricity_TINV_clim.*: /shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost/median_OTHERIND_electricity_TINV_clim__dm
+  FD_FGLS_inter_OTHERIND_other_energy_TINV_clim.*: /shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost/median_OTHERIND_other_energy_TINV_clim_GMFD_dm
+  FD_FGLS_inter_OTHERIND_electricity_TINV_clim.*: /shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost/median_OTHERIND_electricity_TINV_clim_GMFD_dm
 multiimpact_vcv: /home/liruixue/repos/energy-code-release-2020/projection_inputs/csvv/TINV_clim/FD_FGLS_inter_OTHERIND_TINV_clim-fixed.csv
 output-dir: /shares/gcp/social/parameters/energy_pixel_interaction/extraction/multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/TINV_clim_GMFD/total_energy/price03
 file-organize: [ssp, region]
