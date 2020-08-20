@@ -85,7 +85,6 @@ df = lapply(fuels, get_main_model_impacts_maps,
 ###############################################
 # Get time series data for figure 2C
 ################### error ############################
-
 fuels = c("electricity", "other_energy")
 rcps = c("rcp85", "rcp45")
 adapt = c("fulladapt", "noadapt")
@@ -94,7 +93,7 @@ options = expand.grid(fuels = fuels, rcps = rcps, adapt= adapt)
 get_main_model_impacts_ts = function(fuel, rcp, adapt) {
 
 	spec = paste0("OTHERIND_", fuel)
-	# scale = function(x) (x* 0.0036)
+	# scale = function(x) (x* 0.0036) no longer needed
 	names = c("mean", "q50", "q5", "q95", "q10", "q90", "q75","q25")
 
 	df = load.median(  
