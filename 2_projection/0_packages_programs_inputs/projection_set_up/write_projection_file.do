@@ -817,9 +817,9 @@ syntax , [ product(string) ] [ two_product(string) ] [ product_list(string) ] [ 
 	}
 
 	// get multiimpact vcv and setup two_product tag
-
+	* TO-DO: corrected bug here, removed -fixed, need to confirm it's correct
 	if ( "`two_product'" == "TRUE" ) {
-		local vcv "`csvv_path'/`stem'`proj_model'-fixed.csv"
+		local vcv "`csvv_path'/`stem'`proj_model'.csv"
 		local product "total_energy"
 	}
 
