@@ -9,7 +9,7 @@ output_dir="median_OTHERIND_electricity_TINV_clim_GMFD_dm"
 
 # the size of files above which we consider complete
 # look at the completed output files to determine this size
-output_file_size_above=10
+output_file_size_above=100
 
 # 130 for one SSP
 n_folders_total=130
@@ -27,8 +27,8 @@ action=print
 # so that the folders that are currently working on will not be affected
 # if no process is running, set time_limit to empty string
 # so that all incomplete files can be deleted
-# time_limit=""
-time_limit=" -mtime +0 "
+time_limit=""
+#time_limit=" -mtime +0 "
 
 # clean status-*.txt files
 for type in global generate; 
@@ -60,7 +60,9 @@ do
 done
 
 # look for files with HDF error
-# printf "\nFiles with HDF errors:"
-# HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
-# echo "${HDF_errors}"
+printf "\nFiles with HDF errors:"
+HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
+echo "${HDF_errors}"
+
+
 

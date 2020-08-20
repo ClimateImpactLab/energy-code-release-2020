@@ -61,8 +61,9 @@ get_main_model_impacts_maps = function(fuel, price_scen, unit, year, output){
                     spec = spec,
                     grouping_test = "semi-parametric") %>%
 		dplyr::select(region, year, mean) %>%
-		dplyr::filter(year == !!year) %>% 
-		mutate(mean =mean * 0.0036)
+		dplyr::filter(year == !!year)
+     # %>% 
+		# mutate(mean =mean * 0.0036)
 
 	price_tag = ifelse(is.null(price_scen), "impact_pc", price)
 
@@ -93,7 +94,7 @@ options = expand.grid(fuels = fuels, rcps = rcps, adapt= adapt)
 get_main_model_impacts_ts = function(fuel, rcp, adapt) {
 
 	spec = paste0("OTHERIND_", fuel)
-	scale = function(x) (x* 0.0036)
+	# scale = function(x) (x* 0.0036)
 	names = c("mean", "q50", "q5", "q95", "q10", "q90", "q75","q25")
 
 	df = load.median(  
@@ -255,7 +256,7 @@ write_csv(df, paste0(output, '/projection_system_outputs/IR_GCM_level_impacts/',
 # NOte - this pulls a gcm_weights csv from the mortality dropbox
 get.normalized.weights <- function (rcp='rcp85') {
 
-  df = read_csv('/mnt/norgay_synology_drive/Global ACP/damage_function/GMST_anomaly/gcm_weights.csv') 
+  df = read_csv('/mnt/norgay_synology_drive/Global_ACP/damage_function/GMST_anomaly/gcm_weights.csv') 
 
   if (rcp == 'rcp45'){
   	df$weight[df$gcm == "surrogate_GFDL-ESM2G_06"] = 0

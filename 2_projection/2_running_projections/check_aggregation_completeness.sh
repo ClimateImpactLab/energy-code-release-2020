@@ -4,12 +4,12 @@
 
 # set some paths and parameters
 output_root="/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost"
-output_dir="median_OTHERIND_electricity_TINV_clim_GMFD" 
+output_dir="median_OTHERIND_electricity_TINV_clim_GMFD_dm" 
 
 # the size of files above which we consider complete
 # look at the completed output files to determine this size
-levels_file_size_above=10
-aggregated_file_size_above=2
+levels_file_size_above=500
+aggregated_file_size_above=100
 # 130 for one SSP
 n_folders_total=130
 

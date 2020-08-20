@@ -219,6 +219,9 @@ end
 program define write_2product_results_root 
 syntax , product_list(string) csvv(string) [ proj_mode(string) ] uncertainty(string) proj_output(string)
 	
+	* TO-DO: fixing a bug in clim_data, delete when done
+
+	di "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
 	di "parsing stem..."
 	local stem = substr("`csvv'", 1,strpos("`csvv'","OTHERIND") + length("OTHERIND"))
 	di "stem: `stem'"
@@ -226,7 +229,8 @@ syntax , product_list(string) csvv(string) [ proj_mode(string) ] uncertainty(str
 	local proj_model = substr("`csvv'", strpos("`csvv'","TINV"), .)
 	di "model: `proj_model'"
 	di "parsing climate data..."
-	local clim_data = substr("`csvv'", strpos("`csvv'","clim") + length("clim"), 4)
+	*local clim_data = substr("`csvv'", strpos("`csvv'","clim") + length("clim"), 4)
+	local clim_data "GMFD"
 	di "climate data: `clim_data'"
 	
 	di "writing results roots..."
