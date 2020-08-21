@@ -75,7 +75,7 @@ foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double"
 		restore
 
 		//write file full vcv. This is combined for electricity and other_energy
-		file open csvv using "`output_csvv'/`model_tt'/`ster_stem'_OTHERIND_`model_tt'.csvv", write replace
+		file open csvv using "`output_csvv'/`model_tt'/`ster_stem'_OTHERIND_`model_tt'.csv", write replace
 
 		write_vcv , ///
 			coefficientlist(" `coefficientlist_other_energy' `coefficientlist_electricity' ") ///
