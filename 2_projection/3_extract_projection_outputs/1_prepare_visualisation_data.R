@@ -85,7 +85,7 @@ df = lapply(fuels, get_main_model_impacts_maps,
 ###############################################
 # Get time series data for figure 2C
 ################### error ############################
-fuels = c("electricity", "other_energy")
+fuels = c("electricity")
 rcps = c("rcp85", "rcp45")
 adapt = c("fulladapt", "noadapt")
 options = expand.grid(fuels = fuels, rcps = rcps, adapt= adapt)

@@ -13,7 +13,7 @@ aggregated_file_size_above=100
 # 130 for one SSP
 n_folders_total=130
 
-aggregation_scenario=price014
+aggregation_scenario=""
 filename_stem="FD_FGLS_inter_OTHERIND_electricity_TINV_clim"
 
 cd "${output_root}/${output_dir}"
@@ -51,19 +51,20 @@ do
 			filename_suffix="-${scenario}"
 		fi
 		# echo "${filename_stem}${filename_suffix}-${aggregation_scenario}${file_type_suffix}"
-		n_complete=$(find . -name "${filename_stem}${filename_suffix}-${aggregation_scenario}${file_type_suffix}.nc4" -size +${output_file_size_above}M| wc -l)
-		n_incomplete=$(find . -name "${filename_stem}${filename_suffix}-${aggregation_scenario}${file_type_suffix}.nc4" -size -${output_file_size_above}M | wc -l)
-		n_total=$(find . -name "${filename_stem}${filename_suffix}-${aggregation_scenario}${file_type_suffix}.nc4" | wc -l)
+		n_complete=$(find . -name "${filename_stem}${filename_suffix}${aggregation_scenario}${file_type_suffix}.nc4" -size +${output_file_size_above}M| wc -l)
+		n_incomplete=$(find . -name "${filename_stem}${filename_suffix}${aggregation_scenario}${file_type_suffix}.nc4" -size -${output_file_size_above}M | wc -l)
+		n_total=$(find . -name "${filename_stem}${filename_suffix}${aggregation_scenario}${file_type_suffix}.nc4" | wc -l)
 		
 		printf "${scenario}: \n"
+		echo "${filename_stem}${filename_suffix}${aggregation_scenario}${file_type_suffix}.nc4"
 		echo "${n_complete} complete, ${n_incomplete} incomplete, total ${n_total}/${n_folders_total} files"
 	done
 done
 
 # uncomment to look for files with HDF error
-# printf "\nFiles with HDF errors:"
-# HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
-# echo "${HDF_errors}"
+printf "\nFiles with HDF errors:"
+HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
+echo "${HDF_errors}"
 
 # if needed, modify the following command to find folders that doesn't contain a certain file
 # find . -type d -mindepth 4  '!' -exec test -e "{}/${filename_stem}.nc4" ';' -print
