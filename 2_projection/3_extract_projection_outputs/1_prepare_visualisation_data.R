@@ -85,7 +85,7 @@ df = lapply(fuels, get_main_model_impacts_maps,
 ###############################################
 # Get time series data for figure 2C
 ################### error ############################
-fuels = c("electricity")
+fuels = c("electricity", "other_energy")
 rcps = c("rcp85", "rcp45")
 adapt = c("fulladapt", "noadapt")
 options = expand.grid(fuels = fuels, rcps = rcps, adapt= adapt)
@@ -333,7 +333,7 @@ write_csv(covars,
 
 ####################################################
  # Get time series data for global by rcp plots in figure D1
-####################################################
+#######################gammavcv error#############################
 
 get_df_by_price_rcp = function(rcp, price) {
 

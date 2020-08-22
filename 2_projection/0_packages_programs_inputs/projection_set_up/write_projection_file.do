@@ -474,7 +474,7 @@ syntax ,  product(string) sys(string) proj_type(string) proj_model(string) unit(
 	} 
 	* add an option to aggregate only fulladapt and histclim
 	* for projections other than main model point estimate
-	if ! (("`proj_type'"=="median") & (strpos("`proj_mode'", "_dm") == 0)) {
+	if !(("`proj_type'"=="median") & (strpos("`proj_model'", "lininter") == 0)) {
 		file write yml "only-farmers: ['', 'histclim']" _n
 	}
 	file write yml "ssp: SSP3"
