@@ -16,7 +16,13 @@ cd ${repo_root}/impact-calculations
 
 for config in ${aggregate_config_path}/energy-aggregate-median-hddcddspline_OTHERIND_electricity_dm.yml; do
 	echo "aggregating ${config}..."
-	./aggregate.sh ${config} 20	
+	./aggregate.sh ${config} 25	
+done
+
+
+for config in ${aggregate_config_path}/energy-aggregate-median-hddcddspline_OTHERIND_other_energy_dm.yml; do
+	echo "aggregating ${config}..."
+	./aggregate.sh ${config} 25	
 done
 
 

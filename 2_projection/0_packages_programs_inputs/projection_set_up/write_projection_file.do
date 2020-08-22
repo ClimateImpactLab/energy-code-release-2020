@@ -221,7 +221,6 @@ syntax , product_list(string) csvv(string) [ proj_mode(string) ] uncertainty(str
 	
 	* TO-DO: fixing a bug in clim_data, delete when done
 
-	di "&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&"
 	di "parsing stem..."
 	local stem = substr("`csvv'", 1,strpos("`csvv'","OTHERIND") + length("OTHERIND"))
 	di "stem: `stem'"
