@@ -4,5 +4,4 @@ aggregate-weighting-numerator: population * social/baselines/energy/MERGEETL60_r
 aggregate-weighting-denominator: population
 infix: MERGEETL60_rcp45pc
 rcp: rcp45
-only-farmers: ['', 'histclim']
 ssp: SSP3

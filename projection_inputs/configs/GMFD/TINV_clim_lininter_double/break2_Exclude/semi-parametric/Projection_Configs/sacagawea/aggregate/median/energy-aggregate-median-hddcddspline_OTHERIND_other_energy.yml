@@ -1,3 +1,4 @@
 outputdir: outputs/energy_pixel_interaction/impacts-blueghost/median_OTHERIND_other_energy_TINV_clim_lininter_double_GMFD
 weighting: population
+only-farmers: ['', 'histclim']
 ssp: SSP3
