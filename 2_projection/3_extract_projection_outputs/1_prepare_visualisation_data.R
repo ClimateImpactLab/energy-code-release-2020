@@ -84,7 +84,7 @@ df = lapply(fuels, get_main_model_impacts_maps,
 
 ###############################################
 # Get time series data for figure 2C
-################### error ############################
+################### done############################
 fuels = c("electricity", "other_energy")
 rcps = c("rcp85", "rcp45")
 adapt = c("fulladapt", "noadapt")
@@ -165,7 +165,7 @@ write_csv(impacts,
 			'main_model-total_energy-SSP3-rcp85-high-fulladapt-price014-2099-map.csv'))
 
 
-#####################ValueError: could not convert string to float: gammavcv######################
+#####################does not end..######################
 # Get values csvs for the kernel density plots
 
 IR_list = c("USA.14.608", "SWE.15", "CHN.2.18.78", "CHN.6.46.280", "IND.21.317.1249", "BRA.25.5235.9888")
@@ -242,7 +242,6 @@ get_IR_values_csv = function(IR) {
 	return(df_joined)
 }
 
-# TO-Do: error: could not convert string to float
 df = lapply(IR_list, get_IR_values_csv) %>% 
 	bind_rows() %>% as.data.frame()
 
@@ -274,7 +273,7 @@ df = df[,c("gcm", "norm_weight_rcp45", "norm_weight_rcp85")]
 write_csv(df, paste0(output, '/miscellaneous/gcm_weights.csv'))
 
 
-######################ValueError: could not convert string to float: gammavcv#########################
+######################done#########################
  # 2 Load the impacts data for figure 3 time series as percent GDP
 
 args = list(
@@ -333,7 +332,7 @@ write_csv(covars,
 
 ####################################################
  # Get time series data for global by rcp plots in figure D1
-#######################gammavcv error#############################
+######################## price scenarios not aggregated ############################
 
 get_df_by_price_rcp = function(rcp, price) {
 
@@ -388,7 +387,7 @@ mapply(get_df_by_price_rcp, price=options$price, rcp = options$rcp, SIMPLIFY = F
 
 ############################################################
 # Slow adapt time series - ccsm 4 - extract a time series of global impacts-pc
-############################################################
+##########################not run##################################
       
 # Note - we pull these impacts straight from the ncdf projection system output
       
@@ -398,7 +397,7 @@ get_file_name = function(type, fuel=NULL, double = NULL, histclim= NULL, rcp, dm
 		histclim = "-histclim"
 	}
 
-	dir = "/mnt/battuta_shares/gcp/outputs/energy/impacts-blueghost/"
+	dir = "/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost/"
 
 	if(type == "SA_single") {
 		folder = paste0("single-OTHERIND_", fuel, "_FD_FGLS_1401_TINV_clim_GMFD_slow_adapt/", 
@@ -511,7 +510,7 @@ save_csv_single(type = "main_model_single", pop_df = pop_df, fuel = "electricity
 
 ############################################################
 # lininter time series - for appendix figure I3
-############################################################
+#######################not run yet#####################################
 
 get_plot_df = function(adapt="fulladapt", spec, rcp, model) {
 

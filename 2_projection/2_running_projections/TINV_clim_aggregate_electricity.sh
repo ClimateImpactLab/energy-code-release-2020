@@ -14,9 +14,10 @@ cd ${repo_root}/impact-calculations
 
 # Main model - aggregates both point estimate and delta method projections for all price scenarios
 
-for config in ${aggregate_config_path}/energy-aggregate-median-*electricity.yml; do
-	echo "aggregating ${config}..."
-	./aggregate.sh ${config} 
+for config in ${aggregate_config_path}/energy-aggregate-median-*electricity_dm.yml; do
+	echo "aggregating ${config}..." 
+	./aggregate.sh ${config} 65
+	sleep 6h
 done
 
 
