@@ -1,5 +1,5 @@
 # Impacts by income deciles bar chart
-
+# done 26 aug 2020
 rm(list = ls())
 # Load in the required packages, installing them if necessary 
 if(!require("pacman")){install.packages(("pacman"))}

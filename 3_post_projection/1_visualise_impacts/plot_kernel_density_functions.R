@@ -1,4 +1,5 @@
 # Purpose: Plot get the kernel density plots for Figure 3A
+# done 26 Aug 2020
 rm(list = ls())
 
   # Load in the required packages, using the pacman package
@@ -16,7 +17,7 @@ data = paste0(DB_data, "/outputs")
 root =  "/home/liruixue/repos/energy-code-release-2020"
 output = paste0(root, "/figures")
 
-
+dir.create(file.path(output, "fig_3"), showWarnings = FALSE)
 # Source the Kernel Density plotting code
 source(paste0(root, "/3_post_projection/0_utils/kernel_densities.R"))
 
@@ -103,6 +104,7 @@ gen_plot_save_kd <-
   if(!is.null(ymax)){
     kd_plot = kd_plot + ylim(0, ymax)
   } 
+  browser()
   ggsave(paste0(output, "/fig_3/fig_3A_kd_plot_",IR, ".pdf"), kd_plot)
   # return(kd_plot)
 }

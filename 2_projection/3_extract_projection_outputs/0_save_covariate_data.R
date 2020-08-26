@@ -82,7 +82,7 @@ gdppc = get_gdppc_all_regions('high', 'SSP3') %>%
 # Population values are every 5 years. We use flat interpolation (a step function)
 # in between. So the 2099 population is assigned to the value we have in 2095. 
 
-
+SSP3-highSSP3-high
 pop99 = pop %>% 
 	dplyr::filter(ssp == "SSP3") %>%
 	dplyr::filter(year == 2095) %>% 
@@ -98,7 +98,7 @@ covs = left_join(pop99, gdppc99, by = "region") %>%
 	mutate(gdp99 = gdppc99 *pop99)
 
 write_csv(covs, paste0(output, '/projection_system_outputs/covariates/', 
-	'SSP3-high-IR_level-gdppc_pop-2099.csv.csv'))
+	'SSP3-high-IR_level-gdppc_pop-2099.csv'))
 
 
 ###########################################

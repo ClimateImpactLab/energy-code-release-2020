@@ -103,8 +103,9 @@ get_values_csv = function(price, fuel, years = NULL, pop_df= NULL, ssp = "SSP3",
 			dplyr::select(rcp, year, gcm, iam, mean) %>% 
 	      	left_join(pop_df, by=c("year")) %>%
 			mutate(mean = mean * pop) %>%
-			dplyr::select(-pop) %>% 
-			mutate(mean = mean * 0.0036)
+			dplyr::select(-pop) 
+			# %>% 
+			# mutate(mean = mean * 0.0036)
 
 		if(include_variance == TRUE){
 			var = do.call(load.median, c(args, proj_mode = '_dm')) %>% 
@@ -112,8 +113,9 @@ get_values_csv = function(price, fuel, years = NULL, pop_df= NULL, ssp = "SSP3",
 				dplyr::select(rcp, year, gcm, iam, sd) %>% 
 				left_join(pop_df, by=c("year")) %>%
 				mutate(sd = sd * pop) %>%
-				dplyr::select(-pop) %>% 
-				mutate(sd = sd * 0.0036)
+				dplyr::select(-pop) 
+				# %>% 
+				# mutate(sd = sd * 0.0036)
 		}
 
     } else{

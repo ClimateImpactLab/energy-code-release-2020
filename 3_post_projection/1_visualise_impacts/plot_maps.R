@@ -34,7 +34,7 @@ plot_2A = function(fuel, bound, DB_data, map=mymap) {
   df= read_csv(
     paste0(DB_data, '/projection_system_outputs/mapping_data/', 
            'main_model-', fuel, '-SSP3-rcp85-high-fulladapt-impact_pc-2099-map.csv')) 
-  df = df %>% dplyr::mutate(mean = 1 / 0.0036 * mean)
+  # df = df %>% dplyr::mutate(mean = 1 / 0.0036 * mean)
   # Set scaling factor for map color bar
   scale_v = c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1)
   rescale_value <- scale_v*bound
