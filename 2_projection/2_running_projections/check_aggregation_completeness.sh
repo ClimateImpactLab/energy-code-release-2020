@@ -3,8 +3,8 @@
 # can be run from anywhere, just set the correct paths
 
 # set some paths and parameters
-energy_type="electricity"
-# energy_type="other_energy"
+# energy_type="electricity"
+energy_type="other_energy"
 # dm=""
 dm="_dm"
 aggregation_scenario="-MERGEETL60_rcp45pc"
@@ -24,8 +24,8 @@ filename_stem="FD_FGLS_inter_OTHERIND_${energy_type}_TINV_clim"
 cd "${output_root}/${output_dir}"
 
 # check number of status-aggregate.txt files
-n=$(find . -name "status-${type}.txt" | wc -l)
-echo "Number of status-${type}.txt files: ${n}"
+n=$(find . -name "status-aggregate.txt" | wc -l)
+echo "Number of status-aggregate.txt files: ${n}"
 
 
 # check the files for each adaptation scenario
