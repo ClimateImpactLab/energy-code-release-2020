@@ -24,7 +24,7 @@ More details of each sections inputs and outputs can be found in each of these s
 
 ## Guide to data used in this process
 
-Data used in code housed in `/3_post_projection/` are stored in an external location (currently `/{synology}/GCP_Reanalysis/ENERGY/code_release_data_pixel_interaction/projection_system_outputs`). This is intermediate data, that was produced and extracted using the projection system.
+Data used in code housed in `/3_post_projection/` are stored in an external location (currently `/{synology}/CIL_energy/code_release_data_pixel_interaction/projection_system_outputs`). This is intermediate data, that was produced and extracted using the projection system.
 
 The data in this location include: 
 - ***Time series data***, 

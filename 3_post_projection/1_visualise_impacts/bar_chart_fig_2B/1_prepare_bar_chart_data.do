@@ -11,7 +11,7 @@ set more off
 glob DB "/mnt"
 loc DB_data "$DB/CIL_energy/code_release_data_pixel_interaction"
 
-glob root "/home/liruixue/repos/energy-code-release-2010"
+glob root "/home/liruixue/repos/energy-code-release-2020"
 loc data "$root/data"
 loc output "$root/figures"
 

@@ -10,10 +10,10 @@ pacman::p_load(ggplot2, # plotting functions
                readr)   # read_csv()
 
 DB = "/mnt"
-DB_data = paste0(DB, "/GCP_Reanalysis/ENERGY/code_release_data_pixel_interaction")
+DB_data = paste0(DB, "/CIL_energy/code_release_data_pixel_interaction")
 data = paste0(DB_data, "/outputs")
 
-root =  "/home/liruixue/repos/energy-code-release-2010"
+root =  "/home/liruixue/repos/energy-code-release-2020"
 output = paste0(root, "/figures")
 
 

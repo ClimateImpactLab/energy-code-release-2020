@@ -16,9 +16,9 @@ pacman::p_load(ggplot2,
 
 DB = '/mnt/norgay_synology_drive/'
 
-DB_data = paste0(DB, "/GCP_Reanalysis/ENERGY/code_release_data_pixel_interaction")
+DB_data = paste0(DB, "/CIL_energy/code_release_data_pixel_interaction")
 root =  "/home/liruixue/repos/energy-code-release-2020"
-output = "/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/code_release_data_pixel_interaction/projection_system_outputs/21jul2020_pre_data/"
+output = "/mnt/norgay_synology_drive/CIL_energy/code_release_data_pixel_interaction/projection_system_outputs/21jul2020_pre_data/"
 
 
 source(paste0(root, "/3_post_projection/0_utils/mapping.R"))

@@ -1,6 +1,7 @@
 # Purpose: Plot bar chart of impacts of climate change in 2099 relative to 
 # 2010 consumption
 
+# (done 26 aug 2020)
 rm(list = ls())
 
 # Load in the required packages, using the pacman package
@@ -12,10 +13,10 @@ pacman::p_load(ggplot2, # plotting functions
                readr)   # read_csv()
 
 DB = "/mnt"
-DB_data = paste0(DB, "/GCP_Reanalysis/ENERGY/code_release_data_pixel_interaction")
+DB_data = paste0(DB, "/CIL_energy/code_release_data_pixel_interaction")
 data = paste0(DB_data, "/intermediate_data")
 
-root =  "/home/liruixue/repos/energy-code-release-2010"
+root =  "/home/liruixue/repos/energy-code-release-2020"
 output = paste0(root, "/figures")
 
 

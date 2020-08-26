@@ -2,6 +2,7 @@
 ###########################################################
 ##                 Generating Blob Plots                 ##
 ###########################################################
+# done 26 aug 2020
 
 rm(list = ls())
 
@@ -16,9 +17,10 @@ pacman::p_load(ggplot2,
 
 DB = "/mnt"
 
-DB_data = paste0(DB, "/GCP_Reanalysis/ENERGY/code_release_data_pixel_interaction")
-root =  "/home/liruixue/repos/energy-code-release-2010"
+DB_data = paste0(DB, "/CIL_energy/code_release_data_pixel_interaction")
+root =  "/home/liruixue/repos/energy-code-release-2020"
 output = paste0(root, "/figures/fig_Appendix-C3_sample_overlap_present_future")
+dir.create(output, showWarnings = FALSE)
 
 covariates <- paste0(DB_data, "/projection_system_outputs/covariates/",
                      "/covariates-SSP3-rcp85-high-2010_2090-CCSM4.csv")

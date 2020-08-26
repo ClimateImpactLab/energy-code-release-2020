@@ -32,8 +32,8 @@ pacman::p_load(ggplot2,
 
 user= 'liruixue'
 
-db = '/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/'
-output = '/mnt/norgay_synology_drive/GCP_Reanalysis/ENERGY/code_release_data_pixel_interaction/'
+db = '/mnt/norgay_synology_drive/CIL_energy/'
+output = '/mnt/norgay_synology_drive/CIL_energy/code_release_data_pixel_interaction/'
 dir = paste0('/shares/gcp/social/parameters/energy/extraction/',
                     'multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/')
 

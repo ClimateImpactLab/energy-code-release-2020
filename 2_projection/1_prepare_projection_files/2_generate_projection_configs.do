@@ -20,7 +20,7 @@ macro drop _all
 pause off
 cilpath
 // path to energy-code-release repo 
-* global root "/home/liruixue/repos/energy-code-release-2010"
+* global root "/home/liruixue/repos/energy-code-release-2020"
 global root "$REPO/energy-code-release-2020"
 
 * This is used to  
@@ -113,7 +113,7 @@ foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double"
 	}
 
 	// path to dataset with information about income deciles and income spline knot location
-	* local DATA "`DROPBOX'/GCP_Reanalysis/ENERGY/IEA_Replication/Data/Analysis/`clim_data'/rationalized_code/`data_type'/"	
+	* local DATA "`DROPBOX'/CIL_energy/IEA_Replication/Data/Analysis/`clim_data'/rationalized_code/`data_type'/"	
 	* local break_data "`DATA'/data/break10_clim`clim_data'_`case'`IF'_`bknum'_`grouping_test'_TINV_clim_`data_type'.dta"
 
 	pause

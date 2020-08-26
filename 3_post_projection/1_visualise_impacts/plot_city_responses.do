@@ -14,7 +14,7 @@ local clim_data "GMFD"
 glob DB "/mnt"
 loc DB_data "$DB/CIL_energy/code_release_data_pixel_interaction"
 
-glob root "/home/liruixue/repos/energy-code-release-2010"
+glob root "/home/liruixue/repos/energy-code-release-2020"
 loc data "$root/data"
 loc output "$root/figures"
 
@@ -103,9 +103,11 @@ local Coldcol "midblue"
 qui drop if _n > 0
 qui set obs `obs'
 qui replace temp1_`clim_data' = _n + `min' -1
-qui gen above`midcut'=(temp1_`clim_data'>=`midcut') //above 20 indicator
-qui gen below`midcut'=(temp1_`clim_data'<`midcut') //below 20 indicator
 
+//above 20 indicator
+qui gen above`midcut'=(temp1_`clim_data'>=`midcut')
+//below 20 indicator 
+qui gen below`midcut'=(temp1_`clim_data'<`midcut') 
 foreach k of num 1/2 {
 	rename temp`k'_`clim_data' temp`k'
 	replace temp`k' = temp1 ^ `k'

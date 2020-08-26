@@ -5,9 +5,9 @@
 # set some paths and parameters
 energy_type="electricity"
 # energy_type="other_energy"
-dm=""
-# dm="_dm"
-aggregation_scenario="-REMIND17_rcp45"
+# dm=""
+dm="_dm"
+aggregation_scenario="-MERGEETL60_rcp45pc"
 
 output_root="/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost"
 output_dir="median_OTHERIND_${energy_type}_TINV_clim_GMFD${dm}" 

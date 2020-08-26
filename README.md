@@ -25,7 +25,7 @@ This master readme outlines the process for each step, and each analysis step ha
 
 `sters` - Contains regression output, saved as .ster files 
 
-Codes in step 3 onwards also use data held in an external data repository (currently `/{synology}/GCP_Reanalysis/ENERGY/code_release_data_pixel_interaction/`). 
+Codes in step 3 onwards also use data held in an external data repository (currently `/{synology}/CIL_energy/code_release_data_pixel_interaction/`). 
 
 ## Step 1 - Historical Energy Consumption and Climate Dataset Construction
 
