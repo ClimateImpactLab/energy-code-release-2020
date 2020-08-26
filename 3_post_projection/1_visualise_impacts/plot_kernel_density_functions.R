@@ -1,6 +1,6 @@
 # Purpose: Plot get the kernel density plots for Figure 3A
-# done 26 Aug 2020
 rm(list = ls())
+source("/home/liruixue/projection_repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 
   # Load in the required packages, using the pacman package
 if(!require("pacman")){install.packages(("pacman"))}
@@ -97,14 +97,15 @@ gen_plot_save_kd <-
                   x.label = NULL, y.label = "Density", 
                   kd.color = "grey") 
   
+  # TO-DO: if we need limits, add them back
   # Add limits, so we can nicely compare across plots
-  if(!is.null(xmin)){
-    kd_plot = kd_plot + xlim(xmin, xmax) 
-  } 
-  if(!is.null(ymax)){
-    kd_plot = kd_plot + ylim(0, ymax)
-  } 
-  browser()
+  # if(!is.null(xmin)){
+  #   kd_plot = kd_plot + xlim(xmin, xmax) 
+  # } 
+  # if(!is.null(ymax)){
+  #   kd_plot = kd_plot + ylim(0, ymax)
+  # } 
+  # browser()
   ggsave(paste0(output, "/fig_3/fig_3A_kd_plot_",IR, ".pdf"), kd_plot)
   # return(kd_plot)
 }
