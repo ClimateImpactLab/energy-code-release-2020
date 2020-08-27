@@ -113,8 +113,9 @@ get_main_model_impacts_ts = function(fuel, rcp, adapt) {
                     yearlist = as.character(seq(1980,2099,1)),  
                     spec = spec,
                     grouping_test = "semi-parametric")%>%
-		dplyr::filter(year > 2009)  %>%
-	    mutate_at(names, scale)
+		dplyr::filter(year > 2009) 
+     # %>%
+	    # mutate_at(names, scale)
 	
 	write_csv(df, 
 		paste0(output, '/projection_system_outputs/time_series_data/', 
@@ -165,7 +166,7 @@ write_csv(impacts,
 			'main_model-total_energy-SSP3-rcp85-high-fulladapt-price014-2099-map.csv'))
 
 
-#####################does not end..######################
+#####################done######################
 # Get values csvs for the kernel density plots
 
 IR_list = c("USA.14.608", "SWE.15", "CHN.2.18.78", "CHN.6.46.280", "IND.21.317.1249", "BRA.25.5235.9888")

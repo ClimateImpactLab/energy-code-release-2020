@@ -172,9 +172,9 @@ plot_ts_fig_3B = function(DB_data, output){
       dplyr::filter(rcp == !!rcp) %>% 
       left_join(df_gdp, by = "year")%>% 
       mutate(mean = mean * 1000000000, q95 = q95 *1000000000 , q5 = q5* 1000000000) %>% #convert from billions of dollars 
-      mutate(percent_gdp = (mean/gdp) *100, 
-             ub = (q95/gdp) *100, 
-             lb = (q5/gdp) *100)
+      mutate(percent_gdp = (mean/gdp) *100 / 0.0036, 
+             ub = (q95/gdp) *100 / 0.0036, 
+             lb = (q5/gdp) *100 / 0.0036)
     
     df_mean = df %>% 
       dplyr::select(year, percent_gdp)

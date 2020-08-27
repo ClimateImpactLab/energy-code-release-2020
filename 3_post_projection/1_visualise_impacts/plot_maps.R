@@ -76,7 +76,7 @@ plot_3A = function(DB_data, map){
   # Join data, and calculate damages as percent of GDP for each region
   # TO-DO: why need to convert here???
   df = left_join(df_damages, covariates, by = "region")%>%
-    mutate(damage_per_gdp99 = damage * 1000000000 / gdp99 * 277.778)
+    mutate(damage_per_gdp99 = damage * 1000000000 / gdp99 / 0.0036)
 
   # Set plotting parameters, and save!
   bound= 0.03
@@ -93,7 +93,6 @@ plot_3A = function(DB_data, map){
                     rescale_val = rescale_value,
                     colorbar.title = "2099 Damages, Proportion of 2099 GDP", 
                     map.title = "Per-GDP-price014-ssp3-rcp85-high")
-  # browser()
   ggsave(paste0(output, "/fig_3/fig_3A_2099_damages_proportion_gdp_map.png"), p)
 }
 plot_3A(DB_data= DB_data, map = mymap)

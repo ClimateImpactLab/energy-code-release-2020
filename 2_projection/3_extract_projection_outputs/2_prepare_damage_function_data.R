@@ -124,12 +124,14 @@ get_values_csv = function(price, fuel, years = NULL, pop_df= NULL, ssp = "SSP3",
 
 		    mean = do.call(load.median, c(args, proj_mode = '')) %>%
 				rename(mean=value) %>% 
-				dplyr::select(rcp, year, gcm, iam, mean)
+				dplyr::select(rcp, year, gcm, iam, mean) %>% 
+				mutate(mean = mean / 0.0036)
 
 			if(include_variance == TRUE){	
 				var = do.call(load.median, c(args, proj_mode = '_dm')) %>% 
 					mutate(sd=sqrt(value))%>% 
-					dplyr::select(rcp, year, gcm, iam, sd)
+					dplyr::select(rcp, year, gcm, iam, sd) %>% 
+					mutate(sd = sd / 0.0036)
 			}
    		} else{
 
@@ -138,24 +140,28 @@ get_values_csv = function(price, fuel, years = NULL, pop_df= NULL, ssp = "SSP3",
 
 		    mean45 = do.call(load.median, c(args, proj_mode = '')) %>%
 				rename(mean=value) %>% 
-				dplyr::select(rcp, year, gcm, iam, mean)
+				dplyr::select(rcp, year, gcm, iam, mean) %>% 
+				mutate(mean = mean / 0.0036)
 			
 			if(include_variance == TRUE){
 		    	var45 = do.call(load.median, c(args, proj_mode = '_dm')) %>% 
 					mutate(sd=sqrt(value))%>% 
-					dplyr::select(rcp, year, gcm, iam, sd) 
+					dplyr::select(rcp, year, gcm, iam, sd) %>% 
+					mutate(sd = sd / 0.0036) 
 		  	}
 
 		    args$price_scen = paste0(price, '_rcp85')
 
 		    mean85 = do.call(load.median, c(args, proj_mode = '')) %>%
 				rename(mean=value) %>% 
-				dplyr::select(rcp, year, gcm, iam, mean)
+				dplyr::select(rcp, year, gcm, iam, mean) %>% 
+				mutate(mean = mean / 0.0036)
 			
 			if(include_variance == TRUE){
 		   		var85 = do.call(load.median, c(args, proj_mode = '_dm')) %>% 
 					mutate(sd=sqrt(value))%>% 
-					dplyr::select(rcp, year, gcm, iam, sd) 
+					dplyr::select(rcp, year, gcm, iam, sd)  %>% 
+					mutate(sd = sd / 0.0036)
 			}
 
 		    mean = rbind(mean45, mean85)
@@ -198,7 +204,7 @@ df_oe = get_values_csv(price = NULL, fuel = "OTHERIND_other_energy", pop_df = po
 
 # Save values csvs needed for damage functions generally (starting with the price014 needed for )
 df = get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", save = FALSE) 
-write_csv(df, paste0(output, '/gcm_damages_OTHERIND_total_energy_price014_SSP3.csv'))
+write_csv(df, paste0(output, '/impact_values/gcm_damages_OTHERIND_total_energy_price014_SSP3.csv'))
 
 
 
