@@ -13,26 +13,24 @@ aggregate_config_path="${config_path}/${model}/break2_Exclude/semi-parametric/Pr
 cd ${repo_root}/impact-calculations
 
 # Main model - aggregates both point estimate and delta method projections for all price scenarios
-
-# for config in ${aggregate_config_path}/energy-aggregate-median-*price014*other_energy_dm.yml; do
-# 	echo "aggregating ${config}..."
-# 	./aggregate.sh ${config} 10
-# done
-
-# for config in ${aggregate_config_path}/energy-aggregate-median-*price014*electricity_dm.yml; do
-# 	echo "aggregating ${config}..."
-# 	./aggregate.sh ${config} 10
-# done
-
+n=0
 for config in ${aggregate_config_path}/energy-aggregate-median-hddcddspline_OTHERIND_electricity_dm.yml; do
+	printf "\n"
+	n=${n}+1
+	echo "${n}-th process"
 	echo "aggregating ${config}..."
-	./aggregate.sh ${config} 10
+	./aggregate.sh ${config} 1
+	sleep 2s
 done
 
-
-for config in ${aggregate_config_path}/energy-aggregate-median-hddcddspline_OTHERIND_other_energy_dm.yml; do
-	echo "aggregating ${config}..."
-	./aggregate.sh ${config} 10	
-done
+# n=0
+# for config in ${aggregate_config_path}/energy-aggregate-median-hddcddspline_OTHERIND_other_energy_dm.yml; do
+# 	printf "\n"
+# 	n=${n}+1
+# 	echo "${n}-th process"
+# 	echo "aggregating ${config}..."
+# 	./aggregate.sh ${config} 1	
+# 	sleep 2s
+# done
 
 
