@@ -728,7 +728,7 @@ syntax , product(string) proj_model(string) partition(string) config_output(stri
 		local cpus 12
 	}
 	else {
-		local cpus 24
+		local cpus 10
 	}
 
 	file open sh using "`partition'_`product'`proj_mode'.sh", write replace
