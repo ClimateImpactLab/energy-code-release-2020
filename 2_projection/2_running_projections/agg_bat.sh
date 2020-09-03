@@ -29,7 +29,7 @@ for config in ${aggregate_config_path}/energy-aggregate-median-*other_energy_dm.
 	n=(${n}+1)
 	echo "${n}-th process"
 	echo "aggregating ${config}..."
-	./aggregate.sh ${config} 2
+	./aggregate.sh ${config} 1
 	sleep 2s
 done
 
