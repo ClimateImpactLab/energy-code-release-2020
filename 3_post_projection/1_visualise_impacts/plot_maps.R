@@ -30,7 +30,7 @@ mymap = load.map(shploc = paste0(DB_data, "/shapefiles/world-combo-new-nytimes")
 
 plot_2A = function(fuel, bound, DB_data, map=mymap) {
 
-  # Load in the impacts-pc data, and convert it to GJ
+  # Load in the impacts-pc data
   df= read_csv(
     paste0(DB_data, '/projection_system_outputs/mapping_data/', 
            'main_model-', fuel, '-SSP3-rcp85-high-fulladapt-impact_pc-2099-map.csv')) 
@@ -96,6 +96,53 @@ plot_3A = function(DB_data, map){
   ggsave(paste0(output, "/fig_3/fig_3A_2099_damages_proportion_gdp_map.png"), p)
 }
 plot_3A(DB_data= DB_data, map = mymap)
+
+
+
+
+
+
+#############################################
+# a comparison map between the pixel interaction version and the old version
+
+plot_comparison = function(fuel, bound, DB_data, map=mymap){
+  
+  # Load in the impacts-pc data
+  df_new = read_csv(
+    paste0(DB_data, '/projection_system_outputs/mapping_data/', 
+           'main_model-', fuel, '-SSP3-rcp85-high-fulladapt-impact_pc-2099-map.csv')) 
+  
+  # Load in the impacts-pc data, and convert it to GJ
+  df_old = read_csv(
+    paste0(DB, '/code_release_data/projection_system_outputs/mapping_data/', 
+           'main_model-', fuel, '-SSP3-rcp85-high-fulladapt-impact_pc-2099-map.csv')) 
+
+  df_diff = merge(df_new, df_old,  by = c("year", "region")) %>%
+            dplyr::mutate(mean = mean.x - mean.y)
+
+
+  # df = df %>% dplyr::mutate(mean = 1 / 0.0036 * mean)
+  # Set scaling factor for map color bar
+  scale_v = c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1)
+  rescale_value <- scale_v*bound
+  
+  p = join.plot.map(map.df = map, 
+                     df = df_diff, 
+                     df.key = "region", 
+                     plot.var = "mean", 
+                     topcode = T, 
+                     topcode.ub = max(rescale_value),
+                     breaks_labels_val = seq(-bound, bound, bound/3),
+                     color.scheme = "div", 
+                     rescale_val = rescale_value,
+                     colorbar.title = paste0(fuel, " imapacts, GJ PC, 2099"), 
+                     map.title = paste0(fuel, 
+                                    "_TINV_clim_SSP3-rcp85_impactpc_high_fulladapt_2099"))
+  ggsave(paste0(output, "/fig_2A_", fuel, "_impacts_map_pixel-interaction-minus-old.pdf"), p)
+}
+
+plot_comparison(fuel = "electricity", bound = 2, DB_data = DB_data)
+plot_comparison(fuel = "other_energy", bound = 2, DB_data = DB_data)
 
 
 
