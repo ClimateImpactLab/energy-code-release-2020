@@ -4,14 +4,14 @@
 
 # set some paths and parameters
 output_root="/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost"
-output_dir="median_OTHERIND_electricity_TINV_clim_GMFD_dm" 
+output_dir="median_OTHERIND_electricity_TINV_clim_GMFD" 
 
 # the size of files above which we consider complete
 # look at the completed output files to determine this size
-output_file_size_above=100
+output_file_size_above=10
 
 # 130 for one SSP
-n_folders_total=130
+n_folders_total=390
 
 cd "${output_root}/${output_dir}"
 
@@ -44,9 +44,9 @@ do
 done
 
 # uncomment to look for files with HDF error
-printf "\nFiles with HDF errors:"
-HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
-echo "${HDF_errors}"
+# printf "\nFiles with HDF errors:"
+# HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
+# echo "${HDF_errors}"
 
 # if needed, modify the following command to find folders that doesn't contain a certain file
 # find . -mindepth 5 -type d  '!' -exec test -e "{}/${filename_stem}.nc4" ';' -print
