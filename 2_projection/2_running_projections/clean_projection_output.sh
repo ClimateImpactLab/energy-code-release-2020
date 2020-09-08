@@ -4,24 +4,33 @@
 # can be run from anywhere, just set the correct paths
 
 # set some paths and parameters
+
+# set some paths and parameters
+# energy=electricity
+energy=other_energy
+# dm=_dm
+dm=""
+suffix=_lininter
+# suffix=_lininter_double
 output_root="/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost"
-output_dir="median_OTHERIND_electricity_TINV_clim_GMFD_dm" 
+output_dir="median_OTHERIND_${energy}_TINV_clim${suffix}_GMFD${dm}" 
+
 
 # the size of files above which we consider complete
 # look at the completed output files to determine this size
-output_file_size_above=100
+output_file_size_above=10
 
 # 130 for one SSP
 n_folders_total=130
 
 cd "${output_root}/${output_dir}"
 
-filename_stem="FD_FGLS_inter_OTHERIND_electricity_TINV_clim"
+filename_stem="FD_FGLS_inter_OTHERIND_${energy}_TINV_clim${suffix}"
 
 # choose to delete or print. recommended: print once first,
 # if everything looks ok, then delete
-# action=delete
-action=print
+action=delete
+# action=print
 
 # if the projection is still running, set to the second
 # so that the folders that are currently working on will not be affected
@@ -60,9 +69,9 @@ do
 done
 
 # look for files with HDF error
-printf "\nFiles with HDF errors:"
-HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
-echo "${HDF_errors}"
+# printf "\nFiles with HDF errors:"
+# HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
+# echo "${HDF_errors}"
 
 
 
