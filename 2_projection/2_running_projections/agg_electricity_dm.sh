@@ -16,7 +16,7 @@ cd ${repo_root}/impact-calculations
 n=0
 for config in ${aggregate_config_path}/energy-aggregate-median-*electricity_dm.yml; do
 	printf "\n"
-	n=$(expr ${n}+1)
+	n=$[$n +1]
 	echo "${n}-th process"
 	echo "aggregating ${config}..."
 	./aggregate.sh ${config} 1
