@@ -333,7 +333,7 @@ write_csv(covars,
 
 ####################################################
  # Get time series data for global by rcp plots in figure D1
-######################## price scenarios not aggregated ############################
+######################## doing ############################
 
 get_df_by_price_rcp = function(rcp, price) {
 
