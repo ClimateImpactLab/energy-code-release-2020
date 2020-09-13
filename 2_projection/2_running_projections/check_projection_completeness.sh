@@ -6,9 +6,10 @@
 energy=electricity
 # energy=other_energy
 # dm=_dm
-dm=""
+# dm=""
+dm="_slow_adapt"
 # suffix=_lininter
-suffix=_lininter
+# suffix=_lininter_double
 output_root="/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost"
 output_dir="median_OTHERIND_${energy}_TINV_clim${suffix}_GMFD${dm}" 
 
@@ -44,7 +45,7 @@ do
 	n_complete=$(find . -name "${filename_stem}${filename_suffix}.nc4" -size +${output_file_size_above}M| wc -l)
 	echo "find . -name ${filename_stem}${filename_suffix}.nc4 -size +${output_file_size_above}M| wc -l"
 	n_incomplete=$(find . -name "${filename_stem}${filename_suffix}.nc4" -size -${output_file_size_above}M | wc -l)
-	n_total=$(find . -name "${filename_stem}${filename_suffix}${suffix}.nc4" | wc -l)
+	n_total=$(find . -name "${filename_stem}${filename_suffix}.nc4" | wc -l)
 	
 	printf "${scenario}: \n"
 	echo "${n_complete} complete, ${n_incomplete} incomplete, total ${n_total}/${n_folders_total} files"

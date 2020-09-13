@@ -4,24 +4,22 @@
 
 # set some paths and parameters
 energy_type="electricity"
-# energy_type="other_energy"
+energy_type="other_energy"
 # dm=""
 dm="_dm"
-# aggregation_scenario="-MERGEETL60_rcp45(done)"
-# aggregation_scenario="-MERGEETL60_rcp85(done)"
-# aggregation_scenario="-price014(done)" 
-# aggregation_scenario="-price03"
-# aggregation_scenario="-price0"
-# aggregation_scenario="-REMIND17_rcp45"
-# aggregation_scenario="-REMIND17_rcp85"
-# aggregation_scenario="-REMIND17CEMICS_rcp45"
-# aggregation_scenario="-REMIND17CEMICS_rcp85"
-# aggregation_scenario="-REMINDMAgPIE1730_rcp45"
-# aggregation_scenario="-REMINDMAgPIE1730_rcp85"
-# aggregation_scenario="-WITCHGLOBIOM42_rcp45"
-# aggregation_scenario="-WITCHGLOBIOM42_rcp85"
-
-
+aggregation_scenario="-MERGEETL60_rcp45"
+aggregation_scenario="-MERGEETL60_rcp85"
+aggregation_scenario="-price014" 
+aggregation_scenario="-price03"
+aggregation_scenario="-price0"
+aggregation_scenario="-REMIND17_rcp45"
+aggregation_scenario="-REMIND17_rcp85" 
+aggregation_scenario="-REMIND17CEMICS_rcp45"
+aggregation_scenario="-REMIND17CEMICS_rcp85" 
+aggregation_scenario="-REMINDMAgPIE1730_rcp45" 
+aggregation_scenario="-REMINDMAgPIE1730_rcp85"
+aggregation_scenario="-WITCHGLOBIOM42_rcp45"
+aggregation_scenario="-WITCHGLOBIOM42_rcp85"
 
 
 
@@ -83,9 +81,9 @@ do
 done
 
 # uncomment to look for files with HDF error
-# printf "\nFiles with HDF errors:"
-# HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
-# echo "${HDF_errors}"
+printf "\nFiles with HDF errors:"
+HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
+echo "${HDF_errors}"
 
 # if needed, modify the following command to find folders that doesn't contain a certain file
 # find . -type d -mindepth 4  '!' -exec test -e "{}/${filename_stem}.nc4" ';' -print
