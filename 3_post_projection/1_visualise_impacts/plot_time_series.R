@@ -7,6 +7,7 @@
 # 4. Code for figure Appendix I.1 - Comparison to slow adaptation scenario single run
 # 5. Code for figure Appendix I3 - Modelling tech trends 
 
+# two singles not done
 #########################################
 # 0. Set up
 
@@ -114,6 +115,7 @@ get_df_list_fig_2C = function(DB_data, fuel){
 # Plotting function, for replicating Figure 2C. Note - coloring in the paper requires 
 
 # post processing in illustrator 
+
 plot_ts_fig_2C = function(fuel, output, DB_data){
   
   plot_df = get_df_list_fig_2C(DB_data = DB_data,fuel = fuel)
@@ -303,9 +305,10 @@ plot_and_save_appendix_I1 = function(fuel, DB_data, output){
   return(p)
 }
 
+####### not done #######
 plot_and_save_appendix_I1(fuel = "electricity", DB_data = DB_data, output = output)
 plot_and_save_appendix_I1(fuel = "other_energy", DB_data = DB_data, output = output)
-
+###### not done #######
 
 #########################################
 # 4. Figure Appendix I.3 - modelling tech trends 

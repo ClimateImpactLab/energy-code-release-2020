@@ -1,4 +1,5 @@
 # Purpose: Plot get the kernel density plots for Figure 3A
+# done
 rm(list = ls())
 source("/home/liruixue/projection_repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 
