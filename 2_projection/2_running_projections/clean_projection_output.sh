@@ -6,13 +6,14 @@
 # set some paths and parameters
 
 # set some paths and parameters
-energy=electricity
-# energy=other_energy
+# energy=electricity
+energy=other_energy
 # dm=_dm
 dm=""
+suffix=""
 
 # suffix=_lininter
-suffix=_lininter_double
+# suffix=_lininter_double
 output_root="/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost"
 output_dir="median_OTHERIND_${energy}_TINV_clim${suffix}_GMFD${dm}" 
 
@@ -22,16 +23,15 @@ output_dir="median_OTHERIND_${energy}_TINV_clim${suffix}_GMFD${dm}"
 output_file_size_above=10
 
 # 130 for one SSP
-n_folders_total=130
+n_folders_total=390
 
 cd "${output_root}/${output_dir}"
-
 filename_stem="FD_FGLS_inter_OTHERIND_${energy}_TINV_clim${suffix}"
 
 # choose to delete or print. recommended: print once first,
 # if everything looks ok, then delete
-action=print
 action=delete
+# action=delete
 
 # if the projection is still running, set to the second
 # so that the folders that are currently working on will not be affected

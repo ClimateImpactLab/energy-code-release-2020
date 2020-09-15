@@ -4,7 +4,7 @@ outputdir: /shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost/median
 do_farmers: true
 do_historical: true
 deltamethod: no
-only-ssp: SSP3
+only-ssp: [SSP2,SSP4]
 econcovar:
    class: mean
    length: 15
