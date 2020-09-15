@@ -333,7 +333,7 @@ write_csv(covars,
 
 ####################################################
  # Get time series data for global by rcp plots in figure D1
-######################## doing ############################
+######################## done ############################
 
 get_df_by_price_rcp = function(rcp, price) {
 
@@ -388,7 +388,7 @@ mapply(get_df_by_price_rcp, price=options$price, rcp = options$rcp, SIMPLIFY = F
 
 ############################################################
 # Slow adapt time series - ccsm 4 - extract a time series of global impacts-pc
-##########################not run##################################
+########################## projection running ##################################
       
 # Note - we pull these impacts straight from the ncdf projection system output
       
@@ -507,12 +507,12 @@ save_csv_single(type = "SA_single", pop_df = pop_df, fuel = "electricity")
 save_csv_single(type = "main_model_single", pop_df = pop_df, fuel = "other_energy")
 save_csv_single(type = "main_model_single", pop_df = pop_df, fuel = "electricity")
 
-
+single-OTHERIND_other_energy_FD_FGLS_1401_TINV_clim_GMFD_slow_adapt/rcp45/CCSM4/high/SSP3/FD_FGLS_inter_climGMFD_Exclude_all-issues_break2_semi-parametric_poly2_OTHERIND_other_energy_TINV_clim-histclim.nc4
 
 
 ############################################################
 # lininter time series - for appendix figure I3
-#######################not run yet#####################################
+#######################aggregating#####################################
 
 get_plot_df = function(adapt="fulladapt", spec, rcp, model) {
 

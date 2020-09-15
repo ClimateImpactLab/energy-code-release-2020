@@ -208,7 +208,7 @@ write_csv(df, paste0(output, '/impact_values/gcm_damages_OTHERIND_total_energy_p
 
 
 
-
+# doing
 # Loop over each price scenario, for getting the values csvs needed for all damage functions in the paper for SSP3: 
 pricelist = c("price014", "price0", "price03", "WITCHGLOBIOM42", 
 	"MERGEETL60", "REMINDMAgPIE1730", "REMIND17CEMICS", "REMIND17") 
