@@ -388,7 +388,7 @@ mapply(get_df_by_price_rcp, price=options$price, rcp = options$rcp, SIMPLIFY = F
 
 ############################################################
 # Slow adapt time series - ccsm 4 - extract a time series of global impacts-pc
-########################## projection running ##################################
+########################## need rcp45? ##################################
       
 # Note - we pull these impacts straight from the ncdf projection system output
       
@@ -403,7 +403,7 @@ get_file_name = function(type, fuel=NULL, double = NULL, histclim= NULL, rcp, dm
 	if(type == "SA_single") {
 		folder = paste0("single-OTHERIND_", fuel, "_FD_FGLS_1401_TINV_clim_GMFD_slow_adapt/", 
 			rcp, "/CCSM4/high/SSP3/")
-		name = paste0("FD_FGLS_inter_climGMFD_Exclude_all-issues_break2_semi-parametric_poly2_OTHERIND_", 
+		name = paste0("FD_FGLS_inter_OTHERIND_", 
 			fuel , "_TINV_clim")
 
 		file = paste0(dir, folder, name, histclim, ".nc4")	
@@ -411,7 +411,7 @@ get_file_name = function(type, fuel=NULL, double = NULL, histclim= NULL, rcp, dm
 	if(type == "main_model_single") {
 		folder_stem = paste0("median_OTHERIND_", fuel, "_TINV_clim")
 		extra_folder_stem = paste0("_GMFD/median/",rcp,"/CCSM4/high/SSP3/")
-		name = paste0("FD_FGLS_inter_climGMFD_Exclude_all-issues_break2_semi-parametric_poly2_OTHERIND_",  
+		name = paste0("FD_FGLS_inter_OTHERIND_",  
 			fuel, "_TINV_clim")
 
 		file = paste0(dir, folder_stem, extra_folder_stem, name, histclim, ".nc4")	
@@ -507,12 +507,12 @@ save_csv_single(type = "SA_single", pop_df = pop_df, fuel = "electricity")
 save_csv_single(type = "main_model_single", pop_df = pop_df, fuel = "other_energy")
 save_csv_single(type = "main_model_single", pop_df = pop_df, fuel = "electricity")
 
-single-OTHERIND_other_energy_FD_FGLS_1401_TINV_clim_GMFD_slow_adapt/rcp45/CCSM4/high/SSP3/FD_FGLS_inter_climGMFD_Exclude_all-issues_break2_semi-parametric_poly2_OTHERIND_other_energy_TINV_clim-histclim.nc4
 
 
 ############################################################
 # lininter time series - for appendix figure I3
-#######################aggregating#####################################
+#######################done#####################################
+
 
 get_plot_df = function(adapt="fulladapt", spec, rcp, model) {
 

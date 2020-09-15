@@ -216,7 +216,7 @@ pricelist = c("price014", "price0", "price03", "WITCHGLOBIOM42",
 df = lapply(pricelist, get_values_csv, fuel = "OTHERIND_total_energy")
 
 
-####################################################
+#######################not aggregated yet#############################
 # Get values csvs for SSP2 and SSP4, which are used to calculate SCCs after estimating damage functions
 
 get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP2", 
@@ -226,7 +226,7 @@ get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP4",
 	save = TRUE, include_variance = FALSE)
 
 
-####################################################
+##########################not aggregated yet##########################
 # Get values csvs for SSP2 and SSP4, which are used to calculate SCCs after estimating damage functions
 get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP3", 
 	save = TRUE, include_variance = FALSE, model = "TINV_clim_lininter")
