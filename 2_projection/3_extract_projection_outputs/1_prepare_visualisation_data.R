@@ -486,9 +486,8 @@ save_csv_single = function(type, fuel, pop_df){
 	
 	df = join_df(type = type, pop_df = pop_df, fuel = fuel) %>%
 		mutate(type = type) %>%
+      mutate(mean = value ) %>%
       dplyr::select(-value)
-     # %>%
-    	# mutate(mean = (value * 0.0036) ) 
 
 	write_csv(df, paste0(output, "/projection_system_outputs/time_series_data/CCSM4_single/",
 		type,"-",fuel,"-SSP3-high-fulladapt-impact_pc.csv"))
