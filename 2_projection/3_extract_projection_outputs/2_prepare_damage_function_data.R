@@ -190,6 +190,7 @@ get_values_csv = function(price, fuel, years = NULL, pop_df= NULL, ssp = "SSP3",
     
     if(save == TRUE){
     	write_csv(df_joined, paste0(output, '/impact_values/gcm_', type, '_', fuel,price_tag, '_', ssp,model_tag,'.csv'))
+    	print(paste0(output, '/impact_values/gcm_', type, '_', fuel,price_tag, '_', ssp,model_tag,'.csv',"  saved"))
 	}else{
 		return(df_joined)
 	}
