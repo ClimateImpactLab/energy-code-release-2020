@@ -44,7 +44,8 @@ output = "/mnt/CIL_energy/code_release_data_pixel_interaction/projection_system_
 source("/home/liruixue/projection_repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 source(paste0(root, "/3_post_projection/0_utils/time_series.R"))
 
-
+energy_ipcc_output = "/mnt/CIL_energy/outreach/ipcc"
+labor_ipcc_output = "/mnt/CIL_labor/outreach/ipcc"
 
 # get african countries
 
@@ -65,7 +66,7 @@ african_country_codes = african_countries %>% pull(region_key)
 african_IRs = hier %>% 
     filter(substr(region_key, 1,3) %in% african_country_codes) %>%
     filter(is_terminal == TRUE) %>% 
-    select(region_key, parent_key, name) %>% 
+    dplyr::select(region_key, parent_key, name) %>% 
     rename(region = region_key) %>%
     mutate(iso = substr(region, 1,3))
 
@@ -110,7 +111,7 @@ afr_elec_impactpc = elec_impactpc %>%
  rename(iso = region) %>%
  filter(iso %in% african_country_codes) %>%
  filter(year == 2099) %>%
- select(iso, year, mean) %>%
+ dplyr::select(iso, year, mean) %>%
  rename(impactpc_elec = mean)
 # the african mean is a weighted mean of the country values (pop weights)
 elec_afr_mean = merge(afr_elec_impactpc, gdp_pop_iso, by = "iso") %>% 
@@ -123,7 +124,7 @@ afr_other_impactpc = other_impactpc %>%
  rename(iso = region) %>%
  filter(iso %in% african_country_codes) %>%
  filter(year == 2099) %>%
- select(iso, year, mean)%>%
+ dplyr::select(iso, year, mean)%>%
  rename(impactpc_other = mean)
 
 # the african mean is a weighted mean of the country values (pop weights)
@@ -155,7 +156,7 @@ afr_damages = damages %>%
  rename(iso = region) %>%
  filter(iso %in% african_country_codes) %>%
  filter(year == 2099) %>%
- select(iso, year, mean) %>%
+ dplyr::select(iso, year, mean) %>%
  rename(dollar_damages = mean)
 
 afr_frac_gdp = merge(afr_damages, gdp_pop_iso, by = "iso") %>% 
@@ -170,7 +171,7 @@ frac_gdp_mean = afr_frac_gdp %>% summarize(african_mean_frac_gdp = weighted.mean
 
 output_file =  Reduce(function(x,y) merge(x = x, y = y, by = c("iso","year")), 
        list(afr_frac_gdp, afr_other_impactpc, afr_elec_impactpc))
-write_csv(output_file, paste0(output,"/ipcc_data/african_countries_energy_impactpc_pctgdp.csv"))
+write_csv(output_file, paste0(energy_ipcc_output,"/african_countries_energy_impactpc_pctgdp.csv"))
 
 print(elec_afr_mean)
 print(other_afr_mean)
@@ -192,7 +193,7 @@ high_min = read_csv(paste0(extracted_data_dir,
 
 afr_high_impact = Reduce(function(x,y) merge(x = x, y = y, by = c("region"), all = FALSE), 
        list(high_min, gdp_pop, african_IRs)) %>%
-        select(-iso.y) %>%
+        dplyr::select(-iso.y) %>%
         rename(iso = iso.x) %>%
         group_by(iso) %>% 
         summarize(iso_mean_impact_high = weighted.mean(mean, pop99), 
@@ -210,7 +211,7 @@ low_min = read_csv(paste0(extracted_data_dir,
 
 afr_low_impact = Reduce(function(x,y) merge(x = x, y = y, by = c("region"), all = FALSE), 
        list(low_min, gdp_pop, african_IRs)) %>%
-        select(-iso.y) %>%
+        dplyr::select(-iso.y) %>%
         rename(iso = iso.x) %>%
         group_by(iso) %>% 
         summarize(iso_mean_impact_low = weighted.mean(mean, pop99), 
@@ -228,7 +229,7 @@ frac_gdp = read_csv(paste0(extracted_data_dir,
 
 afr_frac_gdp = Reduce(function(x,y) merge(x = x, y = y, by = c("region"), all = FALSE), 
        list(frac_gdp, gdp_pop, african_IRs)) %>%
-        select(-iso.y) %>%
+        dplyr::select(-iso.y) %>%
         rename(iso = iso.x) %>%
         group_by(iso) %>% 
         summarize(iso_mean_frac_gdp = weighted.mean(mean, gdp99), 
@@ -240,7 +241,7 @@ afr_mean_frac_gdp = afr_frac_gdp %>%
 
 output_file =  Reduce(function(x,y) merge(x = x, y = y, by = c("iso","year")), 
        list(afr_low_impact, afr_high_impact, afr_frac_gdp))
-write_csv(output_file, paste0(extracted_data_dir,"/african_countries_labor_impactpc_pctgdp.csv"))
+write_csv(output_file, paste0(labor_ipcc_output,"/african_countries_labor_impactpc_pctgdp.csv"))
 
 print(afr_mean_low_impact)
 print(afr_mean_high_impact)
