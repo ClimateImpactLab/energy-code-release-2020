@@ -53,90 +53,98 @@ african_regions = hier %>% filter(parent_key == "U002") %>% pull(region_key) # t
 
 # get the african countries, which are one level below african regions
 african_countries = hier %>% filter(parent_key %in% c(african_regions))# | region_key == "U002")
-# hier %>% filter(region_key == "U002") --- this is the code for Africa in hierarchy.csv, but it's not in the aggregated files
+
 african_country_codes = african_countries %>% pull(region_key)
 
 
 
 # get IR level population and gdp, and sum them by ISO
-african_IRs = hier %>% filter(parent_key %in% african_country_codes) %>%
-   select(region_key, parent_key, name) %>% rename(region = region_key)
+# since some iso may have multiple levels of aggregation so the parent key may not be the ISO code
+# we subset the first 3 characters of the region_key for the terminal regions,
+ # which is guaranteed to be the iso code
+african_IRs = hier %>% 
+    filter(substr(region_key, 1,3) %in% african_country_codes) %>%
+    filter(is_terminal == TRUE) %>% 
+    select(region_key, parent_key, name) %>% 
+    rename(region = region_key) %>%
+    mutate(iso = substr(region, 1,3))
 
 # this is the output from other part of the repo
 gdp_pop = read_csv(paste0(output, '/covariates/', 
   'SSP3-high-IR_level-gdppc_pop-2099.csv'))
 gdp_pop_iso = merge(gdp_pop, african_IRs, by = "region") %>% 
-    group_by(parent_key) %>% 
-    summarize(iso_gdp99 = sum(gdp99), iso_pop99 = sum(pop99)) %>%
-    rename(region = parent_key)
-
-
+    group_by(iso) %>% 
+    summarize(iso_gdp99 = sum(gdp99), iso_pop99 = sum(pop99))
 
 
 # extract electricity impactpc
-command = paste0("python -u /home/liruixue/repos/prospectus-tools/gcp/extract/quantiles.py ",
-  "/home/liruixue/repos/energy-code-release-2020/projection_inputs/configs",
-  "/GMFD/TINV_clim/break2_Exclude/semi-parametric/Extraction_Configs/sacagawea",
-  "/impactpc/climate/aggregated/median/",
-  "energy-extract-impactpc-aggregated-median_OTHERIND_electricity.yml ",
-  "--only-iam=high  --suffix=_impactpc_median_high_fulladapt-aggregated_ipcc ",
-  "--only-ssp=SSP3  --only-rcp=rcp85 ",
-  "FD_FGLS_inter_OTHERIND_electricity_TINV_clim-aggregated ",
-  "-FD_FGLS_inter_OTHERIND_electricity_TINV_clim-histclim-aggregated ")
-system(command)
+# command = paste0("python -u /home/liruixue/repos/prospectus-tools/gcp/extract/quantiles.py ",
+#   "/home/liruixue/repos/energy-code-release-2020/projection_inputs/configs",
+#   "/GMFD/TINV_clim/break2_Exclude/semi-parametric/Extraction_Configs/sacagawea",
+#   "/impactpc/climate/aggregated/median/",
+#   "energy-extract-impactpc-aggregated-median_OTHERIND_electricity.yml ",
+#   "--only-iam=high  --suffix=_impactpc_median_high_fulladapt-aggregated_ipcc ",
+#   "--only-ssp=SSP3  --only-rcp=rcp85 ",
+#   "FD_FGLS_inter_OTHERIND_electricity_TINV_clim-aggregated ",
+#   "-FD_FGLS_inter_OTHERIND_electricity_TINV_clim-histclim-aggregated ")
+# system(command)
 
 # extract other energy impactpc
-command = paste0("python -u /home/liruixue/repos/prospectus-tools/gcp/extract/quantiles.py ",
-  "/home/liruixue/repos/energy-code-release-2020/projection_inputs/configs",
-  "/GMFD/TINV_clim/break2_Exclude/semi-parametric/Extraction_Configs/sacagawea",
-  "/impactpc/climate/aggregated/median/",
-  "energy-extract-impactpc-aggregated-median_OTHERIND_other_energy.yml ",
-  "--only-iam=high  --suffix=_impactpc_median_high_fulladapt-aggregated_ipcc ",
-  "--only-ssp=SSP3  --only-rcp=rcp85 ",
-  "FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-aggregated ",
-  "-FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-histclim-aggregated ")
-system(command)
+# command = paste0("python -u /home/liruixue/repos/prospectus-tools/gcp/extract/quantiles.py ",
+#   "/home/liruixue/repos/energy-code-release-2020/projection_inputs/configs",
+#   "/GMFD/TINV_clim/break2_Exclude/semi-parametric/Extraction_Configs/sacagawea",
+#   "/impactpc/climate/aggregated/median/",
+#   "energy-extract-impactpc-aggregated-median_OTHERIND_other_energy.yml ",
+#   "--only-iam=high  --suffix=_impactpc_median_high_fulladapt-aggregated_ipcc ",
+#   "--only-ssp=SSP3  --only-rcp=rcp85 ",
+#   "FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-aggregated ",
+#   "-FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-histclim-aggregated ")
+# system(command)
 
 
 # read in output of the previous command
 elec_impactpc = read_csv("/shares/gcp/social/parameters/energy_pixel_interaction/extraction/multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/TINV_clim_GMFD/median_OTHERIND_electricity_TINV_clim_GMFD/SSP3-rcp85_impactpc_median_high_fulladapt-aggregated_ipcc.csv")
-afr_elec_impactpc = elec_impactpc %>%
- filter(region %in% african_country_codes) %>%
+
+elec_impactpc %>% filter(region == "ZAF")
+afr_elec_impactpc = elec_impactpc %>% 
+ rename(iso = region) %>%
+ filter(iso %in% african_country_codes) %>%
  filter(year == 2099) %>%
- select(region, year, mean) %>%
+ select(iso, year, mean) %>%
  rename(impactpc_elec = mean)
 # the african mean is a weighted mean of the country values (pop weights)
-elec_afr_mean = merge(afr_elec_impactpc, gdp_pop_iso, by = "region") %>% 
+elec_afr_mean = merge(afr_elec_impactpc, gdp_pop_iso, by = "iso") %>% 
   summarize(african_mean_impactpc_elec = weighted.mean(impactpc_elec, iso_pop99)) 
 
 
 # read in output of the previous command
 other_impactpc = read_csv("/shares/gcp/social/parameters/energy_pixel_interaction/extraction/multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/TINV_clim_GMFD/median_OTHERIND_other_energy_TINV_clim_GMFD/SSP3-rcp85_impactpc_median_high_fulladapt-aggregated_ipcc.csv")
 afr_other_impactpc = other_impactpc %>%
- filter(region %in% african_country_codes) %>%
+ rename(iso = region) %>%
+ filter(iso %in% african_country_codes) %>%
  filter(year == 2099) %>%
- select(region, year, mean)%>%
+ select(iso, year, mean)%>%
  rename(impactpc_other = mean)
 
 # the african mean is a weighted mean of the country values (pop weights)
-other_afr_mean = merge(afr_other_impactpc, gdp_pop_iso, by = "region") %>%
+other_afr_mean = merge(afr_other_impactpc, gdp_pop_iso, by = "iso") %>%
  summarize(african_mean = weighted.mean(impactpc_other, iso_pop99)) 
 
 
 # get values of the total damages
 
-command = paste0("python -u /home/liruixue/repos/prospectus-tools/gcp/extract/quantiles.py ",
-  "/home/liruixue/repos/energy-code-release-2020/projection_inputs/configs",
-  "/GMFD/TINV_clim/break2_Exclude/semi-parametric/Extraction_Configs/sacagawea",
-  "/damage/price014/climate/aggregated/median/",
-  "energy-extract-damage-aggregated-price014-median_OTHERIND_total_energy.yml ",
-  "--only-iam=high  --suffix=_damage-price014_median_high_fulladapt-aggregated_ipcc ",
-  "--only-ssp=SSP3  --only-rcp=rcp85 ",
-  "FD_FGLS_inter_OTHERIND_electricity_TINV_clim-price014-aggregated ",
-  "-FD_FGLS_inter_OTHERIND_electricity_TINV_clim-histclim-price014-aggregated ",
-  "FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-price014-aggregated ",
-  "-FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-histclim-price014-aggregated")
-system(command)
+# command = paste0("python -u /home/liruixue/repos/prospectus-tools/gcp/extract/quantiles.py ",
+#   "/home/liruixue/repos/energy-code-release-2020/projection_inputs/configs",
+#   "/GMFD/TINV_clim/break2_Exclude/semi-parametric/Extraction_Configs/sacagawea",
+#   "/damage/price014/climate/aggregated/median/",
+#   "energy-extract-damage-aggregated-price014-median_OTHERIND_total_energy.yml ",
+#   "--only-iam=high  --suffix=_damage-price014_median_high_fulladapt-aggregated_ipcc ",
+#   "--only-ssp=SSP3  --only-rcp=rcp85 ",
+#   "FD_FGLS_inter_OTHERIND_electricity_TINV_clim-price014-aggregated ",
+#   "-FD_FGLS_inter_OTHERIND_electricity_TINV_clim-histclim-price014-aggregated ",
+#   "FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-price014-aggregated ",
+#   "-FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-histclim-price014-aggregated")
+# system(command)
 
 # read in output of the previous command
 damages = read_csv(paste0("/shares/gcp/social/parameters/energy_pixel_interaction/extraction",
@@ -144,25 +152,97 @@ damages = read_csv(paste0("/shares/gcp/social/parameters/energy_pixel_interactio
   "/total_energy/SSP3-rcp85_damage-price014_median_high_fulladapt-aggregated_ipcc.csv"))
 
 afr_damages = damages %>% 
- filter(region %in% african_country_codes) %>%
+ rename(iso = region) %>%
+ filter(iso %in% african_country_codes) %>%
  filter(year == 2099) %>%
- select(region, year, mean) %>%
+ select(iso, year, mean) %>%
  rename(dollar_damages = mean)
 
-afr_pct_gdp = merge(afr_damages, gdp_pop_iso, by = "region") %>% 
-        mutate(pct_gdp = dollar_damages / iso_gdp99)
+afr_frac_gdp = merge(afr_damages, gdp_pop_iso, by = "iso") %>% 
+        mutate(frac_gdp = dollar_damages / iso_gdp99)
 
-pct_gdp_mean = afr_pct_gdp %>% summarize(african_mean_pct_gdp = weighted.mean(pct_gdp, iso_gdp99)) 
+frac_gdp_mean = afr_frac_gdp %>% summarize(african_mean_frac_gdp = weighted.mean(frac_gdp, iso_gdp99)) 
 
 
 
 
 # output them into a file
 
-output_file =  Reduce(function(x,y) merge(x = x, y = y, by = c("region","year")), 
-       list(afr_pct_gdp, afr_other_impactpc, afr_elec_impactpc))
-write_csv(output_file, paste0(output,"/ipcc_data/african_countries_impactpc_pctgdp.csv"))
+output_file =  Reduce(function(x,y) merge(x = x, y = y, by = c("iso","year")), 
+       list(afr_frac_gdp, afr_other_impactpc, afr_elec_impactpc))
+write_csv(output_file, paste0(output,"/ipcc_data/african_countries_energy_impactpc_pctgdp.csv"))
 
 print(elec_afr_mean)
 print(other_afr_mean)
-print(pct_gdp_mean)
+print(frac_gdp_mean)
+
+
+
+
+
+
+# process the labor results
+extracted_data_dir = "/shares/gcp/estimation/labor/code_release_int_data/projection_outputs/extracted_data"
+
+# high risk impacts
+high_min = read_csv(paste0(extracted_data_dir,
+          "/SSP3-rcp85_high_highrisk_fulladapt-pop-aggregated_ipcc.csv")) %>%
+          filter(year == 2099) %>%
+          mutate(iso = substr(region, 1,3))
+
+afr_high_impact = Reduce(function(x,y) merge(x = x, y = y, by = c("region"), all = FALSE), 
+       list(high_min, gdp_pop, african_IRs)) %>%
+        select(-iso.y) %>%
+        rename(iso = iso.x) %>%
+        group_by(iso) %>% 
+        summarize(iso_mean_impact_high = weighted.mean(mean, pop99), 
+                  iso_pop99 = sum(pop99)) %>%
+        rename(region = iso)
+
+afr_mean_high_impact = afr_high_impact %>% 
+    summarize(african_mean_high_impact = weighted.mean(iso_mean_impact_high, iso_pop99)) 
+
+# low risk impacts
+low_min = read_csv(paste0(extracted_data_dir,
+          "/SSP3-rcp85_high_lowrisk_fulladapt-pop-aggregated_ipcc.csv")) %>%
+          filter(year == 2099)%>%
+          mutate(iso = substr(region, 1,3))
+
+afr_low_impact = Reduce(function(x,y) merge(x = x, y = y, by = c("region"), all = FALSE), 
+       list(low_min, gdp_pop, african_IRs)) %>%
+        select(-iso.y) %>%
+        rename(iso = iso.x) %>%
+        group_by(iso) %>% 
+        summarize(iso_mean_impact_low = weighted.mean(mean, pop99), 
+                  iso_pop99 = sum(pop99)) %>%
+        rename(region = iso)
+afr_mean_low_impact = afr_low_impact %>% 
+    summarize(african_mean_low_impact = weighted.mean(iso_mean_impact_low, iso_pop99)) 
+
+
+# pct gdp
+frac_gdp = read_csv(paste0(extracted_data_dir,
+          "/SSP3-rcp85_high_allrisk_fulladapt-gdp-levels_ipcc.csv")) %>%
+          filter(year == 2099)%>%
+          mutate(iso = substr(region, 1,3))
+
+afr_frac_gdp = Reduce(function(x,y) merge(x = x, y = y, by = c("region"), all = FALSE), 
+       list(frac_gdp, gdp_pop, african_IRs)) %>%
+        select(-iso.y) %>%
+        rename(iso = iso.x) %>%
+        group_by(iso) %>% 
+        summarize(iso_mean_frac_gdp = weighted.mean(mean, gdp99), 
+                  iso_gdp99 = sum(gdp99)) %>%
+        rename(region = iso)
+
+afr_mean_frac_gdp = afr_frac_gdp %>% 
+    summarize(african_mean_frac_gdp= weighted.mean(iso_mean_frac_gdp, iso_gdp99)) 
+
+output_file =  Reduce(function(x,y) merge(x = x, y = y, by = c("iso","year")), 
+       list(afr_low_impact, afr_high_impact, afr_frac_gdp))
+write_csv(output_file, paste0(extracted_data_dir,"/african_countries_labor_impactpc_pctgdp.csv"))
+
+print(afr_mean_low_impact)
+print(afr_mean_high_impact)
+print(afr_mean_frac_gdp)
+
