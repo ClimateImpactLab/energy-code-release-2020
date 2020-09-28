@@ -66,6 +66,7 @@ foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double"
 
 
 	if("`model_tt'" == "TINV_clim"){
+		local ssp_list  ["SSP1","SSP2","SSP3","SSP4","SSP5"]
 		// which prices do you want to generate aggregation and extraction configs for? 
 		local price_list = " price014 price0 price03 WITCHGLOBIOM42_rcp45 WITCHGLOBIOM42_rcp85 REMINDMAgPIE1730_rcp85 REMINDMAgPIE1730_rcp45 REMIND17CEMICS_rcp85 REMIND17CEMICS_rcp45 REMIND17_rcp85 REMIND17_rcp45 MERGEETL60_rcp85 MERGEETL60_rcp45 "
 	}
