@@ -1,0 +1,160 @@
+# plot time series of damages, by IAM
+
+rm(list = ls())
+library(dplyr)
+library(reticulate)
+library(miceadds)
+library(ggplot2)
+library(RColorBrewer)
+cilpath.r:::cilpath()
+
+
+source("/home/liruixue/projection_repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
+
+# source needed codes and set up paths
+projection.packages <- paste0(REPO,"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
+
+source(paste0(REPO,"/energy-code-release-2020/3_post_projection/0_utils/time_series.R"))
+miceadds::source.all(paste0(projection.packages,"load_projection/"))
+
+
+args = list(
+    conda_env = "risingverse-py27",
+    proj_mode = '', # '' and _dm are the two options
+    region = "global", # needs to be specified for 
+    rcp = "rcp85", 
+    ssp = "SSP3", 
+    price_scen = "price014", # have this as NULL, "price014", "MERGEETL", ...
+    unit =  "damage", # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
+    uncertainty = "climate", # full, climate, values
+    geo_level = "aggregated", # aggregated (ir agglomerations) or 'levels' (single irs)
+    # iam = "high", 
+    model = "TINV_clim", 
+    adapt_scen = "fulladapt", 
+    clim_data = "GMFD", 
+    dollar_convert = "yes", 
+    yearlist = as.character(seq(1980,2100,1)),  
+    spec = "OTHERIND_total_energy",
+    grouping_test = "semi-parametric")
+
+args$iam = "high"
+df_high = do.call(load.median, args) %>% select(year, mean)
+
+args$iam = "low"
+df_low = do.call(load.median, args) %>% select(year, mean)
+
+p <- ggtimeseries(df.list = list(df_high, df_low), 
+                              df.x = "year",
+                              x.limits = c(2010, 2100),                               
+                              # y.limits=c(-0.8,0.2),
+                              y.label = "Total Damages, Billions of 2019 dollars", 
+                              legend.title = "Iam", legend.breaks = c("high", "low"), 
+                              legend.values = c('blue', 'red'))
+p
+
+
+
+# Get data for each fund region
+
+# define a function to allow us to do a mapply festival 
+
+get_df = function(region, rcp, fuel) {
+
+		print(paste0('------------------------------', region, '------------------------------'))
+		
+
+		args = list(
+		    conda_env = "risingverse-py27",
+		    proj_mode = '', # '' and _dm are the two options
+		    # region = "global", # needs to be specified for 
+		    rcp = rcp, 
+		    ssp = "SSP3", 
+		    price_scen = NULL, # have this as NULL, "price014", "MERGEETL", ...
+		    unit =  "impactpc", # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
+		    uncertainty = "climate", # full, climate, values
+		    geo_level = "aggregated", # aggregated (ir agglomerations) or 'levels' (single irs)
+		    iam = "high", 
+		    model = "TINV_clim", 
+		    adapt_scen = "fulladapt", 
+		    clim_data = "GMFD", 
+		    dollar_convert = NULL, 
+		    yearlist = as.character(seq(1980,2100,1)),  
+		    spec = fuel,
+		    grouping_test = "semi-parametric")
+
+
+	    plot_df = do.call(load.median, c(args, region = region)) %>% 
+	                        select(year, mean)
+
+	    # names(plot_df) = c("year", region)
+	    return(plot_df)
+}
+
+plot_funds = function(rcp, aggregated_regions, fuel) {
+
+	df = mapply(get_df, region = aggregated_regions, rcp = rcp, fuel = fuel, SIMPLIFY = FALSE)
+
+	# Get the required number of colors for plotting in the legend 
+	print('getting colors')
+	colourCount = length(aggregated_regions)
+	getPalette = colorRampPalette(brewer.pal(9, "Set1"))
+	print('plotting')
+	p <- ggtimeseries(df.list = df, 
+	                              df.x = "year",
+	                              x.limits = c(2010, 2100),                               
+	                              # y.limits=c(-0.8,0.2),
+	                              y.label = paste0(fuel, " impactpc"), 
+	                              legend.title = "FUND-Region", 
+	                              legend.breaks = aggregated_regions, 
+	                              legend.values = getPalette(colourCount),
+	                              rcp.value = rcp, ssp.value = "SSP3", iam.value = "high") 
+	p
+	return(p)
+}
+
+
+aggregated_regions = c("global", "FUND-ANZ", "FUND-CAM", "FUND-CAN", "FUND-CHI", "FUND-EEU", "FUND-FSU", "FUND-JPK", "FUND-LAM", "FUND-MAF", "FUND-MDE", "FUND-SAS", "FUND-SEA", "FUND-SIS", "FUND-SSA", "FUND-USA", "FUND-WEU")
+x = plot_funds(rcp = "rcp85", aggregated_regions = aggregated_regions, fuel = "OTHERIND_other_energy")
+ggsave(x, file = '/mnt/CIL_energy/code_release_data_pixel_interaction/referee_comments/FUND/FUND_other_energy_impactpc.png')
+y = plot_funds(rcp = "rcp85", aggregated_regions = aggregated_regions, fuel = "OTHERIND_electricity")
+ggsave(y, file = '/mnt/CIL_energy/code_release_data_pixel_interaction/referee_comments/FUND/FUND_elec_impactpc.png')
+
+# get a csv of the damages, for ashwin: 
+get_and_name = function(rcp, region) {
+	args = list(
+		    conda_env = "risingverse-py27",
+		    proj_mode = '', # '' and _dm are the two options
+		    # region = "global", # needs to be specified for 
+		    rcp = rcp, 
+		    ssp = "SSP3", 
+		    price_scen = "price014", # have this as NULL, "price014", "MERGEETL", ...
+		    unit =  "damage", # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
+		    uncertainty = "climate", # full, climate, values
+		    geo_level = "aggregated", # aggregated (ir agglomerations) or 'levels' (single irs)
+		    iam = "high", 
+		    model = "TINV_clim", 
+		    adapt_scen = "fulladapt", 
+		    clim_data = "GMFD", 
+		    dollar_convert = "yes", 
+		    yearlist = as.character(seq(1980,2100,1)),  
+		    spec = "OTHERIND_total_energy",
+		    grouping_test = "semi-parametric")
+	
+	df = do.call(load.median, c(args, region = region)) %>% 
+	                        select(mean)
+	names(df) = c(region)
+	return(df)
+}
+
+save_csv = function(rcp) {
+	df = mapply(get_and_name, region = aggregated_regions, rcp = "rcp45", SIMPLIFY = FALSE) %>%
+			bind_cols()
+	df$year = seq(1981,2100,1)
+	write_csv(df, paste0('/mnt/CIL_energy/code_release_data_pixel_interaction/referee_comments/FUND/damages-price014-',
+		rcp, 'total_energy-SSP3-high.csv'))
+	return(df)
+}
+y = save_csv(rcp = "rcp45")
+z = save_csv(rcp = "rcp85")
+
+

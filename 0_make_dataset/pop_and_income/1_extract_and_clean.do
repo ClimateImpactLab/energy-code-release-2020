@@ -145,3 +145,5 @@ drop lgdppc
 ren lgdppc_i lgdppc
 ren lgdppc_MA lgdppc_MA15
 drop if year >= 2015
+//save "`DATA'/raw_income_and_pop.dta", replace
+ 

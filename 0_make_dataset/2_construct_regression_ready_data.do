@@ -96,6 +96,7 @@ replace hdd20_TINV_GMFD = hdd20_other_TINV_GMFD if inlist(product,"other_energy"
 
 		// create income and climate quantiles 
 		qui egen gpid=xtile(lgdppc_MA15), nq(10)
+		pause
 		qui egen tpid=xtile(cdd20_TINV_GMFD), nq(3)
 		qui egen tgpid=xtile(lgdppc_MA15), nq(3)
 
@@ -250,4 +251,5 @@ long run climate in these two pixels at pixel level
      +--------------------------------+
 which, if aggregated with popwt, equals 
  */
+
 
