@@ -42,7 +42,7 @@ glob dir "$DB_data/referee_comments/li_et_al"
 **********************************************************************************
 * STEP 1: Pull in and format each price scenarios csv
 **********************************************************************************
-foreach ver in shanghai_impact shanghai_impact_nosurrogates {
+foreach ver in shanghai_impact shanghai_impact_no_srg {
 	import delim "${dir}/`ver'_2097_electricity.csv", clear
 	keep rcp year gcm iam value
 
@@ -104,5 +104,5 @@ foreach ver in shanghai_impact shanghai_impact_nosurrogates {
 	ren var_type growth_rate
 	order year placeholder growth_rate
 
-	outsheet using "${dir}/`ver'_2097_electricity_damage_function_coefficients.csv", comma replace
+	outsheet using "${dir}/`fuel'_2097_electricity_damage_function_coefficients.csv", comma replace
 }	
