@@ -35,7 +35,7 @@ foreach fuel in "shanghai_impact" {
 	loc type = "impacts"
 	
 	import delim using "$dir/`fuel'_2097_electricity.csv", clear
-	drop if year < 2015 | year > 2099
+	drop if year < 2095 | year > 2099
 	merge m:1 year gcm rcp using `GMST_anom', nogen keep(3)
 
 	tempfile master`fuel'
@@ -70,22 +70,22 @@ cap rename temp anomaly
 
 * Use this local to determine whether we want consistent scales across other energy
 * and electricity plots
-loc scale_type = "-not_comm"
+loc scale_type = "-comm"
 
 foreach fuel in "shanghai_impact" "shanghai_impact_no_srg"{
 	preserve
 
 	if "`fuel'" == "shanghai_impact" {
 		loc title = "Shanghai Electricity Damage Function"
-		loc ytitle = "% of Current Electricity Consumption"
-		loc ystep = 5 
-		loc ymax = 15 
-		loc ymin = -5
+		loc ytitle = "% of 2012 Electricity Donsumption"
+		loc ystep = 10 
+		loc ymax = 30 
+		loc ymin = -10
 	}
 
 	if "`fuel'" == "shanghai_impact_no_srg"{
 		loc title = "Shanghai Electricity Damage Function (No Surrogate Models)"
-		loc ytitle = "% of Current Electricity Consumption"
+		loc ytitle = "% of 2012 Electricity Consumption"
 		loc ystep = 5 
 		loc ymax = 15 
 		loc ymin = -5
