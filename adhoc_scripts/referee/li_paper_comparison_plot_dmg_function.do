@@ -76,7 +76,7 @@ foreach fuel in "shanghai_impact" "shanghai_impact_no_srg"{
 	preserve
 
 	if "`fuel'" == "shanghai_impact" {
-		loc title = "Shanghai Electricity Damage Function"
+		loc title = "Shanghai Electricity"
 		loc ytitle = "% of 2012 Electricity Donsumption"
 		loc ystep = 20
 		loc ymax = 100
@@ -84,7 +84,7 @@ foreach fuel in "shanghai_impact" "shanghai_impact_no_srg"{
 	}
 
 	if "`fuel'" == "shanghai_impact_no_srg"{
-		loc title = "Shanghai Electricity Damage Function (No Surrogate Models)"
+		loc title = "Shanghai Electricity (No Surrogate Models)"
 		loc ytitle = "% of 2012 Electricity Consumption"
 		loc ystep = 20
 		loc ymax = 100
