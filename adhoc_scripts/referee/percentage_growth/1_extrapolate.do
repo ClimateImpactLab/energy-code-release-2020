@@ -46,7 +46,7 @@ load, whole sample
 //subregionids
 
 insheet using "$replicated_data/Cleaning/UNSD — Methodology.csv", comma names clear
-do `sub_script_path'/subregionid_clean
+do ${sub_script_path}/subregionid_clean
 tempfile subregion
 save `subregion', replace
 
@@ -85,7 +85,7 @@ save `allregions', replace
 //load income deflator data
 **WB source**
 import excel using "$replicated_data/Cleaning/API_NY.GDP.DEFL.ZS_DS2_en_excel_v2.xls", sheet("Data") firstrow clear cellrange(A3:BI268)
-do `sub_script_path'/prices/clean/clean_deflator_data
+do ${sub_script_path}/prices/clean/clean_deflator_data
 tempfile deflat_usa
 qui save `deflat_usa', replace
 
@@ -101,8 +101,8 @@ country, product, flow, product combination.
 insheet using "$price_data/1_inter/IEA_Price.csv", comma names clear
 sort country year
 
-do `sub_script_path'/prices/construct/1_extrapolate_inSample
-do `sub_script_path'/prices/construct/2_clean_inSample_priceData
+do ${sub_script_path}/prices/construct/1_extrapolate_inSample
+do ${sub_script_path}/prices/construct/2_clean_inSample_priceData
 
 tempfile inSample
 save `inSample', replace
