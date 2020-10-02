@@ -78,17 +78,17 @@ foreach fuel in "shanghai_impact" "shanghai_impact_no_srg"{
 	if "`fuel'" == "shanghai_impact" {
 		loc title = "Shanghai Electricity Damage Function"
 		loc ytitle = "% of 2012 Electricity Donsumption"
-		loc ystep = 10 
-		loc ymax = 30 
-		loc ymin = -10
+		loc ystep = 20
+		loc ymax = 100
+		loc ymin = -20
 	}
 
 	if "`fuel'" == "shanghai_impact_no_srg"{
 		loc title = "Shanghai Electricity Damage Function (No Surrogate Models)"
 		loc ytitle = "% of 2012 Electricity Consumption"
-		loc ystep = 5 
-		loc ymax = 15 
-		loc ymin = -5
+		loc ystep = 20
+		loc ymax = 100
+		loc ymin = -20
 	}
 
 	* Nonparametric model for use pre-2100 
