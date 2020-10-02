@@ -34,6 +34,7 @@ miceadds::source.all(paste0(projection.packages,"load_projection/"))
 
 
 # source of data: (electricity consumption of residential and productive use)
+# /mnt/CIL_energy/China/china_energy_consumption_data
 shanghai_2012_total = (18.738 + 78.625) * 100000000 * 0.0036
 
 
