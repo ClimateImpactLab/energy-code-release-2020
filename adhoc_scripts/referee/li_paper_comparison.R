@@ -44,13 +44,13 @@ pop_shanghai = read_csv(paste0(output,'/projection_system_outputs/covariates/' ,
 
 impact_shanghai = load.median(conda_env = "risingverse-py27",
                 proj_mode = '', # '' and _dm are the two options
-                region = "CHN.25.262.1764", # needs to be specified for 
+                region = "CHN.25", # needs to be specified for 
                 rcp = NULL, 
                 ssp = "SSP3", 
                 price_scen = NULL, # have this as NULL, "price014", "MERGEETL", ...
                 unit =  "impactpc", # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
                 uncertainty = "values", # full, climate, values
-                geo_level = "levels", # aggregated (ir agglomerations) or 'levels' (single irs)
+                geo_level = "aggregated", # aggregated (ir agglomerations) or 'levels' (single irs)
                 iam = NULL, 
                 model = "TINV_clim", 
                 adapt_scen = "fulladapt", 
