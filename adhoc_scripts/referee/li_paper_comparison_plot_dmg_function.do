@@ -76,47 +76,37 @@ foreach fuel in "shanghai_impact" "shanghai_impact_no_srg"{
 	preserve
 
 	if "`fuel'" == "shanghai_impact" {
-		loc title = "Total Energy"
-		loc ytitle = "bn USD (2019$)"
-		loc ystep = 4000 
-		loc ymax = 4000 
-		loc ymin = -8000
+		loc title = "Shanghai Electricity Damage Function"
+		loc ytitle = "% of Current Electricity Consumption"
+		loc ystep = 5 
+		loc ymax = 15 
+		loc ymin = -5
 	}
 
 	if "`fuel'" == "shanghai_impact_no_srg"{
-		loc title = "Electricity"
-		loc ytitle = "bn Gigajoules"
-		* Convert to billion GJ
-		replace `fuel' = `fuel'/ 1000000000
-
-		if "`scale_type'" == "-not_comm" {
-			loc ystep = 15
-			loc ymax = 60
-			loc ymin = 0
-		}
-		else{
-			loc ystep = 80
-			loc ymax = 80
-			loc ymin = -200
-		}
+		loc title = "Shanghai Electricity Damage Function (No Surrogate Models)"
+		loc ytitle = "% of Current Electricity Consumption"
+		loc ystep = 5 
+		loc ymax = 15 
+		loc ymin = -5
 	}
 
 	* Nonparametric model for use pre-2100 
-	foreach yr of numlist 2095/2095 {
+	foreach yr of numlist 2097/2097 {
 	        qui reg `fuel' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2 
 	        cap qui predict yhat_`fuel'_`yr' if year>=`yr'-2 & year <= `yr'+2 
 	}
 
 	loc gr
-	loc gr `gr' sc `fuel' anomaly if rcp=="rcp85" & year>=2093, mlcolor(red%30) msymbol(O) mlw(vthin) mfcolor(red%30) msize(vsmall) ||       
-	loc gr `gr' sc `fuel' anomaly if rcp=="rcp45"& year>=2093, mlcolor(ebblue%30) msymbol(O) mlw(vthin) mfcolor(ebblue%30) msize(vsmall)   ||
-	loc gr `gr' line yhat_`fuel'_2099 anomaly if year == 2097 , yaxis(1) color(black) lwidth(medthick) ||
+	loc gr `gr' sc `fuel' anomaly if rcp=="rcp85" & year>=2095, mlcolor(red%30) msymbol(O) mlw(vthin) mfcolor(red%30) msize(vsmall) ||       
+	loc gr `gr' sc `fuel' anomaly if rcp=="rcp45"& year>=2095, mlcolor(ebblue%30) msymbol(O) mlw(vthin) mfcolor(ebblue%30) msize(vsmall)   ||
+	loc gr `gr' line yhat_`fuel'_2097 anomaly if year == 2097 , yaxis(1) color(black) lwidth(medthick) ||
 	
 	di "Graphing time..."
 	sort anomaly
 	graph twoway `gr', yline(0, lwidth(vthin)) ///
 	    	ytitle(`ytitle') xtitle("GMST Anomaly") ///
-	        legend(order(1 "RCP 8.5" 2 "RCP 4.5" 3 "2099 damage fn.") size(*0.5)) name("`fuel'", replace) ///
+	        legend(order(1 "RCP 8.5" 2 "RCP 4.5" 3 "2097 damage fn.") size(*0.5)) name("`fuel'", replace) ///
 	        xscale(r(0(1)10)) xlabel(0(1)10) scheme(s1mono) ///
 	        title("`title' Damage Function, End of Century", tstyle(size(medsmall)))  ///
 	        yscale(r(`ymin'(`ystep')`ymax')) ylabel(`ymin'(`ystep')`ymax')  
@@ -134,7 +124,7 @@ foreach fuel in "shanghai_impact" "shanghai_impact_no_srg"{
 	loc slope = `Dy'/`Dx'
 	di "average slope of `fuel' is `slope'"
 	
-	graph export "$output/fig_3C_damage_function_`fuel'_2099_SSP3.pdf", replace 
+	graph export "$output/li_et_al_comparison_damage_function_`fuel'_2097_SSP3.pdf", replace 
 	restore
 }
 
@@ -148,5 +138,5 @@ tw kdensity anomaly if rcp=="rcp45" & year>=2080, color(edkblue) bw(`bw') || ///
 	legend ( lab(1 "rcp45") lab(2 "rcp85")) scheme(s1mono) ///
 	xtitle("Global mean temperature rise") 
 
-graph export "$output/fig_3C_anomaly_densities_GMST_end_of_century.pdf", replace 
+graph export "$output/li_et_al_comparison_anomaly_densities_GMST_end_of_century.pdf", replace 
 graph drop _all

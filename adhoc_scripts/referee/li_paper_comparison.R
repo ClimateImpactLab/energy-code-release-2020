@@ -33,8 +33,8 @@ miceadds::source.all(paste0(projection.packages,"load_projection/"))
 # CHN.25.262.1764 - Shanghai Proper 
 
 
-# 886.2亿千瓦时(100,000,000KWh), from data.stats.gov.cn
-shanghai_2012_total = 886.2 * 100000000 * 0.0036
+# source of data: (electricity consumption of residential and productive use)
+shanghai_2012_total = (18.738 + 78.625) * 100000000 * 0.0036
 
 
 pop_shanghai = read_csv(paste0(output,'/projection_system_outputs/covariates/' ,
