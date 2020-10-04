@@ -39,8 +39,11 @@ shanghai_2012_total = (18.738 + 78.625) * 100000000 * 0.0036
 
 
 pop_shanghai = read_csv(paste0(output,'/projection_system_outputs/covariates/' ,
-	'SSP3_IR_level_population.csv')) %>% dplyr::filter(region == "CHN.25.262.1764") %>%
-	filter(year == 2095) # 2097 pop not available
+	'SSP3_IR_level_population.csv')) %>% dplyr::filter(substr(region,1,6) == "CHN.25") %>%
+	filter(year == 2095) %>% 
+        summarize(pop = sum(pop))
+        # 2097 pop not available
+
 
 impact_shanghai = load.median(conda_env = "risingverse-py27",
                 proj_mode = '', # '' and _dm are the two options
