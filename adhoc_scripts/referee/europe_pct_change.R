@@ -32,27 +32,27 @@ miceadds::source.all(paste0(projection.packages,"load_projection/"))
 current_consumption = read.dta13(paste0(REPO, 
         "/energy-code-release-2020/data","/IEA_Merged_long_GMFD.dta"))
 
+EU_countries = c("FRA","ITA","ESP","GBR","GRC","DEU")
+
 EU_electricity = current_consumption %>% 
         select(country, year, product, load) %>%
         filter(year >= 2010) %>%
-        filter(country %in% c("FRA","ITA","ESP","GBR","GRC","DEU")) %>%
+        filter(country %in% EU_countries) %>%
         filter(product == "electricity")
 
+        
+EU_pop = read_csv(paste0(output,'/projection_system_outputs/covariates/' ,
+        'SSP3_IR_level_population.csv')) %>%
+        dplyr::mutate(country = substr(region, 1,3)) %>%
+        dplyr::filter(country %in% EU_countries) %>%
+        filter(year == 2095) %>%
+        group_by(country) %>% 
+        summarize(pop = sum(pop))
 
+# 2012 consumption not available(EU_electricity %>% filter(country == "FRA"))$load
+calculate_percentage <- function(country, pop_2095, electricity_current ){
 
-# 2012 consumption not available
-calculate_percentage <- function(country = "FRA", country_2012_total = NULL){
-
-        browser()
-        country_2012_total = EU_electricity %>% filter(country == country) 
-        country_2012_total = country_2012_total$load
-        pop = read_csv(paste0(output,'/projection_system_outputs/covariates/' ,
-        	'SSP3_IR_level_population.csv')) %>%
-                dplyr::mutate(country = substr(region, 1,3)) %>%
-                dplyr::filter(country = country) %>%
-        	filter(year == 2095) %>% 
-                summarize()
-
+        # browser()
         impact = load.median(conda_env = "risingverse-py27",
                         proj_mode = '', # '' and _dm are the two options
                         region = country, # needs to be specified for 
@@ -70,14 +70,19 @@ calculate_percentage <- function(country = "FRA", country_2012_total = NULL){
                         spec = "OTHERIND_electricity",
                         grouping_test = "semi-parametric")  %>% 
         	select(rcp,year,gcm,iam,value)  %>%
-                filter(gcm == "GFDL-ESM2M") %>% 
-        	mutate(value = value *  / country_2012_total * 100) # convert to percentage
+                filter(gcm == "GFDL-ESM2M",rcp=="rcp85",iam=="high") %>% 
+        	dplyr:: mutate(value = value * pop_2095 / electricity_current * 100) # convert to percentage
 
-        return(0)
+        return(impact)
 }
 
-calculate_percentage
 
+EU_impacts = c() 
+
+for (c in EU_countries) {
+        EU_impacts = c(EU_impacts, calculate_percentage(c,(EU_pop %>% filter(country == c))$pop,
+        (EU_electricity %>% filter(country == c))$load))
+}
 
 
 
