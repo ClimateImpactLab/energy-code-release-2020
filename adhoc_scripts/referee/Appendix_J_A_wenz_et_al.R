@@ -28,18 +28,18 @@ setwd(paste0(REPO))
 
 # Source codes that help us load projection system outputs
 miceadds::source.all(paste0(projection.packages,"load_projection/"))
-current_consumption = read.dta13(paste0(REPO, 
-        "/energy-code-release-2020/data","/IEA_Merged_long_GMFD.dta"))
 
+# get current consumption from the same source as regression data
+# for year 2012, electricity, EU countries
 EU_countries = c("FRA","ITA","ESP","GBR","GRC","DEU")
-
-EU_electricity = current_consumption %>% 
+EU_electricity = read.dta13(paste0(REPO, 
+        "/energy-code-release-2020/data","/energy_consumption_all_years.dta"))%>% 
         select(country, year, product, load) %>%
-        filter(year >= 2010) %>%
+        filter(year == 2012) %>%
         filter(country %in% EU_countries) %>%
         filter(product == "electricity")
 
-        
+# get SSP3 population data from the projection system, since 2099 is not readily available, we use 2095
 EU_pop = read_csv(paste0(output,'/projection_system_outputs/covariates/' ,
         'SSP3_IR_level_population.csv')) %>%
         dplyr::mutate(country = substr(region, 1,3)) %>%
@@ -48,10 +48,9 @@ EU_pop = read_csv(paste0(output,'/projection_system_outputs/covariates/' ,
         group_by(country) %>% 
         summarize(pop = sum(pop))
 
-# 2012 consumption not available(EU_electricity %>% filter(country == "FRA"))$load
 calculate_percentage <- function(country, pop_2095, electricity_current ){
 
-        # browser()
+        # extract raw impacts for each model, electricity, country level aggregated
         impact = load.median(conda_env = "risingverse-py27",
                         proj_mode = '', # '' and _dm are the two options
                         region = country, # needs to be specified for 
@@ -79,9 +78,9 @@ calculate_percentage <- function(country, pop_2095, electricity_current ){
 EU_impacts = c() 
 
 for (c in EU_countries) {
-        EU_impacts = c(EU_impacts, calculate_percentage(c,(EU_pop %>% filter(country == c))$pop,
-        (EU_electricity %>% filter(country == c))$load))
+        EU_impacts = c(EU_impacts, (calculate_percentage(c,(EU_pop %>% filter(country == c))$pop,
+        (EU_electricity %>% filter(country == c))$load))$value)
 }
 
-
-
+EU_countries
+EU_impacts

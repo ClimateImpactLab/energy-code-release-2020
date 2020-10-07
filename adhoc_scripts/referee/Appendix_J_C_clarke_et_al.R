@@ -29,7 +29,7 @@ setwd(paste0(REPO))
 # Source codes that help us load projection system outputs
 miceadds::source.all(paste0(projection.packages,"load_projection/"))
 
-# 2012 consumption not available(EU_electricity %>% filter(country == "FRA"))$load
+# get the end-of-century damage in total energy for SSP2, global, price014
 impact = load.median(conda_env = "risingverse-py27",
                 proj_mode = '', # '' and _dm are the two options
                 region = "global", # needs to be specified for 
@@ -44,15 +44,17 @@ impact = load.median(conda_env = "risingverse-py27",
                 adapt_scen = "fulladapt", 
                 clim_data = "GMFD", 
                 yearlist = 2099,  
-                spec = "OTHERIND_electricity",
+                spec = "OTHERIND_total_energy",
                 grouping_test = "semi-parametric")  
 
+# take the model we need
 impact_global = impact %>% filter(gcm == "CESM1-BGC",rcp=="rcp85",iam=="high")
 
 
+# get SSP2 global GDP data
 gdp = read_csv(paste0('/mnt/CIL_energy/code_release_data_pixel_interaction/', 
     '/projection_system_outputs/covariates/SSP2-global-gdp-time_series.csv')) %>%
-    filter(year == 2099)
+    filter(year == 2100)
 
 result = impact_global$value / gdp$gdp * 100
 
