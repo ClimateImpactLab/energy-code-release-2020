@@ -82,7 +82,6 @@ gdppc = get_gdppc_all_regions('high', 'SSP3') %>%
 # Population values are every 5 years. We use flat interpolation (a step function)
 # in between. So the 2099 population is assigned to the value we have in 2095. 
 
-SSP3-highSSP3-high
 pop99 = pop %>% 
 	dplyr::filter(ssp == "SSP3") %>%
 	dplyr::filter(year == 2095) %>% 
@@ -105,7 +104,7 @@ write_csv(covs, paste0(output, '/projection_system_outputs/covariates/',
 # 4 Figure 3B Time series data 
 gdppc = get_gdppc_all_regions('high', 'SSP3')
 
-gdp = convert_global_gdp(gdppc) 
+gdp = convert_global_gdp(gdppc,'SSP3') 
 gdp$year = seq(2010,2100,1) 
 
 gdp = gdp %>% as.data.frame() %>% 
@@ -113,6 +112,19 @@ gdp = gdp %>% as.data.frame() %>%
 
 write_csv(gdp, paste0(output, 
 	'/projection_system_outputs/covariates/SSP3-global-gdp-time_series.csv'))
+
+# also get SSP2 gdp time series for referee comments
+gdppc = get_gdppc_all_regions('high', 'SSP2')
+
+gdp = convert_global_gdp(gdppc,'SSP2') 
+gdp$year = seq(2010,2100,1) 
+
+gdp = gdp %>% as.data.frame() %>% 
+    mutate(gdp = gdp * conversion_value)
+
+write_csv(gdp, paste0(output, 
+    '/projection_system_outputs/covariates/SSP2-global-gdp-time_series.csv'))
+
 
 
 ############################################################

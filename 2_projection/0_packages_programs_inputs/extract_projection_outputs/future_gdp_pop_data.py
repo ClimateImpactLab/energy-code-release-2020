@@ -76,14 +76,16 @@ def get_gdppc_all_regions(model, ssp):
 # create a global gdp time series -- input data frame output from get_gdppc_all_regions
 # this whole situation could be made smarter :)... go for it if you are tryna
 
-def convert_global_gdp(df):
+def convert_global_gdp(df,ssp):
     df['year_floor'] = df.year/5
     df['year_floor'] = df.year_floor.round()
     df['year_floor'] = df.year_floor*5
     df = df.astype({'year_floor':'int64'})
     pop = get_pop().rename(columns={'year':'year_floor'})
-    pop = pop.loc[pop.ssp == 'SSP3']
+    pop = pop.loc[pop.ssp == ssp]
     df2 = df.merge(pop, on = ['region', 'year_floor','ssp'], how = 'left')
     df2['gdp'] = df2['pop']*df2['gdppc']
     dff = df2[['gdp','ssp','year']].groupby(['ssp','year']).sum()
     return dff
+
+

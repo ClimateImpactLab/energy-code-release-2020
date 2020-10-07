@@ -1,7 +1,6 @@
-# Compare our results to Li et al. 2019: who construct end-of-century
- # damage function for Shanghai impact region (with and without 
- # surrogate climate models) in terms of total electricity consumption 
- # as percent of current consumption.
+# Compare our results to Wenz et al et al. 2017
+ # Appendix table J panel A
+
 
 # risingverse
 rm(list = ls())
