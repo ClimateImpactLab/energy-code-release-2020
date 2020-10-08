@@ -26,23 +26,35 @@ projection.packages <- paste0(REPO,"/energy-code-release-2020/2_projection/0_pac
 
 setwd(paste0(REPO))
 
-# Source codes that help us load projection system outputs
+
 miceadds::source.all(paste0(projection.packages,"load_projection/"))
+
+# source of historical energy consumption: same as our regression data
 current_consumption = read.dta13(paste0(REPO, 
-        "/energy-code-release-2020/data","/IEA_Merged_long_GMFD.dta"))
+        "/energy-code-release-2020/data","/energy_consumption_all_years.dta"))
 
-
-US_electricity = current_consumption %>% 
+# take 2012 values and sum electricity and other energy
+US_energy = current_consumption %>% 
         select(country, year, product, load) %>%
-        filter(year >= 2010) %>%
-        filter(country == "USA" ) %>%
-        filter(product == "electricity")
+        filter(year == 2012) %>%
+        filter(country == "USA" ) 
 
+
+# get prices under price014 scenario
 prices = read.dta13(paste0(db,"/IEA_Replication/Data/Projection/prices/2_final/",
         "IEA_Price_FIN_Clean_gr014_GLOBAL_COMPILE.dta"))
 
 
+# get US 2012 price
 US_2012_price = prices %>% filter(country == "USA",year == 2012) 
+
+# multiply price with quantity
+US_exp = merge(US_energy, US_2012_price, by = c("year")) %>%
+                mutate(electricity_exp = load * electricitycompile_price,
+                        other_exp = load * other_energycompile_price)
+# 
+US_energy_expenditure_2012 = (US_exp %>% filter(product == "electricity"))$electricity_exp + 
+                        (US_exp %>% filter(product == "other_energy"))$other_exp
 
 
 # 2012 consumption not available(EU_electricity %>% filter(country == "FRA"))$load
@@ -52,19 +64,19 @@ impact = load.median(conda_env = "risingverse-py27",
                 rcp = "rcp85", 
                 ssp = "SSP3", 
                 price_scen = "price014", # have this as NULL, "price014", "MERGEETL", ...
-                unit =  "damage", # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
+                unit =  "damagepc", # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
                 uncertainty = "climate", # full, climate, values
                 geo_level = "aggregated", # aggregated (ir agglomerations) or 'levels' (single irs)
                 iam = "high", 
                 model = "TINV_clim", 
                 adapt_scen = "fulladapt", 
                 clim_data = "GMFD", 
-                yearlist = 2099,  
-                spec = "OTHERIND_electricity",
+                yearlist = 2090,  
+                spec = "OTHERIND_total_energy",
                 grouping_test = "semi-parametric")  
 
 
-result = impact$mean / (US_electricity$load*US_2012_price$electricitycompile_price) * 100
+result = impact$mean / US_energy_expenditure_2012 * 100
 print(result)
 
 
