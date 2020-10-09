@@ -225,7 +225,7 @@ load_timeseries = function(rcp, price, df_gdp){
                 'main_model-total_energy-SSP3-',rcp,'-high-fulladapt-',price,'.csv'))  %>% 
     left_join(df_gdp, by="year") %>% 
     mutate(mean = mean * 1000000000)%>% 
-    mutate(percent_gdp = (mean/gdp) *100) %>%
+    mutate(percent_gdp = (mean/gdp) *100 / 0.0036) %>%
     dplyr::select(year, percent_gdp) %>% 
     as.data.frame()
   
