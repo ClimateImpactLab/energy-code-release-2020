@@ -32,9 +32,11 @@ quietly{
 				*di "`var'"
 				preserve
 				drop if `var'==.
+				* find how many years the time series is
 				gen run = .
 				replace run = cond(L.run == ., 1, L.run + 1)
 				egen maxrun = max(run)
+				* only compute price growth rate for time series > 5yrs long
 				if maxrun[1] >=5 {
 					loc n_yr = maxrun[1] - 1
 					gen grate = .
