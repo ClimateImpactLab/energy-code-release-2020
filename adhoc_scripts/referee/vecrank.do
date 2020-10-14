@@ -32,6 +32,7 @@ foreach test in "vecrank" "egranger" {
 		use "$DATA/$data_name", clear
 		keep if product=="`prod'"
 
+		pause
 		//Time set the data 
 		sort region_i year 
 		xtset region_i year
@@ -111,9 +112,11 @@ foreach test in "vecrank" "egranger" {
 					restore
 				}
 
-			} // end of loop across regions
+			} 
+			// end of loop across regions
 			di "done with lag `ll'"
-		} // end of loop across lags
+		} 
+		// end of loop across lags
 		di "Saving the tempfiles, prod `prod', test `test'"
 
 		//save this product's csv
@@ -125,8 +128,10 @@ foreach test in "vecrank" "egranger" {
 		// uncomment the next line if you want to look at the results in a csv
 		* export delim using "$OUT/A4_Unit_Root_Tests/bycountry_`test'_`prod'.csv", replace
 
-	} // end of loop over prod types
-} // end of loop over test types
+	} 
+	// end of loop over prod types
+} 
+// end of loop over test types
 
 **----Plotting Histograms for Above Two Tests----**
 
