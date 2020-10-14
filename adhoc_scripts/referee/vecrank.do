@@ -24,7 +24,7 @@ global OUT "$root/figures"
 global data_name "GMFD_TINV_clim_regsort.dta"
 
 * Loop over the different products, and the different types of tests
-foreach test in "johansen" {
+foreach test in "vecrank" "egranger" {
 	foreach prod in "other_energy" "electricity" {
 
 		//load dataset, subset to relevant product
@@ -42,13 +42,15 @@ foreach test in "johansen" {
 			generate lag=.
 			generate country=""
 			generate FEtag=""
-			if "`test'" == "DF" {
-				foreach ind in N Zt p {
+			if "`test'" == "vecrank" {
+				* TO-DO: need to change later
+				foreach ind in N Zt p lags {
 					generate double `ind'=.
 				}
 			} 
-			if "`test'" == "PR" {
-				foreach ind in N Zt Zrho p lags {
+			if "`test'" == "egranger" {
+				* TO-DO: need to change later
+				foreach ind in N Zt lags {
 					generate double `ind'=.
 				}
 				generate default=.
@@ -65,10 +67,11 @@ foreach test in "johansen" {
 				di "for test `test', we are on region_i = `i', prod = `prod', lag = `ll'"
 
 				* Run cap so that it records missing for regimes with only 2 obs
-				if "`test'" == "DF" {
-					cap dfuller load_pc if region_i==`i', trend lags(`ll')
-					foreach ind in N Zt p {
-						local v`ind'=r(`ind')
+				if "`test'" == "vecrank" {
+					cap vecrank load_pc if region_i==`i', trend(none) lags(`ll')
+					* TO-DO: change these
+					foreach ind in N max trace lags {
+						local v`ind'=e(`ind')
 					}
 					* Save a dataset of the results as a tempfile, for appending 
 					preserve
@@ -76,7 +79,7 @@ foreach test in "johansen" {
 						duplicates drop region_i, force
 						keep country FEtag
 						generate lag=`ll'
-						* Save the results of the DF test 
+						* Save the results 
 						foreach ind in N Zt p {
 							generate `ind'=`v`ind''
 						}
@@ -86,10 +89,10 @@ foreach test in "johansen" {
 					restore
 				}
 
-				if "`test'" == "PR" {
-					cap pperron load_pc if region_i==`i', trend lags(`ll')
-					foreach ind in N Zt Zrho p lags {
-						local v`ind'=r(`ind')
+				if "`test'" == "egranger" {
+					cap egranger load_pc if region_i==`i', lags(`ll')
+					foreach ind in N1 N2 Zt lags {
+						local v`ind'=e(`ind')
 					}
 					* Save a dataset of the results as a tempfile, for appending 
 					preserve
@@ -99,7 +102,7 @@ foreach test in "johansen" {
 						generate default=0
 						generate lag=`ll'
 						* Save the results of the PR test 
-						foreach ind in N Zt Zrho p lags {
+						foreach ind in N1 N2 Zt lags {
 							generate `ind'=`v`ind''
 						}
 						* Append the results together
@@ -134,19 +137,19 @@ foreach prod in "other_energy" "electricity" {
 	else {
 		local sub_tit="Electricity"
 	}
-	foreach test in "DF" "PR" { 
-		if "`test'"=="DF" {
-			local gtit="Augmented Dickey Fuller Unit Root Test"
+	foreach test in "vecrank" "egranger" { 
+		if "`test'"=="vecrank" {
+			local gtit="vecrank"
 		}
 		else {
-			local gtit="Phillips Perron Unit Root Test"
+			local gtit="egranger"
 		}
 		use ``test'_`prod'', clear
 
 		forval ll=0/2 {
 			
 			//plot
-			twoway (histogram p if lag==`ll', width(0.05) fcolor(white) fraction), ///
+			twoway (histogram Zt if lag==`ll', width(0.05) fcolor(white) fraction), ///
 			title("Lag `ll'", size(small)) xtitle("P value", size(small)) ///
 			xline(0.05, lcolor(navy) noextend) ///
 			graphregion(color(white)) plotregion(color(white)) ///
@@ -163,6 +166,6 @@ foreach prod in "other_energy" "electricity" {
 		subtitle("`sub_tit' Unit Root Test P-value Histograms") ///
 		graphregion(color(white)) plotregion(color(white))
 	* Save the graph 
-	graph export "$OUT/fig_Appendix-A2_Unit_Root_Tests_p_val_hists_`prod'.pdf", replace
+	graph export "$OUT/cointegration_tests_z_val_hists_`prod'.pdf", replace
 }
 graph drop _all	
