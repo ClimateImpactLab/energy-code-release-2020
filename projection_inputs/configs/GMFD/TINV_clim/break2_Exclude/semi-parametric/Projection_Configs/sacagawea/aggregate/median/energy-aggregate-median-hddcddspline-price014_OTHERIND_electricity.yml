@@ -4,4 +4,3 @@ aggregate-weighting-numerator: population * social/baselines/energy/IEA_Price_FI
 aggregate-weighting-denominator: sum-to-1
 infix: price014
 only-farmers: ['', 'histclim']
-ssp: [SSP1,SSP5]
