@@ -4,7 +4,7 @@
 
 # set some paths and parameters
 energy=electricity
-energy=other_energy
+# energy=other_energy
 # dm=_dm
 dm=""
 # dm="_slow_adapt"
