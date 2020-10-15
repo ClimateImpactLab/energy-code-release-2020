@@ -79,7 +79,7 @@ foreach test in "vecrank" "egranger" {
 				di "for test `test', we are on region_i = `i', prod = `prod', lag = `ll'"
 				* Run cap so that it records missing for regimes with only 2 obs
 				if "`test'" == "vecrank" {
-					cap vecrank load_pc `temp_var' if region_i==`i', trend(constant) lags(`ll')
+					cap vecrank load_pc `temp_var' if region_i==`i', trend(rconstant) lags(`ll')
 					
 					local vN = e(N)
 
@@ -199,6 +199,6 @@ foreach prod in "other_energy" "electricity" {
 	* Combine across lags and across tests, for a given product
 	graph combine mhistvecrank mhistegranger, rows(2) xsize(9) ysize(8) subtitle("`sub_tit' reject_null Histograms") graphregion(color(white)) plotregion(color(white))
 	* Save the graph 
-	graph export "$OUT/cointegration_tests_z_val_hists_`prod'.pdf", replace
+	graph export "$OUT/cointegration_tests_vecrank-rconstant_egranger_z_val_hists_`prod'.pdf", replace
 }
 graph drop _all	
