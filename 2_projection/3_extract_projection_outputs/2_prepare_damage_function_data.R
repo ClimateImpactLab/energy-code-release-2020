@@ -220,10 +220,16 @@ df = lapply(pricelist, get_values_csv, fuel = "OTHERIND_total_energy")
 #######################not aggregated yet#############################
 # Get values csvs for SSP2 and SSP4, which are used to calculate SCCs after estimating damage functions
 
+get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP1", 
+	save = TRUE, include_variance = FALSE)
+
 get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP2", 
 	save = TRUE, include_variance = FALSE)
 
 get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP4", 
+	save = TRUE, include_variance = FALSE)
+
+get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP5", 
 	save = TRUE, include_variance = FALSE)
 
 
