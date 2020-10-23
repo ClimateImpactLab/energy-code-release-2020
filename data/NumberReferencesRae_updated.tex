@@ -1,5 +1,3 @@
-
-
 %  NOTE:
 %  2005 to 2019 dollar conversion factor = 1.273526
 %  KWh to GJ conversion factor = 0.0036
@@ -9,41 +7,45 @@
 % \newcommand{\naotherfuelsqeoc}{220}
 %\newcommand{\naotherfuelsqeoc}{-220.101962328172}
 % GJ:
-\newcommand{\naotherfuelsqeoc}{0.79}
-
+\newcommand{\naotherfuelsqeoc}{-0.62}
+% -0.6219551
+% !! need to flip sign? 
 
 %Global Electricity Impact (quantity) per capita at end-of-century (RCP8.5 full adaptation)
 % \newcommand{\faelectricityqeoc}{269}
 %\newcommand{\faelectricityqeoc}{269.04967585347}
 % GJ:
-\newcommand{\faelectricityqeoc}{0.97}
+\newcommand{\faelectricityqeoc}{1.21}
+% 1.205688
 
 %Global Electricity Impact (quantity) per capita at end-of-century (RCP4.5 full adaptation)
 % \newcommand{\faelectricityqeoc}{269}
 %\newcommand{\faelectricityqeoc}{269.04967585347}
 % GJ:
-\newcommand{\faelectricityqeocmodem}{0.33}
-
+\newcommand{\faelectricityqeocmodem}{0.44}
+% 0.4436469
 
 %Global pop average electricity consumption at 2012 (or 2010 if that's easier)
 % \newcommand{\electricitybaselineq}{3205}
 %\newcommand{\electricitybaselineq}{3205.36305613915}
 % GJ:
-\newcommand{\electricitybaselineq}{11.54}
+\newcommand{\electricitybaselineq}{11.54} 
 
 
 %Global Other Fuels Impact (quantity) per capita at end-of-century (RCP8.5 full adaptation)
 % \newcommand{\faotherfuelsqeoc}{777}
 %\newcommand{\faotherfuelsqeoc}{-777.184173580934}
 % GJ:
-\newcommand{\faotherfuelsqeoc}{2.80}
+\newcommand{\faotherfuelsqeoc}{-2.94}
+% -2.941694
+
 
 %Global Other Fuels Impact (quantity) per capita at end-of-century (RCP4.5 full adaptation)
 % \newcommand{\faotherfuelsqeoc}{777}
 %\newcommand{\faotherfuelsqeoc}{-777.184173580934}
 % GJ:
-\newcommand{\faotherfuelsqeocmodem}{1.07}
-
+\newcommand{\faotherfuelsqeocmodem}{-1.56}
+% -1.155918
 
 %Global pop average other fuels consumption at 2012 (or 2010 if that's easier)
 % \newcommand{\otherfuelsbaselineq}{8182}
@@ -52,17 +54,18 @@
 \newcommand{\otherfuelsbaselineq}{29.46}
 
 
-
 %End-of-century damages under RCP 8.5, price014
 % \newcommand{\damageseochm}{-572897412341.379}
 % Billions of 2019 dollars:
-\newcommand{\damageseochm}{-730}
+\newcommand{\damageseochm}{-497}
+% -1,790,384,391 / 0.0036 / 1,000,000,000 = -497.329 
+
 
 %End-of-century damages under RCP 4.5, price014
 % \newcommand{\damageseoclm}{-243537343768.725}
 % Billions of 2019 dollars:
-\newcommand{\damageseoclm}{-310}
-
+\newcommand{\damageseoclm}{-210}
+% -209.7041
 
 
 %Number of regimes for electricity
@@ -111,7 +114,6 @@
 
 
 
-
 %Additional Entries 10/14/2019
 
 %35 C electricity response for 10th decile in decile row
@@ -119,18 +121,22 @@
 %\newcommand{\elechightemprich}{4.632592}
 % GJ:
 \newcommand{\elechightemprich}{0.017}
+% .0166773
+
 
  %0 C electricity response for 10th decile in decile row
 % \newcommand{\eleclowtemprich}{1.89}
 %\newcommand{\eleclowtemprich}{1.8888}
 % GJ:
 \newcommand{\eleclowtemprich}{0.0068}
+% .0067997
 
 %0 C other fuels response for 10th decile in decile row
 % \newcommand{\otherlowtemprich}{9.44}
 %\newcommand{\otherlowtemprich}{9.443214}
 % GJ:
 \newcommand{\otherlowtemprich}{0.034}
+%.0339956
 
 
 %Difference between 35 C electricity response in top tercile vs. bottom tercile (top minus bottom) in 3 x 3 array
@@ -138,45 +144,54 @@
 %\newcommand{\elechightempincadapt}{3.3650272}
 % GJ:
 \newcommand{\elechightempincadapt}{0.012}
+%  .0099872 -(-.0020763)  = 0.0120635
 
 
 %Difference between 0 C other fuels response in top tercile vs. bottom tercile (top minus bottom) in 3 x 3 array
 % \newcommand{\otherlowtempincadapt}{10.161739}
 %\newcommand{\otherlowtempincadapt}{10.161739}
 % GJ:
-\newcommand{\otherlowtempincadapt}{0.037}
+\newcommand{\otherlowtempincadapt}{0.038}
+%.0264903 - (-.0117654) = 0.0382557
+
 
 
 %Difference between 35 C electricity response in hottest tercile vs. coldest tercile (hottest minus coldest) in 3 x 3 array
 % \newcommand{\elechightempclimadapt}{0.80}
 %\newcommand{\elechightempclimadapt}{0.8047362}
 % GJ:
-\newcommand{\elechightempclimadapt}{0.0029}
+\newcommand{\elechightempclimadapt}{0.004}
+% .0005702 - (-.0034439) = 0.0040141
+
 
 
 %Difference between 0 C electricity response in coldest tercile vs. hottest tercile (coldest minus hottest) in 3 x 3 array
 % \newcommand{\eleclowtempclimadapt}{0.68}
 %\newcommand{\eleclowtempclimadapt}{-0.6762869}
 % GJ:
-\newcommand{\eleclowtempclimadapt}{0.0024}
+\newcommand{\eleclowtempclimadapt}{0.0002}
+%.0007861 - .0005395 = 0.0002466
 
 
 %Difference between 0 C other fuels response in coldest tercile vs. hottest tercile (coldest minus hottest) in 3 x 3 array
 % \newcommand{\otherlowtempclimadapt}{10.20}
 %\newcommand{\otherlowtempclimadapt}{-10.197154}
 % GJ:
-\newcommand{\otherlowtempclimadapt}{0.037}
+\newcommand{\otherlowtempclimadapt}{0.027}
+% .0321399 - .0052229 = 0.026917
+% !! possible sign flip? the original number seems to be negative, then converted to positive, but the new number is positive to begin with
 
 
 
 %Global total damages at 2100 as percent of global GDP (RCP 8.5, 1.4% price growth). 
-\newcommand{\globaldamageseocpergdp}{0.2}
+\newcommand{\globaldamageseocpergdp}{0.1}
 %\newcommand{\globaldamageseocpergdp}{-0.206310566469294}
+% -0.001406308
 
 %Global total damages at 2100 as percent of global GDP (RCP 4.5, 1.4% price growth). 
 \newcommand{\globaldamageseocpergdpmodem}{0.1}
 %\newcommand{\globaldamageseocpergdp}{-0.206310566469294}
-
+% -0.0005929849
 
 %RAE: IGNORE THE NEXT FOUR DERIVATIVES
 % CHECK THESE WITH ASHWIN - I HAVE JUST CONVERTED THESE AS USUAL
@@ -230,40 +245,47 @@
 
 
 
-
 %Marginal Effect of Time on 35C response in rich tercile (tech trends model) - these are in GIGAJOULES
 % \newcommand{\hotmetimerich}{.0006669}
-\newcommand{\hotmetimerich}{.00067}
+\newcommand{\hotmetimerich}{.00002}
+% .0000222
 ​
+
 %Marginal Effect of Time on 35C response in middle tercile (tech trends model)
 % \newcommand{\hotmetimemiddle}{-.0001771}
-​\newcommand{\hotmetimemiddle}{-.00018}
+​\newcommand{\hotmetimemiddle}{-.00016}
+% -.0001588
 
 %Marginal Effect of Time on 35C response in poor tercile (tech trends model)
-\newcommand{\hotmetimepoor}{6.1e-06}
-​
+\newcommand{\hotmetimepoor}{.00067}
+​% .0006692
 
 %Global Electricity Impact (quantity) per capita at end-of-century (RCP8.5 full adaptation tech trends)
 %\newcommand{\faelectricityqeoc}{269.04967585347}
 % \newcommand{\techtrendsfaelectricityqeoc}{1339.301}
 % GJ:
-\newcommand{\techtrendsfaelectricityqeoc}{4.82}
-
+\newcommand{\techtrendsfaelectricityqeoc}{5.77}
+% 5.772256
 
 
 %Global Other Fuels Impact (quantity) per capita at end-of-century (RCP8.5 full adaptation tech trends)
 %\newcommand{\faotherfuelsqeoc}{-777.184173580934}
 % \newcommand{\techtrendsfaotherfuelsqeoc}{1933.268}
 % GJ
-\newcommand{\techtrendsfaotherfuelsqeoc}{6.96}
+\newcommand{\techtrendsfaotherfuelsqeoc}{6.43}
+% 6.427248
+
 
 %DAMAGE FUNCTION SLOPES (ABSOLUTE VALUE)
-
 %Electricity (EJ)
-\newcommand{\elecdamageslope}{3.96}
+\newcommand{\elecdamageslope}{4.54}
+% 4.542375839523518
 
 %Other Fuels (EJ)
-\newcommand{\otherfuelsdamageslope}{10.15}
+\newcommand{\otherfuelsdamageslope}{11.07}
+% 11.06740253628171
 
 %Total (billions of dollars)
-\newcommand{\totaldollarsdamageslope}{181}
+\newcommand{\totaldollarsdamageslope}{183}
+% 182.69802951546
+
