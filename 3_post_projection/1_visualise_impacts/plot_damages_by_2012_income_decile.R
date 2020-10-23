@@ -23,20 +23,22 @@ get_deciles = function(df){
   deciles = df %>% 
     filter(year == 2010)
   
-  # Get cut-off population levels for each quantile
-  total_pop = sum(deciles$pop)
-  pop_per_quantile = total_pop / 10
+
+  # # Get cut-off population levels for each quantile
+  # total_pop = sum(deciles$pop)
+  # pop_per_quantile = total_pop / 10
   
-  deciles <- deciles[order(deciles$loggdppc),] 
-  deciles$cum_pop = cumsum(deciles$pop)
-  deciles$decile = 10
+  # deciles <- deciles[order(deciles$loggdppc),] 
+  # deciles$cum_pop = cumsum(deciles$pop)
+  # deciles$decile = 10
   
-  # Loop over deciles, assigning them to the ordered IRs up to the point where population is equal in each decile
-  for (quant in 1:10){
-    deciles$decile[deciles$cum_pop < quant* pop_per_quantile & deciles$cum_pop >= (quant-1)* pop_per_quantile] <- quant
-  }
+  # # Loop over deciles, assigning them to the ordered IRs up to the point where population is equal in each decile
+  # for (quant in 1:10){
+  #   deciles$decile[deciles$cum_pop < quant* pop_per_quantile & deciles$cum_pop >= (quant-1)* pop_per_quantile] <- quant
+  # }
   
   deciles = deciles %>%
+    dplyr::mutate(decile = ntile(loggdppc, 10)) %>%
     dplyr::select(iso, decile)
   
   return(deciles)
@@ -58,7 +60,7 @@ cov_pixel_interaction= read_csv(paste0("/mnt/CIL_energy/code_release_data_pixel_
   '/miscellaneous/covariates_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim.csv'))
 
 country_inc = cov_pixel_interaction %>%
-    dplyr::select(year, region, loggdppc, pop) %>%
+    dplyr::select(year, region, loggdppc)%>%
     rename(country_inc = loggdppc) %>% 
     mutate(iso = substr(region, 1,3)) 
 
