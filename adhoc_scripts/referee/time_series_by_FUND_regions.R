@@ -58,37 +58,35 @@ p
 
 # define a function to allow us to do a mapply festival 
 
-get_df = function(region, rcp, fuel) {
+get_df = function(region, rcp, fuel, price_scen = NULL, unit = "impactpc") {
 
-		print(paste0('------------------------------', region, '------------------------------'))
-		
+	print(paste0('------------------------------', region, '------------------------------'))
 
-		args = list(
-		    conda_env = "risingverse-py27",
-		    proj_mode = '', # '' and _dm are the two options
-		    # region = "global", # needs to be specified for 
-		    rcp = rcp, 
-		    ssp = "SSP3", 
-		    price_scen = NULL, # have this as NULL, "price014", "MERGEETL", ...
-		    unit =  "impactpc", # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
-		    uncertainty = "climate", # full, climate, values
-		    geo_level = "aggregated", # aggregated (ir agglomerations) or 'levels' (single irs)
-		    iam = "high", 
-		    model = "TINV_clim", 
-		    adapt_scen = "fulladapt", 
-		    clim_data = "GMFD", 
-		    dollar_convert = NULL, 
-		    yearlist = as.character(seq(1980,2100,1)),  
-		    spec = fuel,
-		    grouping_test = "semi-parametric")
+	args = list(
+	    conda_env = "risingverse-py27",
+	    proj_mode = '', # '' and _dm are the two options
+	    # region = "global", # needs to be specified for 
+	    rcp = rcp, 
+	    ssp = "SSP3", 
+	    price_scen = price_scen, # have this as NULL, "price014", "MERGEETL", ...
+	    unit = unit, # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
+	    uncertainty = "climate", # full, climate, values
+	    geo_level = "aggregated", # aggregated (ir agglomerations) or 'levels' (single irs)
+	    iam = "high", 
+	    model = "TINV_clim", 
+	    adapt_scen = "fulladapt", 
+	    clim_data = "GMFD", 
+	    dollar_convert = NULL, 
+	    yearlist = as.character(seq(1980,2100,1)),  
+	    spec = fuel,
+	    grouping_test = "semi-parametric")
 
-
-	    plot_df = do.call(load.median, c(args, region = region)) %>% 
-	                        select(year, mean)
-
-	    # names(plot_df) = c("year", region)
-	    return(plot_df)
+    plot_df = do.call(load.median, c(args, region = region)) %>% 
+                        select(year, mean)
+    # names(plot_df) = c("year", region)
+    return(plot_df)
 }
+
 
 plot_funds = function(rcp, aggregated_regions, fuel) {
 
@@ -115,9 +113,9 @@ plot_funds = function(rcp, aggregated_regions, fuel) {
 
 aggregated_regions = c("global", "FUND-ANZ", "FUND-CAM", "FUND-CAN", "FUND-CHI", "FUND-EEU", "FUND-FSU", "FUND-JPK", "FUND-LAM", "FUND-MAF", "FUND-MDE", "FUND-SAS", "FUND-SEA", "FUND-SIS", "FUND-SSA", "FUND-USA", "FUND-WEU")
 x = plot_funds(rcp = "rcp85", aggregated_regions = aggregated_regions, fuel = "OTHERIND_other_energy")
-ggsave(x, file = '/mnt/CIL_energy/code_release_data_pixel_interaction/referee_comments/FUND/FUND_other_energy_impactpc.png')
+ggsave(x, file = '/home/liruixue/repos/energy-code-release-2020/figures/referee_comments/FUND/FUND_other_energy_impactpc.png')
 y = plot_funds(rcp = "rcp85", aggregated_regions = aggregated_regions, fuel = "OTHERIND_electricity")
-ggsave(y, file = '/mnt/CIL_energy/code_release_data_pixel_interaction/referee_comments/FUND/FUND_elec_impactpc.png')
+ggsave(y, file = '/home/liruixue/repos/energy-code-release-2020/figures/referee_comments/FUND/FUND_elec_impactpc.png')
 
 # get a csv of the damages, for ashwin: 
 get_and_name = function(rcp, region) {
@@ -150,11 +148,26 @@ save_csv = function(rcp) {
 	df = mapply(get_and_name, region = aggregated_regions, rcp = "rcp45", SIMPLIFY = FALSE) %>%
 			bind_cols()
 	df$year = seq(1981,2100,1)
-	write_csv(df, paste0('/mnt/CIL_energy/code_release_data_pixel_interaction/referee_comments/FUND/damages-price014-',
+	write_csv(df, paste0('/home/liruixue/repos/energy-code-release-2020/figures/referee_comments/FUND/damages-price014-',
 		rcp, 'total_energy-SSP3-high.csv'))
 	return(df)
 }
 y = save_csv(rcp = "rcp45")
 z = save_csv(rcp = "rcp85")
+
+
+# global FUND vs our main results in dollar values
+
+total_rcp85 = get_df(rcp = "rcp85", region = c("global"), fuel = "OTHERIND_total_energy", price_scen = "price014", unit = "damage")
+total_rcp45 = get_df(rcp = "rcp45", region = c("global"), fuel = "OTHERIND_total_energy", price_scen = "price014", unit = "damage")
+
+FUND_cooling = read_csv(paste0(REPO,"/energy-code-release-2020/data/", "FUND_impacts_bn1995USD_cooling.csv"))
+
+ggsave(x, file = '/home/liruixue/repos/energy-code-release-2020/figures/referee_comments/FUND/FUND_other_energy_impactpc.png')
+
+y = plot_funds(rcp = "rcp85", aggregated_regions = c("global"), fuel = "OTHERIND_electricity", )
+ggsave(y, file = '/home/liruixue/repos/energy-code-release-2020/figures/referee_comments/FUND/FUND_elec_impactpc.png')
+
+
 
 
