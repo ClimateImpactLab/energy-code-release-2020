@@ -21,7 +21,7 @@ get_deciles = function(df){
   
   # df = country_inc_aggregated
   deciles = df %>% 
-    filter(year == 2010)
+    dplyr::filter(year == 2010)
   
 
   # # Get cut-off population levels for each quantile
@@ -36,12 +36,11 @@ get_deciles = function(df){
   # for (quant in 1:10){
   #   deciles$decile[deciles$cum_pop < quant* pop_per_quantile & deciles$cum_pop >= (quant-1)* pop_per_quantile] <- quant
   # }
+  # browser()
+  deciles$decile = ntile(deciles$loggdppc,10)
+
   
-  deciles = deciles %>%
-    dplyr::mutate(decile = ntile(loggdppc, 10)) %>%
-    dplyr::select(iso, decile)
-  
-  return(deciles)
+  return(dplyr::select(iso, decile))
 }
 
 # Load in pop and income data
@@ -52,8 +51,8 @@ get_deciles = function(df){
 # deciles = get_deciles(df_covariates)
 
 
-pop = read_csv(paste0("/mnt/CIL_energy/code_release_data_pixel_interaction",'/projection_system_outputs/covariates/' ,
-  'SSP3_IR_level_population.csv'))
+# pop = read_csv(paste0("/mnt/CIL_energy/code_release_data_pixel_interaction",'/projection_system_outputs/covariates/' ,
+#   'SSP3_IR_level_population.csv'))
 
 
 cov_pixel_interaction= read_csv(paste0("/mnt/CIL_energy/code_release_data_pixel_interaction", 
@@ -64,10 +63,10 @@ country_inc = cov_pixel_interaction %>%
     rename(country_inc = loggdppc) %>% 
     mutate(iso = substr(region, 1,3)) 
 
-country_inc = merge(country_inc, pop, by = c("region", "year"))
+# country_inc = merge(country_inc, pop, by = c("region", "year"))
 
 country_inc_aggregated =  country_inc %>% group_by(iso, year) %>%
-  summarize(pop = sum(pop), loggdppc = mean(country_inc))
+  summarize(loggdppc = mean(country_inc))
 
 deciles = get_deciles(country_inc_aggregated)
 

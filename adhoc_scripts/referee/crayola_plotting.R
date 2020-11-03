@@ -12,6 +12,8 @@ library(stringr)
 DB = "/mnt"
 coefs_dir = paste0(DB, "/CIL_energy/code_release_data_pixel_interaction/damage_function_estimation/coefficients")
 
+
+output_path = "/home/liruixue/repos/energy-code-release-2020/figures/referee_comments/"
 path = paste0(DB,
                 "/CIL_energy/code_release_data_pixel_interaction", 
                 "/referee_comments/crayola/")
@@ -47,7 +49,8 @@ g1 <- ggplot() +
                      panel.grid.minor = element_blank(),
                      legend.position = "bottom" )
 
-g1
+ggsave(g1, filename = glue("{output_path}/crayola_plot.pdf", width = 8, height = 8))
+
 
 
 # Separate plots for each bin... 
@@ -80,7 +83,7 @@ plot_crayola = function(df, avrg_val, output){
 # plot_crayola(df = df, avrg_val = 3.75, output = path )  
 gmst_list = unique(df$avrg)
 lapply(gmst_list, FUN = plot_crayola, 
-       df = df, output = path)
+       df = df, output = output_path)
   
   
   

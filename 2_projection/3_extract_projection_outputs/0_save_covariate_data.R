@@ -76,7 +76,13 @@ conversion_value = con_df$inf_adj[1]
 ###########################################
 # 3 Data for figure 3A map
 
-gdppc = get_gdppc_all_regions('high', 'SSP3') %>%
+gdppc = get_gdppc_all_regions('high', 'SSP3') 
+
+
+write_csv(pop_df, paste0(output,'/projection_system_outputs/covariates/' ,
+	'SSP3_IR_level_gdppc.csv'))
+
+%>%
 	mutate(gdppc = gdppc * conversion_value)
 
 # Population values are every 5 years. We use flat interpolation (a step function)

@@ -28,7 +28,7 @@ glob DB_data "$DB/CIL_energy/code_release_data_pixel_interaction"
 glob dir "$DB_data/projection_system_outputs/damage_function_estimation"
 
 * SSP toggle - options are "SSP2", "SSP3", or "SSP4"
-loc ssp = "SSP5" 
+loc ssp = "SSP3" 
 
 * Model toggle  - options are "main", "lininter", or "lininter_double"
 loc model = "main"
