@@ -25,10 +25,10 @@ ggtimeseries <- function(df.list = NULL,
                          rcp.value = NULL, ssp.value = NULL, iam.value = NULL) {
   
   #base plot
-  p <- ggplot() +
+  p <- ggplot() + 
     geom_hline(yintercept=0, size=.2) + #zerolin* e
     scale_x_continuous(expand=c(0, 0), limits=c(start.yr, end.yr)) +
-    scale_colour_manual(name=legend.title, breaks=legend.breaks, values=legend.values) +
+    scale_colour_manual(name=legend.title, breaks=legend.breaks, values=legend.values) + 
     scale_alpha_manual(name="", values=c(.7)) +
     theme_bw() +
     theme(panel.grid.major = element_blank(), 

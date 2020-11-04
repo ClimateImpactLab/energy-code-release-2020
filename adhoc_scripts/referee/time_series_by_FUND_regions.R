@@ -38,10 +38,10 @@ args = list(
     grouping_test = "semi-parametric")
 
 args$iam = "high"
-df_high = do.call(load.median, args) %>% select(year, mean)
+df_high = do.call(load.median, args) %>% dplyr::select(year, mean)
 
 args$iam = "low"
-df_low = do.call(load.median, args) %>% select(year, mean)
+df_low = do.call(load.median, args) %>% dplyr::select(year, mean)
 
 p <- ggtimeseries(df.list = list(df_high, df_low), 
                               df.x = "year",
@@ -58,7 +58,7 @@ p
 
 # define a function to allow us to do a mapply festival 
 
-get_df = function(region, rcp, fuel, price_scen = NULL, unit = "impactpc") {
+get_df = function(region, rcp, fuel, price_scen = NULL, unit = "impactpc", dollar_convert = NULL) {
 
 	print(paste0('------------------------------', region, '------------------------------'))
 
@@ -76,13 +76,13 @@ get_df = function(region, rcp, fuel, price_scen = NULL, unit = "impactpc") {
 	    model = "TINV_clim", 
 	    adapt_scen = "fulladapt", 
 	    clim_data = "GMFD", 
-	    dollar_convert = NULL, 
+	    dollar_convert = dollar_convert, 
 	    yearlist = as.character(seq(1980,2100,1)),  
 	    spec = fuel,
 	    grouping_test = "semi-parametric")
 
     plot_df = do.call(load.median, c(args, region = region)) %>% 
-                        select(year, mean)
+                        dplyr::select(year, mean)
     # names(plot_df) = c("year", region)
     return(plot_df)
 }
@@ -139,7 +139,7 @@ get_and_name = function(rcp, region) {
 		    grouping_test = "semi-parametric")
 	
 	df = do.call(load.median, c(args, region = region)) %>% 
-	                        select(mean)
+	                        dplyr::select(mean)
 	names(df) = c(region)
 	return(df)
 }
@@ -158,15 +158,47 @@ z = save_csv(rcp = "rcp85")
 
 # global FUND vs our main results in dollar values
 
-total_rcp85 = get_df(rcp = "rcp85", region = c("global"), fuel = "OTHERIND_total_energy", price_scen = "price014", unit = "damage")
-total_rcp45 = get_df(rcp = "rcp45", region = c("global"), fuel = "OTHERIND_total_energy", price_scen = "price014", unit = "damage")
+total_rcp85 = get_df(rcp = "rcp85", region = c("global"), fuel = "OTHERIND_total_energy", price_scen = "price014", unit = "damage", dollar_convert = TRUE) %>% 
+				# mutate(mean = mean / 1000000000) %>% 
+				dplyr::select(year, mean)
+
+total_rcp45 = get_df(rcp = "rcp45", region = c("global"), fuel = "OTHERIND_total_energy", price_scen = "price014", unit = "damage", dollar_convert = TRUE) %>%
+				# mutate(mean = mean / 1000000000) %>% 
+				dplyr::select(year, mean)
+
+total = merge(total_rcp85, total_rcp45, by = "year")
 
 FUND_cooling = read_csv(paste0(REPO,"/energy-code-release-2020/data/", "FUND_impacts_bn1995USD_cooling.csv"))
+FUND_heating = read_csv(paste0(REPO,"/energy-code-release-2020/data/", "FUND_impacts_bn1995USD_heating.csv"))
 
-ggsave(x, file = '/home/liruixue/repos/energy-code-release-2020/figures/referee_comments/FUND/FUND_other_energy_impactpc.png')
+FUND_sum = merge(FUND_cooling, FUND_heating, by = c("time","regions")) %>% 
+	mutate(total_energy = cooling + heating) %>%
+	group_by(time) %>%
+	summarise(mean= sum(total_energy)) %>%
+	rename(year = time) %>% 
+	filter(year <= 2100, year >= 1981)
 
-y = plot_funds(rcp = "rcp85", aggregated_regions = c("global"), fuel = "OTHERIND_electricity", )
-ggsave(y, file = '/home/liruixue/repos/energy-code-release-2020/figures/referee_comments/FUND/FUND_elec_impactpc.png')
+all_data = merge(FUND_sum, total, by = "year")
+# FUND_sum
+
+	# print('getting colors')
+	# colourCount = 3
+getPalette = colorRampPalette(brewer.pal(9, "Set1"))
+	# print('plotting')
+p <- ggtimeseries(df.list = list(total_rcp45 %>% as.data.frame() , 
+                total_rcp85 %>% as.data.frame(),
+                FUND_sum %>% as.data.frame()), 
+                  df.x = "year",
+                  x.limits = c(1981, 2100),                               
+                  # y.limits=c(-0.8,0.2),
+                  y.label = " impact-dollar", 
+                  legend.title = "FUND-Region", 
+                  legend.breaks = c("rcp45","rcp85","FUND"), 
+                  legend.values = getPalette(3),
+                  rcp.value = "rcp85", ssp.value = "SSP3", iam.value = "high") 
+
+
+# p = plot_funds_new(df = all_data)
 
 
 
