@@ -121,9 +121,11 @@ foreach vv in `pricelist' {
 	
 	* Linear extrapolation for years post-2100 
 	* CHECK: 
-    qui reg `vv' c.anomaly##c.anomaly##c.t##c.t  if year >= `subset'
+    qui reg `vv' c.anomaly##c.anomaly##c.t ##c.t  if year >= `subset'
+/*     a + t + at + a^2 t + a t^2 + a^2 + t^2  + a^2 t^2
+    a + t + at + a^2 t + a^2 
 	
-	* Generate predicted coeffs for each year post 2100 with linear extrapolation
+ */	* Generate predicted coeffs for each year post 2100 with linear extrapolation
 	foreach yr of numlist 2100/2300 {
 		di "`vv' `yr'"
 		* CHECK: 

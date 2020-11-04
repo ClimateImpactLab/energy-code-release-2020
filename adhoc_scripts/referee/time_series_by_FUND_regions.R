@@ -17,6 +17,9 @@ projection.packages <- paste0(REPO,"/energy-code-release-2020/2_projection/0_pac
 source(paste0(REPO,"/energy-code-release-2020/3_post_projection/0_utils/time_series.R"))
 miceadds::source.all(paste0(projection.packages,"load_projection/"))
 
+DB = "/mnt/CIL_energy"
+
+DB_data = paste0(DB, "/code_release_data_pixel_interaction")
 
 args = list(
     conda_env = "risingverse-py27",
@@ -70,7 +73,7 @@ get_df = function(region, rcp, fuel, price_scen = NULL, unit = "impactpc", dolla
 	    ssp = "SSP3", 
 	    price_scen = price_scen, # have this as NULL, "price014", "MERGEETL", ...
 	    unit = unit, # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
-	    uncertainty = "climate", # full, climate, values
+	    uncertainty = "full", # full, climate, values
 	    geo_level = "aggregated", # aggregated (ir agglomerations) or 'levels' (single irs)
 	    iam = "high", 
 	    model = "TINV_clim", 
@@ -158,6 +161,11 @@ z = save_csv(rcp = "rcp85")
 
 # global FUND vs our main results in dollar values
 
+df_gdp = read_csv(paste0(DB_data, '/projection_system_outputs/covariates/', 
+                       "/SSP3-global-gdp-time_series.csv"))
+
+
+
 total_rcp85 = get_df(rcp = "rcp85", region = c("global"), fuel = "OTHERIND_total_energy", price_scen = "price014", unit = "damage", dollar_convert = TRUE) %>% 
 				# mutate(mean = mean / 1000000000) %>% 
 				dplyr::select(year, mean)
@@ -166,7 +174,15 @@ total_rcp45 = get_df(rcp = "rcp45", region = c("global"), fuel = "OTHERIND_total
 				# mutate(mean = mean / 1000000000) %>% 
 				dplyr::select(year, mean)
 
-total = merge(total_rcp85, total_rcp45, by = "year")
+# total = merge(total_rcp85, total_rcp45, by = "year")
+
+
+
+df = total_rcp85 %>%
+  left_join(df_gdp, by = "year") %>% 
+  mutate(mean = mean * 1000000000) %>% #convert from billions of dollars 
+  mutate(percent_gdp = (mean/gdp) *100 / 0.0036)
+
 
 FUND_cooling = read_csv(paste0(REPO,"/energy-code-release-2020/data/", "FUND_impacts_bn1995USD_cooling.csv"))
 FUND_heating = read_csv(paste0(REPO,"/energy-code-release-2020/data/", "FUND_impacts_bn1995USD_heating.csv"))
@@ -178,7 +194,7 @@ FUND_sum = merge(FUND_cooling, FUND_heating, by = c("time","regions")) %>%
 	rename(year = time) %>% 
 	filter(year <= 2100, year >= 1981)
 
-all_data = merge(FUND_sum, total, by = "year")
+# all_data = merge(FUND_sum, total, by = "year")
 # FUND_sum
 
 	# print('getting colors')
@@ -201,5 +217,8 @@ p <- ggtimeseries(df.list = list(total_rcp45 %>% as.data.frame() ,
 # p = plot_funds_new(df = all_data)
 
 
+# file_fed = read_csv('/shares/gcp/estimation/mortality/release_2020/data/3_valuation/inputs/adjustments/fed_income_inflation.csv')
+
+# convert_1995_to_2019 = (file_fed %>% filter(year == 2019))$gdpdef / (file_fed %>% filter(year == 1995))$gdpdef 
 
 
