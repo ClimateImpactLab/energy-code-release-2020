@@ -67,11 +67,6 @@ df_gdp_fund = read_csv(paste0(REPO,"/energy-code-release-2020/data/",
 			rename(year = time) %>% 
 			dplyr::filter(year >= 2001, year <= 2100)
 
-# load the file used in mortality for dollar conversion
-# this value is not used for the %gdp calculation
-file_fed = read_csv('/shares/gcp/estimation/mortality/release_2020/data/3_valuation/inputs/adjustments/fed_income_inflation.csv')
-convert_1995_to_2019 = (file_fed %>% filter(year == 2019))$gdpdef / (file_fed %>% filter(year == 1995))$gdpdef 
-
 
 
 # load projected impacts in billion of 2019 dollar
@@ -132,6 +127,9 @@ p <- ggtimeseries(df.list = list(df_45 %>% as.data.frame() ,
                   rcp.value = "rcp85", ssp.value = "SSP3", iam.value = "high") 
 
 ggsave(p, file = '/home/liruixue/repos/energy-code-release-2020/figures/referee_comments/FUND/FUND_global_time_series.pdf')
+
+
+
 
 
 

@@ -16,7 +16,7 @@ source(paste0(REPO,"/energy-code-release-2020/3_post_projection/0_utils/time_ser
 miceadds::source.all(paste0(projection.packages,"load_projection/"))
 
 
-get_df = function(region, rcp, fuel, price_scen = NULL, unit = "impactpc") {
+get_df = function(region, rcp, fuel, price_scen = NULL, unit = "impactpc", dollar_convert = NULL) {
 
 	print(paste0('------------------------------', region, '------------------------------'))
 
@@ -34,7 +34,7 @@ get_df = function(region, rcp, fuel, price_scen = NULL, unit = "impactpc") {
 	    model = "TINV_clim", 
 	    adapt_scen = "fulladapt", 
 	    clim_data = "GMFD", 
-	    dollar_convert = NULL, 
+	    dollar_convert = dollar_convert, 
 	    yearlist = as.character(seq(1980,2100,1)),  
 	    spec = fuel,
 	    grouping_test = "semi-parametric")
@@ -44,30 +44,48 @@ get_df = function(region, rcp, fuel, price_scen = NULL, unit = "impactpc") {
     # names(plot_df) = c("year", region)
     return(plot_df)
 }
-# df = get_fund_df(region = "FUND-CAM", rcp = "rcp85", fuel = "OTHERIND_electricity", 
-# 	adapt_scen = "noadapt", year = 2099)
+
+# load the file used in mortality for dollar conversion
+# this value is not used for the %gdp calculation
+file_fed = read_csv('/shares/gcp/estimation/mortality/release_2020/data/3_valuation/inputs/adjustments/fed_income_inflation.csv')
+convert_1995_to_2019 = (file_fed %>% filter(year == 2019))$gdpdef / (file_fed %>% filter(year == 1995))$gdpdef 
+
+
+# SSP3
 aggregated_regions = c("FUND-ANZ", "FUND-CAM", "FUND-CAN", "FUND-CHI", "FUND-EEU", "FUND-FSU", "FUND-JPK", "FUND-LAM", "FUND-MAF", "FUND-MDE", "FUND-SAS", "FUND-SEA", "FUND-SIS", "FUND-SSA", "FUND-USA", "FUND-WEU")
-df = mapply(get_df, region = aggregated_regions, rcp = "rcp85", unit = "damage", price_scen = "price014", fuel = "OTHERIND_total_energy", SIMPLIFY = FALSE)
+df = mapply(get_df, region = aggregated_regions, rcp = "rcp85", unit = "damage", price_scen = "price014", fuel = "OTHERIND_total_energy", dollar_convert = "yes", SIMPLIFY = FALSE)
 FUND_ours = do.call(rbind, c(df, make.row.names = TRUE))
 FUND_ours$regions = rownames(FUND_ours)
 rownames(FUND_ours) = NULL
 FUND_ours$regions = substr(FUND_ours$regions, 6,8)
+FUND_ours = FUND_ours %>% filter(year == 2099)
 
-head(FUND_ours)
 
+# FUND
 FUND_cooling = read_csv(paste0(REPO,"/energy-code-release-2020/data/", "FUND_impacts_bn1995USD_cooling.csv"))
 FUND_heating = read_csv(paste0(REPO,"/energy-code-release-2020/data/", "FUND_impacts_bn1995USD_heating.csv"))
 
 FUND = merge(FUND_cooling, FUND_heating, by = c("time","regions")) %>% 
-	mutate(fund_total = cooling + heating) %>%
-	group_by(time) %>%
-	rename(year = time) %>% 
-	filter(year <= 2100, year >= 1981)
-head(FUND)
+	mutate(fund_total = (cooling + heating)) %>%
+	rename(year = time) 
 
-combined = merge(FUND_ours, FUND, by = c("regions", "year")) %>% 
-	mutate(mean = mean / 1000000000)
+# rebase fund data
+FUND_rebaser = FUND %>% filter(year >= 2001, year <= 2010) %>%
+ 	group_by(regions) %>%
+ 	summarise(rebaser = mean(fund_total))
 
+FUND_rebased = merge(FUND, FUND_rebaser, by = "regions") %>% 
+	filter(year == 2099) %>%
+	mutate(fund_total = -(fund_total - rebaser) * convert_1995_to_2019)%>%
+	select(year, regions, fund_total) 
 
+# plot
+plot_df = merge(FUND_rebased, FUND_ours, by = c("year", "regions"))
 
+p = ggplot(plot_df, aes(x = mean, y = fund_total)) + 
+	geom_point()
 	
+
+ggsave(p, file = '/home/liruixue/repos/energy-code-release-2020/figures/referee_comments/FUND/FUND_vs_SSP3_scatterplot.pdf')
+
+
