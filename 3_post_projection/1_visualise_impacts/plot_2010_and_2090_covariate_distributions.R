@@ -52,7 +52,7 @@ covars_reverse$order = factor(covars_reverse$year, levels = c(2090, 2010))
 p_cdd = ggplot() +
   geom_bin2d(data=covars, 
              aes(x=CDD20, y=loggdppc), 
-             colour="transparent",
+             colour="grey",
              size = 1.2,
              bins = bin_num,
              drop = drop_val,
