@@ -143,10 +143,10 @@ foreach prod in "other_energy" "electricity" {
 	}
 	foreach test in "DF" "PR" { 
 		if "`test'"=="DF" {
-			local gtit="Augmented Dickey Fuller Unit Root Test"
+			local gtit="Augmented Dickey Fuller Unit Root Test for Temperature"
 		}
 		else {
-			local gtit="Phillips Perron Unit Root Test"
+			local gtit="Phillips Perron Unit Root Test for Temperature"
 		}
 		use ``test'_`prod'', clear
 
@@ -170,6 +170,6 @@ foreach prod in "other_energy" "electricity" {
 		subtitle("`sub_tit' Unit Root Test P-value Histograms") ///
 		graphregion(color(white)) plotregion(color(white))
 	* Save the graph 
-	graph export "$OUT/fig_Appendix-A2_Unit_Root_Tests_p_val_hists_`prod'.pdf", replace
+	graph export "$OUT/fig_Appendix-A2_Unit_Root_Tests_p_val_hists_`prod'_for_temperature.pdf", replace
 }
 graph drop _all	
