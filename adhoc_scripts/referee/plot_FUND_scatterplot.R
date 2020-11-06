@@ -7,6 +7,13 @@ library(tidyverse)
 library(RColorBrewer)
 cilpath.r:::cilpath()
 
+library(ggrepel)
+
+DB = "/mnt/CIL_energy"
+
+DB_data = paste0(DB, "/code_release_data_pixel_interaction")
+
+
 source("/home/liruixue/projection_repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 
 # source needed codes and set up paths
@@ -83,9 +90,57 @@ FUND_rebased = merge(FUND, FUND_rebaser, by = "regions") %>%
 plot_df = merge(FUND_rebased, FUND_ours, by = c("year", "regions"))
 
 p = ggplot(plot_df, aes(x = mean, y = fund_total)) + 
-	geom_point()
+	geom_point() + 
+	geom_text(label = plot_df$regions)
 	
 
 ggsave(p, file = '/home/liruixue/repos/energy-code-release-2020/figures/referee_comments/FUND/FUND_vs_SSP3_scatterplot.pdf')
 
+# showing %GDP
+
+# load world GDP for SSP3 and FUND
+
+macro_regions = read_csv("/shares/gcp/regions/macro-regions.csv", skip = 37) %>% 
+	select(`region-key`, FUND) %>%
+	rename(iso = `region-key`)
+
+macro_regions
+
+df_gdp = read_csv(paste0('/mnt/CIL_energy/code_release_data_pixel_interaction/projection_system_outputs/covariates/', 
+	'SSP3-high-IR_level-gdppc_pop-2099.csv')) %>%
+	select(region, gdp99) %>%
+	mutate(iso = substr(region, 1, 3)) %>%
+	group_by(iso) %>%
+	summarize(country_gdp = sum(gdp99))
+
+df_gdp = merge(df_gdp, macro_regions, by = "iso") %>%
+	group_by(FUND) %>%
+	summarize(region_gdp = sum(country_gdp))  %>%
+	rename(regions = FUND)
+
+
+
+df_gdp_fund = read_csv(paste0(REPO,"/energy-code-release-2020/data/", 
+                       "/FUND_GDP_bn1995USD.csv")) %>% 
+			rename(year = time) %>% 
+			dplyr::filter(year ==2099)
+
+# calculate percentage GDP
+FUND_all = merge(FUND_rebased, df_gdp_fund, by = c("year","regions")) %>%
+		mutate(percent_gdp_fund = fund_total / income / convert_1995_to_2019 * 100)
+
+
+SSP3_all = merge(FUND_ours , df_gdp, by ="regions" ) %>%
+		mutate(percent_gdp_ssp3 = mean * 1000000000 / 0.0036 / region_gdp * 100)
+
+
+plot_df_gdp = merge(FUND_all, SSP3_all, by = c("regions"))
+
+p = ggplot(plot_df_gdp, aes(x = percent_gdp_ssp3, y = percent_gdp_fund)) + 
+	geom_point() +
+	geom_abline(intercept = 0, slope = 1) +
+	geom_text_repel(label = plot_df_gdp$regions, size = 6, arrow = NA)
+p	
+
+ggsave(p, file = '/home/liruixue/repos/energy-code-release-2020/figures/referee_comments/FUND/FUND_vs_SSP3_scatterplot_percent_gdp.pdf')
 
