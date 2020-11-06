@@ -2,7 +2,7 @@
 ###########################################################
 ##                 Generating Blob Plots                 ##
 ###########################################################
-# done 26 aug 2020
+# blob plots
 
 rm(list = ls())
 
@@ -38,7 +38,7 @@ limits_val = c(lb,ub)
 breaks_labels_val = seq(lb, ub, abs(ub-lb)/5)
 grey.colors <- brewer.pal(7, "Greys")[2:7]
 red.colors <- brewer.pal(7, "YlOrRd")[2:7]
-bin_num <- 50
+bin_num <- 30
 drop_val <- T
 
 
@@ -52,30 +52,15 @@ covars_reverse$order = factor(covars_reverse$year, levels = c(2090, 2010))
 p_cdd = ggplot() +
   geom_bin2d(data=covars, 
              aes(x=CDD20, y=loggdppc), 
-             colour="grey",
-             size = 1.2,
-             bins = bin_num,
+             # colour="grey",
+             # size = 1.2,
+             # alpha = 0.5,
+             # bins = bin_num,
              drop = drop_val,
              na.rm = TRUE) +
   facet_wrap(~year, nrow = 1) + 
   expand_limits(y=0) +
   scale_fill_gradientn(colours = red.colors, 
-                       name = "Frequency", 
-                       limits = limits_val,  
-                       breaks = breaks_labels_val, 
-                       labels = breaks_labels_val,
-                       values=rescale(rescale_val),
-                       na.value=NA) +
-  new_scale_fill() +
-  geom_bin2d(data=covars_reverse, 
-             aes(x=CDD20, y=loggdppc), 
-             # colour="white",
-             bins = bin_num,
-             drop = drop_val,
-             na.rm = TRUE) +
-  facet_wrap(~order, nrow = 1) + 
-  expand_limits(y=0) +
-  scale_fill_gradientn(colours = grey.colors, 
                        name = "Frequency", 
                        limits = limits_val,  
                        breaks = breaks_labels_val, 
@@ -94,7 +79,7 @@ p_cdd = ggplot() +
   geom_bin2d(data=covars_reverse, 
              aes(x=CDD20, y=loggdppc), 
              # colour="white",
-             bins = bin_num,
+             # bins = bin_num,
              drop = drop_val,
              na.rm = TRUE) +
   facet_wrap(~order, nrow = 1) + 
@@ -117,9 +102,9 @@ ggplot2::ggsave(width = 20, height = 10, plot = p_cdd, filename = paste0(output,
 p_hdd = ggplot() +
   geom_bin2d(data=covars_reverse, 
              aes(x=HDD20, y=loggdppc), 
-             colour="white",
-             size = 1.2,
-             bins = bin_num,
+             # colour="white",
+             # size = 1.2,
+             # bins = bin_num,
              drop = drop_val,
              na.rm = TRUE) +
   facet_wrap(~order, nrow = 1) + 
@@ -139,7 +124,7 @@ p_hdd = ggplot() +
   geom_bin2d(data=covars, 
              aes(x=HDD20, y=loggdppc), 
              # colour="white",
-             bins = bin_num,
+             # bins = bin_num,
              drop = drop_val,
              na.rm = TRUE) +
   facet_wrap(~year, nrow = 1) + 
