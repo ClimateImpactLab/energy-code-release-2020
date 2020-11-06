@@ -7,6 +7,8 @@ library(tidyverse)
 library(RColorBrewer)
 cilpath.r:::cilpath()
 
+library(ggrepel)
+
 DB = "/mnt/CIL_energy"
 
 DB_data = paste0(DB, "/code_release_data_pixel_interaction")
@@ -135,9 +137,10 @@ SSP3_all = merge(FUND_ours , df_gdp, by ="regions" ) %>%
 plot_df_gdp = merge(FUND_all, SSP3_all, by = c("regions"))
 
 p = ggplot(plot_df_gdp, aes(x = percent_gdp_ssp3, y = percent_gdp_fund)) + 
-	geom_point() + 
-	geom_text(label = plot_df_gdp$regions)
-	
+	geom_point() +
+	geom_abline(intercept = 0, slope = 1) +
+	geom_text_repel(label = plot_df_gdp$regions, size = 6, arrow = NA)
+p	
 
 ggsave(p, file = '/home/liruixue/repos/energy-code-release-2020/figures/referee_comments/FUND/FUND_vs_SSP3_scatterplot_percent_gdp.pdf')
 
