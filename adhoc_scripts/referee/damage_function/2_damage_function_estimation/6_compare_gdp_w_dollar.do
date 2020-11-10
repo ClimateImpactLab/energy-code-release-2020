@@ -170,6 +170,7 @@ save "$dir_output/percent_gdp_vs_dollar_df_comparison.dta", replace
 use "$dir_output/percent_gdp_vs_dollar_df_comparison.dta", clear
 
 
+* CHECK:
 * put all the predicted %gdp and damages into variables
 * such that p_yh_1 and d_yh_1 correspond to the predicted %gdp and damage in year t-2 (t is the year of the damage function)
 * p_yh_2 and d_yh_2 correspond to the predicted %gdp and damage in year t-1
