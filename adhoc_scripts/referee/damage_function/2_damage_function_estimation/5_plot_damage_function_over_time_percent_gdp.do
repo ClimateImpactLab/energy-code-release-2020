@@ -83,5 +83,5 @@ sort anomaly
 * Plot and save
 graph tw `gr', yline(0, lwidth(vthin)) ytitle("Bn 2019 USD" ) xtitle("GMST Anomaly") title("Total Energy Damage Function, Evolution Over Time", size(small)) xscale(r(0(1)10)) xlabel(0(1)10) legend(off) scheme(s1mono) ylabel(, labsize(small)) 
 
-graph export "$output/fig_Appendix-E1_total_energy_damage_function_evolution_SSP3-price014.pdf", replace 
+graph export "$output/fig_Appendix-E1_total_energy_percent_gdp_damage_function_evolution_SSP3-price014.pdf", replace 
 graph drop _all
