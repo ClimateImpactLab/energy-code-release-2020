@@ -175,7 +175,7 @@ get_df = function(region, rcp, fuel, price_scen = NULL, unit = "impactpc", dolla
 	    geo_level = "aggregated", # aggregated (ir agglomerations) or 'levels' (single irs)
 	    iam = "high", 
 	    model = "TINV_clim", 
-	    adapt_scen = "fulladapt", 
+	    adapt_scen = as.character(adapt), 
 	    clim_data = "GMFD", 
 	    dollar_convert = dollar_convert, 
 	    yearlist = 2099,  
