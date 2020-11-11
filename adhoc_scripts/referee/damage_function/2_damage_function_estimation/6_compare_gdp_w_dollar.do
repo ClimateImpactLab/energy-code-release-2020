@@ -166,7 +166,6 @@ foreach vv in `pricelist' {
 }
 
 save "$dir_output/percent_gdp_vs_dollar_df_comparison.dta", replace
-
 use "$dir_output/percent_gdp_vs_dollar_df_comparison.dta", clear
 
 
@@ -189,6 +188,9 @@ foreach yr_df of numlist 2015/2099 {
 * drop temp vars
 drop d_yh*df p_yh*df
 
-graph tw scatter p_yh_1 d_yh_1, msymbol(circle)|| scatter p_yh_2 d_yh_2, msymbol(diamond) || scatter p_yh_3 d_yh_3, msymbol(triangle) || scatter p_yh_4 d_yh_4 , msymbol(plus)||scatter p_yh_5 d_yh_5, msymbol(X)
+export delimited using "$dir_output/percent_gdp_vs_dollar_df_comparison.csv", replace
+
+
+graph tw scatter p_yh_1 d_yh_1, msymbol(circle)|| scatter p_yh_2 d_yh_2, msymbol(diamond) || scatter p_yh_3 d_yh_3, msymbol(triangle) || scatter p_yh_4 d_yh_4 , msymbol(plus)||scatter p_yh_5 d_yh_5, msymbol(X) || line p_yh_5 d_yh_5, sort
 graph export "$dir_output/percent_gdp_vs_dollar_df_comparison.pdf", replace
 
