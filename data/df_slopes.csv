@@ -1,0 +1,4 @@
+slope,p,lower,upper,fuel,year
+4.509615,0,4.466595,4.552635,electricity,2097
+-11.18192,0,-11.33871,-11.02512,other_energy,2097
+-184.6037,0,-191.6799,-177.5274,total_damage,2097

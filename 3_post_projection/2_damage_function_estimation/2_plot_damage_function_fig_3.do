@@ -168,3 +168,6 @@ tw kdensity anomaly if rcp=="rcp45" & year>=2080, color(edkblue) bw(`bw') || ///
 
 graph export "$output/fig_3/fig_3C_anomaly_densities_GMST_end_of_century.pdf", replace 
 graph drop _all
+
+
+

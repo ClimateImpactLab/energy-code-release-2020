@@ -7,6 +7,7 @@ if(!require("pacman")){install.packages(("pacman"))}
 pacman::p_load(ggplot2, 
                dplyr,
                readr)
+source("/home/liruixue/projection_repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 
 DB = "/mnt"
 
@@ -20,6 +21,7 @@ output = paste0(root, "/figures")
 get_deciles = function(df){
   
   # df = country_inc_aggregated
+  # browser()
   deciles = df %>% 
     dplyr::filter(year == 2010)
   
@@ -40,7 +42,7 @@ get_deciles = function(df){
   deciles$decile = ntile(deciles$loggdppc,10)
 
   
-  return(dplyr::select(iso, decile))
+  return(deciles %>% dplyr::select(iso, decile))
 }
 
 # Load in pop and income data
@@ -69,6 +71,7 @@ country_inc_aggregated =  country_inc %>% group_by(iso, year) %>%
   summarize(loggdppc = mean(country_inc))
 
 deciles = get_deciles(country_inc_aggregated)
+print(deciles %>% filter(decile == 5), n = 20)
 
 country_inc_deciles = merge(country_inc, deciles, by = c("iso"))
 
@@ -80,7 +83,7 @@ country_inc_deciles = merge(country_inc, deciles, by = c("iso"))
 # Load in impacts data
 df_impacts = read_csv(paste0(DB_data, '/projection_system_outputs/mapping_data',
                 "/main_model-total_energy-SSP3-rcp85-high-fulladapt-price014-2099-map.csv")) %>%
-  mutate(damage = damage * 1000000000) %>% 
+  mutate(damage = damage * 1000000000 / 0.0036) %>% 
   mutate(iso = substr(region, 1,3)) %>% 
   left_join(deciles, by = "iso")
 
@@ -113,5 +116,8 @@ ggsave(p, file = paste0(output,
     "/fig_Appendix-H1-new_SSP3-high_rcp85-total-energy-price014-damages_by_country_inc_decile.pdf"), 
     width = 8, height = 6)
 
+
+# (change city to country, check unit)
+# ask tom where's the code for getting the p-value, page 7 of main paper
 
 
