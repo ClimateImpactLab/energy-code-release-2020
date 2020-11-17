@@ -20,41 +20,18 @@ output = paste0(root, "/figures")
 
 get_deciles = function(df){
   
-  # df = country_inc_aggregated
-  # browser()
   deciles = df %>% 
-    dplyr::filter(year == 2010)
-  
+    dplyr::filter(year == 2012) %>% group_by(loggdppc) %>%
+    summarize() 
+  # deciles = merge(df%>%select(iso, loggdppc))
 
-  # # Get cut-off population levels for each quantile
-  # total_pop = sum(deciles$pop)
-  # pop_per_quantile = total_pop / 10
-  
-  # deciles <- deciles[order(deciles$loggdppc),] 
-  # deciles$cum_pop = cumsum(deciles$pop)
-  # deciles$decile = 10
-  
-  # # Loop over deciles, assigning them to the ordered IRs up to the point where population is equal in each decile
-  # for (quant in 1:10){
-  #   deciles$decile[deciles$cum_pop < quant* pop_per_quantile & deciles$cum_pop >= (quant-1)* pop_per_quantile] <- quant
-  # }
-  # browser()
   deciles$decile = ntile(deciles$loggdppc,10)
-
-  
+  countries = df %>% 
+    dplyr::filter(year == 2012)
+  deciles = merge(deciles, countries, by = "loggdppc")  
   return(deciles %>% dplyr::select(iso, decile))
 }
 
-# Load in pop and income data
-# df_covariates = read_csv(paste0(DB_data, '/projection_system_outputs/covariates', 
-#                         '/SSP3-high-IR_level-gdppc-pop-2012.csv'))
-
-# # Find each Impact region's 2012 decile of income per capita. 
-# deciles = get_deciles(df_covariates)
-
-
-# pop = read_csv(paste0("/mnt/CIL_energy/code_release_data_pixel_interaction",'/projection_system_outputs/covariates/' ,
-#   'SSP3_IR_level_population.csv'))
 
 
 cov_pixel_interaction= read_csv(paste0("/mnt/CIL_energy/code_release_data_pixel_interaction", 
@@ -71,12 +48,16 @@ country_inc_aggregated =  country_inc %>% group_by(iso, year) %>%
   summarize(loggdppc = mean(country_inc))
 
 deciles = get_deciles(country_inc_aggregated)
-print(deciles %>% filter(decile == 5), n = 20)
+# print(deciles %>% filter(decile == 5), n = 20)
 
 country_inc_deciles = merge(country_inc, deciles, by = c("iso"))
 
-# countries = country_inc %>% select(iso, year, country_inc) %>%
-# filter(year == 2012) %>% unique()
+
+country_inc_deciles %>% filter(iso == "CHN")
+t = country_inc_deciles %>% filter(decile == 7, year == 2012)
+countries = t %>% select(iso, year, country_inc) %>%
+filter(year == 2012) %>% unique()
+print(countries)
 
 
 

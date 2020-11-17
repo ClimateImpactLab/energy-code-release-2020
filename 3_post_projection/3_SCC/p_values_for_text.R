@@ -31,16 +31,16 @@ library(ggplot2)
 
 # projection.packages <- paste0(git,
 # 	"/gcp-energy/rationalized/2_projection/2_processing/packages/")
-# prospectus.tools.lib <- paste0(git,'/prospectus-tools/gcp/extract/')
+prospectus.tools.lib <- paste0("/home/liruixue/repos",'/prospectus-tools/gcp/extract/')
 # dm_testing <- paste0(git, "/gcp-energy/rationalized/2_projection/delta_method_fumbling/")
-# p_p_tools <- paste0(git, "/post-projection-tools/")
+p_p_tools <- paste0(git, "/post-projection-tools/")
 # miceadds::source.all(paste0(projection.packages,"load_projection/"))
 
 # # Enable python use by R
-# use_python(paste0('/home/',user,'/miniconda3/envs/', env, '/bin/python'), required = T)
+use_python(paste0('/home/',user,'/miniconda3/envs/', env, '/bin/python'), required = T)
 
 # # Source the relevant codes (including python code for getting weights and GCM names) 
-# setwd(prospectus.tools.lib)
+setwd(prospectus.tools.lib)
 # source_python(paste0(dm_testing, 'fetch_weight.py'))
 # source(paste0(projection.packages,"uncertainty_functions.R"))
 # source_python(paste0(projection.packages, "future_gdp_pop_data.py"))
