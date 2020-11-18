@@ -1,5 +1,5 @@
 # P values for figures in the text: 
-
+# need to run under risingverse
 rm(list = ls())
 
 # RCP 8.5 electricity impact at 2099 (GJ per capita)
@@ -15,46 +15,35 @@ library(reticulate)
 library(tidyr)
 library(miceadds)
 library(ggplot2)
-
-# # Automatically get into about the user, and then set the paths to DB, shares, and the git libraries
-# server.name = Sys.info()[["nodename"]]
-# user = Sys.info()[["user"]]
-# sys = Sys.info()[["sysname"]]
-# env = ifelse(user == "tbearpark", "risingverse-py27", "projection")
-
-# db <- ifelse(sys == "Linux", paste0("/home/", user), paste0("/Users/",user,"/Dropbox"))
-# db <- ifelse(user == "tbearpark", paste0("/local/shsiang/Dropbox"), db)
-# git <- ifelse(sys == "Linux", 
-# 	paste0("/home/", user, "/repos"), paste0("/Users/",user,"/Documents/Repos"))
-# battuta.shares <- ifelse(server.name == "sacagawea", 
-# 	paste0("/mnt/battuta_shares"), paste0("/shares"))
-
-# projection.packages <- paste0(git,
-# 	"/gcp-energy/rationalized/2_projection/2_processing/packages/")
-prospectus.tools.lib <- paste0("/home/liruixue/repos",'/prospectus-tools/gcp/extract/')
-# dm_testing <- paste0(git, "/gcp-energy/rationalized/2_projection/delta_method_fumbling/")
-p_p_tools <- paste0(git, "/post-projection-tools/")
-# miceadds::source.all(paste0(projection.packages,"load_projection/"))
-
-# # Enable python use by R
-use_python(paste0('/home/',user,'/miniconda3/envs/', env, '/bin/python'), required = T)
-
-# # Source the relevant codes (including python code for getting weights and GCM names) 
-setwd(prospectus.tools.lib)
-# source_python(paste0(dm_testing, 'fetch_weight.py'))
-# source(paste0(projection.packages,"uncertainty_functions.R"))
-# source_python(paste0(projection.packages, "future_gdp_pop_data.py"))
-
-# rm(list = ls())
 library(readr)
-library(dplyr)
 library(reticulate)
 library(parallel)
 library(miceadds)
 library(haven)
 library(ncdf4)
 library(tidyr)
+library(numDeriv)
+library(stats)
+library(reticulate)
+library(R.cache)
+library(parallel)
+library(rlist)
+library(future)
+library(testit)
+library(data.table)
+library(ncdf4)
+library(reshape2)
+library(stringr)
+library(glue)
+
 cilpath.r:::cilpath()
+
+prospectus.tools.lib <- paste0("/home/liruixue/repos",'/prospectus-tools/gcp/extract/')
+p_p_tools <- paste0(git, "/post-projection-tools/")
+# # Enable python use by R
+use_python(paste0('/home/',user,'/miniconda3/envs/', env, '/bin/python'), required = T)
+# # Source the relevant codes (including python code for getting weights and GCM names) 
+setwd(prospectus.tools.lib)
 
 
 db = '/mnt/CIL_energy/'
@@ -66,6 +55,7 @@ dir = paste0('/shares/gcp/social/parameters/energy_pixel_interaction/extraction/
 # Make sure you are in the risingverse-py27 for this... 
 projection.packages <- paste0(REPO,"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
 setwd(paste0(REPO))
+source(paste0(projection.packages,"uncertainty_functions.R"))
 
 # Source codes that help us load projection system outputs
 miceadds::source.all(paste0(projection.packages,"load_projection/"))
@@ -77,6 +67,41 @@ source_python(paste0(projection.packages, "fetch_weight.py"))
 
 get.values.memo = addMemoization(get.values)
 
+mc <- function(seed, iterations, mean_sd_df, gcm_weight_df, year) {
+  
+  # Set seed for replicability 
+  set.seed(seed)
+  
+  # 1. Take random draws from a uniform distribution
+  p <- runif(iterations) %>% 
+    as.data.frame() %>%
+    rename(u = ".")
+  
+  # 2. Send this random variable to one of the gcms, by creating and then binning the cdf
+  # browser()
+  gcm_weight_df = data.frame(gcm=names(gcm_weight_df), norm_weight=unlist(gcm_weight_df))
+  df_cdf <- gcm_weight_df %>%
+    dplyr::mutate(cdf = cumsum(norm_weight)) 
+  print('got df_cdf')
+
+  p$gcm <- cut(p$u, breaks = c(0, df_cdf$cdf), labels=df_cdf$gcm)
+  
+  # 3. Join information about mean and variances
+  p <- p %>%
+    left_join(mean_sd_df, by="gcm")
+
+  # 4. take draws from the relevant normal distributions
+  p$value <- rnorm(iterations, mean = p$mean, sd = p$sd)
+  print('taken the draws')
+  # 5. Return a df in the form needed for Trin's plotting code
+  p <- p %>% 
+    dplyr::select(value) 
+  p$year <- year
+  p$weight <- 1
+
+  return(p)
+}
+  
 
 #Get gcm list of gcm weights for a given rcp
 get.normalized.weights <- function (gcms, rcp) {
@@ -116,9 +141,9 @@ get_ci = function(rcp, year, unit, price, spec, iam) {
 	df = do.call(load.median, args) %>% 
 			select(year, mean, q5, q95) 
 
-	if(unit =="impactpc"){ #GJ conversion
+	if(unit !="impactpc"){ #GJ conversion
 		df = df	%>%
-			mutate(mean = mean * 0.0036, q5 = q5 * 0.0036, q95 = q95* 0.0036)
+			dplyr::mutate(mean = mean / 0.0036, q5 = q5 / 0.0036, q95 = q95/ 0.0036)
 	}
 
 	return(df)
@@ -176,9 +201,10 @@ get.dfs <- function(env, IR, ssp, iam, rcp, price = NULL, unit, year, fuel) {
     dplyr::filter(!! iam==`iam`, !!rcp==`rcp`) %>%
     dplyr::select(gcm, value, weight) %>%
     rename(variance=value) %>%
-    mutate(sd=sqrt(variance))
+    dplyr::mutate(sd=sqrt(variance))
 
   df_joined = left_join(mean_df, var_df) 
+
 
   if(rcp=="rcp85"){
     assert(dim(df_joined)==c(33, 5))
@@ -221,10 +247,10 @@ get_p_val = function(env, IR, ssp, price, unit,
 		as.data.frame() 
 
 	# Convert to GJ if unit is impact_pc
-	if(is.null(price)) {
+	if(!is.null(price)) {
 		print('converting to GJ')
 		df_mc = df_mc %>% 
-			mutate(value = value * 0.0036)
+			dplyr::mutate(value = value / 0.0036)
 	}
 
 	# Count the number of draws that fall above / below zero. Note - this is a two sided test
@@ -301,20 +327,22 @@ args_total = list(env= "risingverse-py27", IR = "global", ssp = "SSP3",
 
 total = mapply(get_p_val, rcp = total_options$rcp, fuel = total_options$fuel, 
 		MoreArgs = args_total, SIMPLIFY = FALSE) %>%
-		bind_rows()
+		bind_rows() 
 
 # Convert the total damages to percent of 2099 gdp
 total_gdp = total %>% 
-	mutate(mean = mean /gdp_2099, 
+	mutate(mean = mean  /gdp_2099, 
 			q5 = q5 /gdp_2099, 
 			q95 = q95 /gdp_2099) %>%
 	mutate(unit = "proportion_gdp")
 
-
+# to display without scientific notations
+options(scipen=999)
 # Export the final output: 
 df = bind_rows(total, fuels) %>%
 	bind_rows(total_gdp)
-write_csv(df, paste0(db, 
-	'/GCP_Reanalysis/ENERGY/IEA_Replication/Projection/eel_projection/GMFD/',
-	'rationalized_code/replicated_data/TINV_clim_income_spline/semi-parametric/', 
-	'p_values.csv'))
+
+df
+
+
+write_csv(df, "/home/liruixue/repos/energy-code-release-2020/data/p_values.csv")

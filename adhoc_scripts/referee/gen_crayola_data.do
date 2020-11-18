@@ -72,4 +72,4 @@ gen yhat = beta*t + cons
 
 * Append information on "yh", which is the actual level of the df in each bin for 2085 to 2100
 append using "`derivdata'"
-export delimited using "$output/crayola_level_v3.csv", replace
+export delimited using "$output/crayola_level_v3.csv", replace	

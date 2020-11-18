@@ -19,7 +19,6 @@ path = paste0(DB,
                 "/referee_comments/crayola/")
 
 #**********************************************************************************
-
 df <- read.csv(paste0(path, 'crayola_level_v3.csv'))
 
 
@@ -84,7 +83,5 @@ plot_crayola = function(df, avrg_val, output){
 gmst_list = unique(df$avrg)
 lapply(gmst_list, FUN = plot_crayola, 
        df = df, output = output_path)
-  
-  
   
   
