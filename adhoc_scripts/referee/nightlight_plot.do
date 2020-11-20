@@ -62,7 +62,7 @@ foreach temp in 35 0 {
 				local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*deltacut_subInc*largeind`ig'*(temp`k' - 20^`k')"
 			}
 			* nightlight terms
-			local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_temp`k'_GMFD#c.nightlight]* nightlight * (20^`k' - temp`k')"
+			local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_temp`k'_GMFD#c.nightlight]* nightlight * (temp`k' -20^`k')"
 			local add " + "
 		}
 
