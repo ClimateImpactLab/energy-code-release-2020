@@ -39,7 +39,7 @@ foreach temp in 35 0 {
 		* this value in our plotting code is constructed using 
 		* the average income in each cell minus ibar_main
 		* so I constructed it by substracting the income of each observation with ibar_main
-		gen deltacut_subInc = dc1_lgdppc_MA15 - `ibar_main'
+		gen deltacut_subInc = lgdppc_MA15 - `ibar_main'
 
 		* nightlight model predictions
 		estimates use "$root/sters/FD_FGLS_inter_nightlight"
