@@ -9,6 +9,8 @@ set scheme s1color
 foreach temp in 35 0 {
 	foreach fuel in "electricity" "other_energy" {
 
+*		loc fuel "electricity"
+*		loc temp 35
 		* to get the ibar_main value
 		preserve
 		use "$root/data/break_data_TINV_clim.dta", clear
@@ -18,6 +20,7 @@ foreach temp in 35 0 {
 
 		* read data, replace temperature with 35 or 0, generate above/below 20 indicators
 		use "$root/data/GMFD_TINV_clim_regsort_nightlight_1992.dta", clear
+		drop if product != "`fuel'"
 
 		replace temp1_GMFD = `temp'
 

@@ -125,6 +125,8 @@ replace hdd20_TINV_GMFD = hdd20_other_TINV_GMFD if inlist(product,"other_energy"
 		qui egen avgHDD_tpid=mean(hdd20_TINV_GMFD), by(tpid) 
 		//average lgdppc in each cell
 		qui egen avgInc_tgpid=mean(lgdppc_MA15), by(tgpid) 
+		//average lgdppc in each climate decile
+		qui egen avgInc_tpid=mean(lgdppc_MA15), by(tpid) 
 
 		qui egen maxInc_gpid=max(lgdppc_MA15), by(gpid) //max lgdppc in each cell - this is needed for configs
 		
