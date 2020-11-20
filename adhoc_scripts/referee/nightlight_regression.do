@@ -11,7 +11,7 @@ global root "${REPO}/energy-code-release-2020"
 import delimited using "/shares/gcp/social/baselines/nightlights_downscale/NL/nightlights_1992_test2.csv", clear
 rename iso country
 rename sumpop nightlight
-
+replace nightlight = log(nightlight)
 * merge with our existing data
 merge 1:n country using "$root/data/GMFD_TINV_clim_regsort.dta"
 drop if _merge != 3
