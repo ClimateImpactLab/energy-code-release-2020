@@ -129,10 +129,11 @@ forval lg=3(-1)1 {	//Income tercile
 		use "$root/data/break_data_`model_main'.dta", clear
 		duplicates drop tpid tgpid, force
 		sort tpid tgpid 
-		local tr_index = `tr' * 3 // create index for grabbing the long run climate to plot in each cell
+		local tr_index = 3 * 3 
+		// create index for grabbing the long run climate to plot in each cell
 		local subCDD = avgCDD_tpid[`tr_index']
 		local subHDD = avgHDD_tpid[`tr_index']
-		local subInc = avgInc_tgpid[`lg']
+		local subInc = avgInc_tgpid[3]
 		restore
 			
 		// set up plotting locals for sub plot

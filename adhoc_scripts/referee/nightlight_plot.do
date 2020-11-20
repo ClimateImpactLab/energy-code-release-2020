@@ -9,6 +9,13 @@ set scheme s1color
 foreach temp in 35 0 {
 	foreach fuel in "electricity" "other_energy" {
 
+		* to get the ibar_main value
+		preserve
+		use "$root/data/break_data_TINV_clim.dta", clear
+		summ maxInc_largegpid_`fuel' if largegpid_`fuel' == 1
+		local ibar_main = `r(max)'
+		restore
+
 		* read data, replace temperature with 35 or 0, generate above/below 20 indicators
 		use "$root/data/GMFD_TINV_clim_regsort_nightlight_1992.dta", clear
 
@@ -29,6 +36,10 @@ foreach temp in 35 0 {
 			local pg=2
 		}
 
+		* this value in our plotting code is constructed using 
+		* the average income in each cell minus ibar_main
+		* so I constructed it by substracting the income of each observation with ibar_main
+		gen deltacut_subInc = dc1_lgdppc_MA15 - `ibar_main'
 
 		* nightlight model predictions
 		estimates use "$root/sters/FD_FGLS_inter_nightlight"
@@ -39,18 +50,19 @@ foreach temp in 35 0 {
 		* loop through polynomial order 1 and 2
 		foreach k of num 1/2 {	
 
-			* the following lines are the same as plotting code 
-			* except that FD_dc1_lgdppc_MA15I`ig'temp`k' term is from the dataset, not determined based on the cell
+
 			local line = " `line' `add' _b[c.indp`pg'#c.indf1#c.FD_temp`k'_GMFD] * (temp`k' - 20^`k')"
-			local line = "`line' + above20*_b[c.indp`pg'#c.indf1#c.FD_cdd20_TINVtemp`k'_GMFD]*FD_cdd20_TINVtemp`k'_GMFD * (temp`k' - 20^`k')"
-			local line = "`line' + below20*_b[c.indp`pg'#c.indf1#c.FD_hdd20_TINVtemp`k'_GMFD]*FD_hdd20_TINVtemp`k'_GMFD * (20^`k' - temp`k')"
+			* in the following two lines, I changed the average hdd/cdd in the cell to hdd/cdd of each observation
+			local line = "`line' + above20*_b[c.indp`pg'#c.indf1#c.FD_cdd20_TINVtemp`k'_GMFD]*cdd20_TINV_GMFD * (temp`k' - 20^`k')"
+			local line = "`line' + below20*_b[c.indp`pg'#c.indf1#c.FD_hdd20_TINVtemp`k'_GMFD]*hdd20_TINV_GMFD * (20^`k' - temp`k')"
 			
 			* loop through the large/small income groups
+			* only one term will be non-zero for each observation because only one of largeind1 and largeind2 will be turned on
 			foreach ig of num 1/2 {
-				local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*FD_dc1_lgdppc_MA15I`ig'temp`k'*(temp`k' - 20^`k')"
+				local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*deltacut_subInc*largeind`ig'*(temp`k' - 20^`k')"
 			}
 			* nightlight terms
-			local line = "`line' + below20*_b[c.indp`pg'#c.indf1#c.FD_temp`k'_GMFD#c.nightlight]*FD_temp`k'_GMFD * nightlight * (20^`k' - temp`k')"
+			local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_temp`k'_GMFD#c.nightlight]* nightlight * (20^`k' - temp`k')"
 			local add " + "
 		}
 
@@ -65,19 +77,18 @@ foreach temp in 35 0 {
 
 		foreach k of num 1/2 {
 			local line = " `line' `add' _b[c.indp`pg'#c.indf1#c.FD_temp`k'_GMFD] * (temp`k' - 20^`k')"
-			local line = "`line' + above20*_b[c.indp`pg'#c.indf1#c.FD_cdd20_TINVtemp`k'_GMFD]*FD_cdd20_TINVtemp`k'_GMFD * (temp`k' - 20^`k')"
-			local line = "`line' + below20*_b[c.indp`pg'#c.indf1#c.FD_hdd20_TINVtemp`k'_GMFD]*FD_hdd20_TINVtemp`k'_GMFD * (20^`k' - temp`k')"
+			local line = "`line' + above20*_b[c.indp`pg'#c.indf1#c.FD_cdd20_TINVtemp`k'_GMFD]*cdd20_TINV_GMFD * (temp`k' - 20^`k')"
+			local line = "`line' + below20*_b[c.indp`pg'#c.indf1#c.FD_hdd20_TINVtemp`k'_GMFD]*hdd20_TINV_GMFD * (20^`k' - temp`k')"
 			foreach ig of num 1/2 {
-				local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*FD_dc1_lgdppc_MA15I`ig'temp`k'*(temp`k' - 20^`k')"
+				local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*deltacut_subInc*largeind`ig'*(temp`k' - 20^`k')"
 			}
-			local add " + "
+		 	local add " + "
 		}
 
 		predictnl yhat_main = `line', se(se_main) ci(lower_main upper_main)
 
-		
 		* plot
-		graph tw scatter yhat_nl yhat_main || line yhat_nl yhat_nl, sort ytitle("nightlight") xtitle("main model") title("`fuel' `temp'C") legend(off)
+		graph tw scatter yhat_nl yhat_main if largeind1==1, msize(vtiny) || scatter yhat_nl yhat_main if largeind1==0, msize(vtiny)  || line yhat_nl yhat_nl, sort legend(lab(1 "small income") lab(2 "large income") lab(3 "45 degree line")) ytitle("nightlight") xtitle("main model") title("`fuel' `temp'C") 
 		graph export "$root/figures/referee_comments/main_vs_nightlight_`fuel'_at_`temp'.pdf", replace
 		graph drop _all
 	}
