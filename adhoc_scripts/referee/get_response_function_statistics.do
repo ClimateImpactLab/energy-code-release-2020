@@ -8,13 +8,10 @@ global root "${REPO}/energy-code-release-2020"
 set scheme s1color
 
 
-
 foreach temp in 35 0 {
 	foreach fuel in "electricity" "other_energy" {
 
-		* to get the ibar_main value
-		*loc fuel "other_energy"
-		*loc temp 0
+		* to get the cutoff for each fuel
 		use "$root/data/break_data_TINV_clim.dta", clear
 		summ maxInc_largegpid_`fuel' if largegpid_`fuel' == 1
 		local ibar_main = `r(max)'
@@ -22,13 +19,12 @@ foreach temp in 35 0 {
 		duplicates drop tpid tgpid, force
 		sort tpid tgpid 
 		keep *gdp* avgCDD* avgHDD* avgInc* tpid tgpid large*
+
 		gen temp1 = `temp'
 		gen temp2 = temp1 ^ 2
 
-
 		gen above20 = (temp1 >= 20) 
 		gen below20 = (temp1 < 20) 
-
 
 		if "`fuel'"=="electricity" {
 			local pg=1
@@ -37,23 +33,20 @@ foreach temp in 35 0 {
 			local pg=2
 		}
 
+		* generate indicators for large income group, 
+		* avgInc_tpid is mean income in each climate tercile 
 		gen largeind_`fuel'1 = 1 if avgInc_tpid <= `ibar_main'
 		gen largeind_`fuel'2 = 0 if avgInc_tpid <= `ibar_main'
 		
 		replace largeind_`fuel'2 = 1 if avgInc_tpid > `ibar_main'
 		replace largeind_`fuel'1 = 0 if avgInc_tpid > `ibar_main'
 
-		* this value in our plotting code is constructed using 
-		* the average income in each cell minus ibar_main
-		* so I constructed it by substracting the income of each observation with ibar_main
 		gen deltacut_subInc = avgInc_tpid - `ibar_main'
-
 
 		* keep only cold tercile
 		keep if tpid == 3
 
-		* main model predictions, everything the same except for removing the nightlight line
-
+		* get main model predictions
 		estimates use "$root/sters/FD_FGLS_inter_TINV_clim"
 		
 		local line ""
