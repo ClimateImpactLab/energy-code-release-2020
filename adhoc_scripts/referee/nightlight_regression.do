@@ -10,6 +10,7 @@ global root "${REPO}/energy-code-release-2020"
 * get nightlight data
 import delimited using "/shares/gcp/social/baselines/nightlights_downscale/NL/nightlights_1992_test2.csv", clear
 rename iso country
+drop year
 rename sumpop nightlight
 replace nightlight = log(nightlight)
 * merge with our existing data
