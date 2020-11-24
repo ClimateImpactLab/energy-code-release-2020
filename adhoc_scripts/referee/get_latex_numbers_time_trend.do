@@ -84,6 +84,7 @@ forval lg = 1/3 {
 		duplicates drop tpid tgpid, force
 		sort tpid tgpid 
 		local subInc = avgInc_tgpid[`lg']
+		di "`subInc'"
 		local deltacut_subInc = `subInc' - `ibar'
 
 	restore
@@ -104,7 +105,7 @@ forval lg = 1/3 {
 	** trace out dose response marginal effect
 	predictnl yhat`lg' = `line', se(se`lg') ci(lower`lg' upper`lg')
 
-	list temp1 yhat`lg'
+	list temp1 yhat`lg' if temp1 == 35
 }
 
 graph drop _all

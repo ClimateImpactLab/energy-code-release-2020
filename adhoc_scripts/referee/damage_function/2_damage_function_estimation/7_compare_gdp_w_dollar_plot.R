@@ -28,6 +28,7 @@ for (subset in c(2010, 2050, 2085)) {
 
 	p = ggplot(d, aes(x = p_yh, y = d_yh, color = year)) + 
 		geom_point(size = 1) + 
+		theme(aspect.ratio = 1) +
 		labs(title = "Damage Function Comparison", x = "dollar damage converted from % GDP", y = "raw dollar damage")
 
 	ggsave(p, file = glue('/home/liruixue/repos/energy-code-release-2020/figures/referee_comments/percent_gdp_vs_dollar_df_comparison_gradient_{subset}.pdf'))

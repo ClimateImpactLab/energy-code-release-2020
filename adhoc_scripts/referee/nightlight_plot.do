@@ -7,7 +7,7 @@ global root "${REPO}/energy-code-release-2020"
 set scheme s1color
 
 global estimate_with_nightlight_term "true"
-global plot_only_1992 "false"
+global plot_only_1992 "true"
 
 foreach temp in 35 0 {
 	foreach fuel in "electricity" "other_energy" {
@@ -99,7 +99,7 @@ foreach temp in 35 0 {
 		predictnl yhat_main = `line', se(se_main) ci(lower_main upper_main)
 
 		* plot
-		graph tw scatter yhat_nl yhat_main if largeind1==1, msize(vtiny) || scatter yhat_nl yhat_main if largeind1==0, msize(vtiny)  || line yhat_nl yhat_nl, sort legend(lab(1 "small income") lab(2 "large income") lab(3 "45 degree line")) ytitle("nightlight") xtitle("main model") title("`fuel' `temp'C") 
+		graph tw scatter yhat_nl yhat_main if largeind1==1, msize(vtiny) || scatter yhat_nl yhat_main if largeind1==0, msize(vtiny)  || line yhat_nl yhat_nl, sort legend(lab(1 "small income") lab(2 "large income") lab(3 "45 degree line")) ytitle("nightlight") xtitle("main model") title("`fuel' `temp'C") aspectratio(1) 
 		graph export "$root/figures/referee_comments/nightlight/main_vs_nightlight_`fuel'_at_`temp'_pred_w_nl_term_${estimate_with_nightlight_term}_only_1992_${plot_only_1992}.pdf", replace
 		graph drop _all
 	}
