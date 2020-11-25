@@ -38,6 +38,7 @@ library(glue)
 
 cilpath.r:::cilpath()
 
+git <- paste0("/home/liruixue/repos")
 prospectus.tools.lib <- paste0("/home/liruixue/repos",'/prospectus-tools/gcp/extract/')
 p_p_tools <- paste0(git, "/post-projection-tools/")
 # # Enable python use by R
@@ -55,7 +56,7 @@ dir = paste0('/shares/gcp/social/parameters/energy_pixel_interaction/extraction/
 # Make sure you are in the risingverse-py27 for this... 
 projection.packages <- paste0(REPO,"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
 setwd(paste0(REPO))
-source(paste0(projection.packages,"uncertainty_functions.R"))
+# source(paste0(projection.packages,"uncertainty_functions.R"))
 
 # Source codes that help us load projection system outputs
 miceadds::source.all(paste0(projection.packages,"load_projection/"))
@@ -65,12 +66,13 @@ source_python(paste0(projection.packages, "fetch_weight.py"))
 ####################################################
 # 1 Functions
 
-get.values.memo = addMemoization(get.values)
+# get.values.memo = addMemoization(get.values)
 
 mc <- function(seed, iterations, mean_sd_df, gcm_weight_df, year) {
   
   # Set seed for replicability 
   set.seed(seed)
+  browser()
   
   # 1. Take random draws from a uniform distribution
   p <- runif(iterations) %>% 
@@ -78,8 +80,9 @@ mc <- function(seed, iterations, mean_sd_df, gcm_weight_df, year) {
     rename(u = ".")
   
   # 2. Send this random variable to one of the gcms, by creating and then binning the cdf
-  # browser()
-  gcm_weight_df = data.frame(gcm=names(gcm_weight_df), norm_weight=unlist(gcm_weight_df))
+  gcm_weight_df = data.frame(gcm=names(gcm_weight_df), norm_weight=unlist(gcm_weight_df)) %>%
+  					mutate(norm_weight = round(norm_weight, digits = 4))
+
   df_cdf <- gcm_weight_df %>%
     dplyr::mutate(cdf = cumsum(norm_weight)) 
   print('got df_cdf')
@@ -234,7 +237,7 @@ get_p_val = function(env, IR, ssp, price, unit,
 	# Get the GCM list and their weights
 	gcms = get.gcm.list(rcp = rcp)
 
-	gcm.weights <- get.normalized.weights(gcms=gcms, rcp = rcp)
+	gcm.weights <- get.normalized.weights(gcms=gcms, rcp = rcp) 
 	print('got the gcm weights')
 	# Take draws from each GCM, with the number of draws depending on the weights
 

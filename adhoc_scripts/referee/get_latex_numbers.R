@@ -200,14 +200,16 @@ df = load.median(conda_env = "risingverse-py27",
                     model = "TINV_clim", 
                     adapt_scen = "fulladapt", 
                     clim_data = "GMFD", 
+                    dollar_convert = "yes",
                     yearlist = 2099,  
                     spec = "OTHERIND_total_energy",
                     grouping_test = "semi-parametric")
-print(df$mean/0.0036/1000000000)
+print(df$mean/0.0036)
 
 # Global total damages at 2100 as percent of global GDP (RCP 8.5, 1.4% price growth). 
 
-print(df$mean/0.0036/((gdp_SSP3 %>% filter(year == 2099))$gdp))
+print(df$mean/0.0036/((gdp_SSP3 %>% filter(year == 2099))$gdp / 1000000000))
+
 
 
 # End-of-century damages under RCP 4.5, price014
@@ -224,11 +226,12 @@ df = load.median(conda_env = "risingverse-py27",
                     model = "TINV_clim", 
                     adapt_scen = "fulladapt", 
                     clim_data = "GMFD", 
+                    dollar_convert="yes",
                     yearlist = 2099,  
                     spec = "OTHERIND_total_energy",
                     grouping_test = "semi-parametric")
-print(df$mean/0.0036/1000000000)
-print(df$mean/0.0036/((gdp_SSP3 %>% filter(year == 2099))$gdp))
+print(df$mean/0.0036)
+print(df$mean/0.0036/((gdp_SSP3 %>% filter(year == 2099))$gdp/1000000000))
 
 
 
