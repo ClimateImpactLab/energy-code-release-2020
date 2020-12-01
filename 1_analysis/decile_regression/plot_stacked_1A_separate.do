@@ -101,8 +101,8 @@ foreach fuel in "electricity" "other_energy" {
 		name(addgraph`lg', replace)
 
 		//add graphic for combined plotting later
-		local graphic = "`graphic' addgraph`lg'"
-		local graphic_noSE = "`graphic_noSE' addgraph`lg'_noSE"
+		local graphic = "addgraph`lg'"
+		local graphic_noSE = "addgraph`lg'_noSE"
 	}				
 										
 		
