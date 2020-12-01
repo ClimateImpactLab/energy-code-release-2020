@@ -72,7 +72,7 @@ mc <- function(seed, iterations, mean_sd_df, gcm_weight_df, year) {
   
   # Set seed for replicability 
   set.seed(seed)
-  browser()
+  # browser()
   
   # 1. Take random draws from a uniform distribution
   p <- runif(iterations) %>% 
@@ -80,8 +80,7 @@ mc <- function(seed, iterations, mean_sd_df, gcm_weight_df, year) {
     rename(u = ".")
   
   # 2. Send this random variable to one of the gcms, by creating and then binning the cdf
-  gcm_weight_df = data.frame(gcm=names(gcm_weight_df), norm_weight=unlist(gcm_weight_df)) %>%
-  					mutate(norm_weight = round(norm_weight, digits = 4))
+  gcm_weight_df = data.frame(gcm=names(gcm_weight_df), norm_weight=unlist(gcm_weight_df))
 
   df_cdf <- gcm_weight_df %>%
     dplyr::mutate(cdf = cumsum(norm_weight)) 
