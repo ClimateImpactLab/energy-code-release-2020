@@ -46,6 +46,8 @@ foreach fuel in "electricity" "other_energy" {
 	********************************************************************************
 	* Step 2: Plot Plot Plot
 	********************************************************************************
+	local graphic ""
+	local graphic_noSE ""
 
 	// loop over income deciles
 	forval lg=1/10 {
@@ -101,19 +103,17 @@ foreach fuel in "electricity" "other_energy" {
 		name(addgraph`lg', replace)
 
 		//add graphic for combined plotting later
-		local graphic = "addgraph`lg'"
-		local graphic_noSE = "addgraph`lg'_noSE"
+		local graphic = "`graphic' addgraph`lg'"
+		local graphic_noSE = "`graphic_noSE' addgraph`lg'_noSE"
 	}				
 										
-		
 	// plot and save combined plot with SE
 	graph combine `graphic', imargin(zero) ycomm rows(1) xsize(20) ysize(3) ///
 	title("Poly 2 Income Decile Electricity Temperature Response (`model')", size(small)) ///
 	subtitle("`colorGuide'", size(small)) ///
 	plotregion(color(white)) graphregion(color(white)) name(comb, replace)
 	graph export "$root/figures/fig_1A_`fuel'_income_decile_`model'.pdf", replace
-
-				
+		
 	graph drop _all	
 
 }
