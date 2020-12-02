@@ -80,8 +80,6 @@ df = lapply(fuels, get_main_model_impacts_maps,
 
 	
 
-
-
 ###############################################
 # Get time series data for figure 2C
 ################### done############################

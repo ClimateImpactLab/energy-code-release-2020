@@ -52,10 +52,6 @@ covars_reverse$order = factor(covars_reverse$year, levels = c(2090, 2010))
 p_cdd = ggplot() +
   geom_bin2d(data=covars, 
              aes(x=CDD20, y=loggdppc), 
-             # colour="grey",
-             # size = 1.2,
-             # alpha = 0.5,
-             # bins = bin_num,
              drop = drop_val,
              na.rm = TRUE) +
   facet_wrap(~year, nrow = 1) + 
@@ -69,7 +65,6 @@ p_cdd = ggplot() +
                        na.value=NA) +
   theme(panel.background = element_rect(fill = 'white', colour = 'grey'))
 
-p_cdd
 
 ggplot2::ggsave(width = 20, height = 10, plot = p_cdd, filename = paste0(output,'/Kdensity_CDD20_loggdppc_red.pdf'))
 
@@ -78,8 +73,6 @@ ggplot2::ggsave(width = 20, height = 10, plot = p_cdd, filename = paste0(output,
 p_cdd = ggplot() +
   geom_bin2d(data=covars_reverse, 
              aes(x=CDD20, y=loggdppc), 
-             # colour="white",
-             # bins = bin_num,
              drop = drop_val,
              na.rm = TRUE) +
   facet_wrap(~order, nrow = 1) + 
@@ -102,9 +95,6 @@ ggplot2::ggsave(width = 20, height = 10, plot = p_cdd, filename = paste0(output,
 p_hdd = ggplot() +
   geom_bin2d(data=covars_reverse, 
              aes(x=HDD20, y=loggdppc), 
-             # colour="white",
-             # size = 1.2,
-             # bins = bin_num,
              drop = drop_val,
              na.rm = TRUE) +
   facet_wrap(~order, nrow = 1) + 
@@ -123,8 +113,6 @@ ggplot2::ggsave(width = 20, height = 10, plot = p_hdd, filename = paste0(output,
 p_hdd = ggplot() +
   geom_bin2d(data=covars, 
              aes(x=HDD20, y=loggdppc), 
-             # colour="white",
-             # bins = bin_num,
              drop = drop_val,
              na.rm = TRUE) +
   facet_wrap(~year, nrow = 1) + 
