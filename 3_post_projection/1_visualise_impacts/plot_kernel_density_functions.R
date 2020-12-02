@@ -1,5 +1,5 @@
 # Purpose: Plot get the kernel density plots for Figure 3A
-# done
+
 rm(list = ls())
 source("/home/liruixue/projection_repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 
@@ -88,8 +88,8 @@ gen_plot_save_kd <-
   val = df_gdp$gdp99[df_gdp$region == IR] %>% as.numeric()
   # Convert to dollars, since that 
   # was the units of the impacts was  billions of dollars
-  val = val / 1000000000 
-  df_mc$value = df_mc$value / val
+  val = val / 1000000000
+  df_mc$value = df_mc$value / val / 0.0036
 
   print(paste0("plotting for ", IR))
 
@@ -100,15 +100,14 @@ gen_plot_save_kd <-
   
   # TO-DO: if we need limits, add them back
   # Add limits, so we can nicely compare across plots
-  # if(!is.null(xmin)){
-  #   kd_plot = kd_plot + xlim(xmin, xmax) 
-  # } 
-  # if(!is.null(ymax)){
-  #   kd_plot = kd_plot + ylim(0, ymax)
-  # } 
-  # browser()
+  if(!is.null(xmin)){
+    kd_plot = kd_plot + xlim(xmin, xmax) 
+  } 
+  if(!is.null(ymax)){
+    kd_plot = kd_plot + ylim(0, ymax)
+  } 
   ggsave(paste0(output, "/fig_3/fig_3A_kd_plot_",IR, ".pdf"), kd_plot)
-  # return(kd_plot)
+  return(kd_plot)
 }
 
 
@@ -122,4 +121,9 @@ args = list(iterations = 1000, seed = 123, xmax =0.03, xmin = -0.03, ymax = 800,
 
 mapply(gen_plot_save_kd, IR = IR_list, title =IR_list_names, MoreArgs = args)
 
+# TO-DO: testing code, can delete later
+# p = gen_plot_save_kd(IR = "USA.14.608", title ="Chicago", iterations = 1000,
+#   seed = 123, xmax =0.03, xmin = -0.03, ymax = 800,
+#             DB_data = DB_data, output = output)
 
+# p

@@ -1,4 +1,4 @@
-# Impacts by income deciles bar chart
+# Plot impacts by income deciles bar chart
 # done 26 aug 2020
 # changed to income decile by country income oct 2020
 
@@ -16,15 +16,12 @@ root =  "/home/liruixue/repos/energy-code-release-2020"
 output = paste0(root, "/figures")
 
 
-# Take deciles of 2010 income/ clim data distribution of IRs, by getting equal populations in each population
-
+# Take deciles of 2012 income/ clim data distribution of IRs, by getting equal populations in each population
 get_deciles = function(df){
   
   deciles = df %>% 
     dplyr::filter(year == 2012) %>% group_by(loggdppc) %>%
     summarize() 
-  # deciles = merge(df%>%select(iso, loggdppc))
-
   deciles$decile = ntile(deciles$loggdppc,10)
   countries = df %>% 
     dplyr::filter(year == 2012)
@@ -33,30 +30,23 @@ get_deciles = function(df){
 }
 
 
-
+# load covariates
 cov_pixel_interaction= read_csv(paste0("/mnt/CIL_energy/code_release_data_pixel_interaction", 
   '/miscellaneous/covariates_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim.csv'))
 
+# get IR level income
 country_inc = cov_pixel_interaction %>%
     dplyr::select(year, region, loggdppc)%>%
     rename(country_inc = loggdppc) %>% 
     mutate(iso = substr(region, 1,3)) 
 
+# aggregate to country income
 country_inc_aggregated =  country_inc %>% group_by(iso, year) %>%
   summarize(loggdppc = mean(country_inc))
 
+# generate deciles
 deciles = get_deciles(country_inc_aggregated)
-# print(deciles %>% filter(decile == 5), n = 20)
-
 country_inc_deciles = merge(country_inc, deciles, by = c("iso"))
-
-
-country_inc_deciles %>% filter(iso == "CHN")
-t = country_inc_deciles %>% filter(decile == 7, year == 2012)
-countries = t %>% select(iso, year, country_inc) %>%
-filter(year == 2012) %>% unique()
-print(countries)
-
 
 
 # Load in impacts data
