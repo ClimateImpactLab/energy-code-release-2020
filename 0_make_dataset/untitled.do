@@ -1,1 +1,0 @@
-use "$root/data/break_data_TINV_clim.dta", clear

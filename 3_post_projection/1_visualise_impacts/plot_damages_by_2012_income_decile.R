@@ -1,6 +1,7 @@
 # Impacts by income deciles bar chart
 # done 26 aug 2020
 # changed to income decile by country income oct 2020
+
 rm(list = ls())
 # Load in the required packages, installing them if necessary 
 if(!require("pacman")){install.packages(("pacman"))}
@@ -10,7 +11,6 @@ pacman::p_load(ggplot2,
 source("/home/liruixue/projection_repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 
 DB = "/mnt"
-
 DB_data = paste0(DB, "/CIL_energy/code_release_data_pixel_interaction")
 root =  "/home/liruixue/repos/energy-code-release-2020"
 output = paste0(root, "/figures")
@@ -41,8 +41,6 @@ country_inc = cov_pixel_interaction %>%
     dplyr::select(year, region, loggdppc)%>%
     rename(country_inc = loggdppc) %>% 
     mutate(iso = substr(region, 1,3)) 
-
-# country_inc = merge(country_inc, pop, by = c("region", "year"))
 
 country_inc_aggregated =  country_inc %>% group_by(iso, year) %>%
   summarize(loggdppc = mean(country_inc))
@@ -96,9 +94,5 @@ p = ggplot(data = df_plot) +
 ggsave(p, file = paste0(output, 
     "/fig_Appendix-H1-new_SSP3-high_rcp85-total-energy-price014-damages_by_country_inc_decile.pdf"), 
     width = 8, height = 6)
-
-
-# (change city to country, check unit)
-# ask tom where's the code for getting the p-value, page 7 of main paper
 
 
