@@ -2,12 +2,10 @@
 # map country-level income and IR-level income
 # map ratio of country-level income and IR-level income
 
-
 rm(list = ls())
 library(ggplot2)
 library(sp)
 library(glue)
-
 library(dplyr)
 library(readr)
 library(haven)
@@ -24,8 +22,7 @@ pacman::p_load(ggplot2,
 data = '/shares/gcp/social/parameters/energy_pixel_interaction/extraction/'
 
 root =  paste0(REPO, "/energy-code-release-2020")
-output = "/mnt/CIL_energy/code_release_data_pixel_interaction/projection_system_outputs/plot_single/"
-
+output = paste0(root, "/figures/referee_comments/compare_country_vs_IR_income/")
 source(paste0(root, "/3_post_projection/0_utils/mapping.R"))
 source(paste0(root, "/3_post_projection/0_utils/time_series.R"))
 
