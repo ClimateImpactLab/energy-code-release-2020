@@ -4,7 +4,7 @@ library(reticulate)
 library(miceadds)
 library(ggplot2)
 library(tidyverse)
-library(RColorBrewer)
+# library(RColorBrewer)
 library(parallel)
 cilpath.r:::cilpath()
 library(ggrepel)
@@ -99,6 +99,7 @@ FUND_rebased = merge(FUND, FUND_rebaser, by = "regions") %>%
 	select(year, regions, fund_total) 
 
 # plot
+
 plot_df = merge(FUND_rebased, FUND_ours, by = c("year", "regions"), all.y = TRUE)
 
 # showing %GDP
@@ -108,7 +109,7 @@ macro_regions = read_csv("/shares/gcp/regions/macro-regions.csv", skip = 37) %>%
 	select(`region-key`, FUND) %>%
 	rename(iso = `region-key`)
 
-macro_regions
+macro_regions 
 
 df_gdp = read_csv(paste0('/mnt/CIL_energy/code_release_data_pixel_interaction/projection_system_outputs/covariates/', 
 	'SSP3-high-IR_level-gdppc_pop-2099.csv')) %>%
@@ -118,10 +119,28 @@ df_gdp = read_csv(paste0('/mnt/CIL_energy/code_release_data_pixel_interaction/pr
 	summarize(country_gdp = sum(gdp99))
 
 df_gdp = merge(df_gdp, macro_regions, by = "iso") %>%
-	group_by(FUND) %>%
-	summarize(region_gdp = sum(country_gdp))  %>%
+	group_by(FUND) 	%>% 
+	summarize(region_gdp = sum(country_gdp)) %>%
 	rename(regions = FUND)
 
+# df_gdp$region_name = df_gdp$regions
+
+df_gdp$regions_name = c("","Australia and New Zealand",
+	"Central America",
+	"Canada",
+	"China plus",
+	"Central and Eastern Europe",
+	"Former Soviet Union",
+	"Japan and South Korea",
+	"Latin America",
+	"North Africa",
+	"Middle East",
+	"South Asia",
+	"Southeast Asia",
+	"Small Island States",
+	"Sub-Saharan Africa",
+	"USA",
+	"Western Europe")
 
 
 df_gdp_fund = read_csv(paste0(REPO,"/energy-code-release-2020/data/", 
@@ -142,28 +161,14 @@ plot_df_gdp = merge(FUND_all, SSP3_all, by = c("regions"))
 
 
 
-df = plot_df_gdp %>% select(regions, percent_gdp_fund, percent_gdp_ssp3, adapt)
-df_long = df %>% gather(var, value, -c(regions,adapt))
+df = plot_df_gdp %>% select(percent_gdp_fund, percent_gdp_ssp3, adapt, regions,regions_name) 
 
-p = ggplot(df, aes(x = regions)) + 
-	geom_point(aes(y=percent_gdp_fund, color = "red"), 
-		data = df %>% filter(adapt == "fulladapt"),
-		position = position_nudge(x = -0.2)) + 
-	geom_point(aes(y=percent_gdp_ssp3, color = "blue"), 
-		data = df %>% filter(adapt == "fulladapt"),
-		position = position_nudge(x = -0.2)) +
-	geom_point(aes(y=percent_gdp_fund, color = "red"), 
-		data = df %>% filter(adapt == "noadapt"),
-		position = position_nudge(x = 0.2)) + 
-	geom_point(aes(y=percent_gdp_ssp3, color = "blue"), 
-		data = df %>% filter(adapt == "noadapt"),
-		position = position_nudge(x = 0.2)) +
-	geom_point(aes(y=percent_gdp_fund, color = "red"), 
-		data = df %>% filter(adapt == "incadapt"),
-		position = position_nudge(x = 0)) + 
-	geom_point(aes(y=percent_gdp_ssp3, color = "blue"), 
-		data = df %>% filter(adapt == "incadapt"),
-		position = position_nudge(x = 0)) +
+
+df_long = df %>% gather(var, value, -c(regions_name, adapt, regions))
+
+cols <- c("FUND" = "maroon", "fulladapt" = "steelblue4", "incadapt" = "steelblue3", "noadapt" = "steelblue2")
+
+p = ggplot(df, aes(x = regions_name)) + 
 	geom_line(aes(group = regions, y = value),
 		data = df_long %>% filter(adapt == "fulladapt"),
 		position = position_nudge(x = -0.2)) +
@@ -172,10 +177,30 @@ p = ggplot(df, aes(x = regions)) +
 		position = position_nudge(x = 0.2)) +
 	geom_line(aes(group = regions, y = value),
 		data = df_long %>% filter(adapt == "incadapt"),
-		position = position_nudge(x = 0))  + 
-	scale_color_manual(labels = c("FUND", "projection"), values = c("blue", "red"))
-
+		position = position_nudge(x = 0)) +
+	geom_point(aes(y=percent_gdp_fund,colour = "FUND"), 
+		data = df %>% filter(adapt == "fulladapt"),
+		position = position_nudge(x = -0.2)) + 
+	geom_point(aes(y=percent_gdp_ssp3,colour = "fulladapt"), 
+		data = df %>% filter(adapt == "fulladapt"),
+		position = position_nudge(x = -0.2)) +
+	geom_point(aes(y=percent_gdp_fund,colour = "FUND"), 
+		data = df %>% filter(adapt == "noadapt"),
+		position = position_nudge(x = 0.2)) + 
+	geom_point(aes(y=percent_gdp_ssp3,colour = "noadapt"), 
+		data = df %>% filter(adapt == "noadapt"),
+		position = position_nudge(x = 0.2)) +
+	geom_point(aes(y=percent_gdp_fund,colour = "FUND"), 
+		data = df %>% filter(adapt == "incadapt"),
+		position = position_nudge(x = 0)) + 
+	geom_point(aes(y=percent_gdp_ssp3,colour = "incadapt"), 
+		data = df %>% filter(adapt == "incadapt"),
+		position = position_nudge(x = 0)) +
+    scale_x_discrete(labels = function(x) str_wrap(x, width = 8)) + 
+	scale_color_manual(limits = c("FUND", "fulladapt","incadapt","noadapt"), 
+		values = cols) 
 p
+
 
 ggsave(p, file = glue('/home/liruixue/repos/energy-code-release-2020/figures/referee_comments/FUND/FUND_vs_SSP3_scatterplot_percent_gdp_all_scenarios.pdf'))
 

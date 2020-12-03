@@ -165,8 +165,6 @@ afr_frac_gdp = merge(afr_damages, gdp_pop_iso, by = "iso") %>%
 frac_gdp_mean = afr_frac_gdp %>% summarize(african_mean_frac_gdp = weighted.mean(frac_gdp, iso_gdp99)) 
 
 
-
-
 # output them into a file
 
 output_file =  Reduce(function(x,y) merge(x = x, y = y, by = c("iso","year")), 

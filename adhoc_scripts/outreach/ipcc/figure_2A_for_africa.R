@@ -1,8 +1,7 @@
 # Produces maps displayed in the energy paper. Uses Functions in mapping.R
-# done 26 aug 2020
+# figure 2A for africa only
+
 rm(list = ls())
-
-
 library(ggplot2)
 library(magrittr)
 library(dplyr)
