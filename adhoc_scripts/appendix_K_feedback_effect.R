@@ -74,7 +74,14 @@ impactpc_elec = load.median(conda_env = "risingverse-py27",
 impact_elec = impactpc_elec$mean*pop / 1000000000
 
 
+
+
+# data sources: 
+# https://www.eia.gov/todayinenergy/detail.php?id=32572
+# Table 1: https://www.epa.gov/sites/production/files/2018-03/documents/emission-factors_mar_2018_0.pdf
+
 # EF : emission factor
+
 mmBTU_per_kwh = 0.003412969
 nat_gas_CC_heat_rate = 7340
 kwh_per_GJ = 277.7777778
@@ -103,6 +110,7 @@ rownames(output_table) = c("Per capita impact (GJ)","Total impact (billion GJ)",
 	"Emissions factor (t CO2e per GJ)","Additional emissions (Gt CO2e)")
 
 write.csv(output_table, "/home/liruixue/repos/energy-code-release-2020/data/appendix_K_table.csv")
+
 
 
 
