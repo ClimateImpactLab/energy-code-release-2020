@@ -13,7 +13,7 @@ library(readstata13)
 
 source("/home/liruixue/projection_repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 
-for (subset in c(2010, 2050, 2085)) {
+for (subset in c(2085)) {
 
 	data = read_csv(glue("/mnt/CIL_energy/code_release_data_pixel_interaction/referee_comments/damage_function_estimation/percent_gdp_vs_dollar_df_comparison_{subset}.csv"))
 

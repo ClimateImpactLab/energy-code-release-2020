@@ -3,8 +3,8 @@
 # can be run from anywhere, just set the correct paths
 
 # set some paths and parameters
-energy=electricity
-# energy=other_energy
+# energy=electricity
+energy=other_energy
 dm=_dm
 # dm=""
 # dm="_slow_adapt"
@@ -20,7 +20,7 @@ output_dir="median_OTHERIND_${energy}_TINV_clim${suffix}_GMFD${dm}"
 output_file_size_above=10
 
 # 130 for one SSP
-n_folders_total=520
+n_folders_total=390
 
 cd "${output_root}/${output_dir}"
 
