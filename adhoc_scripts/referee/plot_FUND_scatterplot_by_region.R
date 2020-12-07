@@ -1,3 +1,5 @@
+# plot fund vs projected impacts 
+# with regions on the x axis, and impacts on y axis
 rm(list = ls())
 library(dplyr)
 library(reticulate)
