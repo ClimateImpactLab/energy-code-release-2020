@@ -66,7 +66,6 @@ pop_df = pop %>%
 write_csv(pop_df, paste0(output,'/projection_system_outputs/covariates/' ,
 	'SSP3_IR_level_population.csv'))
 
-
 # Get population and gdp values: 
 inf = paste0("/mnt/Global_ACP/MORTALITY", 
 	"/Replication_2018/3_Output/7_valuation/1_values/adjustments/vsl_adjustments.dta")
