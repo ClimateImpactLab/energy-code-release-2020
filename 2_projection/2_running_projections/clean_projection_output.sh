@@ -30,8 +30,8 @@ filename_stem="FD_FGLS_inter_OTHERIND_${energy}_TINV_clim${suffix}"
 
 # choose to delete or print. recommended: print once first,
 # if everything looks ok, then delete
-action=print
-# action=delete
+# action=print
+action=delete
 
 # if the projection is still running, set to the second
 # so that the folders that are currently working on will not be affected
