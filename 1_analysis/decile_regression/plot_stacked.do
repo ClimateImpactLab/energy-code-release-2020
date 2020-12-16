@@ -81,7 +81,9 @@ forval lg=1/10 {
 
 		estimates use "$root/sters/FD_FGLS_income_decile_`model'"
 		predictnl yhat`lg'_`var' = `line', se(se`lg'_`var') ci(lower`lg'_`var' upper`lg'_`var')
-		
+
+		*describe, fullname
+
 		// add predicted dose reponse to plotting locals
 		loc SE = "`SE' rarea upper`lg'_`var' lower`lg'_`var' temp1, col(``var'_col'%30) || line yhat`lg'_`var' temp1, lc (``var'_col') ||"
 		loc noSE "`noSE' line yhat`lg'_`var' temp1, lc (``var'_col') ||"
@@ -89,7 +91,6 @@ forval lg=1/10 {
 
 	}
 	
-
 
 	//plot with SE
 	tw `SE' , ///
@@ -104,7 +105,9 @@ forval lg=1/10 {
 	local graphic = "`graphic' addgraph`lg'"
 	local graphic_noSE = "`graphic_noSE' addgraph`lg'_noSE"
 }				
-									
+
+*list temp1 yhat10_electricity
+							
 	
 // plot and save combined plot with SE
 graph combine `graphic', imargin(zero) ycomm rows(1) xsize(20) ysize(3) ///
