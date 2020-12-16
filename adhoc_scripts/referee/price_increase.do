@@ -16,7 +16,7 @@ levelsof country, local(countries)
 tempname results
 tempfile results_file
 postfile `results' str10 country str20 price start_year end_year n_obs annual_growth_rate_pct using "`results_file'", replace
-*quietly{
+quietly{
 	foreach c of local countries {
 		di "`c'"
 		if "`c'" == "LVA" continue
@@ -67,10 +67,9 @@ postfile `results' str10 country str20 price start_year end_year n_obs annual_gr
 			}
 		}
 	}
-*}
+}
 postclose `results'
 
 use `results_file', clear
-*save "/home/liruixue/repos/energy-code-release-2020/data/price_growth_rates.dta", replace
 export delimited using  "/home/liruixue/repos/energy-code-release-2020/data/price_growth_rates.csv", replace
 
