@@ -1,0 +1,148 @@
+
+  ___  ____  ____  ____  ____ (R)
+ /__    /   ____/   /   ____/
+___/   /   /___/   /   /___/   16.1   Copyright 1985-2019 StataCorp LLC
+  Statistics/Data Analysis            StataCorp
+                                      4905 Lakeway Drive
+     MP - Parallel Edition            College Station, Texas 77845 USA
+                                      800-STATA-PC        http://www.stata.com
+                                      979-696-4600        stata@stata.com
+                                      979-696-4601 (fax)
+
+Single-user 24-core Stata perpetual license:
+       Serial number:  501606209668
+         Licensed to:  Goldman School of Public Policy
+                       University of California, Berkeley
+
+Notes:
+      1.  Stata is running in batch mode.
+      2.  Unicode is supported; see help unicode_advice.
+      3.  More than 2 billion observations are allowed; see help obs_advice.
+      4.  Maximum number of variables is set to 5000; see help set_maxvar.
+
+. do 2_plot_damage_function_fig_3.do 
+
+. /*
+> 
+> Purpose: Figure 4 plotting, for energy sector total end of century damages 
+> 
+> */
+. 
+. clear all
+
+. set more off
+
+. set scheme s1color
+
+. 
+. glob DB "/mnt"
+
+. 
+. glob DB_data "$DB/CIL_energy/code_release_data_pixel_interaction"
+
+. glob dir "$DB_data/projection_system_outputs/damage_function_estimation/resam
+> pled_data"
+
+. 
+. glob root "/home/liruixue/repos/energy-code-release-2020"
+
+. glob output "$root/figures/"
+
+. 
+. 
+. //Load in GMTanom data file, save as a tempfile 
+. insheet using "$DB_data/projection_system_outputs/damage_function_estimation/
+> GMTanom_all_temp_2001_2010.csv", comma names clear
+(4 vars, 7,735 obs)
+
+. drop if year < 2015 | year > 2099
+(2,210 observations deleted)
+
+. tempfile GMST_anom
+
+. save `GMST_anom', replace
+(note: file /tmp/St329620.000001 not found)
+file /tmp/St329620.000001 saved
+
+. 
+. * ***************************************************************************
+> *******
+. * * STEP 1: Pull in Damage CSVs and Merge with GMST Anomaly Data
+. * ***************************************************************************
+> *******
+. 
+. foreach fuel in "total_energy_price014" "electricity" "other_energy" {
+  2. 
+.         di "`fuel'"
+  3. 
+.         if("`fuel'"=="total_energy_price014"){
+  4.                 loc type = "damages"
+  5.         }
+  6.         else{
+  7.                 loc type = "impacts"
+  8.         }
+  9.         
+.         import delim using "$dir/gcm_`type'_OTHERIND_`fuel'_SSP3-15-draws.csv
+> ", clear
+ 10.         drop if year < 2015 | year > 2099
+ 11.         merge m:1 year gcm rcp using `GMST_anom', nogen assert(3)
+ 12. 
+.         tempfile master`fuel'
+ 13.         save `master`fuel'', replace
+ 14. 
+.         qui bysort year: egen minT=min(temp)
+ 15.         qui bysort year: egen maxT=max(temp)
+ 16.         qui replace minT=round(minT,0.1)
+ 17.         qui replace maxT=round(maxT,0.1)
+ 18.         qui keep year minT maxT
+ 19.         qui duplicates drop year, force
+ 20. 
+.         merge 1:m year using `master`fuel'', nogen assert(3)
+ 21.         ren *alue `fuel'
+ 22.         save `master`fuel'', replace
+ 23. }
+total_energy_price014
+(7 vars, 175,500 obs)
+(9,750 observations deleted)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                           165,750  
+    -----------------------------------------
+(note: file /tmp/St329620.000002 not found)
+file /tmp/St329620.000002 saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                           165,750  
+    -----------------------------------------
+file /tmp/St329620.000002 saved
+electricity
+(6 vars, 175,500 obs)
+(9,750 observations deleted)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                           165,750  
+    -----------------------------------------
+(note: file /tmp/St329620.000003 not found)
+file /tmp/St329620.000003 saved
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                           165,750  
+    -----------------------------------------
+file /tmp/St329620.000003 saved
+other_energy
+(6 vars, 175,500 obs)
+(9,750 observations deleted)
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                           165,750  
+    -----------------------------------------
