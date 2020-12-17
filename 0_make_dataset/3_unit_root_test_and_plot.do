@@ -130,9 +130,11 @@ foreach test in "DF" "PR" {
 foreach prod in "other_energy" "electricity" {
 	if "`prod'"== "other_energy" {
 		local sub_tit="Other Energy"
+		local rgb_color 222 154 73
 	}
 	else {
 		local sub_tit="Electricity"
+		local rgb_color 76 87 115
 	}
 	foreach test in "DF" "PR" { 
 		if "`test'"=="DF" {
@@ -146,7 +148,7 @@ foreach prod in "other_energy" "electricity" {
 		forval ll=0/2 {
 			
 			//plot
-			twoway (histogram p if lag==`ll', width(0.05) lcolor(255 0 0) fcolor(255 0 0) fraction), ///
+			twoway (histogram p if lag==`ll', width(0.05) lcolor("`rgb_color'") fcolor("`rgb_color'") fraction), ///
 			title("Lag `ll'", size(small)) xtitle("P value", size(small)) ///
 			xline(0.05, lcolor(navy) noextend) ///
 			graphregion(color(white)) plotregion(color(white)) ///
