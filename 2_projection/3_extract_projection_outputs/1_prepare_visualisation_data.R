@@ -85,7 +85,7 @@ df = lapply(fuels, get_main_model_impacts_maps,
 ################### done############################
 fuels = c("electricity", "other_energy")
 rcps = c("rcp85", "rcp45")
-adapt = c("fulladapt", "noadapt")
+adapt = c("fulladapt", "noadapt","incadapt")
 options = expand.grid(fuels = fuels, rcps = rcps, adapt= adapt)
 
 get_main_model_impacts_ts = function(fuel, rcp, adapt) {
@@ -305,6 +305,45 @@ get_df_ts_main_model_total_energy = function(rcp, args) {
 
 rcps = c("rcp45", "rcp85")
 lapply(rcps, get_df_ts_main_model_total_energy, args = args) 
+
+
+# incadapt version
+# TO-DO:
+args = list(
+    conda_env = "risingverse-py27",
+    # proj_mode = '', # '' and _dm are the two options
+    region = "global", # needs to be specified for 
+    # rcp = "rcp85", 
+    ssp = "SSP3", 
+    price_scen = "price014", # have this as NULL, "price014", "MERGEETL", ...
+    unit =  "damage", # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
+    uncertainty = "full", # full, climate, values
+    geo_level = "aggregated", # aggregated (ir agglomerations) or 'levels' (single irs)
+    iam = "high", 
+    model = "TINV_clim", 
+    adapt_scen = "incadapt", 
+    clim_data = "GMFD", 
+    yearlist = as.character(seq(2010,2100,1)),  
+    spec = "OTHERIND_total_energy",
+    dollar_convert = "yes",
+    grouping_test = "semi-parametric")
+
+get_df_ts_main_model_total_energy = function(rcp, args) {
+  plot_df = do.call(load.median, c(args, rcp = rcp, proj_mode = '')) %>% 
+                          dplyr::select(year, mean, q5, q95, rcp) %>%
+                          mutate(rcp = !!rcp)
+  write_csv(plot_df, 
+    paste0(output, '/projection_system_outputs/time_series_data/', 
+      'main_model-total_energy-SSP3-',rcp, '-high-incadapt-price014.csv'))
+}
+
+rcps = c("rcp85")
+lapply(rcps, get_df_ts_main_model_total_energy, args = args) 
+
+
+
+
+
 
 
 
