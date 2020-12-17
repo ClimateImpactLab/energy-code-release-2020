@@ -155,7 +155,7 @@ foreach prod in "other_energy" "electricity" {
 		forval ll=0/2 {
 			
 			//plot
-			twoway (histogram p if lag==`ll', width(0.05) fcolor(white) fraction), ///
+			twoway (histogram p if lag==`ll', width(0.05) lcolor("`rgb_color'") fcolor("`rgb_color'")  fraction), ///
 			title("Lag `ll'", size(small)) xtitle("P value", size(small)) ///
 			xline(0.05, lcolor(navy) noextend) ///
 			graphregion(color(white)) plotregion(color(white)) ///
