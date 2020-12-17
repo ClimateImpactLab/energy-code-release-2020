@@ -3,10 +3,10 @@
 # can be run from anywhere, just set the correct paths
 
 # set some paths and parameters
-# energy_type="electricity"
-energy_type="other_energy"
-dm=""
-# dm="_dm"
+energy_type="electricity"
+# energy_type="other_energy"
+# dm=""
+dm="_dm"
 # aggregation_scenario=""
 # aggregation_scenario="-MERGEETL60_rcp45"
 # aggregation_scenario="-MERGEETL60_rcp85"
@@ -29,8 +29,8 @@ output_dir="median_OTHERIND_${energy_type}_TINV_clim_GMFD${dm}"
 
 # the size of files above which we consider complete
 # look at the completed output files to determine this size
-levels_file_size_above=10
-aggregated_file_size_above=1
+levels_file_size_above=100
+aggregated_file_size_above=10
 # 130 for one SSP
 n_folders_total=130
 
