@@ -65,7 +65,7 @@ impact_shanghai = load.median(conda_env = "risingverse-py27",
 	mutate(value = value * pop_shanghai$pop / shanghai_2012_total * 100) # convert to percentage
 
 impact_shanghai_nosurrogate = impact_shanghai %>% dplyr::filter(!grepl("surrogate",gcm))
-write_csv(impact_shanghai, "/mnt/CIL_energy/code_release_data_pixel_interaction/referee_comments/li_et_al/shanghai_impact_2097_electricity.csv")
+write_csv(impact_shanghai, "/home/liruixue/repos/energy-code-release-2020/figures/referee_comments/li_et_al_shanghai_comparison/shanghai_impact_2097_electricity.csv")
 
-write_csv(impact_shanghai_nosurrogate, "/mnt/CIL_energy/code_release_data_pixel_interaction/referee_comments/li_et_al/shanghai_impact_no_srg_2097_electricity.csv")
+write_csv(impact_shanghai_nosurrogate, "/home/liruixue/repos/energy-code-release-2020/figures/referee_comments/li_et_al_shanghai_comparison/shanghai_impact_no_srg_2097_electricity.csv")
 

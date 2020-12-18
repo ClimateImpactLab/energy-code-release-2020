@@ -14,7 +14,7 @@ glob DB_data "$DB/CIL_energy/code_release_data_pixel_interaction"
 glob dir "$DB_data/referee_comments/li_et_al"
 
 glob root "/home/liruixue/repos/energy-code-release-2020"
-glob output "$DB_data/referee_comments/li_et_al"
+glob output "/home/liruixue/repos/energy-code-release-2020/figures/referee_comments/li_et_al_shanghai_comparison"
 
 
 //Load in GMTanom data file, save as a tempfile 
