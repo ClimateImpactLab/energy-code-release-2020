@@ -123,12 +123,18 @@ foreach fuel in "total_energy_price014" "other_energy" "electricity" {
 	foreach yr of numlist 2099/2099 {
 	        qui reg `fuel' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2 
 	        cap qui predict yhat_`fuel'_`yr' if year>=`yr'-2 & year <= `yr'+2 
+	        qreg `fuel'  c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(0.05)
+			predict y05_`fuel'_`yr' if year>=`yr'-2 & year <= `yr'+2
+			qreg `fuel'  c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(0.95)
+			predict y95_`fuel'_`yr' if year>=`yr'-2 & year <= `yr'+2
+    
 	}
 
 	loc gr
 	loc gr `gr' sc `fuel' anomaly if rcp=="rcp85" & year>=2095, mlcolor(red%30) msymbol(O) mlw(vthin) mfcolor(red%30) msize(vsmall) ||       
 	loc gr `gr' sc `fuel' anomaly if rcp=="rcp45"& year>=2095, mlcolor(ebblue%30) msymbol(O) mlw(vthin) mfcolor(ebblue%30) msize(vsmall)   ||
 	loc gr `gr' line yhat_`fuel'_2099 anomaly if year == 2099 , yaxis(1) color(black) lwidth(medthick) ||
+	loc gr `gr' rarea y95_`fuel'_2099 y05_`fuel'_2099 anomaly if year == 2099 , col(grey%5) lwidth(none) ||
 	
 	di "Graphing time..."
 	sort anomaly
