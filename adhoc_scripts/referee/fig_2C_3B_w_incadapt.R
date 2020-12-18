@@ -194,18 +194,19 @@ plot_ts_fig_3B = function(DB_data, output){
                     y.limits=c(-0.8,0.2),
                     y.label = "% GDP", 
                     legend.title = "Adaptation Scenario", legend.breaks = c("Inc Adapt", "Full Adapt"), 
-                    legend.values = c('blue', 'red')) + 
+                    legend.values = c('red', 'blue')) + 
     geom_ribbon(data = df_inc[[1]], aes(x=df_inc[[1]]$year, ymin=df_inc[[1]]$ub, ymax=df_inc[[1]]$lb), 
-                fill = "blue", alpha=0.1, show.legend = FALSE) +
+                fill = "red", alpha=0.1, show.legend = FALSE) +
     geom_ribbon(data = df_full[[1]], aes(x=df_full[[1]]$year, ymin=df_full[[1]]$ub, ymax=df_full[[1]]$lb), 
-                fill = "red",  alpha=0.1, show.legend = FALSE) + 
-    ggtitle("Damages as a percent of global gdp, ssp3-high")
+                fill = "blue",  alpha=0.1, show.legend = FALSE) + 
+    ggtitle("Damages as a percent of global gdp, ssp3-high-rcp85")
 
   ggsave(p, file = paste0(output, 
-          "/referee_comments/fig_3b_global_damage_time_series_percent_gdp_SSP3-high_incadapt.pdf"), width = 8, height = 6)
+          "/fig_3b_global_damage_time_series_percent_gdp_SSP3-high-rcp85_incadapt.pdf"), width = 8, height = 6)
   
   return(p)  
 }
+
 r = plot_ts_fig_3B(DB_data =DB_data, output = output)
 
 
@@ -222,7 +223,7 @@ df_gdp = read_csv(paste0(DB_data, '/projection_system_outputs/covariates/',
 load_timeseries = function(rcp, price, df_gdp){
   
   df = read_csv(paste0(DB_data, '/projection_system_outputs/time_series_data/',
-                'main_model-total_energy-SSP3-',rcp,'-high-fulladapt-',price,'.csv'))  %>% 
+                'main_model-total_energy-SSP3-',rcp,'-high-incadapt-',price,'.csv'))  %>% 
     left_join(df_gdp, by="year") %>% 
     mutate(mean = mean * 1000000000)%>% 
     mutate(percent_gdp = (mean/gdp) *100 / 0.0036) %>%
