@@ -177,9 +177,4 @@ graph drop _all
 
 
 
-predict yhat
-drop yhatnl
-predictnl yhatnl = _b[mpg] * mpg + _b[c.mpg#c.mpg] * (mpg^2)  + _b[_cons]
-
-
 
