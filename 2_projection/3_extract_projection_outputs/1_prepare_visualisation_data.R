@@ -307,8 +307,7 @@ rcps = c("rcp45", "rcp85")
 lapply(rcps, get_df_ts_main_model_total_energy, args = args) 
 
 
-# incadapt version
-# TO-DO:
+# incadapt version for producing timeseries for referee comments
 args = list(
     conda_env = "risingverse-py27",
     # proj_mode = '', # '' and _dm are the two options

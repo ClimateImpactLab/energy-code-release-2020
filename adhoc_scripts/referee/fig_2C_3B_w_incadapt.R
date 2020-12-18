@@ -194,11 +194,11 @@ plot_ts_fig_3B = function(DB_data, output){
                     y.limits=c(-0.8,0.2),
                     y.label = "% GDP", 
                     legend.title = "Adaptation Scenario", legend.breaks = c("Inc Adapt", "Full Adapt"), 
-                    legend.values = c('red', 'blue')) + 
+                    legend.values = c('blue', 'red')) + 
     geom_ribbon(data = df_inc[[1]], aes(x=df_inc[[1]]$year, ymin=df_inc[[1]]$ub, ymax=df_inc[[1]]$lb), 
-                fill = "red", alpha=0.1, show.legend = FALSE) +
+                fill = "blue", alpha=0.1, show.legend = FALSE) +
     geom_ribbon(data = df_full[[1]], aes(x=df_full[[1]]$year, ymin=df_full[[1]]$ub, ymax=df_full[[1]]$lb), 
-                fill = "blue",  alpha=0.1, show.legend = FALSE) + 
+                fill = "red",  alpha=0.1, show.legend = FALSE) + 
     ggtitle("Damages as a percent of global gdp, ssp3-high-rcp85")
 
   ggsave(p, file = paste0(output, 
@@ -208,152 +208,6 @@ plot_ts_fig_3B = function(DB_data, output){
 }
 
 r = plot_ts_fig_3B(DB_data =DB_data, output = output)
-
-
-#########################################
-# 3. Figure Appendix D.1 - Time series by price scenario
-
-df_gdp = read_csv(paste0(DB_data, '/projection_system_outputs/covariates/', 
-                         "/SSP3-global-gdp-time_series.csv"))
-
-
-# Helper function for loading time series data, and converting to 
-# percent of gdp
-
-load_timeseries = function(rcp, price, df_gdp){
-  
-  df = read_csv(paste0(DB_data, '/projection_system_outputs/time_series_data/',
-                'main_model-total_energy-SSP3-',rcp,'-high-incadapt-',price,'.csv'))  %>% 
-    left_join(df_gdp, by="year") %>% 
-    mutate(mean = mean * 1000000000)%>% 
-    mutate(percent_gdp = (mean/gdp) *100 / 0.0036) %>%
-    dplyr::select(year, percent_gdp) %>% 
-    as.data.frame()
-  
-  return(df)
-}
-
-plot_prices = function(rcp, pricelist, output) {
-  
-  df = mapply(load_timeseries, price=pricelist, 
-              MoreArgs = list(rcp = rcp, df_gdp = df_gdp),
-              SIMPLIFY = FALSE)
-  
-  colourCount = length(pricelist)
-  print('plotting')
-  
-  p <- ggtimeseries(df.list = df, 
-                    df.x = "year",
-                    x.limits = c(2010, 2100),                               
-                    # y.limits=c(-0.8,0.2),
-                    y.label = "Total Damages, % GDP", 
-                    legend.title = "Price scenario", 
-                    legend.breaks = pricelist, 
-                    legend.values = brewer.pal(colourCount, "Spectral"),
-                    rcp.value = rcp, ssp.value = "SSP3", iam.value = "high") 
-  
-  ggsave(p, file = paste0(output, 
-                          "/fig_Appendix-D1_global_total_energy_timeseries_all-prices-", 
-                          rcp, ".pdf"), width = 8, height = 6)
-}
-
-pricelist = c("price0", "price014", "price03", "WITCHGLOBIOM42", 
-              "MERGEETL60", "REMINDMAgPIE1730", "REMIND17CEMICS", "REMIND17") 
-
-plot_prices(pricelist = pricelist, rcp = "rcp45",  output = output)
-plot_prices(pricelist = pricelist, rcp = "rcp85",  output = output)
-
-
-#########################################
-# 4. Figure Appendix I.1 - Comparison to slow adaptation scenario single run
-
-get_plot_df_by_fuel = function(fuel, DB_data) {
-  
-  df_SA = read_csv(paste0(DB_data, "/projection_system_outputs/time_series_data/CCSM4_single/",
-              "SA_single-", fuel, "-SSP3-high-fulladapt-impact_pc.csv"))
-  
-  df_main = read_csv(paste0(DB_data, "/projection_system_outputs/time_series_data/CCSM4_single/", 
-              "main_model_single-", fuel, "-SSP3-high-fulladapt-impact_pc.csv"))
-
-  df <- rbind(df_SA, df_main) %>%
-    mutate(legend = paste0(type,"_", rcp))
-  
-  return(df)
-
-}
-
-plot_and_save_appendix_I1 = function(fuel, DB_data, output){
-  
-  df = get_plot_df_by_fuel(fuel = fuel, DB_data = DB_data)
-  p = ggplot() +
-    geom_line(data = df, aes(x = year, y = mean, color = rcp, linetype = type)) +
-    scale_colour_manual(values=c("blue", "red", "steelblue", "tomato1")) +
-    scale_linetype_manual(values=c("dashed", "solid"))+
-    scale_x_continuous(breaks=seq(2010, 2100, 10))  +
-    geom_hline(yintercept=0, size=.2) +
-    scale_alpha_manual(name="", values=c(.7)) +
-    theme_bw() +
-    theme(panel.grid.major = element_blank(), 
-          panel.grid.minor = element_blank(),
-          panel.background = element_blank(), 
-          axis.line = element_line(colour = "black")) +
-    ggtitle(paste0(fuel, "-SSP3-CCSM4-High")) +
-    ylab("Impacts (GJ PC)") + xlab("")
-  
-  ggsave(p, file = paste0(output, 
-                          "/fig_Appendix-I1_Slow_adapt-global_", fuel, "_timeseries_impact-pc_CCSM4-SSP3-high.pdf"), 
-                          width = 8, height = 6)
-  return(p)
-}
-
-####### not done #######
-plot_and_save_appendix_I1(fuel = "electricity", DB_data = DB_data, output = output)
-plot_and_save_appendix_I1(fuel = "other_energy", DB_data = DB_data, output = output)
-###### not done #######
-
-#########################################
-# 4. Figure Appendix I.3 - modelling tech trends 
-
-
-plot_ts_appendix_I3 = function(fuel, output){
-  
-  
-  spec = paste0("OTHERIND_", fuel)
-  
-  # Load in data for each scenario
-  df_lininter = read_csv(paste0(
-    DB_data, '/projection_system_outputs/time_series_data/',
-    'lininter_model-', fuel,'-SSP3-rcp85-high-fulladapt-impact_pc.csv')) %>% 
-    mutate(type = "lininter")
-  
-  df_main = read_csv(paste0(
-      DB_data, '/projection_system_outputs/time_series_data/',
-      'main_model-', fuel,'-SSP3-rcp85-high-fulladapt-impact_pc.csv'))%>% 
-    dplyr::filter(rcp =="rcp85" )%>% 
-    dplyr::filter(adapt_scen =="fulladapt" )%>% 
-    dplyr::filter(spec ==!!spec )%>%
-    dplyr::select(year, mean) %>%  
-    mutate(type = "main model")
-  
-  p = ggtimeseries(df.list = list(as.data.frame(df_lininter), as.data.frame(df_main)), 
-                   y.label = "Impacts per capita, Gigajoules", 
-                   legend.title = "Scenario", legend.breaks = c("Full adapt Tech Trends",
-                                                                "Full adapt Main Model"), 
-                   rcp.value = paste0(spec, '-rcp85'), ssp.value = "SSP3", iam.value = "high", 
-                   x.limits =c(2010, 2100),
-                   y.limits=c(-4,8)) + scale_y_continuous(breaks=seq(-3,7,3))
-
-  ggsave(p, file = paste0(output, 
-                          "/fig_Appendix-I3_lininter-global_", fuel, "_timeseries_impact-pc_SSP3-high-rcp85.pdf"), 
-         width = 8, height = 6)
-}
-
-
-plot_ts_appendix_I3(fuel = "electricity", output = output)
-plot_ts_appendix_I3(fuel = "other_energy", output = output)
-
-
-
 
 
 
