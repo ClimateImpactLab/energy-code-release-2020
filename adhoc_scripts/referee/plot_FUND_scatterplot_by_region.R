@@ -170,41 +170,68 @@ df_long = df %>% gather(var, pct_gdp, -c(regions_name, adapt, regions))
 
 cols <- c("FUND" = "maroon", "fulladapt" = "steelblue4", "incadapt" = "steelblue3", "noadapt" = "steelblue2")
 
-p = ggplot(df, aes(x = regions_name)) + 
-	geom_line(aes(group = regions, y = pct_gdp),
-		data = df_long %>% filter(adapt == "fulladapt"),
-		position = position_nudge(x = -0.2)) +
-	geom_line(aes(group = regions, y = pct_gdp),
-		data = df_long %>% filter(adapt == "noadapt"),
-		position = position_nudge(x = 0.2)) +
-	geom_line(aes(group = regions, y = pct_gdp),
-		data = df_long %>% filter(adapt == "incadapt"),
-		position = position_nudge(x = 0)) +
-	geom_point(aes(y=percent_gdp_fund,colour = "FUND"), 
+# p = ggplot(df, aes(x = regions_name)) + 
+# 	geom_line(aes(group = regions, y = pct_gdp),
+# 		data = df_long %>% filter(adapt == "fulladapt"),
+# 		position = position_nudge(x = -0.2)) +
+# 	geom_line(aes(group = regions, y = pct_gdp),
+# 		data = df_long %>% filter(adapt == "noadapt"),
+# 		position = position_nudge(x = 0.2)) +
+# 	geom_line(aes(group = regions, y = pct_gdp),
+# 		data = df_long %>% filter(adapt == "incadapt"),
+# 		position = position_nudge(x = 0)) +
+# 	geom_point(aes(y=percent_gdp_fund,colour = "FUND"), 
+# 		data = df %>% filter(adapt == "fulladapt"),
+# 		position = position_nudge(x = -0.2)) + 
+# 	geom_point(aes(y=percent_gdp_ssp3,colour = "fulladapt"), 
+# 		data = df %>% filter(adapt == "fulladapt"),
+# 		position = position_nudge(x = -0.2)) +
+# 	geom_point(aes(y=percent_gdp_fund,colour = "FUND"), 
+# 		data = df %>% filter(adapt == "noadapt"),
+# 		position = position_nudge(x = 0.2)) + 
+# 	geom_point(aes(y=percent_gdp_ssp3,colour = "noadapt"), 
+# 		data = df %>% filter(adapt == "noadapt"),
+# 		position = position_nudge(x = 0.2)) +
+# 	geom_point(aes(y=percent_gdp_fund,colour = "FUND"), 
+# 		data = df %>% filter(adapt == "incadapt"),
+# 		position = position_nudge(x = 0)) + 
+# 	geom_point(aes(y=percent_gdp_ssp3,colour = "incadapt"), 
+# 		data = df %>% filter(adapt == "incadapt"),
+# 		position = position_nudge(x = 0)) +
+#     scale_x_discrete(labels = function(x) str_wrap(x, width = 8)) + 
+# 	scale_color_manual(limits = c("FUND", "fulladapt","incadapt","noadapt"), 
+# 		values = cols) 
+# p
+
+
+# ggsave(p, file = glue('/home/liruixue/repos/energy-code-release-2020/figures/referee_comments/FUND/FUND_vs_SSP3_scatterplot_percent_gdp_all_scenarios.pdf'),
+# 	width = 10, height = 6)
+
+
+p_bar = ggplot(df, aes(x = regions_name)) +
+	geom_bar(aes(weight = percent_gdp_ssp3,fill = "fulladapt"), 
 		data = df %>% filter(adapt == "fulladapt"),
-		position = position_nudge(x = -0.2)) + 
-	geom_point(aes(y=percent_gdp_ssp3,colour = "fulladapt"), 
-		data = df %>% filter(adapt == "fulladapt"),
-		position = position_nudge(x = -0.2)) +
-	geom_point(aes(y=percent_gdp_fund,colour = "FUND"), 
-		data = df %>% filter(adapt == "noadapt"),
-		position = position_nudge(x = 0.2)) + 
-	geom_point(aes(y=percent_gdp_ssp3,colour = "noadapt"), 
-		data = df %>% filter(adapt == "noadapt"),
-		position = position_nudge(x = 0.2)) +
-	geom_point(aes(y=percent_gdp_fund,colour = "FUND"), 
+		position = position_nudge(x = -0.1), width = 0.1) +
+	geom_bar(aes(weight = percent_gdp_ssp3,fill = "incadapt"), 
 		data = df %>% filter(adapt == "incadapt"),
-		position = position_nudge(x = 0)) + 
-	geom_point(aes(y=percent_gdp_ssp3,colour = "incadapt"), 
+		position = position_nudge(x = 0), width = 0.1) +
+	geom_bar(aes(weight = percent_gdp_ssp3,fill = "noadapt"), 
+		data = df %>% filter(adapt == "noadapt"),
+		position = position_nudge(x = 0.1), width = 0.1) +
+	geom_bar(aes(weight = percent_gdp_fund,fill = "FUND"), 
 		data = df %>% filter(adapt == "incadapt"),
-		position = position_nudge(x = 0)) +
+		position = position_nudge(x = 0.2), width = 0.1) + 
     scale_x_discrete(labels = function(x) str_wrap(x, width = 8)) + 
-	scale_color_manual(limits = c("FUND", "fulladapt","incadapt","noadapt"), 
-		values = cols) 
-p
+	scale_fill_manual(limits = c("fulladapt","incadapt","noadapt", "FUND"), 
+		values = cols, name = NULL) + 
+	theme_bw() + 
+	theme(panel.border = element_blank(), panel.grid.major = element_blank(),
+	panel.grid.minor = element_blank(), axis.line = element_line(colour = "black"))+
+	geom_hline(yintercept = 0)
+
+p_bar
 
 
-ggsave(p, file = glue('/home/liruixue/repos/energy-code-release-2020/figures/referee_comments/FUND/FUND_vs_SSP3_scatterplot_percent_gdp_all_scenarios.pdf'),
+ggsave(p_bar, file = glue('/home/liruixue/repos/energy-code-release-2020/figures/referee_comments/FUND/FUND_vs_SSP3_barplot_percent_gdp_all_scenarios.pdf'),
 	width = 10, height = 6)
-
 

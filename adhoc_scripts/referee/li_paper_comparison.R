@@ -58,7 +58,7 @@ impact_shanghai = load.median(conda_env = "risingverse-py27",
                 model = "TINV_clim", 
                 adapt_scen = "fulladapt", 
                 clim_data = "GMFD", 
-                yearlist = as.character(seq(2090,2099,1)), ,  
+                yearlist = as.character(seq(2080,2099,1)), ,  
                 spec = "OTHERIND_electricity",
                 grouping_test = "semi-parametric")  %>% 
 	select(rcp,year,gcm,iam,value)  %>%
