@@ -3,8 +3,8 @@
 # can be run from anywhere, just set the correct paths
 
 # set some paths and parameters
-energy_type="electricity"
-# energy_type="other_energy"
+# energy_type="electricity"
+energy_type="other_energy"
 dm=""
 # dm="_dm"
 # aggregation_scenario=""
