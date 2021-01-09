@@ -36,7 +36,8 @@ qui do $root/2_projection/0_packages_programs_inputs/projection_set_up/write_pro
 ******Set Script Toggles********************************************************
 
 // which ssps do you want to project results for?
-local ssp_list  "SSP3"
+local ssp_list  "[SSP2, SSP3, SSP4]"
+*local ssp_list  "SSP3"
 *local ssp_list "[SSP2, SSP4]"
 
 ******** Set parameters for model specification *****************************

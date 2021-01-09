@@ -56,7 +56,6 @@ forval i=1/4 {
 	qui gen double FD_yeartemp`i'_GMFD = (year * temp`i'_GMFD) - (L1.year * L1.temp`i'_GMFD)
 
 	// temp x decade
-	// TO-DO: now only have first 2 decind
 	forval dg=1/2 {
 		qui gen double FD_D`dg'temp`i'_GMFD = (decind`dg' * temp`i'_GMFD) - (L1.decind`dg' * L1.temp`i'_GMFD)
 	}
