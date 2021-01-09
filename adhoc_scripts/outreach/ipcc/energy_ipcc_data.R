@@ -177,9 +177,6 @@ print(frac_gdp_mean)
 
 
 
-
-
-
 # process the labor results
 extracted_data_dir = "/shares/gcp/estimation/labor/code_release_int_data/projection_outputs/extracted_data"
 

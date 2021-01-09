@@ -56,7 +56,6 @@ dir = paste0('/shares/gcp/social/parameters/energy_pixel_interaction/extraction/
 # Make sure you are in the risingverse-py27 for this... 
 projection.packages <- paste0(REPO,"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
 setwd(paste0(REPO))
-# source(paste0(projection.packages,"uncertainty_functions.R"))
 
 # Source codes that help us load projection system outputs
 miceadds::source.all(paste0(projection.packages,"load_projection/"))
@@ -66,13 +65,10 @@ source_python(paste0(projection.packages, "fetch_weight.py"))
 ####################################################
 # 1 Functions
 
-# get.values.memo = addMemoization(get.values)
-
 mc <- function(seed, iterations, mean_sd_df, gcm_weight_df, year) {
   
   # Set seed for replicability 
   set.seed(seed)
-  # browser()
   
   # 1. Take random draws from a uniform distribution
   p <- runif(iterations) %>% 
@@ -276,17 +272,6 @@ get_p_val = function(env, IR, ssp, price, unit,
 ##################################################
 # 2 GDP values for rescaling
 
-# Get global GDP in 2099, convert to billions of 2019 dollars
-# gdppc = get_gdppc_all_regions('high', 'SSP3')
-# gdp = convert_global_gdp(gdppc)
-# gdp$year = seq(2010,2100,1)
-# inf = paste0("/mnt/Global_ACP/MORTALITY", 
-# 	"/Replication_2018/3_Output/7_valuation/1_values/adjustments/vsl_adjustments.dta")
-# con_df = read_dta(inf) con_df = read_dta(inf) 
-# conversion_value = con_df$inf_adj[1]
-# gdp = gdp %>% mutate(gdp = gdp * conversion_value / 1000000000)
-# gdp_2099 = gdp$gdp[gdp$year ==2099]
-
 gdp_2099 = (read_csv(paste0(output, 
 	'/projection_system_outputs/covariates/SSP3-global-gdp-time_series.csv')) %>% filter(year == 2099))$gdp / 1000000000
 
@@ -312,7 +297,6 @@ args = list(env= "risingverse-py27", IR = "global", ssp = "SSP3", price=NULL, un
 fuels = mapply(get_p_val, rcp = options$rcp, fuel = options$fuel, 
 		MoreArgs = args, SIMPLIFY = FALSE) %>%
 		bind_rows()
-
 
 
 # Run for total energy damages...
@@ -343,8 +327,6 @@ options(scipen=999)
 # Export the final output: 
 df = bind_rows(total, fuels) %>%
 	bind_rows(total_gdp)
-
-df
 
 
 write_csv(df, "/home/liruixue/repos/energy-code-release-2020/data/p_values.csv")

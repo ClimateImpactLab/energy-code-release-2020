@@ -80,3 +80,6 @@ graph tw `gr', yline(0, lwidth(vthin)) 	ytitle("Bn 2019 USD" ) xtitle("GMST Anom
 
 graph export "$output/fig_Appendix-E1_total_energy_damage_function_evolution_SSP3-price014_t_cubic.pdf", replace 
 graph drop _all
+
+
+

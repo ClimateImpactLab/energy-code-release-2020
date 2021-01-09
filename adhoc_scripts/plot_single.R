@@ -79,9 +79,6 @@ plot_2A(fuel = "other_energy", bound = 18, data = data)
 
 
 
-
-
-
 #########################################
 # 1. Figure 2C
 # There are three functions needed for replicating this figure
@@ -100,7 +97,6 @@ get_df_list_fig_2C = function(data, fuel){
   df= read_csv(glue(
     "{data}/single-OTHERIND_{fuel}_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_GMFD/single-aggregated_energy_rcp85_ccsm4_high_SSP3_OTHERIND_{fuel}_FD_FGLS_rebased.csv")) 
   df = df %>% filter(is.na(region)) %>% dplyr::select(c("year","value"))
-  # browser()
   return(df)
 }
 
@@ -117,7 +113,6 @@ plot_ts_fig_2C = function(fuel, output, data){
     y.label = 'Hot and cold impacts: change in GJ/pc',
     rcp.value = 'rcp85', ssp.value = 'SSP3', iam.value = 'high')+ 
   ggtitle(paste0(fuel, "-high", "-rcp85","-SSP3"))   
-  # browser()
   ggsave(paste0(output, "/fig_2C_", fuel, "_time_series.pdf"), p)
   return(p)
 }

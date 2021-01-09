@@ -4,8 +4,7 @@ import delimited using "/mnt/CIL_energy/code_release_data_pixel_interaction/proj
 gen growth_rate_yearly = gdp / gdp[_n-1] - 1
 gen growth_rate_15yr = (gdp[91] / gdp[76])^(1/15)
 gen gdp_2300 = gdp[91] * (growth_rate_15yr)^200 
-
- */
+*/
 
 
 clear all
@@ -195,3 +194,5 @@ foreach subset in 2085 2050 2010 {
 	graph tw scatter p_yh_1 d_yh_1, msymbol(circle)|| scatter p_yh_2 d_yh_2, msymbol(diamond) || scatter p_yh_3 d_yh_3, msymbol(triangle) || scatter p_yh_4 d_yh_4 , msymbol(plus)||scatter p_yh_5 d_yh_5, msymbol(X) || line p_yh_5 d_yh_5, sort
 	graph export "$dir_output/percent_gdp_vs_dollar_df_comparison_`subset'.pdf", replace
 }
+
+

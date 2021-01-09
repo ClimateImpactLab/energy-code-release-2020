@@ -108,7 +108,7 @@ plot_2B_bar_charts = function(fuel, df, list, output) {
     left_join(list) %>% 
     filter(!is.na(order))
 
-  #Plot!!
+  #Plot
   plt =	ggplot(plot_df) +
   		geom_bar(aes(x=reorder(country_name,-order),
   		            y = get(var_name), fill=factor(year, levels=c(2099,2010) )),

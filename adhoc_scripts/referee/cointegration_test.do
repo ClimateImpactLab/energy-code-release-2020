@@ -166,11 +166,6 @@ foreach test in "vecrank" "egranger" {
 
 
 
-
-
-
-
-
 **----Plotting Histograms for Above Two Tests----**
 
 foreach prod in "other_energy" "electricity" {

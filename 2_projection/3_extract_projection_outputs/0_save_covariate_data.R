@@ -40,7 +40,6 @@ city_list = read_csv(paste0(db,
 		write_csv(paste0(output, '/miscellaneous/stockholm_guangzhou_region_names_key.csv'))
 
 # Covariates are from a single run allcalcs file
-# TO-DO: shorten the long path?
 cov_electricity_single= read_csv("/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost/single-OTHERIND_electricity_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_GMFD/rcp85/CCSM4/high/SSP3/hddcddspline_OTHERIND_electricity-allcalcs-FD_FGLS_inter_OTHERIND_electricity_TINV_clim.csv",
   skip = 114) %>% 
 	write_csv(paste0(output, '/miscellaneous/covariates_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim.csv'))

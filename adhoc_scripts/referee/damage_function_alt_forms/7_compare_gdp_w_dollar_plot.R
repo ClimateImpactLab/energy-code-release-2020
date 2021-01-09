@@ -34,3 +34,4 @@ for (subset in c(2085)) {
 	ggsave(p, file = glue('/home/liruixue/repos/energy-code-release-2020/figures/referee_comments/percent_gdp_vs_dollar_df_comparison_gradient_{subset}.pdf'))
 
 }
+

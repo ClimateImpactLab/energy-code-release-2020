@@ -114,8 +114,6 @@ get_values_csv = function(price, fuel, years = NULL, pop_df= NULL, ssp = "SSP3",
 				left_join(pop_df, by=c("year")) %>%
 				mutate(sd = sd * pop) %>%
 				dplyr::select(-pop) 
-				# %>% 
-				# mutate(sd = sd * 0.0036)
 		}
 
     } else{
@@ -184,7 +182,6 @@ get_values_csv = function(price, fuel, years = NULL, pop_df= NULL, ssp = "SSP3",
     }
 
     print('adding price information to dataframe')
-    # browser()
     df_joined$price = price
 
     

@@ -25,11 +25,8 @@ miceadds::source.all(paste0(projection.packages,"load_projection/"))
 
 
 # plot_adapt = function(adapt = "fulladapt") {
-
 # 	get_df = function(region, rcp, fuel, price_scen = NULL, unit = "impactpc", dollar_convert = NULL, adapt = adapt) {
-
 # 		print(paste0('------------------------------', region, '------------------------------'))
-
 # 		args = list(
 # 		    conda_env = "risingverse-py27",
 # 		    proj_mode = '', # '' and _dm are the two options
@@ -243,7 +240,6 @@ p
 ggsave(p, file = glue('/home/liruixue/repos/energy-code-release-2020/figures/referee_comments/FUND/FUND_vs_SSP3_scatterplot_all_scenarios.pdf'))
 
 # showing %GDP
-
 # load world GDP for SSP3 and FUND
 
 macro_regions = read_csv("/shares/gcp/regions/macro-regions.csv", skip = 37) %>% 

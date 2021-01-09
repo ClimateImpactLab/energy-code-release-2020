@@ -151,3 +151,6 @@ ren var_type growth_rate
 order year placeholder growth_rate
 
 outsheet using "$dir_output/coefficients/df_mean_output_`ssp'`model_tag'_t_cubic.csv", comma replace	
+
+
+

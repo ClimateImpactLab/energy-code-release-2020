@@ -353,9 +353,3 @@ plot_ts_appendix_I3(fuel = "other_energy", output = output)
 
 
 
-
-
-
-
-
-

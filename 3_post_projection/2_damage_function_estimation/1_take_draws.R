@@ -21,7 +21,6 @@ dir = paste0(DB_data, "/projection_system_outputs/damage_function_estimation/")
 # uncertainty calculations
 
 
-
 take_draws = function(price, ssp, fuel, num_iterations, 
                       directory) {
   

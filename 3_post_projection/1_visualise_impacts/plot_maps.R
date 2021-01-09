@@ -34,7 +34,6 @@ plot_2A = function(fuel, bound, DB_data, map=mymap) {
   df= read_csv(
     paste0(DB_data, '/projection_system_outputs/mapping_data/', 
            'main_model-', fuel, '-SSP3-rcp85-high-fulladapt-impact_pc-2099-map.csv')) 
-  # df = df %>% dplyr::mutate(mean = 1 / 0.0036 * mean)
   # Set scaling factor for map color bar
   scale_v = c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1)
   rescale_value <- scale_v*bound
@@ -83,7 +82,6 @@ plot_3A = function(DB_data, map){
            'SSP3-high-IR_level-gdppc_pop-2099.csv')) 
 
   # Join data, and calculate damages as percent of GDP for each region
-  # TO-DO: why need to convert here???
   df = left_join(df_damages, covariates, by = "region")%>%
     mutate(damage_per_gdp99 = damage * 1000000000 / gdp99 / 0.0036)
 
@@ -137,8 +135,6 @@ plot_comparison = function(fuel, bound, DB_data, map=mymap){
   df_diff = merge(df_new, df_old,  by = c("year", "region")) %>%
             dplyr::mutate(mean = mean.x - mean.y)
 
-
-  # df = df %>% dplyr::mutate(mean = 1 / 0.0036 * mean)
   # Set scaling factor for map color bar
   scale_v = c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1)
   rescale_value <- scale_v*bound
@@ -160,26 +156,6 @@ plot_comparison = function(fuel, bound, DB_data, map=mymap){
 
 plot_comparison(fuel = "electricity", bound = 3, DB_data = DB_data)
 plot_comparison(fuel = "other_energy", bound = 3, DB_data = DB_data)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

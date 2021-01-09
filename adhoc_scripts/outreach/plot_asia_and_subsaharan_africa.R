@@ -39,9 +39,6 @@ mymap = load.map(shploc = paste0(DB_data, "/shapefiles/world-combo-new-nytimes")
 # #############################################
 # # 2. Figure 2 A
 
-
-
-
 #############################################
 
 continents <- setnames(subset(fread("/shares/gcp/regions/continents2.csv"), select=c('alpha-3', 'sub-region')), c('iso', 'continent'))
@@ -70,7 +67,6 @@ plot_2A = function(fuel, bound, DB_data, map=mymap_asia) {
            'main_model-', fuel, '-SSP3-rcp85-high-fulladapt-impact_pc-2099-map.csv')) 
 
   df = df %>% dplyr::filter(region %in% asian_IRs)
-  # df = df %>% dplyr::mutate(mean = 1 / 0.0036 * mean)
   # Set scaling factor for map color bar
   scale_v = c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1)
   rescale_value <- scale_v*bound
@@ -93,7 +89,6 @@ plot_2A(fuel = "electricity", bound = 3, DB_data = DB_data)
 plot_2A(fuel = "other_energy", bound = 18, DB_data = DB_data)
 
 
-
 ############
 # plot russia as it's not included in Asia
 
@@ -108,7 +103,6 @@ plot_2A = function(fuel, bound, DB_data, map=mymap_russia) {
            'main_model-', fuel, '-SSP3-rcp85-high-fulladapt-impact_pc-2099-map.csv')) 
 
   df = df %>% dplyr::filter(region %in% russia_IRs)
-  # df = df %>% dplyr::mutate(mean = 1 / 0.0036 * mean)
   # Set scaling factor for map color bar
   scale_v = c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1)
   rescale_value <- scale_v*bound
@@ -129,19 +123,5 @@ plot_2A = function(fuel, bound, DB_data, map=mymap_russia) {
 }
 plot_2A(fuel = "electricity", bound = 3, DB_data = DB_data)
 plot_2A(fuel = "other_energy", bound = 18, DB_data = DB_data)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 

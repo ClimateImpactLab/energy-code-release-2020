@@ -91,6 +91,3 @@ ggsave(paste0(output, "/IR-vs-country_income-groups_map.pdf"), p)
 
 
 
-
-
-

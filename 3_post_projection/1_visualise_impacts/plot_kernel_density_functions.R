@@ -98,7 +98,6 @@ gen_plot_save_kd <-
                   x.label = NULL, y.label = "Density", 
                   kd.color = "grey") 
   
-  # TO-DO: if we need limits, add them back
   # Add limits, so we can nicely compare across plots
   if(!is.null(xmin)){
     kd_plot = kd_plot + xlim(xmin, xmax) 
@@ -121,9 +120,3 @@ args = list(iterations = 1000, seed = 123, xmax =0.03, xmin = -0.03, ymax = 800,
 
 mapply(gen_plot_save_kd, IR = IR_list, title =IR_list_names, MoreArgs = args)
 
-# TO-DO: testing code, can delete later
-# p = gen_plot_save_kd(IR = "USA.14.608", title ="Chicago", iterations = 1000,
-#   seed = 123, xmax =0.03, xmin = -0.03, ymax = 800,
-#             DB_data = DB_data, output = output)
-
-# p

@@ -27,7 +27,6 @@ setwd(paste0(REPO))
 # Source codes that help us load projection system outputs
 miceadds::source.all(paste0(projection.packages,"load_projection/"))
 
-
 # Note on naming convention: 
 # Time series naming convention:
 # {model}-{fuel}-{ssp}-{rcp}-{iam}-{adapt_scenario}-{price_scen}
@@ -62,8 +61,6 @@ get_main_model_impacts_maps = function(fuel, price_scen, unit, year, output){
                     grouping_test = "semi-parametric") %>%
 		dplyr::select(region, year, mean) %>%
 		dplyr::filter(year == !!year)
-     # %>% 
-		# mutate(mean =mean * 0.0036)
 
 	price_tag = ifelse(is.null(price_scen), "impact_pc", price)
 
@@ -83,8 +80,6 @@ df = lapply(fuels, get_main_model_impacts_maps,
 
 
 
-	
-
 ###############################################
 # Get time series data for figure 2C
 ################### done############################
@@ -96,7 +91,6 @@ options = expand.grid(fuels = fuels, rcps = rcps, adapt= adapt)
 get_main_model_impacts_ts = function(fuel, rcp, adapt) {
 
 	spec = paste0("OTHERIND_", fuel)
-	# scale = function(x) (x* 0.0036) no longer needed
 	names = c("mean", "q50", "q5", "q95", "q10", "q90", "q75","q25")
 
 	df = load.median(  
@@ -117,8 +111,6 @@ get_main_model_impacts_ts = function(fuel, rcp, adapt) {
                     spec = spec,
                     grouping_test = "semi-parametric")%>%
 		dplyr::filter(year > 2009) 
-     # %>%
-	    # mutate_at(names, scale)
 	
 	write_csv(df, 
 		paste0(output, '/projection_system_outputs/time_series_data/', 
@@ -343,10 +335,6 @@ get_df_ts_main_model_total_energy = function(rcp, args) {
 
 rcps = c("rcp85")
 lapply(rcps, get_df_ts_main_model_total_energy, args = args) 
-
-
-
-
 
 
 
@@ -578,8 +566,6 @@ get_plot_df = function(adapt="fulladapt", spec, rcp, model) {
 
       df = do.call(load.median, args) %>% 
             select(year, mean)
-             # %>%
-            # mutate(mean = mean * 0.0036)
       print('unit is going to be gigajoules per capita!')
       print(paste0('adaptation scenario is ', adapt))
       return(df)

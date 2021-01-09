@@ -163,3 +163,6 @@ foreach subset in 2085 2050 2010 {
 
 	outsheet using "$dir_output/coefficients/df_mean_output_`ssp'`model_tag'_percent_gdp_`subset'.csv", comma replace	
 }
+
+
+
