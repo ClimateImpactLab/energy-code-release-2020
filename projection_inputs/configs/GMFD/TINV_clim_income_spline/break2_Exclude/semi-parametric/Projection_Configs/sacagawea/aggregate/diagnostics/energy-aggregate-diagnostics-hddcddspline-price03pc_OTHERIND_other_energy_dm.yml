@@ -1,0 +1,6 @@
+outputdir: outputs/energy/impacts-blueghost
+levels-weighting: population * social/baselines/energy/IEA_Price_FIN_Clean_gr03_GLOBAL_COMPILE.dta:country:year:other_energycompile_price
+targetdir: /shares/gcp/outputs/energy/impacts-blueghost/single-OTHERIND_other_energy_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_income_spline_GMFD_dm/rcp85/CCSM4/high/SSP3
+aggregate-weighting-numerator: population * social/baselines/energy/IEA_Price_FIN_Clean_gr03_GLOBAL_COMPILE.dta:country:year:other_energycompile_price
+aggregate-weighting-denominator: population
+infix: price03pc
