@@ -27,7 +27,7 @@ Note: data listed as being in `/data/` is stored in this git repo in the `/data`
 - Code inputs:
 	- `code_release_data_pixel_interaction/projection_system_outputs/covariates/covariates-SSP3-rcp85-high-2010_2090-CCSM4.csv`
 - Code outputs: 
-	- `/fig_Appendix-C3_sample_overlap_present_future/*`
+	- `/fig_Extended_Data_fig_3_sample_overlap_present_future/*`
 
 ### `plot_city_responses.do`
 - This code plots response functions for the Guangzhou and Stockholm, at both their 2015 and 2099 covariate values. This aims to help readers understand how changing income and climate affect our projected response functions. These are presented in the paper as insets within Figure 2A. 

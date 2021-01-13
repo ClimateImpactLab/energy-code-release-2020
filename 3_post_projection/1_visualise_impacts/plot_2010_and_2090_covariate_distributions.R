@@ -20,7 +20,7 @@ DB = "/mnt"
 
 DB_data = paste0(DB, "/CIL_energy/code_release_data_pixel_interaction")
 root =  "/home/liruixue/repos/energy-code-release-2020"
-output = paste0(root, "/figures/fig_Appendix-C3_sample_overlap_present_future")
+output = paste0(root, "/figures/fig_Extended_Data_fig_3_sample_overlap_present_future")
 dir.create(output, showWarnings = FALSE)
 source("/home/liruixue/projection_repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 
