@@ -1,6 +1,6 @@
 /*
 
-Purpose: Appendix E1 Figure plotting, to show evolution of total energy damage function over time
+Purpose: Figure 3C plotting, to show evolution of total energy damage function over time
 
 */
 
@@ -57,6 +57,11 @@ sort year
 bysort year: gen anomaly = _n/4
 gen y = cons + beta1*anomaly + beta2*anomaly^2
 
+
+* convert to trillion
+replace y = y / 1000
+
+
 * Merge in range and drop unsupported temperature 
 merge m:1 year using `ref'
 qui replace y=. if anomaly<minT & year<=2099
@@ -86,5 +91,5 @@ graph tw `gr', yline(0, lwidth(vthin)) ///
 	xscale(r(0(1)10)) xlabel(0(1)10) legend(off) scheme(s1mono) ///
 	ylabel(, labsize(small)) 
 
-graph export "$output/fig_Appendix-E1_total_energy_damage_function_evolution_SSP3-price014.pdf", replace 
+graph export "$output/fig_3/fig_3C_total_energy_damage_function_evolution_SSP3-price014.pdf", replace 
 graph drop _all

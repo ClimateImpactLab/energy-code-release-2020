@@ -31,7 +31,7 @@ root =  "/home/liruixue/repos/energy-code-release-2020"
 output = paste0(root, "/figures")
 
 # Source time series plotting codes
-source(paste0(root, "/3_post_projection/0_utils/time_series.R"))
+source(paste0("/home/liruixue/repos/post-projection-tools/", "/timeseries/ggtimeseries.R"))
 
 
 #########################################

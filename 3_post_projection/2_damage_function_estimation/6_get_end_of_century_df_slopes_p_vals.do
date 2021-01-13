@@ -1,4 +1,10 @@
 
+/*
+
+Purpose: get the slope and p values (or confidence intervals) of damage function at end of century
+
+*/
+
 clear all
 set more off
 set scheme s1color
@@ -60,7 +66,7 @@ tempfile master
 save `master', replace
 
 * **********************************************************************************
-* * STEP 2: Estimate damage functions and plot, pre-2100
+* * STEP 2: Estimate damage functions and plot, compute slope and p values
 * **********************************************************************************
 
 cap rename temp anomaly
