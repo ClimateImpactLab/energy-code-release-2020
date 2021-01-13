@@ -47,7 +47,7 @@ Note: data listed as being in `/data/` is stored in this git repo in the `/data`
 	- `/code_release_data_pixel_interaction/projection_system_outputs/covariates/SSP3-high-IR_level-gdppc-pop-2012.csv`: 2012 income and population data at the impact region level
 	- `/code_release_data_pixel_interaction/projection_system_outputs/covariates/SSP3-high-IR_level-gdppc-pop-2099.csv`: 2099 income and population data at the impact region level
 - Code outputs: 
-	- `fig_Appendix-H1_SSP3-high_rcp85-total-energy-price014-damages_by_inc_decile.pdf`
+	- `fig_Extended_Data_fig_4-H1-new_SSP3-high_rcp85-total-energy-price014-damages_by_country_inc_decile.pdf`
 
 ### `plot_kernel_density_functions.R`
 - This code generates visualisations of the uncertainty around our projected impacts due to climate change for selected impact regions. We do this by taking draws from the distribution of impacts for these impact regions, by loading in the mean and variance of their impacts under each of the 33 climate projections in the SMME for the year 2099. By taking draws from each of these Gaussian distributions in proportion to each GCM's weight (see Appendix Section A.2.3 and Table 1 for more details), we can calculate the mixture distribution across the 33 climate projections for each impact region. See Appendix Section C.5.
@@ -85,8 +85,8 @@ Note: data listed as being in `/data/` is stored in this git repo in the `/data`
 - Code outputs: 
 	- `fig_2C_*_time_series.pdf`
 	- `fig_3/fig_3b_global_damage_time_series_percent_gdp_SSP3-high.pdf`
-	- `fig_Appendix-D1_global_total_energy_timeseries_all-prices-*.pdf`
-	- `fig_Appendix-I1_Slow_adapt-global_*_timeseries_impact-pc_CCSM4-SSP3-high.pdf`
-	- `fig_Appendix-I3_lininter-global_*_timeseries_impact-pc_SSP3-high-rcp85.pdf`
+	- `fig_Extended_Data_fig_5_global_total_energy_timeseries_all-prices-*.pdf`
+	- `fig_Appendix-G1_Slow_adapt-global_*_timeseries_impact-pc_CCSM4-SSP3-high.pdf`
+	- `fig_Appendix-G3_lininter-global_*_timeseries_impact-pc_SSP3-high-rcp85.pdf`
 	
 

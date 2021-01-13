@@ -252,7 +252,7 @@ plot_prices = function(rcp, pricelist, output) {
                     rcp.value = rcp, ssp.value = "SSP3", iam.value = "high") 
   
   ggsave(p, file = paste0(output, 
-                          "/fig_Appendix-D1_global_total_energy_timeseries_all-prices-", 
+                          "/fig_Extended_Data_fig_5_global_total_energy_timeseries_all-prices-", 
                           rcp, ".pdf"), width = 8, height = 6)
 }
 
@@ -300,7 +300,7 @@ plot_and_save_appendix_I1 = function(fuel, DB_data, output){
     ylab("Impacts (GJ PC)") + xlab("")
   
   ggsave(p, file = paste0(output, 
-                          "/fig_Appendix-I1_Slow_adapt-global_", fuel, "_timeseries_impact-pc_CCSM4-SSP3-high.pdf"), 
+                          "/fig_Appendix-G1_Slow_adapt-global_", fuel, "_timeseries_impact-pc_CCSM4-SSP3-high.pdf"), 
                           width = 8, height = 6)
   return(p)
 }
@@ -343,7 +343,7 @@ plot_ts_appendix_I3 = function(fuel, output){
                    y.limits=c(-4,8)) + scale_y_continuous(breaks=seq(-3,7,3))
 
   ggsave(p, file = paste0(output, 
-                          "/fig_Appendix-I3_lininter-global_", fuel, "_timeseries_impact-pc_SSP3-high-rcp85.pdf"), 
+                          "/fig_Appendix-G3_lininter-global_", fuel, "_timeseries_impact-pc_SSP3-high-rcp85.pdf"), 
          width = 8, height = 6)
 }
 

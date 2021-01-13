@@ -26,7 +26,7 @@ Note, the input datasets for codes in this analysis are generated in the [0_make
     		* `energy-code-release/sters/FD_global_TINV_clim.ster`
     		* `energy-code-release/sters/FD_FGLS_global_TINV_clim.ster`
 		* Figures
-	    	* `energy-code-release/figures/fig_Appendix-C1_product_overlay_TINV_clim_global.pdf` (Appendix Figure C.1 in the paper)
+	    	* `energy-code-release/figures/fig_Appendix-B1_product_overlay_TINV_clim_global.pdf` (Appendix Figure C.1 in the paper)
 
 
 2. Run `2_decile_regression.do` to estimate and plot the energy-temperature response for each decile of in sample GDP per-capita (*Appendix* Equation C.3).
@@ -55,9 +55,9 @@ Note, the input datasets for codes in this analysis are generated in the [0_make
 
 		* Figures
         	* `energy-code-release/figures/fig_1C_*_interacted_TINV_clim.pdf` (Figure 1C in the paper) 
-    		* `energy-code-release/figures/fig_Appendix-I2_*_interacted_main_model_TINV_clim_overlay_model_EX.pdf` (Appendix Figure I2 in the paper)
-    		* `energy-code-release/figures/fig_Appendix-I3A_ME_time_TINV_clim_lininter_*.pdf` (Appendix Figure I3A in the paper)
-    		* `energy-code-release/figures/fig_Appendix-I3B_*_interacted_main_model_TINV_clim_overlay_model_lininter.pdf` (Appendix Figure I3B in the paper)
+    		* `energy-code-release/figures/fig_Appendix-G2_*_interacted_main_model_TINV_clim_overlay_model_EX.pdf` (Appendix Figure I2 in the paper)
+    		* `energy-code-release/figures/fig_Appendix-G3A_ME_time_TINV_clim_lininter_*.pdf` (Appendix Figure I3A in the paper)
+    		* `energy-code-release/figures/fig_Appendix-G3B_*_interacted_main_model_TINV_clim_overlay_model_lininter.pdf` (Appendix Figure I3B in the paper)
 
 # Feasible Generalised Least Squares (FGLS) Procedure
 

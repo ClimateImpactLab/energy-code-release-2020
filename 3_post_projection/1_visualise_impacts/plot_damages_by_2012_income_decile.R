@@ -82,7 +82,7 @@ p = ggplot(data = df_plot) +
   scale_x_discrete(limits = seq(1,10))
 
 ggsave(p, file = paste0(output, 
-    "/fig_Appendix-H1-new_SSP3-high_rcp85-total-energy-price014-damages_by_country_inc_decile.pdf"), 
+    "/fig_Extended_Data_fig_4-H1-new_SSP3-high_rcp85-total-energy-price014-damages_by_country_inc_decile.pdf"), 
     width = 8, height = 6)
 
 

@@ -104,7 +104,7 @@ We run three kinds of regressions in this section:
     * Code for these regressions can be found in [1_analysis/uninteracted_regression](https://github.com/ClimateImpactLab/energy-code-release-2020/tree/master/1_analysis/uninteracted_regression)
     * This code outputs: 
         * ster files for both the first stage and the FGLS regression: `FD_global_TINV_clim.ster` and `FD_FGLS_global_TINV_clim.ster`, respectively  
-        * ***Appendix Figure C1***: `fig_Appendix-C1_product_overlay_TINV_clim_global.pdf`
+        * ***Appendix Figure C1***: `fig_Appendix-B1_product_overlay_TINV_clim_global.pdf`
 2. Decile regressions (*Appendix* Equation C.3)
     * These regressions are run in order to understand how the sensitivity of energy consumption to climate change modulates with incomoe levels. 
     * Code for these regressions can be found in [1_analysis/decile_regression](https://github.com/ClimateImpactLab/energy-code-release-2020/tree/master/1_analysis/decile_regression)
@@ -119,9 +119,9 @@ We run three kinds of regressions in this section:
             * `FD_inter_*.ster` and `FD_FGLS_inter_*.ster`
         * The following paper and appendix figures:
             * ***Figures 1C***: `fig_1C_*_interacted_TINV_clim*.pdf`
-            * ***Appendix Figures I2***: `fig_Appendix-I2_*_interacted_main_model_TINV_clim_overlay_model_EX*.pdf`
-            * ***Appendix Figures I3A***: `fig_Appendix-I3A_ME_time_TINV_clim_lininter_*.pdf`
-            * ***Appendix Figures I3B***: `fig_Appendix-I3B_*_interacted_main_model_TINV_clim_overlay_model_lininter.pdf`
+            * ***Appendix Figures I2***: `fig_Appendix-G2_*_interacted_main_model_TINV_clim_overlay_model_EX*.pdf`
+            * ***Appendix Figures I3A***: `fig_Appendix-G3A_ME_time_TINV_clim_lininter_*.pdf`
+            * ***Appendix Figures I3B***: `fig_Appendix-G3B_*_interacted_main_model_TINV_clim_overlay_model_lininter.pdf`
 
 ## Step 3 - Project Future Impacts of Climate Change 
 
@@ -151,10 +151,10 @@ In this stage, we take the projected future impacts found in step 3, and use the
          * ***Figure 3*** `/fig_3/.`: Figures in this folder present visualisations of monetized damages, combined across fuel types. We present a map of the damages, to highlight the spatial distribution, with visualisations of uncertainty for selected impact regions (Figure 3A). We also show an aggregated time series showing total projected damages by year as percent of global gdp (Figure 3B). The damage functions in Figure 3C are produced by code in damage function estimation.  
          * Appendix figures including 
             * ***Appendix Figure C3***: `/fig_Appendix-C3_sample_overlap_present_future/.`
-            * ***Appendix Figure D1***: `fig_Appendix-D1_global_total_energy_timeseries_all-prices-rcp*.pdf`
+            * ***Appendix Figure D1***: `fig_Extended_Data_fig_5_global_total_energy_timeseries_all-prices-rcp*.pdf`
             * ***Appendix Figure H1***: `fig_Appendix-H1_SSP3-high_rcp85-total-energy-price014-damages_by_inc_decile.pdf`
-            * ***Appendix Figure I1***: `fig_Appendix-I1_Slow_adapt-global_*_timeseries_impact-pc_CCSM4-SSP3-high.pdf`
-            * ***Appendix Figure I3.C***: `fig_Appendix-I3_lininter-global_*_timeseries_impact-pc_SSP3-high-rcp85.pdf`
+            * ***Appendix Figure I1***: `fig_Appendix-G1_Slow_adapt-global_*_timeseries_impact-pc_CCSM4-SSP3-high.pdf`
+            * ***Appendix Figure I3.C***: `fig_Appendix-G3_lininter-global_*_timeseries_impact-pc_SSP3-high-rcp85.pdf`
                                                 
 
 2. We then use the global damages implied by our projections to construct damage functions. Code for estimating these damage functions is contained in [3_post_projection/2_damage_function_estimation](https://github.com/ClimateImpactLab/energy-code-release-2020/tree/master/3_post_projection/2_damage_function_estimation). 
