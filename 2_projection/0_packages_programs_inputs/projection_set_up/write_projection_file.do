@@ -476,7 +476,8 @@ syntax ,  product(string) sys(string) proj_type(string) proj_model(string) unit(
 	if !(("`proj_type'"!="median") & (strpos("`proj_model'", "lininter") == 0)) {
 		file write yml "only-farmers: ['', 'histclim']" _n
 	}
-	file write yml "ssp: SSP3"
+	* updated: we now want to aggregate all SSPs
+	* file write yml "ssp: SSP3"
 
 	file close yml
 end
