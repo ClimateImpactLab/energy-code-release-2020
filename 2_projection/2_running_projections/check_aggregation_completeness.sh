@@ -5,8 +5,8 @@
 # set some paths and parameters
 # energy_type="electricity"
 energy_type="other_energy"
-dm=""
-# dm="_dm"
+# dm=""
+dm="_dm"
 # aggregation_scenario=""
 # aggregation_scenario="-MERGEETL60_rcp45"
 # aggregation_scenario="-MERGEETL60_rcp85"
@@ -32,7 +32,7 @@ output_dir="median_OTHERIND_${energy_type}_TINV_clim_GMFD${dm}"
 levels_file_size_above=100
 aggregated_file_size_above=10
 # 130 for one SSP
-n_folders_total=130
+n_folders_total=520
 
 filename_stem="FD_FGLS_inter_OTHERIND_${energy_type}_TINV_clim"
 
