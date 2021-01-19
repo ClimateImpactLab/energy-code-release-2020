@@ -5,4 +5,3 @@ aggregate-weighting-numerator: population * social/baselines/energy/REMIND17CEMI
 aggregate-weighting-denominator: sum-to-1
 infix: REMIND17CEMICS_rcp45
 rcp: rcp45
-ssp: SSP3

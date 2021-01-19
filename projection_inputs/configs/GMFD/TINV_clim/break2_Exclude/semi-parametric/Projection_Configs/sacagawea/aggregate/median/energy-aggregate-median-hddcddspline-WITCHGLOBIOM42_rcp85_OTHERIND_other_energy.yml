@@ -5,4 +5,3 @@ aggregate-weighting-denominator: sum-to-1
 infix: WITCHGLOBIOM42_rcp85
 rcp: rcp85
 only-farmers: ['', 'histclim']
-ssp: SSP3

@@ -5,4 +5,3 @@ aggregate-weighting-numerator: population * social/baselines/energy/REMINDMAgPIE
 aggregate-weighting-denominator: sum-to-1
 infix: REMINDMAgPIE1730_rcp85
 rcp: rcp85
-ssp: SSP3

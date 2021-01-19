@@ -5,4 +5,3 @@ aggregate-weighting-numerator: population * social/baselines/energy/MERGEETL60_r
 aggregate-weighting-denominator: population
 infix: MERGEETL60_rcp85pc
 rcp: rcp85
-ssp: SSP3
