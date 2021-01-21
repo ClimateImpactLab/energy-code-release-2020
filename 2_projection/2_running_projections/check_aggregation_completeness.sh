@@ -3,14 +3,14 @@
 # can be run from anywhere, just set the correct paths
 
 # set some paths and parameters
-# energy_type="electricity"
-energy_type="other_energy"
+energy_type="electricity"
+# energy_type="other_energy"
 # dm=""
 dm="_dm"
 # aggregation_scenario=""
 # aggregation_scenario="-MERGEETL60_rcp45"
 # aggregation_scenario="-MERGEETL60_rcp85"
-aggregation_scenario="-price014" 
+# aggregation_scenario="-price014" 
 # aggregation_scenario="-price03"
 # aggregation_scenario="-price0"
 # aggregation_scenario="-REMIND17_rcp45"
@@ -19,7 +19,7 @@ aggregation_scenario="-price014"
 # aggregation_scenario="-REMIND17CEMICS_rcp85" 
 # aggregation_scenario="-REMINDMAgPIE1730_rcp45" 
 # aggregation_scenario="-REMINDMAgPIE1730_rcp85"
-# aggregation_scenario="-WITCHGLOBIOM42_rcp45"
+aggregation_scenario="-WITCHGLOBIOM42_rcp45"
 # aggregation_scenario="-WITCHGLOBIOM42_rcp85"
 
 

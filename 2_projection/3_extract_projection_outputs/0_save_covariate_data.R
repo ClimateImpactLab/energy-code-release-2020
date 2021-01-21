@@ -148,3 +148,6 @@ df = left_join(df, pop12, by = "region") %>%
 
 write_csv(df, paste0(output, '/projection_system_outputs/covariates/',
 	'SSP3-high-IR_level-gdppc-pop-2012.csv'))
+
+
+
