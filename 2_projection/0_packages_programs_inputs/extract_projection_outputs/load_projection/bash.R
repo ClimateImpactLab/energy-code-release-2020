@@ -158,7 +158,7 @@ get.available.memory <- function(...) {
   
   print("Fetching available memory (GB)...")
   mem.avail.string = system("free -h | awk '{print $7}'", intern=TRUE)[2]
-  mem.avail = as.numeric(gsub('G', '', mem.avail.string)) # always want some buffer
+  mem.avail = as.numeric(gsub('Gi', '', mem.avail.string)) # always want some buffer
   print(mem.avail)
   return(mem.avail)
 
