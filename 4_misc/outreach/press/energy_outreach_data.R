@@ -25,9 +25,9 @@ setwd(paste0(REPO))
 miceadds::source.all(paste0(projection.packages,"load_projection/"))
 
 
-source(glue("{REPO}/mortality/2_projection/impacts.R"))
-source(glue("{REPO}/mortality/2_projection/econvar.R"))
-source(glue("{REPO}/mortality/3_valuation/2_calculate_damages/damages.R"))
+# source(glue("{REPO}/mortality/2_projection/impacts.R"))
+# source(glue("{REPO}/mortality/2_projection/econvar.R"))
+# source(glue("{REPO}/mortality/3_valuation/2_calculate_damages/damages.R"))
 
 #' Wrapper that calls get_mortality_impacts with converted parameters.
 #' @param years what years to output ("averaged","all")
@@ -87,45 +87,26 @@ ProcessImpacts = function(years, export=FALSE, ...){
 }
 
 
-
-
-get_impacts_pct_gdp = function(fuel, price_scen, unit, year, output){
+get_energy_impacts = function(output_unit, fuel, rcp, ssp,...){
     
-    spec = paste0("OTHERIND_", fuel)
-    df = load.median(conda_env = "risingverse-py27",
-                    proj_mode = '', # '' and _dm are the two options
-                    region = NULL, # needs to be specified for 
-                    rcp = "rcp85", 
-                    ssp = "SSP3", 
-                    price_scen = price_scen, # have this as NULL, "price014", "MERGEETL", ...
-                    unit = "damage", # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
-                    uncertainty = "climate", # full, climate, values
-                    geo_level = "levels", # aggregated (ir agglomerations) or 'levels' (single irs)
-                    iam = "high", 
-                    model = "TINV_clim", 
-                    adapt_scen = "fulladapt", 
-                    clim_data = "GMFD", 
-                    yearlist = year,  
-                    spec = spec,
-                    grouping_test = "semi-parametric") %>%
-        dplyr::select(region, year, mean) %>%
-        dplyr::filter(year == !!year)
-
-    price_tag = ifelse(is.null(price_scen), "impact_pc", price)
-
-    df_gdp = read_csv(paste0(DB_data, '/projection_system_outputs/covariates/', 
-                           "/SSP3-global-gdp-time_series.csv"))
-
-}
-
-get_impacts_gj = function(fuel, rcp, unit, year, levels){
-    
+    # browser()
+    if (output_unit == "gj") {
+        price_scen = NULL
+        unit = "impactpc"
+        } else if (output_unit == "kwh") {
+        price_scen = NULL
+        unit = "impactpc"
+        } else if (output_unit == "pct_gdp") {
+        price_scen = NULL
+        unit = "damage"
+        } 
+    if 
     spec = paste0("OTHERIND_", fuel)
     df = load.median(conda_env = "risingverse-py27",
                     proj_mode = '', # '' and _dm are the two options
                     region = NULL, # needs to be specified for 
                     rcp = rcp, 
-                    ssp = "SSP3", 
+                    ssp = ssp, 
                     price_scen = NULL, # have this as NULL, "price014", "MERGEETL", ...
                     unit =  unit, # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
                     uncertainty = "climate", # full, climate, values
@@ -134,21 +115,24 @@ get_impacts_gj = function(fuel, rcp, unit, year, levels){
                     model = "TINV_clim", 
                     adapt_scen = "fulladapt", 
                     clim_data = "GMFD", 
-                    yearlist = year,  
+                    yearlist = c(2099),  
                     spec = spec,
                     grouping_test = "semi-parametric") %>%
         dplyr::select(region, year, mean) %>%
         dplyr::filter(year == !!year)
 
+
     price_tag = ifelse(is.null(price_scen), "impact_pc", price)
+    
     return(df)
 }
 
 
 
+
 #converts DB paper outreach requests into get_mortality_impacts parameters.
 ParamConvert = function(
-    unit, 
+    type, 
     geography, 
     rcp=NULL, 
     ssp=NULL, 
@@ -156,11 +140,15 @@ ParamConvert = function(
     ...){
 
     # c(scn, units, scale_variable, engine)
-    unit_list = list(
-        income_per_capita=c(
-            NA, 'gdppc', 1, get_econvar), 
-        population_projections=c(
-            NA, 'pop', 1, get_econvar))
+    type_list = list(
+        impacts_gj=c(
+            'gj', get_energy_impacts), 
+        impacts_kwn=c(
+            'kwn', get_energy_impacts), 
+        impacts_pct_gdp=c(
+            'pct_gdp', get_energy_impacts))
+
+    more_args = list(...)
 
     geography_list = list(
         ISO_code="iso", 
@@ -174,7 +162,26 @@ ParamConvert = function(
         Region_ID="impact_regions", 
         Global="global")
 
-    engine=unlist(unit_list[[unit]][4])
+    engine=unlist(type_list[[type]][2])
+    # browser()
+
+    if (identical(engine[[1]], get_energy_impacts)) {
+
+        stopifnot(!is.null(more_args[['fuel']]), !is.null(rcp), !is.null(ssp))
+
+        invargs = list(
+            # scn=paste(unit_list[[unit]][1]),
+            output_unit=paste(type_list[[type]][1]),
+            # scale_variable=unlist(unit_list[[unit]][3]),
+            regions=geography_list[[geography]],
+            rcp=rcp,
+            fuel = more_args[['fuel']],
+            ssp=ssp,
+            qtile=qtile
+            )
+
+    } 
+
 
     outvargs = list(geography_name=geography_names_list[[geography]])
 
