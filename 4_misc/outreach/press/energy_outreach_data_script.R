@@ -7,22 +7,25 @@ source(glue("{REPO}/mortality/utils/wrap_mapply.R"))
 
 
 # unit testing
-undebug(ProcessImpacts)
-undebug(get_mortality_impacts)
-undebug(ConstructDF)
+# undebug(ProcessImpacts)
+# undebug(get_mortality_impacts)
+# undebug(ConstructDF)
 
-args=list(unit="mortality_risk",
+args=list(
+  years="all",
+  impact_type="impacts_pct_gdp",
+  resolution="global",
   rcp="rcp85",
-  years="averaged",
-  qtile="mean",
-  geography="state_abbrev",
-  ssp="SSP3")
+  # ssp = "SSP3",
+  stats="mean",
+  fuel = "electricity"
+  )
 
 source(glue("{REPO}/energy-code-release-2020/4_misc/",
     "outreach/press/energy_outreach_data.R"))
 
 test=do.call(ProcessImpacts,args)
-
+head(test)
 
 # Death rates
 
