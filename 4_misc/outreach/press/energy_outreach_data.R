@@ -412,4 +412,3 @@ get_children = function(region_list) {
 
     return(child)
 }
-get_children("CAN")
