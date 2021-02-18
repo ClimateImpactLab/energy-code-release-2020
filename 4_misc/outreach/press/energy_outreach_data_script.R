@@ -13,7 +13,7 @@ source(glue("{REPO}/mortality/utils/wrap_mapply.R"))
 
 args=list(
   years="all",
-  impact_type="impacts_pct_gdp",
+  impact_type="impacts_gj",
   resolution="global",
   rcp="rcp85",
   # ssp = "SSP3",
