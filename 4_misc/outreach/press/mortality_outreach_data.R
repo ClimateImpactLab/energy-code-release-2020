@@ -20,7 +20,7 @@ ProcessImpacts = function(years, export=FALSE, ...){
     engine = ParamList[['engine']]
 
     DT = do.call(engine[[1]], c(invargs, list(as.DT=TRUE)))
-
+    
     if(list(...)$geography=="state_abbrev") 
         DT = StatesNames(DT)
 

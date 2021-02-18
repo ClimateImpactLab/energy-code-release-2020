@@ -3,12 +3,10 @@ library(glue)
 library(parallel)
 cilpath.r:::cilpath()
 
-source(glue("{REPO}/energy-code-release-2020/4_misc/",
-    "outreach/press/energy_outreach_data.R"))
 source(glue("{REPO}/mortality/utils/wrap_mapply.R"))
 
 
-unit testing
+# unit testing
 undebug(ProcessImpacts)
 undebug(get_mortality_impacts)
 undebug(ConstructDF)
@@ -20,6 +18,8 @@ args=list(unit="mortality_risk",
   geography="state_abbrev",
   ssp="SSP3")
 
+source(glue("{REPO}/energy-code-release-2020/4_misc/",
+    "outreach/press/energy_outreach_data.R"))
 
 test=do.call(ProcessImpacts,args)
 

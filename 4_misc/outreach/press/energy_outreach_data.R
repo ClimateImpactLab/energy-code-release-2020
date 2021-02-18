@@ -10,7 +10,7 @@ library(ncdf4)
 library(tidyr)
 cilpath.r:::cilpath()
 
-
+print("test")
 db = '/mnt/CIL_energy/'
 output = '/mnt/CIL_energy/code_release_data_pixel_interaction/'
 
