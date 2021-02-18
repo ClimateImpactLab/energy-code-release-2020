@@ -5,19 +5,14 @@ cilpath.r:::cilpath()
 
 source(glue("{REPO}/mortality/utils/wrap_mapply.R"))
 
-
 # unit testing
-undebug(ProcessImpacts)
-undebug(get_impacts_gj)
-undebug(ConstructDF)
-
 args=list(
-  years="annual",
-  unit="impacts_gj",
-  geography="Global",
+  years="all",
+  impact_type="impacts_pct_gdp",
+  resolution="global",
   rcp="rcp85",
-  ssp = "SSP3",
-  qtile="mean",
+  # ssp = "SSP3",
+  stats="mean",
   fuel = "electricity"
   )
 
@@ -25,7 +20,7 @@ source(glue("{REPO}/energy-code-release-2020/4_misc/",
     "outreach/press/energy_outreach_data.R"))
 
 test=do.call(ProcessImpacts,args)
-
+head(test)
 
 # Death rates
 
