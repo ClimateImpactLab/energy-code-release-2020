@@ -325,8 +325,11 @@ return_region_list = function(regions) {
     list = check %>%
     dplyr::filter(is_terminal == "True")
 
-    if (regions == 'cities_500k')
-    return(list$region.key)
+    if (regions == 'cities_500k'){
+        cities_500k = memo.csv('/home/liruixue/repos/energy-code-release-2020/data/500k_cities.csv') %>%
+        select(Region_ID)
+        return(unique(cities_500k$Region_ID))
+    }
     else if (regions == 'iso')
     return(unique(substr(list$region.key, 1, 3)))
     else if (regions == 'states'){
@@ -349,8 +352,10 @@ return_region_gdp = function(regions) {
         paste0(DB_data, '/projection_system_outputs/covariates/', 
          'SSP3-high-IR_level-gdppc_pop-2099.csv')) 
 
+    if (regions == 'cities_500k') {
 
-    if (regions == 'cities_500k')
+    }
+
     return(gdp)
     else if (regions == 'iso')
     return(unique(substr(list$region.key, 1, 3)))
