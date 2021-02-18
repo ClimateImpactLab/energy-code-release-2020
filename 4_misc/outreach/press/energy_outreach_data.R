@@ -39,15 +39,41 @@ ProcessImpacts = function(years, export=FALSE, ...){
     ParamList = do.call(ParamConvert,list(...))
 
     print("1")
+
     invargs = ParamList[['invargs']]
-    outvargs = ParamList[['outvargs']]
+    resolution = ParamList[['resolution']]
     engine = ParamList[['engine']]
 
-    DT = do.call(engine, c(invargs, list(as.DT=TRUE)))
-    print("2")
-    # browser()
+    region_list = return_region_list(resolution)
 
-    if(list(...)$resolution=="state_abbrev") 
+    geo_level_lookup = list(
+        iso="aggregated", 
+        states="aggregated", 
+        all_IRs="levels", 
+        global="aggregated")
+
+    invargs = list.append(invargs, geo_level =  geo_level_lookup[[resolution]])
+
+    # browser()
+    df_list = wrap_mapply(
+        impact_type = invargs$impact_type,
+        geo_level = invargs$geo_level, 
+        region = region_list, 
+        fuel = invargs$fuel, 
+        rcp = invargs$rcp, 
+        stats  = invargs$stats,
+        mc.cores=2,
+        mc.silent=FALSE,
+        FUN=get_energy_impacts
+        ) 
+
+    # browser()
+    DT <- do.call("rbind", df_list) %>% dplyr::select(year, region, !!invargs$stats)
+    rownames(DT) <- c()
+
+    print("2")
+
+    if(resolution=="states") 
     DT = StatesNames(DT)
     print("3")
 
@@ -59,6 +85,7 @@ ProcessImpacts = function(years, export=FALSE, ...){
             seq(2080,2099)))
     print("4")
 
+    # browser()
     if (!is.null(years_list[[years]]))
     DT = YearChunks(DT,years_list[[years]])
     else
@@ -82,8 +109,8 @@ ProcessImpacts = function(years, export=FALSE, ...){
     setnames(DT, "region", list(...)$resolution)
     print("7")
 
-    if(list(...)$resolution=="global") 
-    DT[,(list(...)$resolution):="global"][]
+    if(resolution=="global") 
+    DT[,resolution:="global"][]
 
     print("8")
 
@@ -94,54 +121,46 @@ ProcessImpacts = function(years, export=FALSE, ...){
             Path, c(list(...),
                 list(
                     years=years,
-                    geography_name=outvargs$geography_name))))
+                    resolution=invargs$resolution))))
 
     return(DT)
 
 }
 
 
-get_energy_impacts = function(impact_type, resolution, fuel, rcp, stats,...){
+
+get_energy_impacts(impact_type = "impacts_gj",
+    geo_level = "levels",
+    region = "USA.33.1854",
+    fuel = "electricity",
+    rcp = "rcp45",
+    stats = "mean")
+
+get_energy_impacts = function(impact_type, geo_level, region, fuel, rcp, stats,...){
 
     # browser()
-    if (impact_type == "impacts_gj") {
+    if (impact_type == "impacts_gj" | impact_type == "impacts_kwh") {
         price_scen = NULL
         unit = "impactpc"
         spec = paste0("OTHERIND_", fuel)
-        } else if (impact_type == "impacts_kwh") {
-            price_scen = NULL
-            unit = "impactpc"
-            spec = paste0("OTHERIND_", fuel)
-            } else if (impact_type == "impacts_pct_gdp") {
-                price_scen = "price014"
-                unit = "damage"
-                spec = "OTHERIND_total_energy"       
-            } 
-
-            if (resolution == "iso" ) {
-                    level = "aggregated"
-                    regions = return_region_list("iso")
-                } else if (resolution == "states" ) {
-                    level = "aggregated"
-                    regions = return_region_list("states")
-                    } else if (resolution == "global") {
-                        level = "aggregated"
-                        regions = return_region_list("global")
-                        } else if (resolution == "cities_500k") {
-                            level = "levels"
-                            regions = return_region_list("cities_500k")
-                            } else {
-                                print("geo region wrong")
-                            }
-                            df = load.median(conda_env = "risingverse-py27",
+    } else if (impact_type == "impacts_pct_gdp") {
+        price_scen = "price014"
+        unit = "damage"
+        spec = "OTHERIND_total_energy"       
+    } else {
+        print("wrong fuel type")
+    }
+    # browser()
+ 
+            df = load.median(conda_env = "risingverse-py27",
                                 proj_mode = '', # '' and _dm are the two options
-                                region = regions, # needs to be specified for 
+                                region = region, # needs to be specified for 
                                 rcp = rcp, 
                                 ssp = "SSP3", 
                                 price_scen = price_scen, # have this as NULL, "price014", "MERGEETL", ...
                                 unit =  unit, # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
                                 uncertainty = "full", # full, climate, values
-                                geo_level = level, # aggregated (ir agglomerations) or 'levels' (single irs)
+                                geo_level = geo_level, # aggregated (ir agglomerations) or 'levels' (single irs)
                                 iam = "low", 
                                 model = "TINV_clim", 
                                 adapt_scen = "fulladapt", 
@@ -149,17 +168,18 @@ get_energy_impacts = function(impact_type, resolution, fuel, rcp, stats,...){
                                 yearlist = seq(2020, 2099),  
                                 spec = spec,
                                 grouping_test = "semi-parametric")
-                            df = df %>% dplyr::select(year, region, !!stats)
+            df = df %>% dplyr::select(year, region, !!stats)
 
-                            if (impact_type == "impacts_kwh") {
-                                df = df %>% dplyr::mutate(mean = mean * 0.0036)
-                                } else if (impact_type == "impacts_pct_gdp") {
+            if (impact_type == "impacts_kwh") {
+                gj_to_kwh <- function(x) (x * 0.0036) 
+                df = df %>% dplyr::mutate_at(vars(-c(year,region)), gj_to_kwh)
+                } else if (impact_type == "impacts_pct_gdp") {
 
-                                    browser()
-                                    df = left_join(df, covariates, by = "region")
+                                    # browser()
+                                    # df = left_join(df, covariates, by = "region")
 
-                                    %>%
-                                    dplyr::mutate(stats = !!stats * 1000000000 / gdp99 / 0.0036)
+                                    # %>%
+                                    # dplyr::mutate(stats = !!stats * 1000000000 / gdp99 / 0.0036)
                                     } else {
                                        return(df)
                                    }
@@ -178,32 +198,16 @@ ParamConvert = function(
     ...){
 
     more_args = list(...)
-
-    geography_names_list = list(
-        ISO_code="country_level", 
-        state_abbrev="US_states", 
-        Region_ID="impact_regions", 
-        Global="global")
-
     engine = get_energy_impacts
-    # browser()
-
     stopifnot(!is.null(fuel), !is.null(rcp))
-
     invargs = list(
         impact_type = impact_type,
-        resolution = resolution,
         rcp = rcp,
         fuel = fuel,
         stats = stats
         )
-
-    outvargs = list(geography_name=geography_names_list[[resolution]])
-
-    return(list(invargs=invargs, outvargs=outvargs, engine=engine))
-
+    return(list(invargs=invargs, resolution=resolution, engine=engine))
 }
-
 
 #reshapes the data to get region in rows and years in columns
 YearsReshape = function(DT){
@@ -222,11 +226,13 @@ YearsReshape = function(DT){
 #get two-decades means
 YearChunks = function(DT,intervals,...){
 
-
+    # browser()
+    DT = as.data.table(DT)
     DT[,years:=dplyr:::case_when(year %in% intervals[[1]] ~ 'years_2020_2039',
         year %in% intervals[[2]] ~ 'years_2040_2059',
         year %in% intervals[[3]] ~ 'years_2080_2099')][,year:=NULL]
 
+    # bk = DT
     DT=DT[!is.na(years)]
 
     DT=DT[,lapply(.SD, mean), by=.(region,years)]
@@ -236,10 +242,10 @@ YearChunks = function(DT,intervals,...){
 
 
 #directories and files names
-Path = function(unit, geography_name, rcp, ssp, qtile, years, suffix='', ...){
+Path = function(unit, resolution, rcp, ssp, qtile, years, suffix='', ...){
     base = ""
     dir = glue("/mnt/CIL_energy/impacts_outreach/")
-    file = glue("unit_{unit}_geography_{geography_name}_years_{years}_{rcp}{suffix}.csv")
+    file = glue("unit_{unit}_geography_{resolution}_years_{years}_{rcp}{suffix}.csv")
 
     print(glue('{dir}/{file}'))
     dir.create(dir, recursive = TRUE, showWarnings = FALSE)
@@ -256,53 +262,21 @@ OpenProcessed = function(...){
 }
 
 memo.csv = addMemoization(read.csv)
-    
+
 #add US states name to states ID
 StatesNames = function(df){
-    browser()
     DT=setkey(as.data.table(df),region)
-    check = setkey(setnames(
-        memo.csv('/shares/gcp/regions/hierarchy.csv', skip = 100),
-        "region-key", "region")[,.(region, name)],region)
+
+    # index the hierarchy.csv file
+    check = setkey(as.data.table(setnames(
+        memo.csv('/shares/gcp/regions/hierarchy.csv', skip = 31),
+        "region.key", "region"))[,.(region, name)],region)
+
+    # replace region ID with region names 
     DT=check[DT][,region:=name][,name:=NULL][]
     return(DT)
 }
 
-
-# Handles the regional hierarchy in the analysis, e.g., impact regions, ADM1 
-# agglomerations, countries. 
-
-
-#' Checks spatial resolution of regions as defined by impact region definitions.
-#' 
-#' Determines whether input region is an impact region or a more aggregated 
-#' region. 
-#'
-#' @param region_list vector of IRs, ISOs, or regional codes in between.
-#' @return List containing region codes at ir_level or aggregated resolutions.
-check_resolution = function(region_list) {
-
-    out = list()
-
-    check = memo.csv('/shares/gcp/regions/hierarchy.csv') %>%
-    data.frame()
-
-    list = check %>%
-    dplyr::filter(region.key %in% region_list)
-
-    if (nrow(list)==0 & !('' %in% region_list))
-    stop('Region not found!')
-
-    if (any(list$is_terminal))
-    out[['ir_level']] = dplyr::filter(list, is_terminal)$region.key
-    if (any(!(list$is_terminal)))
-    out[['aggregated']] = dplyr::filter(list, !(is_terminal))$region.key
-    if ('' %in% region_list)
-    out[['aggregated']] = c(out[['aggregated']], '')
-
-
-    return(out)
-}
 
 
 #' Translates key words into list of impact region codes.
@@ -315,9 +289,8 @@ check_resolution = function(region_list) {
 return_region_list = function(regions) {
 
     # browser()
-
     if (length(regions) > 1) {
-    return(regions)
+        return(regions)
     }
     check = memo.csv('/shares/gcp/regions/hierarchy.csv', skip = 31) %>%
     data.frame()
@@ -325,18 +298,24 @@ return_region_list = function(regions) {
     list = check %>%
     dplyr::filter(is_terminal == "True")
 
-    if (regions == 'cities_500k'){
-        cities_500k = memo.csv('/home/liruixue/repos/energy-code-release-2020/data/500k_cities.csv') %>%
-        select(Region_ID)
-        return(unique(cities_500k$Region_ID))
+    if (regions == 'all_IRs'){
+        return(c("JPN.41.R5148cbf71a2651b4","USA.33.1854"))
+        # return(list$region.key)
     }
+    # else if (regions == 'cities_500k'){
+    #     cities_500k = memo.csv('/home/liruixue/repos/energy-code-release-2020/data/500k_cities.csv') %>%
+    #     select(Region_ID)
+    #     return(unique(cities_500k$Region_ID))
+    # }
     else if (regions == 'iso')
-    return(unique(substr(list$region.key, 1, 3)))
+    return(c("CAN","CHN"))
+    # return(unique(substr(list$region.key, 1, 3)))
     else if (regions == 'states'){
-        df = list %>% 
-        dplyr::filter(substr(region.key, 1, 3)=="USA") %>%
-        dplyr::mutate(region.key = gsub('^([^.]*.[^.]*).*$', '\\1', region.key))
-        return(unique(df$region.key))
+        return(c("CAN","CHN"))
+        # df = list %>% 
+        # dplyr::filter(substr(region.key, 1, 3)=="USA") %>%
+        # dplyr::mutate(region.key = gsub('^([^.]*.[^.]*).*$', '\\1', region.key))
+        # return(unique(df$region.key))
     }
     else if (regions == 'global')
     return('global')
@@ -352,24 +331,21 @@ return_region_gdp = function(regions) {
         paste0(DB_data, '/projection_system_outputs/covariates/', 
          'SSP3-high-IR_level-gdppc_pop-2099.csv')) 
 
-    if (regions == 'cities_500k') {
-
+    if (regions == 'all_IRs') {
+        return(gdp)
+        } else if (regions == 'iso')
+        return(unique(substr(list$region.key, 1, 3)))
+        else if (regions == 'states'){
+            df = list %>% 
+            dplyr::filter(substr(region.key, 1, 3)=="USA") %>%
+            dplyr::mutate(region.key = gsub('^([^.]*.[^.]*).*$', '\\1', region.key))
+            return(unique(df$region.key))
+        }
+        else if (regions == 'global')
+        return('global')
+        else
+        return(regions)
     }
-
-    return(gdp)
-    else if (regions == 'iso')
-    return(unique(substr(list$region.key, 1, 3)))
-    else if (regions == 'states'){
-        df = list %>% 
-        dplyr::filter(substr(region.key, 1, 3)=="USA") %>%
-        dplyr::mutate(region.key = gsub('^([^.]*.[^.]*).*$', '\\1', region.key))
-        return(unique(df$region.key))
-    }
-    else if (regions == 'global')
-    return('global')
-    else
-    return(regions)
-}
 
 
 
