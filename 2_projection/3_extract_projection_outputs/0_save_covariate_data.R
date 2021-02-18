@@ -137,6 +137,9 @@ gdppc = get_gdppc_all_regions('high', 'SSP3') %>%
 df = gdppc %>% 
 	dplyr::filter(year == 2012)
 
+all_year_IR_comb = expand.grid(region = unique(pop$region), year = seq(2010, 2100))
+
+pop_allyears = left_join(all_year_IR_comb, pop, )
 # Get 2012 population projections
 pop12 = pop %>% 
 	dplyr::filter(ssp == "SSP3") %>%
@@ -148,6 +151,27 @@ df = left_join(df, pop12, by = "region") %>%
 
 write_csv(df, paste0(output, '/projection_system_outputs/covariates/',
 	'SSP3-high-IR_level-gdppc-pop-2012.csv'))
+
+
+
+
+############################################################
+# 6 Get data needed for generating press stats - all gdp values for all years
+
+gdppc = get_gdppc_all_regions('low', 'SSP3') %>%
+	mutate(gdppc = gdppc * conversion_value) 
+
+df = gdppc
+
+pop = pop %>% 
+	dplyr::filter(ssp == "SSP3") %>%
+	dplyr::select(region, pop, year)
+
+df = left_join(df, pop, by = c("region", "year")) %>% 
+	dplyr::select(region, year, gdppc, pop)
+
+write_csv(df, paste0(output, '/projection_system_outputs/covariates/',
+	'SSP3-low-IR_level-gdppc-pop-all-years.csv'))
 
 
 
