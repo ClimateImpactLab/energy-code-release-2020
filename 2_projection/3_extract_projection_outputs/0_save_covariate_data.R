@@ -157,7 +157,8 @@ write_csv(df, paste0(output, '/projection_system_outputs/covariates/',
 
 
 ############################################################
-# 6 Get data needed for generating press stats - all gdp values for all years
+# 6 Get data needed for generating press stats -
+ # all IR level gdp values for all years
 
 gdppc = get_gdppc_all_regions('low', 'SSP3') %>%
 	mutate(gdppc = gdppc * conversion_value) 
@@ -170,10 +171,6 @@ pop = pop %>%
 
 df = left_join(df, pop, by = c("region", "year")) %>% 
 	dplyr::select(region, year, gdppc, pop)
-
-
-df <- read.csv(paste0(output, '/projection_system_outputs/covariates/',
-	'SSP3-low-IR_level-gdppc-pop-all-years.csv'))
 
 # linearly interpolate missing pop
 df$pop <- na.interpolation(ts(c(df$pop)), option = "linear") 
