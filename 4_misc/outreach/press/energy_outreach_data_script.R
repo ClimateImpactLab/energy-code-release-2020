@@ -10,11 +10,12 @@ source(glue("{REPO}/mortality/utils/wrap_mapply.R"))
 
 args=list(
   years="all",
-  impact_type="impacts_gj",
-  resolution="all_IRs",
+  impact_type="impacts_pct_gdp",
+  resolution="global",
   rcp="rcp85",
   stats="q95",
-  fuel = "electricity"
+  fuel = "electricity",
+  export = TRUE
   )
 
 source(glue("{REPO}/energy-code-release-2020/4_misc/",

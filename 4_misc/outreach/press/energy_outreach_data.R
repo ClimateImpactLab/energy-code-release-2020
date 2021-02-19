@@ -58,6 +58,7 @@ ProcessImpacts = function(years, export=FALSE, ...){
     df_list = wrap_mapply(
         impact_type = invargs$impact_type,
         geo_level = invargs$geo_level, 
+        resolution = resolution,
         region = region_list, 
         fuel = invargs$fuel, 
         rcp = invargs$rcp, 
@@ -118,10 +119,10 @@ ProcessImpacts = function(years, export=FALSE, ...){
     fwrite(
         DT,
         do.call(
-            Path, c(list(...),
+            Path, c(invargs,
                 list(
                     years=years,
-                    resolution=invargs$resolution))))
+                    resolution=resolution))))
 
     return(DT)
 
@@ -129,14 +130,14 @@ ProcessImpacts = function(years, export=FALSE, ...){
 
 
 
-get_energy_impacts(impact_type = "impacts_gj",
-    geo_level = "levels",
-    region = "USA.33.1854",
-    fuel = "electricity",
-    rcp = "rcp45",
-    stats = "mean")
+# get_energy_impacts(impact_type = "impacts_gj",
+#     geo_level = "levels",
+#     region = "USA.33.1854",
+#     fuel = "electricity",
+#     rcp = "rcp45",
+#     stats = "mean")
 
-get_energy_impacts = function(impact_type, geo_level, region, fuel, rcp, stats,...){
+get_energy_impacts = function(impact_type, resolution, geo_level, region, fuel, rcp, stats,...){
 
     # browser()
     if (impact_type == "impacts_gj" | impact_type == "impacts_kwh") {
@@ -150,8 +151,7 @@ get_energy_impacts = function(impact_type, geo_level, region, fuel, rcp, stats,.
     } else {
         print("wrong fuel type")
     }
-    # browser()
- 
+     
             df = load.median(conda_env = "risingverse-py27",
                                 proj_mode = '', # '' and _dm are the two options
                                 region = region, # needs to be specified for 
@@ -174,16 +174,20 @@ get_energy_impacts = function(impact_type, geo_level, region, fuel, rcp, stats,.
                 gj_to_kwh <- function(x) (x * 0.0036) 
                 df = df %>% dplyr::mutate_at(vars(-c(year,region)), gj_to_kwh)
                 } else if (impact_type == "impacts_pct_gdp") {
+                    gdp = return_region_gdp(resolution) 
+                    if (region == "global") {
+                        region = ""
+                    }
+                    gdp = gdp %>% filter(region == region)
+                    df = left_join(df, gdp, by = c("region", "year")) 
+                    df = df %>% rename(stats = !!stats) %>%
+                    dplyr::mutate(stats = stats * 1000000000 / gdp / 0.0036) 
+                    df = rename(df, !!stats:= stats)
 
-                                    # browser()
-                                    # df = left_join(df, covariates, by = "region")
-
-                                    # %>%
-                                    # dplyr::mutate(stats = !!stats * 1000000000 / gdp99 / 0.0036)
-                                    } else {
-                                       return(df)
-                                   }
-                               }
+            } else {
+               return(df)
+           }
+       }
 
 
 #converts DB paper outreach requests into get_mortality_impacts parameters.
@@ -242,10 +246,10 @@ YearChunks = function(DT,intervals,...){
 
 
 #directories and files names
-Path = function(unit, resolution, rcp, ssp, qtile, years, suffix='', ...){
+Path = function(impact_type, resolution, rcp, stats, years, suffix='', ...){
     base = ""
     dir = glue("/mnt/CIL_energy/impacts_outreach/")
-    file = glue("unit_{unit}_geography_{resolution}_years_{years}_{rcp}{suffix}.csv")
+    file = glue("unit_{impact_type}_geography_{resolution}_years_{years}_{rcp}{suffix}.csv")
 
     print(glue('{dir}/{file}'))
     dir.create(dir, recursive = TRUE, showWarnings = FALSE)
@@ -302,14 +306,14 @@ return_region_list = function(regions) {
         return(c("JPN.41.R5148cbf71a2651b4","USA.33.1854"))
         # return(list$region.key)
     }
-    # else if (regions == 'cities_500k'){
-    #     cities_500k = memo.csv('/home/liruixue/repos/energy-code-release-2020/data/500k_cities.csv') %>%
-    #     select(Region_ID)
-    #     return(unique(cities_500k$Region_ID))
-    # }
+        # else if (regions == 'cities_500k'){
+        #     cities_500k = memo.csv('/home/liruixue/repos/energy-code-release-2020/data/500k_cities.csv') %>%
+        #     select(Region_ID)
+        #     return(unique(cities_500k$Region_ID))
+        # }
     else if (regions == 'iso')
-    return(c("CAN","CHN"))
-    # return(unique(substr(list$region.key, 1, 3)))
+        return(c("CAN","CHN"))
+        # return(unique(substr(list$region.key, 1, 3)))
     else if (regions == 'states'){
         return(c("CAN","CHN"))
         # df = list %>% 
@@ -329,25 +333,29 @@ return_region_gdp = function(regions) {
     DB_data = "/mnt/CIL_energy/code_release_data_pixel_interaction"
     gdp = read_csv(
         paste0(DB_data, '/projection_system_outputs/covariates/', 
-         'SSP3-high-IR_level-gdppc_pop-2099.csv')) 
-
+         'SSP3-low-IR_level-gdppc-pop-gdp-all-years.csv')) 
     if (regions == 'all_IRs') {
-        return(gdp)
-        } else if (regions == 'iso')
-        return(unique(substr(list$region.key, 1, 3)))
-        else if (regions == 'states'){
-            df = list %>% 
-            dplyr::filter(substr(region.key, 1, 3)=="USA") %>%
-            dplyr::mutate(region.key = gsub('^([^.]*.[^.]*).*$', '\\1', region.key))
-            return(unique(df$region.key))
+            return(gdp[c("region","year","gdp")])
+        } else if (regions == 'iso' | regions == "states") {
+            regions = "states"
+            regions_list = return_region_list(regions)
+            IR_list = get_children(regions_list)
+            IR_df = data.frame(agg_region = rep(names(IR_list),sapply(IR_list, length))
+                , region = unlist(IR_list)) 
+            rownames(IR_df) = c()
+            regions_gdp = inner_join(IR_df, gdp, by = "region")
+            regions_gdp = regions_gdp %>% group_by(agg_region, year) %>%
+                        summarise(gdp = sum(gdp))%>% 
+                        select(agg_region, year, gdp) %>%
+                        rename(region = agg_region)
+            return(regions_gdp)
+        } else if (regions == 'global') {
+            global_gdp = gdp %>% group_by(year) %>%
+                        summarise(gdp = sum(gdp))
+            global_gdp$region = ""
+            return(global_gdp)
         }
-        else if (regions == 'global')
-        return('global')
-        else
-        return(regions)
     }
-
-
 
 
 #' Identifies IRs within a more aggregated region code.
