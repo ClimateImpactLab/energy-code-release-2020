@@ -10,6 +10,7 @@ library(dplyr)
 library(reticulate)
 library(haven)
 library(tidyr)
+library(imputeTS)
 cilpath.r:::cilpath()
 
 
@@ -170,8 +171,18 @@ pop = pop %>%
 df = left_join(df, pop, by = c("region", "year")) %>% 
 	dplyr::select(region, year, gdppc, pop)
 
-write_csv(df, paste0(output, '/projection_system_outputs/covariates/',
+
+df <- read.csv(paste0(output, '/projection_system_outputs/covariates/',
 	'SSP3-low-IR_level-gdppc-pop-all-years.csv'))
+
+# linearly interpolate missing pop
+df$pop <- na.interpolation(ts(c(df$pop)), option = "linear") 
+
+df <- df %>% dplyr::mutate(gdp = pop * gdppc)
+
+write_csv(df, paste0(output, '/projection_system_outputs/covariates/',
+	'SSP3-low-IR_level-gdppc-pop-gdp-all-years.csv'))
+
 
 
 
