@@ -6,8 +6,8 @@
 # set some paths and parameters
 
 # set some paths and parameters
-# energy=electricity
-energy=other_energy
+energy=electricity
+# energy=other_energy
 dm=_dm
 # dm=""
 suffix=""

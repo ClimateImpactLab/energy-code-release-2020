@@ -256,7 +256,7 @@ syntax , uncertainty(string)
 		local evalqvals "['mean', 0.05, 0.95]"
 	} 
 	else if inlist("`uncertainty'", "full") {
-		local evalqvals "['mean', .5, 0.05, 0.95, 0.10, 0.90, 0.75, 0.25]"
+		local evalqvals "['mean', .5, 0.05, 0.17, 0.83, 0.95, 0.10, 0.90, 0.75, 0.25]"
 	} 
 	else {
 		local evalqvals ""

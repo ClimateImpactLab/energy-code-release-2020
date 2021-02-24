@@ -166,7 +166,6 @@ plot_ts_fig_3B = function(DB_data, output){
   # Load in gdp global projected SSP3 time series
   df_gdp = read_csv(paste0(DB_data, '/projection_system_outputs/covariates/', 
                            "/SSP3-global-gdp-time_series.csv"))
-  
   # Get separate dataframes for rcp45 and rcp85, for plotting
   format_df = function(rcp, df_impacts, df_gdp){
 
