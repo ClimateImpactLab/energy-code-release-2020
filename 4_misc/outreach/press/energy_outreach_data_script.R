@@ -10,10 +10,10 @@ source(glue("{REPO}/mortality/utils/wrap_mapply.R"))
 
 args=list(
   years="all",
-  impact_type="impacts_pct_gdp",
-  resolution="global",
+  impact_type="impacts_gj",
+  resolution="all_IRs",
   rcp="rcp85",
-  stats="q95",
+  stats="mean",
   fuel = "electricity",
   export = TRUE
   )
