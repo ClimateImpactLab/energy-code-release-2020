@@ -52,7 +52,7 @@ load.median.check.params <- function(proj_mode = '', dollar_convert=NULL,
 
   } else if (uncertainty == 'full') {
     
-    # testit::assert(!is.null(region)) # due to memory constraints
+    testit::assert(!is.null(region)) # due to memory constraints
     testit::assert(!is.null(rcp)) # rcp should only be null for values (possibly this might not hold when OTHERIND_total_energy gets integrated)
 
   } else if (uncertainty == 'climate') {
