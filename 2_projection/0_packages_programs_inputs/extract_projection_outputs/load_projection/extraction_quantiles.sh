@@ -159,6 +159,17 @@ else
 	iam_restriction=''
 fi
 
+# restrict to one SSP if desired
+if [[ ( "${ssp}" ) ]]; then
+	ssp_tag=_${ssp}
+	ssp_restriction=--only-ssp=${ssp}
+else
+	ssp_tag=''
+	ssp_restriction=''
+fi
+
+
+
 # restrict to one region if extracting aggregated values (standard)
 
 if [[ ( "${geo_level}" == "aggregated" ) && ( "${uncertainty}" == "values" ) ]]; then
@@ -190,13 +201,14 @@ fi
 
 # set up some variables to make the calling line not a gazillion characters --
 ecp=${repo_root}/${extraction_config_path}/${unit}/${price_scen}/${uncertainty}/${geo_level}/median/energy-extract-${unit}${geo_level_tag}${price_scen_tag}-median_${spec}${proj_mode}.yml 
-suffix=_${region_tag}${unit}${price_scen_tag}_median${uncertainty_tag}${iam_tag}${rcp_tag}_${adapt_scen}${geo_level_tag}${proj_mode}
+suffix=_${region_tag}${unit}${price_scen_tag}_median${uncertainty_tag}${iam_tag}${ssp_tag}${rcp_tag}_${adapt_scen}${geo_level_tag}${proj_mode}
 log_file=${log_file_path}/${region_log_tag}log${suffix}_${spec}.txt
 
 # print out information about call
 
 echo "extraction.config:${ecp}"
 echo "iam.restriction:${iam_restriction}"
+echo "ssp.restriction:${ssp_restriction}"
 echo "region.restriction:${region_restriction}"
 echo "suffix:${suffix}"
 echo "log.file:${log_file}"
@@ -217,9 +229,9 @@ if [[ "${spec}" != "OTHERIND_total_energy" ]]; then
         input_file_histclim=${input_file}
 
 	if [[ "${adapt_scen}" == "noadapt" ]]; then
-	    command=$(echo "nohup python -u quantiles.py ${ecp} ${iam_restriction} ${region_restriction} --suffix=${suffix} ${input_file_adapt} >> ${log_file} 2>&1 &")
+	    command=$(echo "nohup python -u quantiles.py ${ecp} ${iam_restriction} ${ssp_restriction} ${region_restriction} --suffix=${suffix} ${input_file_adapt} >> ${log_file} 2>&1 &")
 	else
-	    command=$(echo "nohup python -u quantiles.py ${ecp} ${iam_restriction} ${region_restriction} --suffix=${suffix} ${input_file_adapt} -${input_file_histclim} >> ${log_file} 2>&1 &")
+	    command=$(echo "nohup python -u quantiles.py ${ecp} ${iam_restriction} ${ssp_restriction} ${region_restriction} --suffix=${suffix} ${input_file_adapt} -${input_file_histclim} >> ${log_file} 2>&1 &")
 	fi
 else
         echo "extracting total_energy"
@@ -237,10 +249,10 @@ else
 
 	if [[ "${adapt_scen}" == "noadapt" ]]; then
 
-	    command=$(echo "nohup python -u quantiles.py ${ecp} ${iam_restriction} ${rcp_restriction} ${region_restriction} --suffix=${suffix} ${input_file_adapt_e} ${input_file_adapt_oe} >> ${log_file} 2>&1 &")
+	    command=$(echo "nohup python -u quantiles.py ${ecp} ${iam_restriction} ${ssp_restriction} ${rcp_restriction} ${region_restriction} --suffix=${suffix} ${input_file_adapt_e} ${input_file_adapt_oe} >> ${log_file} 2>&1 &")
 
 	else
-	    command=$(echo "nohup python -u quantiles.py ${ecp} ${iam_restriction} ${rcp_restriction} ${region_restriction} --suffix=${suffix} ${input_file_adapt_e} -${input_file_histclim_e} ${input_file_adapt_oe} -${input_file_histclim_oe} >> ${log_file} 2>&1 &")
+	    command=$(echo "nohup python -u quantiles.py ${ecp} ${iam_restriction} ${ssp_restriction} ${rcp_restriction} ${region_restriction} --suffix=${suffix} ${input_file_adapt_e} -${input_file_histclim_e} ${input_file_adapt_oe} -${input_file_histclim_oe} >> ${log_file} 2>&1 &")
 	fi
 
 fi

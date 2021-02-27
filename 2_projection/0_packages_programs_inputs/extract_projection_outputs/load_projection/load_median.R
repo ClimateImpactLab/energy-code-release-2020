@@ -26,6 +26,7 @@ library(haven)
 #' @param proj_mode type of projection (like delta method or point estimate)
 #' @param uncertainty amount of uncertainty reflected in data
 #' @param region region for which querying data
+#' @param regions multiple regions for which querying data
 #' @param rcp rcp scenario
 #' @param iam iam scenario
 #' @param price_scen dollarized damages price scenario
@@ -38,7 +39,7 @@ library(haven)
 #' 
 
 load.median.check.params <- function(proj_mode = '', dollar_convert=NULL,
-  uncertainty = NULL, region = NULL, rcp = NULL, iam = NULL, ssp = 'SSP3', spec = NULL, 
+  uncertainty = NULL, region = NULL, regions = NULL, rcp = NULL, iam = NULL, ssp = 'SSP3', spec = NULL, 
   sector = 'energy', price_scen = NULL, ...) {
 
   # both proj_mode are a part of the full uncertainty configs, thus the code and configs are set up such that
@@ -52,7 +53,11 @@ load.median.check.params <- function(proj_mode = '', dollar_convert=NULL,
 
   } else if (uncertainty == 'full') {
     
-    testit::assert(!is.null(region)) # due to memory constraints
+    testit::assert(!is.null(region)) | testit::assert(!is.null(regions)) | testit::assert(geo_level != "aggregated") 
+    # we either extract a certain set of regions, or extract all regions from levels file only
+    # because there's a bug with extracted all regions from the aggregated files 
+    # which james is fixing here https://github.com/jrising/prospectus-tools/issues/41
+    testit::assert(!is.null(ssp)) # due to memory constraints
     testit::assert(!is.null(rcp)) # rcp should only be null for values (possibly this might not hold when OTHERIND_total_energy gets integrated)
 
   } else if (uncertainty == 'climate') {
@@ -88,7 +93,7 @@ load.median <- function(yearlist = as.character(seq(1980,2100,1)),
 
   kwargs = list(...)
   testit::assert(uncertainty != 'single')
-  kwargs = rlist::list.append(kwargs, yearlist = yearlist, uncertainty = uncertainty, region = region, proj_mode=proj_mode)
+  kwargs = rlist::list.append(kwargs, yearlist = yearlist, uncertainty = uncertainty, region = region, regions = regions, proj_mode=proj_mode)
 
   print('Checking the parametres make sense...')
   do.call(load.median.check.params, kwargs)
