@@ -137,8 +137,13 @@ fi
 
 if [[ "${uncertainty}" == "full" ]]; then
 	uncertainty_tag=_fulluncertainty
-	region_restriction=--region=${region}
-	region_tag=${region}_
+	if [[ "${region}" != ""  ]]; then		
+		region_restriction=--region=${region}
+		region_tag=${region}_
+	else 
+		region_restriction=--regions=${regions}
+		region_tag=$multi_regions_
+	fi
 fi
 
 # netcdfs don't have a tag for fulladapt
