@@ -8,6 +8,21 @@ source(glue("{REPO}/mortality/utils/wrap_mapply.R"))
 
 # unit testing
 
+
+source(glue("{REPO}/energy-code-release-2020/4_misc/",
+    "outreach/press/energy_outreach_data.R"))
+
+d = ProcessImpacts(  
+  years="all",
+  impact_type="impacts_qty",
+  resolution="global", 
+  rcp="rcp85",
+  all_stats="mean",
+  fuel = "electricity",
+  export = TRUE)
+
+
+
 args=list(
   years="all",
   impact_type="impacts_gj",

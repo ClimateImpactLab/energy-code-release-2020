@@ -38,9 +38,12 @@ eval "$1" # fetch parameters from the command line
 ### 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
 ## / parameter:spec / options:OTHERIND_electricity, OTHERIND_other_energy, OTHERIND_total_energy / required:yes /
 ## / parameter:region / options:UNDEFINED / required:no /
+## / parameter:regions / options:UNDEFINED / required:no /
+## / parameter:regions_suffix / options:UNDEFINED / required:no /
 ### specify region if extracting full uncertainty or if extracting values for an aggregated region
 ## / parameter:uncertainty / options:full, climate, values / required:yes /
 ## / parameter:iam / options:high, low / required:no /
+## / parameter:ssp / options:SSP1, SSP2, SSP3, SSP4, SSP5 / required:no /
 ## / parameter:rcp / options:rcp85, rcp45 / required:no /
 ## / parameter:proj_mode / options:_dm / required:no /
 ### options really are '' and _dm but i'm not sure yet how to pass that into R through my funciton
@@ -142,7 +145,7 @@ if [[ "${uncertainty}" == "full" ]]; then
 		region_tag=${region}_
 	else 
 		region_restriction=--regions=${regions}
-		region_tag=$multi_regions_
+		region_tag=${regions_suffix}_
 	fi
 fi
 
@@ -169,6 +172,7 @@ if [[ ( "${ssp}" ) ]]; then
 	ssp_tag=_${ssp}
 	ssp_restriction=--only-ssp=${ssp}
 else
+	echo "empty ssp tag"
 	ssp_tag=''
 	ssp_restriction=''
 fi

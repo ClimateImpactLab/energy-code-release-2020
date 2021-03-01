@@ -40,20 +40,22 @@ library(haven)
 
 load.median.check.params <- function(proj_mode = '', dollar_convert=NULL,
   uncertainty = NULL, region = NULL, regions = NULL, rcp = NULL, iam = NULL, ssp = 'SSP3', spec = NULL, 
-  sector = 'energy', price_scen = NULL, ...) {
+  sector = 'energy', price_scen = NULL, geo_level,...) {
+
+  print(list(...))
 
   # both proj_mode are a part of the full uncertainty configs, thus the code and configs are set up such that
   testit::assert(!(proj_mode == '_dm' && uncertainty == 'full')) 
+  # testit::assert(xor(is.null(region),is.null(regions)))
 
-  if (uncertainty == 'values') {
-    
+  if (uncertainty == 'values') {    
     testit::assert(!is.null(region))
     testit::assert(is.null(rcp))
     testit::assert(is.null(iam))
 
   } else if (uncertainty == 'full') {
-    
-    testit::assert(!is.null(region)) | testit::assert(!is.null(regions)) | testit::assert(geo_level != "aggregated") 
+    print(list(...))
+    testit::assert((!is.null(region)) | (!is.null(regions))) | testit::assert(geo_level == "aggregated") 
     # we either extract a certain set of regions, or extract all regions from levels file only
     # because there's a bug with extracted all regions from the aggregated files 
     # which james is fixing here https://github.com/jrising/prospectus-tools/issues/41
@@ -89,7 +91,7 @@ load.median.check.params <- function(proj_mode = '', dollar_convert=NULL,
 #' 
 
 load.median <- function(yearlist = as.character(seq(1980,2100,1)), 
-  dollar_convert = NULL, uncertainty = NULL, region = NULL, proj_mode, ...) {
+  dollar_convert = NULL, uncertainty = NULL, region = NULL, regions = NULL, proj_mode, ...) {
 
   kwargs = list(...)
   testit::assert(uncertainty != 'single')
@@ -114,7 +116,7 @@ load.median <- function(yearlist = as.character(seq(1980,2100,1)),
   print(paste0("Loading file: ", paths$file))
   
   df <-readr::read_csv(paths$file) %>%
-    dplyr::filter(year %in% yearlist)
+    dplyr::filter(year %in% yearlist) 
 
   print('Adding data identifiers to data frame...')
   print(colnames(df))

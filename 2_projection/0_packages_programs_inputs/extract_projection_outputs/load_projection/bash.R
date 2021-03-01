@@ -1,4 +1,3 @@
-
 #' ---
 #' Purpose:  ${1: Functions for interfacing with shell scripts from R script}
 #' authors: ${2: Maya Norman and Tom Bearpark}
@@ -36,6 +35,7 @@ extract <- function(paths = list(), ...) {
     kwargs = list(...)
     kwargs = rlist::list.append(kwargs, shell.file = paths$shell_path, extract = 'true')
     parameters = do.call(get.bash.parameters, kwargs)
+    
     kwargs = rlist::list.append(kwargs, parameters = parameters)
     output.text = do.call(call.shell.script, kwargs)
     
