@@ -8,9 +8,8 @@ library(miceadds)
 library(haven)
 library(ncdf4)
 library(tidyr)
-cilpath.r:::cilpath()
 
-print("test2")
+cilpath.r:::cilpath()
 db = '/mnt/CIL_energy/'
 output = '/mnt/CIL_energy/code_release_data_pixel_interaction/'
 
@@ -27,116 +26,70 @@ miceadds::source.all(paste0(projection.packages,"load_projection/"))
 #' Wrapper that calls get_mortality_impacts with converted parameters.
 #' @param years what years to output ("averaged","all")
 #' @param ... other parameters as in the DB outreach paper
-
 #' @return Data table of processed impacts.
 ProcessImpacts = function(...){
 
     ParamList = do.call(ParamConvert,list(...))
 
-    print("1")
-
     invargs = ParamList[['invargs']]
-    # resolution = ParamList[['resolution']]
-    # engine = ParamList[['engine']]
 
-    # browser()
     # get a df with all impacts and all stats at that resolution
     df = wrap_mapply(
         impact_type = invargs$impact_type,
-        # geo_level = invargs$geo_level, 
         resolution = invargs$resolution,
-        # region = region_list, 
         fuel = invargs$fuel, 
         rcp = invargs$rcp, 
-        # stats  = invargs$stats,
         mc.cores=1,
         mc.silent=FALSE,
         FUN=get_energy_impacts
         ) 
-    gdp = return_region_gdp(invargs$resolution)    
 
-    # browser()
-    region_list = return_region_list(invargs$resolution)
-    # browser()
-
-    # get_region_stats(
-    #     df = df, 
-    #     gdp = gdp,
-    #     impact_type = invargs$impact_type,
-    #     resolution = invargs$resolution,
-    #     region = region_list,
-    #     years = invargs$years,
-    #     all_stats = invargs$all_stats,
-    #     fuel = invargs$fuel, 
-    #     rcp = invargs$rcp, 
-    #     all_stats = invargs$all_stats
-    #     ) 
-# 
-    # browser()
-    wrap_mapply(
+    df = select_and_transform(
         df = df, 
-        gdp = gdp,
         impact_type = invargs$impact_type,
         resolution = invargs$resolution,
-        region = region_list,
-        years = invargs$years,
-        # geo_level = geo_level, 
-        # resolution = resolution,
-        all_stats = invargs$all_stats,
-        fuel = invargs$fuel, 
-        rcp = invargs$rcp, 
-        mc.cores=1,
-        mc.silent=FALSE,
-        FUN=get_region_stats
+        stats = invargs$stats,
         ) 
+
+    reshape_and_save(
+        df = df, 
+        stats = invargs$stats, 
+        resolution = invargs$resolution, 
+        impact_type = invargs$impact_type, 
+        time_step = invargs$time_step,
+        fuel = invargs$fuel, 
+        rcp = invargs$rcp,
+        export = invargs$export)
+
 
 }
 
-# get_regions_string(c("CHN","JPN"))
-# ... = years, fuel, rcp
-get_region_stats = function(df, gdp, impact_type, resolution, region, all_stats, ...) {
+select_and_transform = function(df, impact_type, resolution, stats, ...) {
 
-    # browser()
-    # df_backup = df
-
-    if (region != "global") {
-    df = df %>% filter(region == !!region)
-    } 
-    for (stats in all_stats) {
-        df_stats = df %>% dplyr::select(year, region, !!stats) 
-        if (impact_type == "impacts_qty") {
-            reshape_and_save(df_stats, stats, resolution, "impacts_gj", ...)
-            gj_to_kwh <- function(x) (x * 0.0036) 
-            df_stats = df_stats %>% dplyr::mutate_at(vars(-c(year,region)), gj_to_kwh)
-            reshape_and_save(df_stats, stats, "impacts_kwh", ...)
-        } else if (impact_type == "impacts_pct_gdp") {
-            gdp = gdp %>% filter(region == !!region)
-
-            df_stats = left_join(df_stats, gdp, by = c("region", "year")) 
-            df_stats = df_stats %>% rename(stats = !!stats) %>%
-            dplyr::mutate(stats = stats * 1000000000 * 100 / gdp / 0.0036) 
-            df_stats = rename(df_stats, !!stats:= stats)
-            reshape_and_save(df_stats, stats, resolution, "impacts_pct_gdp", ...)
-        }
+    df_stats = do.call("rbind", df) %>% dplyr::select(year, region, !!stats) 
+    if (impact_type == "impacts_gj") {
+        return(df_stats)
+    } else if (impact_type == "impacts_kwh") {
+        gj_to_kwh <- function(x) (x * 0.0036) 
+        df_stats = df_stats %>% dplyr::mutate_at(vars(-c(year,region)), gj_to_kwh)
+        return(df_stats)        
+    } else if (impact_type == "impacts_pct_gdp") {
+        gdp = return_region_gdp(resolution)    
+        df_stats = left_join(df_stats, gdp, by = c("region", "year")) 
+        df_stats = df_stats %>% rename(stats = !!stats) %>%
+        dplyr::mutate(stats = stats * 1000000000 * 100 / gdp / 0.0036) 
+        df_stats = rename(df_stats, !!stats:= stats)
+        return(df_stats)
     }
 }
 
 
 
-reshape_and_save = function(df, stats, resolution, impact_type, ...) {
-        # browser()
-    more_args = list(...)
-    browser()
-    DT <- do.call("rbind", df_list) %>% dplyr::select(year, region, stats)
-    # DT <- df %>% dplyr::select(year, region, !!stats)
+reshape_and_save = function(df, stats, resolution, impact_type, time_step, rcp, fuel, export,...) {
 
-    rownames(DT) <- c()
-
-    print("2")
-
+    rownames(df) <- c()
     if(resolution=="states") 
-    DT = StatesNames(DT)
-    print("3")
+    df = StatesNames(df)
 
     years_list = list(
         all=NULL,
@@ -144,47 +97,39 @@ reshape_and_save = function(df, stats, resolution, impact_type, ...) {
             seq(2020,2039),
             seq(2040,2059),
             seq(2080,2099)))
-    print("4")
 
-    if (!is.null(years_list[[more_args$years]]))
-    DT = YearChunks(DT,years_list[[more_args$years]])
+    if (!is.null(years_list[[time_step]]))
+    df = YearChunks(df,years_list[[time_step]])
     else
-    setnames(DT, old='year', new='years')
-    print("5")
+    setnames(df, old='year', new='years')
 
-    # browser()
+    df = YearsReshape(df)
 
-    DT = YearsReshape(DT)
-
-    print("6")
-
-
-    if(identical(names(DT), c("region", as.character(seq(2020, 2099))))) 
+    if(identical(names(df), c("region", as.character(seq(2020, 2099))))) 
     setnames(
-        DT, 
+        df, 
         as.character(seq(2020,2099)), 
         glue("year_{as.character(seq(2020,2099))}"))
 
-    setnames(DT, "region", list(...)$resolution)
-    print("7")
+    setnames(df, "region", resolution)
 
     if(resolution=="global") 
-    DT[,resolution:="global"][]
+    df[,resolution:="global"][]
 
-    print("8")
+    if (export) {
+        fwrite(
+            df,
+            do.call(
+                Path, args = list(impact_type = impact_type, 
+                        resolution = resolution,
+                        rcp = rcp, 
+                        stats = stats, 
+                        fuel = fuel, 
+                        time_step=time_step)))
+    }
 
-    if (export)
-    fwrite(
-        DT,
-        do.call(
-            Path, c(more_args,
-                list(
-                    years=more_args$years,
-                    resolution=resolution))))
-
-    return(DT)
+    return(df)
 }
-
 
 
 get_geo_level = function(resolution) {
@@ -196,24 +141,23 @@ get_geo_level = function(resolution) {
         global="aggregated")
 
     return(geo_level_lookup[[resolution]])
-
 }
 
-
-
-# get_energy_impacts(impact_type = "impacts_qty",
-#  resolution = "global", fuel = "electricity", rcp = "rcp85")
 
 get_energy_impacts = function(impact_type, fuel, rcp, resolution,...) {
 
 
     # browser()
-    if (impact_type == "impacts_qty" ) {
+    if (impact_type == "impacts_gj" | impact_type == "impacts_kwh"  ) {
         price_scen = NULL
         unit = "impactpc"
         spec = paste0("OTHERIND_", fuel)
         dollar_convert = "no"
     } else if (impact_type == "impacts_pct_gdp") {
+        if (fuel != "total_energy") {
+            print("to get percentage gdp, fuel must be total energy!")
+            return()
+        }
         price_scen = "price014"
         unit = "damage"
         spec = "OTHERIND_total_energy"       
@@ -223,12 +167,13 @@ get_energy_impacts = function(impact_type, fuel, rcp, resolution,...) {
     }
 
     geo_level = get_geo_level(resolution)
-    region_list = return_region_list(resolution)
+    # browser()
         
-    if (geo_level == "aggregated" ){
-        regions = get_regions_string(region_list)
+    if (geo_level == "aggregated") {
+        regions = return_region_list(resolution)
+        # regions = get_regions_string(region_list)
     
-    df = load.median(conda_env = "risingverse-py27",
+        df = load.median(conda_env = "risingverse-py27",
                         proj_mode = '', # '' and _dm are the two options
                         # region = region, # needs to be specified for 
                         regions = regions,
@@ -266,6 +211,7 @@ get_energy_impacts = function(impact_type, fuel, rcp, resolution,...) {
                         grouping_test = "semi-parametric")
 
     }
+
     return(df)
     # %>%
     #     dplyr::filter(region %in% region_codes)
@@ -274,21 +220,16 @@ get_energy_impacts = function(impact_type, fuel, rcp, resolution,...) {
 }
 
 
-get_regions_string = function(regions_list) {
-    s = paste0("[", paste(unlist(regions_list), collapse=','), "]")
-    return(s)
-}
-
 
 
 #converts DB paper outreach requests into get_mortality_impacts parameters.
 ParamConvert = function(
-    years,
+    time_step,
     impact_type, 
     resolution, 
     rcp=NULL, 
     # ssp=NULL, 
-    all_stats=NULL,
+    stats=NULL,
     fuel = "electricity",
     export = TRUE,
     ...){
@@ -300,51 +241,50 @@ ParamConvert = function(
         impact_type = impact_type,
         rcp = rcp,
         fuel = fuel,
-        all_stats = all_stats,
+        stats = stats,
         resolution = resolution,
-        years = years,
+        time_step = time_step,
         export = export
         )
     return(list(invargs=invargs))
 }
 
 #reshapes the data to get region in rows and years in columns
-YearsReshape = function(DT){
+YearsReshape = function(df){
 
     # browser()
-    var = names(DT)[!(names(DT) %in% c('region', 'years'))]
-    setnames(DT,var,"value")
-    DT=reshape2:::dcast(DT,region + value ~ years, value.var='value')
-    setDT(DT)
-    DT[,value:=NULL]
+    var = names(df)[!(names(df) %in% c('region', 'years'))]
+    setnames(df,var,"value")
+    df=reshape2:::dcast(df,region + value ~ years, value.var='value')
+    setDT(df)
+    df[,value:=NULL]
     #super annoying trick
-    DT=DT[,lapply(.SD, function(x) mean(x,na.rm=TRUE)), by=region] 
-    return(DT)
+    df=df[,lapply(.SD, function(x) mean(x,na.rm=TRUE)), by=region] 
+    return(df)
 }
 
 #get two-decades means
-YearChunks = function(DT,intervals,...){
+YearChunks = function(df,intervals,...){
 
     # browser()
-    DT = as.data.table(DT)
-    DT[,years:=dplyr:::case_when(year %in% intervals[[1]] ~ 'years_2020_2039',
+    df = as.data.table(df)
+    df[,years:=dplyr:::case_when(year %in% intervals[[1]] ~ 'years_2020_2039',
         year %in% intervals[[2]] ~ 'years_2040_2059',
         year %in% intervals[[3]] ~ 'years_2080_2099')][,year:=NULL]
 
-    # bk = DT
-    DT=DT[!is.na(years)]
+    # bk = df
+    df=df[!is.na(years)]
 
-    DT=DT[,lapply(.SD, mean), by=.(region,years)]
+    df=df[,lapply(.SD, mean), by=.(region,years)]
 
-    return(DT)
+    return(df)
 }
 
 
 #directories and files names
-Path = function(impact_type, resolution, rcp, stats, fuel, years, suffix='', ...){
-    base = ""
+Path = function(impact_type, resolution, rcp, stats, fuel, time_step, suffix='', ...){
     dir = glue("/mnt/CIL_energy/impacts_outreach/")
-    file = glue("unit_{impact_type}_geography_{resolution}_years_{years}_{rcp}{suffix}.csv")
+    file = glue("{fuel}_{impact_type}_geography_{resolution}_years_{time_step}_SSP3_low_{rcp}_{stats}{suffix}.csv")
 
     print(glue('{dir}/{file}'))
     dir.create(dir, recursive = TRUE, showWarnings = FALSE)
@@ -364,7 +304,7 @@ memo.csv = addMemoization(read.csv)
 
 #add US states name to states ID
 StatesNames = function(df){
-    DT=setkey(as.data.table(df),region)
+    df=setkey(as.data.table(df),region)
 
     # index the hierarchy.csv file
     check = setkey(as.data.table(setnames(
@@ -372,8 +312,8 @@ StatesNames = function(df){
         "region.key", "region"))[,.(region, name)],region)
 
     # replace region ID with region names 
-    DT=check[DT][,region:=name][,name:=NULL][]
-    return(DT)
+    df=check[df][,region:=name][,name:=NULL][]
+    return(df)
 }
 
 

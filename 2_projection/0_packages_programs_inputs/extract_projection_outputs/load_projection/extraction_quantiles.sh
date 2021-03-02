@@ -117,11 +117,11 @@ if [[ "${spec}" == "OTHERIND_total_energy" && "{$uncertainty}" == "full" ]]; the
     if [[ -z ${rcp} ]]; then
             echo "Aborting because rcp must be restricted if extracting total_energy due to memory constraints."
             exit 1
-    fi
-    
-    rcp_restriction=--rcp=${rcp}
-
+    fi    
  fi
+
+
+
 
 
 ############################################################################################################
@@ -140,12 +140,15 @@ fi
 
 if [[ "${uncertainty}" == "full" ]]; then
 	uncertainty_tag=_fulluncertainty
-	if [[ "${region}" != ""  ]]; then		
+	if [[ ( ${region} ) ]]; then		
 		region_restriction=--region=${region}
 		region_tag=${region}_
-	else 
+	elif [[ ( ${regions} ) ]]; then	
 		region_restriction=--regions=${regions}
 		region_tag=${regions_suffix}_
+	else 
+		region_restriction=""
+		region_tag=""
 	fi
 fi
 
@@ -166,6 +169,16 @@ else
 	iam_tag=''
 	iam_restriction=''
 fi
+
+
+if [[ ( "${rcp}" ) ]]; then
+	rcp_tag=_${rcp}
+	rcp_restriction=--only-rcp=${rcp}
+else
+	rcp_tag=''
+	rcp_restriction=''
+fi
+
 
 # restrict to one SSP if desired
 if [[ ( "${ssp}" ) ]]; then
@@ -238,9 +251,9 @@ if [[ "${spec}" != "OTHERIND_total_energy" ]]; then
         input_file_histclim=${input_file}
 
 	if [[ "${adapt_scen}" == "noadapt" ]]; then
-	    command=$(echo "nohup python -u quantiles.py ${ecp} ${iam_restriction} ${ssp_restriction} ${region_restriction} --suffix=${suffix} ${input_file_adapt} >> ${log_file} 2>&1 &")
+	    command=$(echo "nohup python -u quantiles.py ${ecp} ${iam_restriction}  ${rcp_restriction}  ${ssp_restriction} ${region_restriction} --suffix=${suffix} ${input_file_adapt} >> ${log_file} 2>&1 &")
 	else
-	    command=$(echo "nohup python -u quantiles.py ${ecp} ${iam_restriction} ${ssp_restriction} ${region_restriction} --suffix=${suffix} ${input_file_adapt} -${input_file_histclim} >> ${log_file} 2>&1 &")
+	    command=$(echo "nohup python -u quantiles.py ${ecp} ${iam_restriction}  ${rcp_restriction}  ${ssp_restriction} ${region_restriction} --suffix=${suffix} ${input_file_adapt} -${input_file_histclim} >> ${log_file} 2>&1 &")
 	fi
 else
         echo "extracting total_energy"

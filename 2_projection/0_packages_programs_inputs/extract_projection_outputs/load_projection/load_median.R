@@ -46,16 +46,14 @@ load.median.check.params <- function(proj_mode = '', dollar_convert=NULL,
 
   # both proj_mode are a part of the full uncertainty configs, thus the code and configs are set up such that
   testit::assert(!(proj_mode == '_dm' && uncertainty == 'full')) 
-  # testit::assert(xor(is.null(region),is.null(regions)))
-
+  
   if (uncertainty == 'values') {    
     testit::assert(!is.null(region))
     testit::assert(is.null(rcp))
     testit::assert(is.null(iam))
 
   } else if (uncertainty == 'full') {
-    print(list(...))
-    testit::assert((!is.null(region)) | (!is.null(regions))) | testit::assert(geo_level == "aggregated") 
+    testit::assert(!(is.null(region) && is.null(regions) && geo_level == "aggregated")) 
     # we either extract a certain set of regions, or extract all regions from levels file only
     # because there's a bug with extracted all regions from the aggregated files 
     # which james is fixing here https://github.com/jrising/prospectus-tools/issues/41
@@ -90,12 +88,24 @@ load.median.check.params <- function(proj_mode = '', dollar_convert=NULL,
 #' @export
 #' 
 
+get_regions_string = function(regions) {
+    s = paste0("[", paste(regions, collapse=','), "]")
+    return(s)
+}
+
 load.median <- function(yearlist = as.character(seq(1980,2100,1)), 
   dollar_convert = NULL, uncertainty = NULL, region = NULL, regions = NULL, proj_mode, ...) {
 
   kwargs = list(...)
+  if (!is.null(regions)) {
+    regions = get_regions_string(regions)
+  }
   testit::assert(uncertainty != 'single')
   kwargs = rlist::list.append(kwargs, yearlist = yearlist, uncertainty = uncertainty, region = region, regions = regions, proj_mode=proj_mode)
+
+  # convert the list to a string so that it can be passed to the shell script
+  # browser()
+  
 
   print('Checking the parametres make sense...')
   do.call(load.median.check.params, kwargs)
@@ -116,7 +126,8 @@ load.median <- function(yearlist = as.character(seq(1980,2100,1)),
   print(paste0("Loading file: ", paths$file))
   
   df <-readr::read_csv(paths$file) %>%
-    dplyr::filter(year %in% yearlist) 
+    dplyr::filter(year %in% yearlist)
+
 
   print('Adding data identifiers to data frame...')
   print(colnames(df))
@@ -134,12 +145,17 @@ load.median <- function(yearlist = as.character(seq(1980,2100,1)),
     df$proj_mode <- NULL
   }
 
-  if ('region' %in% colnames(df) & !is.null(region)) { 
-    print('Filtering data frame to region queried...')
-    df$region[is.na(df$region)] <- ""
-    rgn = ifelse(region == "global", "", region)
-    df = df %>% dplyr::filter(region == rgn)
-  }
+  # if ('region' %in% colnames(df) & !is.null(region)) { 
+  #   print('Filtering data frame to region queried...')
+  #   df$region[is.na(df$region)] <- ""
+  #   rgn = ifelse(region == "global", "", region)
+  #   df = df %>% dplyr::filter(region == rgn)
+  # }
+
+  # if (!is.null(regions_list) & (! ("global" %in% regions_list)) { 
+  #   print('Filtering data frame to regions queried...')
+  #   df = df %>% dplyr::filter(region %in% regions_list)
+  # }
 
   if (!is.null(dollar_convert)) { 
     # testit::assert(!is.null(price_scen))

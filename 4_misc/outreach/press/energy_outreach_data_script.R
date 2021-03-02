@@ -5,53 +5,94 @@ cilpath.r:::cilpath()
 
 source(glue("{REPO}/mortality/utils/wrap_mapply.R"))
 
-
-# unit testing
-
-
 source(glue("{REPO}/energy-code-release-2020/4_misc/",
     "outreach/press/energy_outreach_data.R"))
 
-d = ProcessImpacts(  
-  years="all",
-  impact_type="impacts_qty",
-  resolution="global", 
-  rcp="rcp85",
-  all_stats="mean",
-  fuel = "electricity",
-  export = TRUE)
 
-
-
-args=list(
-  years="all",
+# extract files
+out = wrap_mapply(  
+  time_step="all",
   impact_type="impacts_gj",
-  resolution="all_IRs",
-  rcp="rcp85",
+  resolution=c("all_IRs", "iso","states","global"), 
+  rcp=c("rcp45", "rcp85"),
   stats="mean",
+  fuel = c("electricity", "other_energy"),
+  export = TRUE,
+  FUN=ProcessImpacts,
+  mc.cores=16,
+  mc.silent=FALSE
+)
+
+
+out = wrap_mapply(  
+  time_step="all",
+  impact_type="impacts_pct_gdp",
+  resolution=c("all_IRs", "iso","states","global"), 
+  rcp=c("rcp45", "rcp85"),
+  stats="mean",
+  fuel = c("electricity", "other_energy"),
+  export = TRUE,
+  FUN=ProcessImpacts,
+  mc.cores=16,
+  mc.silent=FALSE
+)
+
+
+# extract files
+out = wrap_mapply(  
+  time_step="all",
+  impact_type="impacts_gj",
+  resolution=c("states", "iso", "global", "all_IRs"), 
+  rcp=c("rcp45", "rcp85"),
+  stats="mean",
+  fuel = c("electricity", "other_energy"),
+  export = TRUE,
+  FUN=ProcessImpacts,
+  mc.cores=8,
+  mc.silent=FALSE
+)
+
+
+# impacts in quantity
+out = wrap_mapply(  
+  time_step=c("all", "averaged"),
+  impact_type=c("impacts_gj", "impacts_kwh"),
+  resolution="states", 
+  rcp=c("rcp45", "rcp85"),
+  stats=c("mean","q50"),
   fuel = "electricity",
-  export = TRUE
-  )
+  export = TRUE,
+  FUN=ProcessImpacts,
+  mc.cores=8,
+  mc.silent=FALSE
+)
 
-source(glue("{REPO}/energy-code-release-2020/4_misc/",
-    "outreach/press/energy_outreach_data.R"))
 
-test=do.call(ProcessImpacts,args)
-head(test)
+# impacts in pct gdp
+out = wrap_mapply(  
+  time_step=c("all", "averaged"),
+  impact_type="impacts_pct_gdp",
+  resolution="states", 
+  rcp=c("rcp45", "rcp85"),
+  stats=c("mean","q50"),
+  fuel = "total_energy",
+  export = TRUE,
+  FUN=ProcessImpacts,
+  mc.cores=1,
+  mc.silent=FALSE
+)
 
-# Death rates
+# impacts in pct gdp
+out = wrap_mapply(  
+  time_step=c("all", "averaged"),
+  impact_type="impacts_pct_gdp",
+  resolution="states", 
+  rcp=c("rcp45", "rcp85"),
+  stats=c("mean","q50"),
+  fuel = "total_energy",
+  export = TRUE,
+  FUN=ProcessImpacts,
+  mc.cores=1,
+  mc.silent=FALSE
+)
 
-# ISO-level
-
-out = wrap_mapply(
-    unit=c("mortality_risk","change_in_deathrate"),
-    rcp=c("rcp45","rcp85"),
-    years=c("all", "averaged"),
-    qtile=c("mean","q5","q17","q83","q95","q50"),
-    mc.cores=32,
-    mc.silent=FALSE,
-    export=TRUE,
-    FUN=ProcessImpacts,
-    MoreArgs=list(
-        geography="ISO_code",
-        ssp="SSP3"))
