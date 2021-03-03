@@ -124,6 +124,7 @@ load.median <- function(yearlist = as.character(seq(1980,2100,1)),
 
   # Let's load the file!
   print(paste0("Loading file: ", paths$file))
+  browser()
   
   df <-readr::read_csv(paths$file) %>%
     dplyr::filter(year %in% yearlist)
