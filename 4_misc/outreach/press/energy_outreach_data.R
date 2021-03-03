@@ -9,6 +9,7 @@ library(haven)
 library(ncdf4)
 library(tidyr)
 
+print("test6")
 cilpath.r:::cilpath()
 db = '/mnt/CIL_energy/'
 output = '/mnt/CIL_energy/code_release_data_pixel_interaction/'
@@ -27,18 +28,25 @@ miceadds::source.all(paste0(projection.packages,"load_projection/"))
 #' @param years what years to output ("averaged","all")
 #' @param ... other parameters as in the DB outreach paper
 #' @return Data table of processed impacts.
-ProcessImpacts = function(...){
-
-    ParamList = do.call(ParamConvert,list(...))
-
-    invargs = ParamList[['invargs']]
+ProcessImpacts = function(
+    time_step,
+    impact_type, 
+    resolution, 
+    rcp=NULL, 
+    # ssp=NULL, 
+    stats=NULL,
+    fuel = NULL,
+    export = TRUE,
+    regenerate = FALSE,
+    ...){
 
     # get a df with all impacts and all stats at that resolution
     df = wrap_mapply(
-        impact_type = invargs$impact_type,
-        resolution = invargs$resolution,
-        fuel = invargs$fuel, 
-        rcp = invargs$rcp, 
+        impact_type = impact_type,
+        resolution = resolution,
+        fuel = fuel, 
+        rcp = rcp, 
+        regenerate = regenerate,
         mc.cores=1,
         mc.silent=FALSE,
         FUN=get_energy_impacts
@@ -46,20 +54,20 @@ ProcessImpacts = function(...){
 
     df = select_and_transform(
         df = df, 
-        impact_type = invargs$impact_type,
-        resolution = invargs$resolution,
-        stats = invargs$stats,
+        impact_type = impact_type,
+        resolution = resolution,
+        stats = stats,
         ) 
 
     reshape_and_save(
         df = df, 
-        stats = invargs$stats, 
-        resolution = invargs$resolution, 
-        impact_type = invargs$impact_type, 
-        time_step = invargs$time_step,
-        fuel = invargs$fuel, 
-        rcp = invargs$rcp,
-        export = invargs$export)
+        stats = stats, 
+        resolution = resolution, 
+        impact_type = impact_type, 
+        time_step = time_step,
+        fuel = fuel, 
+        rcp = rcp,
+        export = export)
 
 
 }
@@ -77,7 +85,8 @@ select_and_transform = function(df, impact_type, resolution, stats, ...) {
         gdp = return_region_gdp(resolution)    
         df_stats = left_join(df_stats, gdp, by = c("region", "year")) 
         df_stats = df_stats %>% rename(stats = !!stats) %>%
-        dplyr::mutate(stats = stats * 1000000000 * 100 / gdp / 0.0036) 
+        dplyr::mutate(stats = stats * 1000000000 * 100 / gdp / 0.0036) %>%
+        dplyr::select(-gdp)
         df_stats = rename(df_stats, !!stats:= stats)
         return(df_stats)
     }
@@ -144,7 +153,7 @@ get_geo_level = function(resolution) {
 }
 
 
-get_energy_impacts = function(impact_type, fuel, rcp, resolution,...) {
+get_energy_impacts = function(impact_type, fuel, rcp, resolution, regenerate,...) {
 
 
     # browser()
@@ -191,7 +200,8 @@ get_energy_impacts = function(impact_type, fuel, rcp, resolution,...) {
                         yearlist = seq(2020, 2099),  
                         spec = spec,
                         dollar_convert = dollar_convert,
-                        grouping_test = "semi-parametric")
+                        grouping_test = "semi-parametric",
+                        regenerate = regenerate)
     } else {
             df = load.median(conda_env = "risingverse-py27",
                         proj_mode = '', # '' and _dm are the two options
@@ -208,7 +218,8 @@ get_energy_impacts = function(impact_type, fuel, rcp, resolution,...) {
                         yearlist = seq(2020, 2099),  
                         spec = spec,
                         dollar_convert = dollar_convert,
-                        grouping_test = "semi-parametric")
+                        grouping_test = "semi-parametric",
+                        regenerate = regenerate)
 
     }
 
@@ -219,35 +230,6 @@ get_energy_impacts = function(impact_type, fuel, rcp, resolution,...) {
 
 }
 
-
-
-
-#converts DB paper outreach requests into get_mortality_impacts parameters.
-ParamConvert = function(
-    time_step,
-    impact_type, 
-    resolution, 
-    rcp=NULL, 
-    # ssp=NULL, 
-    stats=NULL,
-    fuel = "electricity",
-    export = TRUE,
-    ...){
-
-    more_args = list(...)
-    # engine = get_energy_impacts
-    stopifnot(!is.null(fuel), !is.null(rcp))
-    invargs = list(
-        impact_type = impact_type,
-        rcp = rcp,
-        fuel = fuel,
-        stats = stats,
-        resolution = resolution,
-        time_step = time_step,
-        export = export
-        )
-    return(list(invargs=invargs))
-}
 
 #reshapes the data to get region in rows and years in columns
 YearsReshape = function(df){
