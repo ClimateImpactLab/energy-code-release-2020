@@ -40,6 +40,7 @@ take_draws = function(price, ssp, fuel, num_iterations,
   df = read_csv(paste0(directory, "impact_values/",
           "gcm_", type, "_OTHERIND_",fuel ,price_tag, "_",ssp, ".csv"))
   
+  browser()
   
   # Take draws
   l = length(df$mean)
