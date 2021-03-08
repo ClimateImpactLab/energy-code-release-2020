@@ -9,90 +9,205 @@ source(glue("{REPO}/energy-code-release-2020/4_misc/",
     "outreach/press/energy_outreach_data.R"))
 
 
-# extract files
+
+# extract files - levels quantity - other_energy 
 out = wrap_mapply(  
   time_step="all",
   impact_type="impacts_gj",
-  resolution=c("all_IRs", "iso","states","global"), 
-  rcp=c("rcp45", "rcp85"),
+  resolution=c("all_IRs"), 
+  rcp=c("rcp85"),
   stats="mean",
-  fuel = c("electricity", "other_energy"),
+  fuel = c("other_energy"),
   export = TRUE,
+  regenerate = FALSE,
   FUN=ProcessImpacts,
-  mc.cores=16,
+  mc.cores=1,
   mc.silent=FALSE
 )
+# only extracted until 1982
+df = read_csv("/shares/gcp/social/parameters/energy_pixel_interaction/extraction/multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/TINV_clim_GMFD/median_OTHERIND_other_energy_TINV_clim_GMFD/SSP3-rcp85_impactpc_median_fulluncertainty_low_SSP3_rcp85_fulladapt.csv")
 
+# extract files - levels dollar - error 
+
+# [1] "Loading file: /shares/gcp/social/parameters/energy_pixel_interaction/extraction/multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/TINV_clim_GMFD/total_energy/SSP3-rcp85_damage-price014_median_fulluncertainty_low_SSP3_rcp85_fulladapt-levels.csv"
+# Error: Problem with `filter()` input `..1`.
+# ✖ 'match' requires vector arguments
+# ℹ Input `..1` is `year %in% yearlist`.
+
+df = read_csv("/shares/gcp/social/parameters/energy_pixel_interaction/extraction/multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/TINV_clim_GMFD/total_energy/SSP3-rcp85_damage-price014_median_fulluncertainty_low_SSP3_rcp85_fulladapt-levels.csv")
 
 out = wrap_mapply(  
   time_step="all",
   impact_type="impacts_pct_gdp",
-  resolution=c("all_IRs", "iso","states","global"), 
-  rcp=c("rcp45", "rcp85"),
+  resolution=c("all_IRs"), 
+  rcp=c("rcp85"),
   stats="mean",
-  fuel = c("electricity", "other_energy"),
+  fuel = c("total_energy"),
   export = TRUE,
+  regenerate = FALSE,
   FUN=ProcessImpacts,
-  mc.cores=16,
+  mc.cores=1,
   mc.silent=FALSE
 )
 
 
-# extract files
-out = wrap_mapply(  
-  time_step="all",
-  impact_type="impacts_gj",
-  resolution=c("states", "iso", "global", "all_IRs"), 
-  rcp=c("rcp45", "rcp85"),
-  stats="mean",
-  fuel = c("electricity", "other_energy"),
-  export = TRUE,
-  FUN=ProcessImpacts,
-  mc.cores=8,
-  mc.silent=FALSE
-)
+
+# ***************extract files****************
+
+# # extract files - levels quantity - electricity -  done
+# out = wrap_mapply(  
+#   time_step="all",
+#   impact_type="impacts_gj",
+#   resolution=c("all_IRs"), 
+#   rcp=c("rcp45", "rcp85"),
+#   stats="mean",
+#   fuel = c("electricity"),
+#   export = TRUE,
+#   regenerate = TRUE,
+#   FUN=ProcessImpacts,
+#   mc.cores=1,
+#   mc.silent=FALSE
+# )
 
 
-# impacts in quantity
+# # extract files - levels quantity - other_energy rcp45 -  done
+# out = wrap_mapply(  
+#   time_step="all",
+#   impact_type="impacts_gj",
+#   resolution=c("all_IRs"), 
+#   rcp=c("rcp45"),
+#   stats="mean",
+#   fuel = c("other_energy"),
+#   export = TRUE,
+#   regenerate = TRUE,
+#   FUN=ProcessImpacts,
+#   mc.cores=1,
+#   mc.silent=FALSE
+# )
+
+
+# # extract files - levels quantity - gdp rcp45 -  done
+# out = wrap_mapply(  
+#   time_step="all",
+#   impact_type="impacts_pct_gdp",
+#   resolution=c("all_IRs"), 
+#   rcp=c("rcp45"),
+#   stats="mean",
+#   fuel = c("total_energy"),
+#   export = TRUE,
+#   regenerate = TRUE,
+#   FUN=ProcessImpacts,
+#   mc.cores=1,
+#   mc.silent=FALSE
+# )
+
+
+# # extract files - aggregated quantity - done
+# out = wrap_mapply(  
+#   time_step="all",
+#   impact_type="impacts_gj",
+#   resolution=c("states","global","iso"), 
+#   rcp=c("rcp45", "rcp85"),
+#   stats="mean",
+#   fuel = c("electricity", "other_energy"),
+#   export = TRUE,
+#   FUN=ProcessImpacts,
+#   mc.cores=1,
+#   mc.silent=FALSE
+# )
+
+# # extract files - aggregated dollar - done
+# out = wrap_mapply(  
+#   time_step="all",
+#   impact_type="impacts_pct_gdp",
+#   resolution=c("global", "states", "iso"), 
+#   rcp=c("rcp45", "rcp85"),
+#   stats="mean",
+#   fuel = c("total_energy"),
+#   export = TRUE,
+#   FUN=ProcessImpacts,
+#   mc.cores=1,
+#   mc.silent=FALSE
+# )
+
+
+
+# generate all aggregated file stats
 out = wrap_mapply(  
   time_step=c("all", "averaged"),
   impact_type=c("impacts_gj", "impacts_kwh"),
-  resolution="states", 
+  resolution=c("states","global","iso"), 
   rcp=c("rcp45", "rcp85"),
-  stats=c("mean","q50"),
-  fuel = "electricity",
+  stats=c("mean", "q5", "q17", "q50", "q83", "q95"),
+  fuel = c("electricity", "other_energy"),
+  regenerate = FALSE,
   export = TRUE,
   FUN=ProcessImpacts,
-  mc.cores=8,
+  mc.cores=32,
   mc.silent=FALSE
 )
 
 
-# impacts in pct gdp
+# aggregated files impacts in pct gdp
 out = wrap_mapply(  
   time_step=c("all", "averaged"),
   impact_type="impacts_pct_gdp",
-  resolution="states", 
+  resolution=c("states","global","iso"), 
   rcp=c("rcp45", "rcp85"),
-  stats=c("mean","q50"),
+  stats=c("mean", "q5", "q17", "q50", "q83", "q95"),
   fuel = "total_energy",
+  regenerate = FALSE,
   export = TRUE,
   FUN=ProcessImpacts,
-  mc.cores=1,
+  mc.cores=32,
   mc.silent=FALSE
 )
 
-# impacts in pct gdp
+
+# IR level electricity 
+out = wrap_mapply(  
+  time_step=c("all", "averaged"),
+  impact_type=c("impacts_gj", "impacts_kwh"),
+  resolution=c("all_IRs"), 
+  rcp=c("rcp45", "rcp85"),
+  stats=c("mean", "q5", "q17", "q50", "q83", "q95"),
+  fuel = c("electricity"),
+  regenerate = FALSE,
+  export = TRUE,
+  FUN=ProcessImpacts,
+  mc.cores=16,
+  mc.silent=FALSE
+)
+
+
+# IR level other energy - rcp45
+out = wrap_mapply(  
+  time_step=c("all", "averaged"),
+  impact_type="impacts_gj",
+  resolution=c("all_IRs"), 
+  rcp=c("rcp45"),
+  stats=c("mean", "q5", "q17", "q50", "q83", "q95"),
+  fuel = c("other_energy"),
+  export = TRUE,
+  regenerate = FALSE,
+  FUN=ProcessImpacts,
+  mc.cores=16,
+  mc.silent=FALSE
+)
+
+# IR level impacts in pct gdp - rcp45
 out = wrap_mapply(  
   time_step=c("all", "averaged"),
   impact_type="impacts_pct_gdp",
-  resolution="states", 
-  rcp=c("rcp45", "rcp85"),
-  stats=c("mean","q50"),
+  resolution=c("all_IRs"), 
+  rcp=c("rcp45"),
+  stats=c("mean", "q5", "q17", "q50", "q83", "q95"),
   fuel = "total_energy",
+  regenerate = FALSE,
   export = TRUE,
   FUN=ProcessImpacts,
-  mc.cores=1,
+  mc.cores=16,
   mc.silent=FALSE
 )
+
 

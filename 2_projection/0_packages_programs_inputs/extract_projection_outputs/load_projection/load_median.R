@@ -40,7 +40,7 @@ library(haven)
 
 load.median.check.params <- function(proj_mode = '', dollar_convert=NULL,
   uncertainty = NULL, region = NULL, regions = NULL, rcp = NULL, iam = NULL, ssp = 'SSP3', spec = NULL, 
-  sector = 'energy', price_scen = NULL, geo_level,...) {
+  sector = 'energy', price_scen = NULL, geo_level, ...) {
 
   print(list(...))
 
@@ -94,7 +94,7 @@ get_regions_string = function(regions) {
 }
 
 load.median <- function(yearlist = as.character(seq(1980,2100,1)), 
-  dollar_convert = NULL, uncertainty = NULL, region = NULL, regions = NULL, proj_mode, ...) {
+  dollar_convert = NULL, uncertainty = NULL, region = NULL, regions = NULL, proj_mode, regenerate = FALSE, ...) {
 
   kwargs = list(...)
   if (!is.null(regions)) {
@@ -116,19 +116,24 @@ load.median <- function(yearlist = as.character(seq(1980,2100,1)),
   # If the file we want doesn't exit - produce it using quantiles.py on the relevant netcdf! 
   # note: please feel free to revise check.memory() function if it is currently too cautious
 
+
+  if (file.exists(paths$file) && regenerate) {
+    #Delete file if it exists
+    file.remove(paths$file)
+  }
+
   if (!file.exists(paths$file)) {
-    print('File does not already exist, so we are extracting...')
+    print('File does not already exist or we would like to regenerate, so we are extracting...')
     kwargs = rlist::list.append(kwargs, paths = paths)
     do.call(extract, kwargs)
   }  
 
   # Let's load the file!
   print(paste0("Loading file: ", paths$file))
-  browser()
+  # browser()
   
-  df <-readr::read_csv(paths$file) %>%
-    dplyr::filter(year %in% yearlist)
-
+  df <-readr::read_csv(paths$file) %>% dplyr::filter(year %in% yearlist)
+  # browser()
 
   browser()
   print('Adding data identifiers to data frame...')
@@ -164,6 +169,7 @@ load.median <- function(yearlist = as.character(seq(1980,2100,1)),
     print(paste0('converting to 2019 USD'))
     df <- convert.to.2019(df=df, proj_mode = proj_mode)
   }
+  print("done load_median")
   
   return(df)
 }
