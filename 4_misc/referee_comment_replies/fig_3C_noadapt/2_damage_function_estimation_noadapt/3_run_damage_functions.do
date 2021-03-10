@@ -47,7 +47,7 @@ if("`model'" == "main") {
 	loc model_tag = ""
 
 	if ("`ssp'" == "SSP3") {
-		loc pricelist price014 price0 price03 WITCHGLOBIOM42 MERGEETL60 REMINDMAgPIE1730 REMIND17CEMICS REMIND17
+		loc pricelist price014 
 	}
 	else {
 		loc pricelist price014 
