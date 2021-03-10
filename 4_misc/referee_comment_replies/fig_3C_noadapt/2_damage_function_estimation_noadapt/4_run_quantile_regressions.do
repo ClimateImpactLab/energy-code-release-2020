@@ -41,7 +41,7 @@ if("`model'" == "main") {
 
 * list of the scenarios we want to run a damage function for 
 if("`ssp'" == "SSP3") {
-	loc pricelist price014 price0 price03 WITCHGLOBIOM42 MERGEETL60 REMINDMAgPIE1730 REMIND17CEMICS REMIND17
+	loc pricelist price014
 }
 
 * Get a list of the quantiles we want to run the quantile regression for 
