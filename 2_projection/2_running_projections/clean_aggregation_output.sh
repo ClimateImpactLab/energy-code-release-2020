@@ -6,7 +6,7 @@
 energy="other_energy"
 # energy="electricity"
 output_root="/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost"
-output_dir="median_OTHERIND_${energy}_TINV_clim_GMFD" 
+output_dir="median_OTHERIND_${energy}_TINV_clim_GMFD_dm" 
 
 # the size of files above which we consider complete
 # look at the completed output files to determine this size
@@ -23,7 +23,7 @@ cd "${output_root}/${output_dir}"
 # choose to delete or print. recommended: print once first,
 # if everything looks ok, then delete
 # action=delete
-action=print
+action=delete
 
 # if the projection is still running, set to the second
 # so that the folders that are currently working on will not be affected

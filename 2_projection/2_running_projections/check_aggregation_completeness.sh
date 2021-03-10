@@ -3,10 +3,10 @@
 # can be run from anywhere, just set the correct paths
 
 # set some paths and parameters
-# energy_type="electricity"
-energy_type="other_energy"
-# dm=""
-dm="_dm"
+energy_type="electricity"
+# energy_type="other_energy"
+dm=""
+# dm="_dm"
 # aggregation_scenario=""
 # aggregation_scenario="-MERGEETL60_rcp45"
 # aggregation_scenario="-MERGEETL60_rcp85"
@@ -82,9 +82,9 @@ do
 done
 
 # uncomment to look for files with HDF error
-# printf "\nFiles with HDF errors:"
-# HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
-# echo "${HDF_errors}"
+printf "\nFiles with HDF errors:"
+HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
+echo "${HDF_errors}"
 # missing_file="FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-histclim-price014-levels.nc4"
 # if needed, modify the following command to find folders that doesn't contain a certain file
 # find . -type d -mindepth 4  '!' -exec test -e "{}/${missing_file}.nc4" ';' -print
