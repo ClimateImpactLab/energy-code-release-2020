@@ -38,9 +38,8 @@ take_draws = function(price, ssp, fuel, num_iterations,
   
   # Read in the gcm level means and standard deviations
   df = read_csv(paste0(directory, "impact_values/",
-          "gcm_", type, "_OTHERIND_",fuel ,price_tag, "_",ssp, ".csv"))
-  
-  
+          "gcm_", type, "_OTHERIND_",fuel ,price_tag, "_",ssp, "_noadapt.csv"))
+    
   # Take draws
   l = length(df$mean)
   for(i in 1:num_iterations) {
@@ -60,7 +59,7 @@ take_draws = function(price, ssp, fuel, num_iterations,
 
   write_csv(df, paste0(directory, "resampled_data/",
                        "gcm_", type, "_OTHERIND_",fuel,
-                       price_tag, "_",ssp,"-", num_iterations, "-draws.csv"))
+                       price_tag, "_",ssp,"-", num_iterations, "-draws_noadapt.csv"))
 
   return(df)
     
@@ -77,16 +76,5 @@ df_oe = take_draws(price = NULL, ssp = "SSP3",
 
 df_elec = take_draws(price = NULL, ssp = "SSP3", 
                 fuel = "electricity", num_iterations = 15, directory = dir)
-
-
-
-####################
-# 2. Take 100 draws from all price scenarios, for use in quantile regressions
-pricelist = c("price014", "price0", "price03", "WITCHGLOBIOM42", 
-              "MERGEETL60", "REMINDMAgPIE1730", "REMIND17CEMICS", "REMIND17") 
-
-lapply(pricelist, FUN = take_draws, 
-       ssp = "SSP3", fuel = "total_energy", num_iterations = 100, directory = dir)
-
 
 

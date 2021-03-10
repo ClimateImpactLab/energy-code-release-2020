@@ -50,7 +50,7 @@ pop_df = read_csv(paste0(data_dir,'/projection_system_outputs/covariates/' ,
 
 # 2.2 Extract and load values csvs
 get_values_csv = function(price, fuel, years = NULL, pop_df= NULL, ssp = "SSP3", save = TRUE, 
-	include_variance = TRUE, model = "TINV_clim") {
+	include_variance = TRUE, model = "TINV_clim", regenerate = FALSE) {
 	
 	# Function loads in mean and variances for a given price scenario
 	# Deals with three cases: 
@@ -91,7 +91,8 @@ get_values_csv = function(price, fuel, years = NULL, pop_df= NULL, ssp = "SSP3",
             yearlist = as.character(seq(2010,2099,1)),  
             dollar_convert = "yes",
             spec = paste(fuel),
-            grouping_test = "semi-parametric")
+            grouping_test = "semi-parametric",
+            regenerate = regenerate)
 
     if(is.null(price)) {
 
@@ -196,12 +197,12 @@ get_values_csv = function(price, fuel, years = NULL, pop_df= NULL, ssp = "SSP3",
 
 ####################################
 # Stuff needed for figure 3C...
-df_elec = get_values_csv(price = NULL, fuel = "OTHERIND_electricity", pop_df = pop_df, save = TRUE) 
+df_elec = get_values_csv(price = NULL, fuel = "OTHERIND_electricity", pop_df = pop_df, save = TRUE, regenerate = TRUE) 
 
 df_oe = get_values_csv(price = NULL, fuel = "OTHERIND_other_energy", pop_df = pop_df, save = TRUE) 
 
 # Save values csvs needed for damage functions generally (starting with the price014 needed for )
-df = get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", save = TRUE) 
+df = get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", save = FALSE) 
 write_csv(df, paste0(output, '/impact_values/gcm_damages_OTHERIND_total_energy_price014_SSP3_noadapt.csv'))
 
 
