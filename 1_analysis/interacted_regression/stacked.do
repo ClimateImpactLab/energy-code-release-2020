@@ -151,6 +151,41 @@ reghdfe FD_load_pc `temp_r' `precip_r' `climate_r' ///
 DumInc*, absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i) residuals(resid)
 estimates save "$root/sters/FD_inter_`model_name'", replace	
 
+// if reghdfe doesn't give standard error, run a reg version
+gen included = e(sample)
+tempfile reg_data
+save `reg_data', replace
+get_RF_uninteracted_splines `leads_lags' `differentiated_treatment' `ster_name'_reghdfe `filename_stem' `t_version' `chn_week' `spl_varname' `fe' `N_knots' `knots_loc' `weights' `data_subset' `reg_folder' ${ref_temp}
+
+use `reg_data', clear
+
+* automatically run reg if reghdfe produces standard errors of zero
+
+* creating a matrix of standard errors
+mat A = e(V)
+local coefs =colsof(A)
+matrix std_errors = vecdiag(e(V))
+
+forvalues i = 1/`coefs' {
+	matrix std_errors[1, `i'] = sqrt(std_errors[1, `i'])
+}
+* summing all standard errors
+mata : st_matrix("sum", rowsum(st_matrix("std_errors")))
+* checking if sum of all standard errors are zero; if so, we run a normal reg.
+if sum[1,1] == 0 {
+	di "Your standard errors are all zero. Now running a normal reg."
+	local fixed_effects = e(extended_absvars)
+	reg FD_load_pc `temp_r' `precip_r' `climate_r' ///
+	`lgdppc_MA15_r' `income_spline_r' `year_temp_r' `year_income_spline_r' ///
+	DumInc* `fixed_effects' cluster(region_i) residuals(resid)
+	estimates save "$root/sters/FD_inter_`model_name'_reg", replace	
+}
+
+
+
+
+
+
 //calculating weigts for FGLS
 drop if resid==.
 bysort region_i: egen omega = var(resid)
@@ -162,5 +197,40 @@ reghdfe FD_load_pc `temp_r' `precip_r' `climate_r' ///
 `lgdppc_MA15_r' `income_spline_r' `year_temp_r' `year_income_spline_r' ///
 DumInc* [pw = weight], absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i)
 estimates save "$root/sters/FD_FGLS_inter_`model_name'", replace
+
+
+// if reghdfe doesn't give standard error, run a reg version
+gen included = e(sample)
+tempfile reg_data
+save `reg_data', replace
+get_RF_uninteracted_splines `leads_lags' `differentiated_treatment' `ster_name'_reghdfe `filename_stem' `t_version' `chn_week' `spl_varname' `fe' `N_knots' `knots_loc' `weights' `data_subset' `reg_folder' ${ref_temp}
+
+use `reg_data', clear
+
+* automatically run reg if reghdfe produces standard errors of zero
+
+* creating a matrix of standard errors
+mat A = e(V)
+local coefs =colsof(A)
+matrix std_errors = vecdiag(e(V))
+
+forvalues i = 1/`coefs' {
+	matrix std_errors[1, `i'] = sqrt(std_errors[1, `i'])
+}
+* summing all standard errors
+mata : st_matrix("sum", rowsum(st_matrix("std_errors")))
+* checking if sum of all standard errors are zero; if so, we run a normal reg.
+if sum[1,1] == 0 {
+	di "Your standard errors are all zero. Now running a normal reg."
+	local fixed_effects = e(extended_absvars)
+	reg FD_load_pc `temp_r' `precip_r' `climate_r' ///
+	`lgdppc_MA15_r' `income_spline_r' `year_temp_r' `year_income_spline_r' ///
+	DumInc* `fixed_effects' [pw = weight], cluster(region_i)
+	estimates save "$root/sters/FD_FGLS_inter_`model_name'_reg", replace
+
+}
+
+
+
 
 

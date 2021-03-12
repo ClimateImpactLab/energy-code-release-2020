@@ -83,7 +83,6 @@ forval lg=1/2 {
 	}
 }		
 		
-
 ** First difference temp x year^2 x income spline 
 
 forval lg=1/2 {
