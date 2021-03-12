@@ -49,6 +49,7 @@ restore
 
 * load temporal trend ster file
 
+
 estimates use "$root/sters/FD_FGLS_inter_`model'_lininter.ster"
 
 * set product specific index for coefficients
@@ -127,6 +128,8 @@ graph drop _all
 
 
 * load temporal trend ster file
+
+drop yhat* 
 
 estimates use "$root/sters/FD_FGLS_inter_`model'_quadinter.ster"
 
