@@ -101,11 +101,6 @@ if ( "`submodel_ov'" != "" ) {
 	if "`submodel_ov'" == "lininter" {
 		local fig "fig_Appendix-G3B"
 	}
-
-	if "`submodel_ov'" == "quadinter" {
-		local fig "fig_Appendix-G3B-quadinter"
-	}
-	
 	if "`submodel_ov'" == "EX" {
 		local fig "fig_Appendix-G2"
 	}
@@ -189,11 +184,6 @@ forval lg=3(-1)1 {	//Income tercile
 					local line = "`line' + _b[c.indp`pg'#c.indf`fg'#c.FD_dc1_lgdppc_MA15yearI`ig'temp`k']*`deltacut_subInc'*`year'*(temp`k' - 20^`k')"
 				}
 
-/* 				if (strpos("`plot_model'", "quadinter") > 0) {
-					local line = "`line' + _b[c.indp`pg'#c.indf`fg'#c.FD_year2temp`k'_GMFD] * (temp`k' - 20^`k')*`year'*`year'"
-					local line = "`line' + _b[c.indp`pg'#c.indf`fg'#c.FD_dc1_lgdppc_MA15year2I`ig'temp`k']*`deltacut_subInc'*`year'*`year'*(temp`k' - 20^`k')"
-				}
- */
 				local add " + "
 
 			}
