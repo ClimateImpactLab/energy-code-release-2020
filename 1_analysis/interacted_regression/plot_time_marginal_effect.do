@@ -129,7 +129,7 @@ graph drop _all
 
 * load temporal trend ster file
 
-drop yhat* 
+drop yhat* se* lower* upper*
 
 estimates use "$root/sters/FD_FGLS_inter_`model'_quadinter.ster"
 
