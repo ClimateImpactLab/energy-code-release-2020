@@ -162,3 +162,5 @@ reghdfe FD_load_pc `temp_r' `precip_r' `climate_r' ///
 `lgdppc_MA15_r' `income_spline_r' `year_temp_r' `year_income_spline_r' ///
 DumInc* [pw = weight], absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i)
 estimates save "$root/sters/FD_FGLS_inter_`model_name'", replace
+
+
