@@ -45,7 +45,7 @@ forval i=1/2 {
 	qui gen double FD_precip`i'_GMFD = precip`i'_GMFD - L1.precip`i'_GMFD
 }
 	
-** First Difference temp, temp x year, and temp x decade **
+** First Difference temp, temp x year, temp x year^2, and temp x decade **
 
 forval i=1/4 {
 	
@@ -54,6 +54,9 @@ forval i=1/4 {
 	
 	// temp x year
 	qui gen double FD_yeartemp`i'_GMFD = (year * temp`i'_GMFD) - (L1.year * L1.temp`i'_GMFD)
+
+	// temp x year^2
+	qui gen double FD_year2temp`i'_GMFD = (year * year * temp`i'_GMFD) - (L1.year * L1.year * L1.temp`i'_GMFD)
 
 	// temp x decade
 	forval dg=1/2 {
@@ -80,6 +83,18 @@ forval lg=1/2 {
 	}
 }		
 		
+
+** First difference temp x year^2 x income spline 
+
+forval lg=1/2 {
+	forval i=1/4 {
+		qui gen double FD_dc1_lgdppc_MA15year2I`lg'temp`i' = ///
+		( dc1_lgdppc_MA15 * temp`i'_GMFD * largeind`lg' * year * year ) ///
+		- ( L1.dc1_lgdppc_MA15 * L1.temp`i'_GMFD * L1.largeind`lg' * L1.year * L1.year )
+	}
+}		
+		
+
 ** First difference income spline x temp
 
 forval lg=1/2 {

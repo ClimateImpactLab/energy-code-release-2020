@@ -95,7 +95,7 @@ forval pg=1/2 {
 	}		
 }
 
-if ("`submodel'" == "lininter" | "`submodel'" == "quadinter" ) {
+if ("`submodel'" == "lininter") {
 	
 	* temp x year
 
@@ -115,30 +115,6 @@ if ("`submodel'" == "lininter" | "`submodel'" == "quadinter" ) {
 		forval lg = 1/2 {
 			forval k = 1/2 {
 				local year_income_spline_r = "`year_income_spline_r' c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15yearI`lg'temp`k'"
-			}
-		}		
-	}
-}
-
-
-
-
-if ("`submodel'" == "quadinter") {
-	
-	* temp x year^2
-
-	forval pg=1/2 {
-		forval k = 1/2 {
-			local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#c.FD_year2temp`k'_GMFD"
-		}	
-	}
-		
-	* temp x year^2 x income spline
-	
-	forval pg=1/2 {
-		forval lg = 1/2 {
-			forval k = 1/2 {
-				local year_income_spline_r = "`year_income_spline_r' c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15year2I`lg'temp`k'"
 			}
 		}		
 	}

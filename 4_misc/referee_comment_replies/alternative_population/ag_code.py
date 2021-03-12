@@ -13,12 +13,13 @@ import fiona
 from rasterstats import zonal_stats
 import csv
 import sys,os
+import pandas as pd
 import unicodedata
 
-out_dir = sys.argv[4]
-shp_file = sys.argv[3]
-raster_dir = sys.argv[2]
-stat = sys.argv[1]
+out_dir = "/home/liruixue/temp/"
+shp_file = "/shares/gcp/climate/_spatial_data/world-combo-new-nytimes/new_shapefile.shp"
+raster_dir = "/home/liruixue/temp/GeoTIFF/SSP3_GeoTIFF/total/GeoTIFF/"
+stat = "sum"
 
 #out_dir = os.getcwd()
 filename = shp_file.split('/')[-1].replace('.shp','')
@@ -26,7 +27,9 @@ outfile = out_dir + '/' + filename + '_irrigated_area.csv'
 
 def to_ascii(str):
     return unicodedata.normalize('NFKD', str).encode('ascii', 'ignore').decode('ascii')
-    
+
+
+
 def collect_stats(shp, rasters, stat):
     shp_stats = []
     with fiona.open(shp, 'r') as adm_layer:
@@ -35,8 +38,10 @@ def collect_stats(shp, rasters, stat):
        
         for raster in rasters:
             print('calculating ' + stat + ' irrigated area from ' + raster) 
-            shp_stats.extend(get_stats(adm_layer, raster, stat))   
+            shp_stats.extend(get_stats(adm_layer,  raster, stat))   
     return shp_stats
+
+
 
 def get_stats(adm_layer, raster, stat):
     rasterfile = raster_dir + raster
@@ -54,6 +59,7 @@ def get_stats(adm_layer, raster, stat):
             print('calculated ' + str(j) + ' of ' + str(len(adm_layer)) + ' regions')
     return stats
         
+
 def write_csv(outfile, shp_stats):
     with open(outfile, 'w') as csvfile:
         outwriter = csv.writer(csvfile, lineterminator='\n')
@@ -67,5 +73,18 @@ for filename in os.listdir(raster_dir):
     if filename.endswith('.asc') or filename.endswith('.tif') :
         rasters.append(filename)
         
+
 write_csv(outfile, collect_stats(shp_file, rasters, stat))
 print('complete')
+
+
+
+results = pd.read_csv("/home/liruixue/temp/new_shapefile_irrigated_area.csv")
+results["year"] = results.raster.apply(lambda x: x[-4:])
+results = results[["hierid","year","sum_value"]]
+results.sort_values(by = ["hierid","year"], inplace = True)
+results = results.fillna(0)
+results.to_csv("/home/liruixue/temp/pop.csv", index = False)
+
+
+results[results.year == "2010"].sort_values(by = ["sum_value"])

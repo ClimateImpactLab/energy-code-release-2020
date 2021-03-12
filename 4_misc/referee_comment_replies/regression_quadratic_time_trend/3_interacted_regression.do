@@ -19,16 +19,16 @@ global root "${REPO}/energy-code-release-2020"
 ******Set Script Toggles********************************************************
 
 // What model do you want?
-global model "TINV_clim"
+global model "TINV_clim_quadinter"
 
 ********************************************************************************
 * Step 1: Estimate Energy Temperature Response
 ********************************************************************************
 
-foreach submodel in "" "EX" "lininter" "quadinter"  {
+foreach submodel in "quadinter"  {
 
 	global submodel "`submodel'"
-	do $root/1_analysis/interacted_regression/stacked.do
+	do $root/4_misc/regression_quadratic_time_trend/stacked.do
 
 }
 
@@ -37,12 +37,12 @@ foreach submodel in "" "EX" "lininter" "quadinter"  {
 ********************************************************************************
 
 foreach product in "other_energy" "electricity" {
-	foreach submodel in "" "EX" "lininter"  "quadinter" {
+	foreach submodel in "quadinter"  {
 		
 		global submodel_ov "`submodel'"
 		global product "`product'"
 		
-		do $root/1_analysis/interacted_regression/plot_stacked.do
+		do $root/4_misc/regression_quadratic_time_trend/plot_stacked.do
 	}
 }
 
@@ -53,6 +53,6 @@ foreach product in "other_energy" "electricity" {
 
 foreach product in "other_energy" "electricity" {
 	global product "`product'"
-	do $root/1_analysis/interacted_regression/plot_time_marginal_effect.do
+	do $root/4_misc/regression_quadratic_time_trend/plot_time_marginal_effect.do
 }
 
