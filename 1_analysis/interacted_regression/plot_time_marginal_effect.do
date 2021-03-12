@@ -132,6 +132,7 @@ local model = "$model" // What is the main model for this plot?
 local var = "$product" // What product's response function are we plotting?
 local fig = "fig_Appendix-G3A" // Whats the plots figure number in the paper?
 
+local MEgraphic 
 ********************************************************************************
 * Step 1: Load Data and Clean for Plotting
 ********************************************************************************
@@ -240,6 +241,6 @@ forval lg = 1/3 {
 graph combine `MEgraphic', imargin(zero) ycomm rows(1) xsize(9) ysize(3) ///
 subtitle("Marginal Effect of Time `var'", size(small)) ///
 plotregion(color(white)) graphregion(color(white)) name(comb`i', replace)
-graph export "$root/figures/`fig'_ME_time_`model'_quadinter_new_`var'.pdf", replace
+graph export "$root/figures/`fig'_ME_time_`model'_quadinter_`var'.pdf", replace
 graph drop _all
 

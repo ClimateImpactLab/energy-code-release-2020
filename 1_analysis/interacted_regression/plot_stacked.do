@@ -98,12 +98,8 @@ if ( "`submodel_ov'" != "" ) {
 
 	local plot_title "main_model_`plot_title'_overlay_model_`submodel_ov'"
 
-	if "`submodel_ov'" == "lininter" {
+	if ("`submodel_ov'" == "lininter" |"`submodel_ov'" == "quadinter") {
 		local fig "fig_Appendix-G3B"
-	}
-
-	if "`submodel_ov'" == "quadinter" {
-		local fig "fig_Appendix-G3B-quadinter"
 	}
 	
 	if "`submodel_ov'" == "EX" {
