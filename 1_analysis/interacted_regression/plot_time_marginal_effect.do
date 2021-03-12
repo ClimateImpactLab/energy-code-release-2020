@@ -119,17 +119,62 @@ graph drop _all
 
 
 
+********************************************************************************/* 
+  */repeat the process for quadinter model for referee comment
 ********************************************************************************
-* Step 4: repeat the process for quadinter model for referee comment
+
+
+set scheme s1color
+
+****** Set Model Specification Locals ******************************************
+
+local model = "$model" // What is the main model for this plot?
+local var = "$product" // What product's response function are we plotting?
+local fig = "fig_Appendix-G3A" // Whats the plots figure number in the paper?
+
 ********************************************************************************
+* Step 1: Load Data and Clean for Plotting
+********************************************************************************
+		
+use "$root/data/GMFD_`model'_regsort.dta", clear
+
+//Set up locals for plotting
+local obs = 35 + abs(-5) + 1
+
+//clean data for plotting
+drop if _n > 0
+set obs `obs'
+
+replace temp1_GMFD = _n - 6
+
+foreach k of num 1/2 {
+	rename temp`k'_GMFD temp`k'
+	replace temp`k' = temp1 ^ `k'
+}
+
+********************************************************************************
+* Step 2: Set up for plotting by: 
+	* a) finding knot location 
+	* b) load ster
+	* b) assigning product index
+********************************************************************************
+
+* Get Income Spline Knot Location 
+	
+preserve
+use "$root/data/break_data_`model'.dta", clear
+summ maxInc_largegpid_`var' if largegpid_`var' == 1
+local ibar = `r(max)'
+restore
+
+* load temporal trend ster file
+
 
 
 ***** note to self: not done from here!!! &^&*^&&^#@%#!WETERTR*
 
 
 * load temporal trend ster file
-
-drop yhat* se* lower* upper*
 
 estimates use "$root/sters/FD_FGLS_inter_`model'_quadinter.ster"
 
@@ -195,6 +240,6 @@ forval lg = 1/3 {
 graph combine `MEgraphic', imargin(zero) ycomm rows(1) xsize(9) ysize(3) ///
 subtitle("Marginal Effect of Time `var'", size(small)) ///
 plotregion(color(white)) graphregion(color(white)) name(comb`i', replace)
-graph export "$root/figures/`fig'_ME_time_`model'_quadinter_`var'.pdf", replace
+graph export "$root/figures/`fig'_ME_time_`model'_quadinter_new_`var'.pdf", replace
 graph drop _all
 

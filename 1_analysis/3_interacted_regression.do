@@ -37,7 +37,7 @@ foreach submodel in "" "EX" "lininter" "quadinter"  {
 ********************************************************************************
 
 foreach product in "other_energy" "electricity" {
-	foreach submodel in "" "EX" "lininter"  {
+	foreach submodel in "" "EX" "lininter" "quadinter" {
 		
 		global submodel_ov "`submodel'"
 		global product "`product'"
@@ -51,8 +51,8 @@ foreach product in "other_energy" "electricity" {
 * for Temporal Trend Model
 ********************************************************************************
 
-/* foreach product in "other_energy" "electricity" {
+foreach product in "other_energy" "electricity" {
 	global product "`product'"
 	do $root/1_analysis/interacted_regression/plot_time_marginal_effect.do
 }
- */
+
