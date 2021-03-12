@@ -155,8 +155,6 @@ estimates save "$root/sters/FD_inter_`model_name'", replace
 gen included = e(sample)
 tempfile reg_data
 save `reg_data', replace
-get_RF_uninteracted_splines `leads_lags' `differentiated_treatment' `ster_name'_reghdfe `filename_stem' `t_version' `chn_week' `spl_varname' `fe' `N_knots' `knots_loc' `weights' `data_subset' `reg_folder' ${ref_temp}
-
 use `reg_data', clear
 
 * automatically run reg if reghdfe produces standard errors of zero
@@ -177,7 +175,7 @@ if sum[1,1] == 0 {
 	local fixed_effects = e(extended_absvars)
 	reg FD_load_pc `temp_r' `precip_r' `climate_r' ///
 	`lgdppc_MA15_r' `income_spline_r' `year_temp_r' `year_income_spline_r' ///
-	DumInc* `fixed_effects' cluster(region_i) residuals(resid)
+	DumInc* `fixed_effects', cluster(region_i) 
 	estimates save "$root/sters/FD_inter_`model_name'_reg", replace	
 }
 
@@ -190,7 +188,7 @@ if sum[1,1] == 0 {
 drop if resid==.
 bysort region_i: egen omega = var(resid)
 qui gen weight = 1/omega
-drop resid
+drop resid included
 
 //run second stage FGLS regression
 reghdfe FD_load_pc `temp_r' `precip_r' `climate_r' ///
@@ -203,8 +201,6 @@ estimates save "$root/sters/FD_FGLS_inter_`model_name'", replace
 gen included = e(sample)
 tempfile reg_data
 save `reg_data', replace
-get_RF_uninteracted_splines `leads_lags' `differentiated_treatment' `ster_name'_reghdfe `filename_stem' `t_version' `chn_week' `spl_varname' `fe' `N_knots' `knots_loc' `weights' `data_subset' `reg_folder' ${ref_temp}
-
 use `reg_data', clear
 
 * automatically run reg if reghdfe produces standard errors of zero
