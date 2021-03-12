@@ -175,7 +175,7 @@ if sum[1,1] == 0 {
 	local fixed_effects = e(extended_absvars)
 	reg FD_load_pc `temp_r' `precip_r' `climate_r' ///
 	`lgdppc_MA15_r' `income_spline_r' `year_temp_r' `year_income_spline_r' ///
-	DumInc* `fixed_effects', cluster(region_i) 
+	DumInc* `fixed_effects' if included == 1, cluster(region_i) 
 	estimates save "$root/sters/FD_inter_`model_name'_reg", replace	
 }
 
@@ -221,7 +221,7 @@ if sum[1,1] == 0 {
 	local fixed_effects = e(extended_absvars)
 	reg FD_load_pc `temp_r' `precip_r' `climate_r' ///
 	`lgdppc_MA15_r' `income_spline_r' `year_temp_r' `year_income_spline_r' ///
-	DumInc* `fixed_effects' [pw = weight], cluster(region_i)
+	DumInc* `fixed_effects' [pw = weight] if included == 1, cluster(region_i)
 	estimates save "$root/sters/FD_FGLS_inter_`model_name'_reg", replace
 
 }
