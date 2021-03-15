@@ -170,14 +170,14 @@ forvalues i = 1/`coefs' {
 * summing all standard errors
 mata : st_matrix("sum", rowsum(st_matrix("std_errors")))
 * checking if sum of all standard errors are zero; if so, we run a normal reg.
-if sum[1,1] == 0 {
+* if sum[1,1] == 0 {
 	di "Your standard errors are all zero. Now running a normal reg."
 	local fixed_effects = e(extended_absvars)
 	reg FD_load_pc `temp_r' `precip_r' `climate_r' ///
 	`lgdppc_MA15_r' `income_spline_r' `year_temp_r' `year_income_spline_r' ///
 	DumInc* `fixed_effects' if included == 1, cluster(region_i) 
 	estimates save "$root/sters/FD_inter_`model_name'_reg", replace	
-}
+* }
 
 
 
@@ -216,7 +216,7 @@ forvalues i = 1/`coefs' {
 * summing all standard errors
 mata : st_matrix("sum", rowsum(st_matrix("std_errors")))
 * checking if sum of all standard errors are zero; if so, we run a normal reg.
-if sum[1,1] == 0 {
+* if sum[1,1] == 0 {
 	di "Your standard errors are all zero. Now running a normal reg."
 	local fixed_effects = e(extended_absvars)
 	reg FD_load_pc `temp_r' `precip_r' `climate_r' ///
@@ -224,7 +224,7 @@ if sum[1,1] == 0 {
 	DumInc* `fixed_effects' [pw = weight] if included == 1, cluster(region_i)
 	estimates save "$root/sters/FD_FGLS_inter_`model_name'_reg", replace
 
-}
+*}
 
 
 
