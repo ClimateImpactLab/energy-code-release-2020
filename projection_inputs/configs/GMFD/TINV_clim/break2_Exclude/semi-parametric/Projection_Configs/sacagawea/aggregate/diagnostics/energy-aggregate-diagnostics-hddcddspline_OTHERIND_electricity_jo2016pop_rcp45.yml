@@ -1,4 +1,4 @@
-outputdir: outputs/energy_pixel_interaction/impacts-blueghost
-weighting: population_jo2016
+outputdir: outputs/energy_pixel_interaction/impacts-blueghost/median_OTHERIND_electricity_TINV_clim_GMFD
+weighting: population
 targetdir: /shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost/median_OTHERIND_electricity_TINV_clim_GMFD/median/rcp45/CCSM4/high/SSP3
 infix: jo2016
