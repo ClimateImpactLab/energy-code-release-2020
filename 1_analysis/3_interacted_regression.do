@@ -32,7 +32,7 @@ foreach submodel in "" "EX" "lininter" "quadinter"  {
 
 } 
 
-/*
+
 ********************************************************************************
 * Step 2: Plot Energy Temperature Response
 ********************************************************************************
@@ -45,15 +45,15 @@ foreach product in "other_energy" "electricity" {
 		
 		do $root/1_analysis/interacted_regression/plot_stacked.do
 	}
-} */
+}
  
 ********************************************************************************
 * Step 3: Plot Marginal Effect of Time on Energy Temperature Response 
 * for Temporal Trend Model
 ********************************************************************************
 
-/* foreach product in "other_energy" "electricity" {
+foreach product in "other_energy" "electricity" {
 	global product "`product'"
 	do $root/1_analysis/interacted_regression/plot_time_marginal_effect.do
-} */
+}
 

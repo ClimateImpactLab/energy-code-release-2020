@@ -188,7 +188,7 @@ mata : st_matrix("sum", rowsum(st_matrix("std_errors")))
 drop if resid==.
 bysort region_i: egen omega = var(resid)
 qui gen weight = 1/omega
-drop resid included
+drop resid //included
 
 //run second stage FGLS regression
 reghdfe FD_load_pc `temp_r' `precip_r' `climate_r' ///

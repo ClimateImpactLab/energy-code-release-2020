@@ -41,8 +41,9 @@ local break_data "$root/data/break_data_TINV_clim.dta"
 * Note TINV_clim_lininter_double and TINV_clim_lininter_half are exactly the same csvv as TINV_clim_lininter
 * Hence we copy the csvv made for TINV_clim_lininter
 * 
-foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double" "TINV_clim_lininter_half"{
+foreach model_tt in /*"TINV_clim" "TINV_clim_lininter"*/ "TINV_clim_lininter_double" "TINV_clim_lininter_half" {
 	
+	di "`model_tt'"
 	if(inlist("`model_tt'", "TINV_clim", "TINV_clim_lininter")){
 
 		***************************************************
@@ -76,31 +77,32 @@ foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double"
 
 		//write file full vcv. This is combined for electricity and other_energy
 		file open csvv using "`output_csvv'/`model_tt'/`ster_stem'_OTHERIND_`model_tt'.csv", write replace
-
 		write_vcv , ///
 			coefficientlist(" `coefficientlist_other_energy' `coefficientlist_electricity' ") ///
 			 num_coefficients(`all_coefficients')
-
+		di "test"
 		file close csvv
 	}
 	else if("`model_tt'" == "TINV_clim_lininter_double"){
 
 		cap mkdir "`output_csvv'/TINV_clim_lininter_double"
-		
-		foreach product in "_other_energy" "_electricity" ""{
+		foreach product in "_other_energy" "_electricity"{
 			copy "`output_csvv'/TINV_clim_lininter/FD_FGLS_inter_OTHERIND`product'_TINV_clim_lininter.csvv" ///
 				"`output_csvv'/TINV_clim_lininter_double/FD_FGLS_inter_OTHERIND`product'_TINV_clim_lininter_double.csvv", replace 
 		}
-
+		copy "`output_csvv'/TINV_clim_lininter/FD_FGLS_inter_OTHERIND_TINV_clim_lininter.csv" ///
+		"`output_csvv'/TINV_clim_lininter_double/FD_FGLS_inter_OTHERIND_TINV_clim_lininter_double.csv", replace 
 	}
-	else if("`model_tt'" == "TINV_clim_lininter_half"){
-
-		cap mkdir "`output_csvv'/TINV_clim_lininter_half"
-		
-		foreach product in "_other_energy" "_electricity" ""{
+ 	else if("`model_tt'" == "TINV_clim_lininter_half"){
+ 		cap mkdir "`output_csvv'/TINV_clim_lininter_half"
+		foreach product in "_other_energy" "_electricity"{
 			copy "`output_csvv'/TINV_clim_lininter/FD_FGLS_inter_OTHERIND`product'_TINV_clim_lininter.csvv" ///
 				"`output_csvv'/TINV_clim_lininter_half/FD_FGLS_inter_OTHERIND`product'_TINV_clim_lininter_half.csvv", replace 
 		}
+		copy "`output_csvv'/TINV_clim_lininter/FD_FGLS_inter_OTHERIND_TINV_clim_lininter.csv" ///
+			"`output_csvv'/TINV_clim_lininter_half/FD_FGLS_inter_OTHERIND_TINV_clim_lininter_half.csv", replace 
+
 
 	}
+
 }
