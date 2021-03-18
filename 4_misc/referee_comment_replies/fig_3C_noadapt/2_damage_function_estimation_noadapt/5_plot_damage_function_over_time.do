@@ -84,12 +84,17 @@ loc gr `gr' line y anomaly if year == `yr', color(gs5*.5) ||
 loc gr `gr' line y anomaly if year == 2100, color(black) ||
 sort anomaly
 
+* make the scale the same as the fulladapt plot
+loc ystep = 2
+loc ymax = 0
+loc ymin = -10
+
 * Plot and save
 graph tw `gr', yline(0, lwidth(vthin)) ///
 	ytitle("Bn 2019 USD" ) xtitle("GMST Anomaly") ///
 	title("Total Energy Damage Function, Evolution Over Time", size(small)) ///
 	xscale(r(0(1)10)) xlabel(0(1)10) legend(off) scheme(s1mono) ///
-	ylabel(, labsize(small)) 
+	yscale(r(`ymin'(`ystep')`ymax')) ylabel(`ymin'(`ystep')`ymax', labsize(small))  
 
 graph export "$output/fig_3/fig_3C_total_energy_damage_function_evolution_SSP3-price014_noadapt.pdf", replace 
 graph drop _all
