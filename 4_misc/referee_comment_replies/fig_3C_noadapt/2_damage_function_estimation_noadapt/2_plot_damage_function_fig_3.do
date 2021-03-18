@@ -189,13 +189,13 @@ foreach fuel in "total_energy_p14" "other_energy" "electricity" {
 	loc gr `gr' sc `fuel'_na anomaly if rcp=="rcp45"& year>=2095, mlcolor(ebblue%30) msymbol(O) mlw(vthin) mfcolor(ebblue%30) msize(vsmall)   ||
 	loc gr `gr' line yhat_`fuel'_2099_na anomaly if year == 2099 , yaxis(1) color(black) lwidth(medthick) ||
 	loc gr `gr' rarea y95_`fuel'_2099_na y05_`fuel'_2099_na anomaly if year == 2099 , col(grey%5) lwidth(none) ||
-	loc gr `gr' line yhat_`fuel'_2099_fa anomaly if year == 2099 , yaxis(1) color(green) lwidth(medthick) ||
+	loc gr `gr' line yhat_`fuel'_2099_fa anomaly if year == 2099 , yaxis(1) color(black) lpattern(dash) lwidth(medthick) ||
 	
 	di "Graphing time..."
 	sort anomaly
 	graph twoway `gr', yline(0, lwidth(vthin)) ///
 	    	ytitle(`ytitle') xtitle("GMST Anomaly") ///
-	        legend(order(1 "RCP 8.5" 2 "RCP 4.5" 3 "2099 damage fn.") size(*0.5)) name("`fuel'", replace) ///
+	        legend(order(1 "RCP 8.5" 2 "RCP 4.5" 3 "2099 damage fn. noadapt" 4 "2099 damage fn. fulladapt") size(*0.5)) name("`fuel'", replace) ///
 	        xscale(r(0(1)10)) xlabel(0(1)10) scheme(s1mono) ///
 	        title("`title' Damage Function (No Adaptation), End of Century", tstyle(size(medsmall)))  ///
 	        yscale(r(`ymin'(`ystep')`ymax')) ylabel(`ymin'(`ystep')`ymax')  
