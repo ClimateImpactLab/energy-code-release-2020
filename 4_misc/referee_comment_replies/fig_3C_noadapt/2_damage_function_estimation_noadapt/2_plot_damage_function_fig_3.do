@@ -127,9 +127,9 @@ foreach fuel in "total_energy_p14" "other_energy" "electricity" {
 	if "`fuel'" == "total_energy_p14" {
 		loc title = "Total Energy"
 		loc ytitle = "bn USD (2019$)"
-		loc ystep = 4000 
-		loc ymax = 4000 
-		loc ymin = -8000
+		loc ystep = 1000 
+		loc ymax = 1000 
+		loc ymin = -5000
 	}
 
 	if "`fuel'" == "electricity"{
@@ -140,9 +140,9 @@ foreach fuel in "total_energy_p14" "other_energy" "electricity" {
 		replace `fuel'_fa = `fuel'_fa/ 1000000000
 
 		if "`scale_type'" == "-not_comm" {
-			loc ystep = 15
-			loc ymax = 60
-			loc ymin = 0
+			loc ystep = 10
+			loc ymax = 50
+			loc ymin = -20
 		}
 		else{
 			loc ystep = 80
@@ -158,9 +158,9 @@ foreach fuel in "total_energy_p14" "other_energy" "electricity" {
 		replace `fuel'_fa = `fuel'_fa / 1000000000
 
 		if "`scale_type'" == "-not_comm" {
-			loc ystep = 60
-			loc ymax = 40 
-			loc ymin = -200
+			loc ystep = 20
+			loc ymax = 20
+			loc ymin = -120
 		}
 		else{
 			loc ystep = 80

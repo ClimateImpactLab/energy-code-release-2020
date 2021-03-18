@@ -126,14 +126,39 @@ get_plot_df_by_fuel_jo2016 = function(fuel, DB_data) {
   "_TINV_clim-jo2016-aggregated.nc4"), 
   impact_var="rebased") %>% mutate(rcp = "rcp85")
 
+
+  df_jo2016_rcp45_hist = nc_to_DT(nc_file=paste0("/shares/gcp/outputs/energy_pixel_interaction/",
+  "impacts-blueghost/median_OTHERIND_", fuel, 
+  "_TINV_clim_GMFD/median/rcp45/CCSM4/high/SSP3/FD_FGLS_inter_OTHERIND_", fuel, 
+  "_TINV_clim-histclim-jo2016-aggregated.nc4"), 
+  impact_var="rebased") %>% mutate(rcp = "rcp45") %>%
+  rename(hist = rebased)
+
+  df_jo2016_rcp85_hist = nc_to_DT(nc_file=paste0("/shares/gcp/outputs/energy_pixel_interaction/",
+  "impacts-blueghost/median_OTHERIND_", fuel, 
+  "_TINV_clim_GMFD/median/rcp85/CCSM4/high/SSP3/FD_FGLS_inter_OTHERIND_", fuel, 
+  "_TINV_clim-histclim-jo2016-aggregated.nc4"), 
+  impact_var="rebased") %>% mutate(rcp = "rcp85") %>%
+  rename(hist = rebased)
+
+
+  df_jo2016_rcp45 = merge(df_jo2016_rcp45, df_jo2016_rcp45_hist, by = c("year","region","rcp")) %>%
+    mutate(mean = rebased - hist) %>%
+    select(-c("rebased","hist"))
+  df_jo2016_rcp85 = merge(df_jo2016_rcp85, df_jo2016_rcp85_hist, by = c("year","region","rcp")) %>%
+    mutate(mean = rebased - hist) %>%
+    select(-c("rebased","hist"))
+
+
   df_jo2016 <- rbind(df_jo2016_rcp45, df_jo2016_rcp85) %>%
     filter(region == "", year >= 2010)  %>%
     mutate(fuel = fuel, type = "jo2016_pop") %>%
-    rename (mean = rebased) %>%
     select(-region)
   
   df_main = read_csv(paste0(DB_data, "/projection_system_outputs/time_series_data/CCSM4_single/", 
               "main_model_single-", fuel, "-SSP3-high-fulladapt-impact_pc.csv"))
+
+
 
   df <- rbind(df_jo2016, df_main) %>%
     mutate(legend = paste0(type,"_", rcp))

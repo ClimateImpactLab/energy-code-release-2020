@@ -150,7 +150,7 @@ reghdfe FD_load_pc `temp_r' `precip_r' `climate_r' ///
 `lgdppc_MA15_r' `income_spline_r' `year_temp_r' `year_income_spline_r' ///
 DumInc*, absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i) residuals(resid)
 estimates save "$root/sters/FD_inter_`model_name'", replace	
-
+/* 
 // if reghdfe doesn't give standard error, run a reg version
 gen included = e(sample)
 tempfile reg_data
@@ -181,7 +181,7 @@ mata : st_matrix("sum", rowsum(st_matrix("std_errors")))
 
 
 
-
+ */
 
 
 //calculating weigts for FGLS
@@ -195,7 +195,7 @@ reghdfe FD_load_pc `temp_r' `precip_r' `climate_r' ///
 `lgdppc_MA15_r' `income_spline_r' `year_temp_r' `year_income_spline_r' ///
 DumInc* [pw = weight], absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i)
 estimates save "$root/sters/FD_FGLS_inter_`model_name'", replace
-
+/* 
 
 // if reghdfe doesn't give standard error, run a reg version
 gen included = e(sample)
@@ -227,6 +227,5 @@ mata : st_matrix("sum", rowsum(st_matrix("std_errors")))
 *}
 
 
-
-
+ */
 

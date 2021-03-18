@@ -85,9 +85,9 @@ loc gr `gr' line y anomaly if year == 2100, color(black) ||
 sort anomaly
 
 * make the scale the same as the fulladapt plot
-loc ystep = 2
-loc ymax = 0
-loc ymin = -10
+loc ystep = 1
+loc ymax = 1
+loc ymin = -5
 
 * Plot and save
 graph tw `gr', yline(0, lwidth(vthin)) ///
