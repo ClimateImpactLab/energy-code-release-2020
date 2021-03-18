@@ -24,7 +24,7 @@ tempfile GMST_anom
 save `GMST_anom', replace
 
 * **********************************************************************************
-* * STEP 1: Pull in Damage CSVs and Merge with GMST Anomaly Data
+* * STEP 1: Pull in NOADAPT Damage CSVs and Merge with GMST Anomaly Data
 * **********************************************************************************
 
 foreach fuel in "total_energy_price014" "electricity" "other_energy" {
@@ -53,7 +53,7 @@ foreach fuel in "total_energy_price014" "electricity" "other_energy" {
 	qui duplicates drop year, force
 
 	merge 1:m year using `master`fuel'', nogen assert(3)
-	ren *alue `fuel'
+	ren *alue `fuel'_na
 	save `master`fuel'', replace
 }
 use `mastertotal_energy_price014'
@@ -61,8 +61,55 @@ foreach fuel in  "electricity" "other_energy"{
 	merge 1:1 year minT maxT rcp gcm iam batch temp using `master`fuel'', nogen assert(3)
 }
 
-tempfile master
-save `master', replace
+tempfile master_noadapt
+save `master_noadapt', replace
+
+
+
+* **********************************************************************************
+* * STEP 1.5: Pull in FULLADAPT Damage CSVs and Merge with GMST Anomaly Data
+* **********************************************************************************
+
+foreach fuel in "total_energy_price014" "electricity" "other_energy" {
+
+	di "`fuel'"
+
+	if("`fuel'"=="total_energy_price014"){
+		loc type = "damages"
+	}
+	else{
+		loc type = "impacts"
+	}
+	
+	import delim using "$dir/gcm_`type'_OTHERIND_`fuel'_SSP3-15-draws.csv", clear
+	drop if year < 2015 | year > 2099
+	merge m:1 year gcm rcp using `GMST_anom', nogen assert(3)
+
+	tempfile master`fuel'
+	save `master`fuel'', replace
+
+	qui bysort year: egen minT=min(temp)
+	qui bysort year: egen maxT=max(temp)
+	qui replace minT=round(minT,0.1)
+	qui replace maxT=round(maxT,0.1)
+	qui keep year minT maxT
+	qui duplicates drop year, force
+
+	merge 1:m year using `master`fuel'', nogen assert(3)
+	ren *alue `fuel'_fa
+	save `master`fuel'', replace
+}
+use `mastertotal_energy_price014'
+foreach fuel in  "electricity" "other_energy"{
+	merge 1:1 year minT maxT rcp gcm iam batch temp using `master`fuel'', nogen assert(3)
+}
+
+tempfile master_fulladapt
+save `master_fulladapt', replace
+
+
+merge 1:1 year minT maxT rcp gcm iam batch temp using `master_noadapt', nogen assert(3)
+rename *total_energy_price014* *total_energy_p14*
 
 * **********************************************************************************
 * * STEP 2: Estimate damage functions and plot, pre-2100
@@ -74,10 +121,10 @@ cap rename temp anomaly
 * and electricity plots
 loc scale_type = "-not_comm"
 
-foreach fuel in "total_energy_price014" "other_energy" "electricity" {
+foreach fuel in "total_energy_p14" "other_energy" "electricity" {
 	preserve
 
-	if "`fuel'" == "total_energy_price014" {
+	if "`fuel'" == "total_energy_p14" {
 		loc title = "Total Energy"
 		loc ytitle = "bn USD (2019$)"
 		loc ystep = 4000 
@@ -89,7 +136,8 @@ foreach fuel in "total_energy_price014" "other_energy" "electricity" {
 		loc title = "Electricity"
 		loc ytitle = "bn Gigajoules"
 		* Convert to billion GJ
-		replace `fuel' = `fuel'/ 1000000000
+		replace `fuel'_na = `fuel'_na/ 1000000000
+		replace `fuel'_fa = `fuel'_fa/ 1000000000
 
 		if "`scale_type'" == "-not_comm" {
 			loc ystep = 15
@@ -106,7 +154,9 @@ foreach fuel in "total_energy_price014" "other_energy" "electricity" {
 		loc title = "Other Energy"
 		loc ytitle = "bn Gigajoules"
 		* Convert to billion GJ
-		replace `fuel' = `fuel' / 1000000000
+		replace `fuel'_na = `fuel'_na / 1000000000
+		replace `fuel'_fa = `fuel'_fa / 1000000000
+
 		if "`scale_type'" == "-not_comm" {
 			loc ystep = 60
 			loc ymax = 40 
@@ -121,20 +171,25 @@ foreach fuel in "total_energy_price014" "other_energy" "electricity" {
 
 	* Nonparametric model for use pre-2100 
 	foreach yr of numlist 2099/2099 {
-	        qui reg `fuel' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2 
-	        cap qui predict yhat_`fuel'_`yr' if year>=`yr'-2 & year <= `yr'+2 
-	        qreg `fuel'  c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(0.05)
-			predict y05_`fuel'_`yr' if year>=`yr'-2 & year <= `yr'+2
-			qreg `fuel'  c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(0.95)
-			predict y95_`fuel'_`yr' if year>=`yr'-2 & year <= `yr'+2
-    
+	        qui reg `fuel'_na c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2 
+	        cap qui predict yhat_`fuel'_`yr'_na if year>=`yr'-2 & year <= `yr'+2 
+	        qreg `fuel'_na  c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(0.05)
+			predict y05_`fuel'_`yr'_na if year>=`yr'-2 & year <= `yr'+2
+			qreg `fuel'_na  c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(0.95)
+			predict y95_`fuel'_`yr'_na if year>=`yr'-2 & year <= `yr'+2
+			
+			* plot fulladapt on the same plot    
+	        reg `fuel'_fa c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2 
+	        cap predict yhat_`fuel'_`yr'_fa if year>=`yr'-2 & year <= `yr'+2 
 	}
 
+
 	loc gr
-	loc gr `gr' sc `fuel' anomaly if rcp=="rcp85" & year>=2095, mlcolor(red%30) msymbol(O) mlw(vthin) mfcolor(red%30) msize(vsmall) ||       
-	loc gr `gr' sc `fuel' anomaly if rcp=="rcp45"& year>=2095, mlcolor(ebblue%30) msymbol(O) mlw(vthin) mfcolor(ebblue%30) msize(vsmall)   ||
-	loc gr `gr' line yhat_`fuel'_2099 anomaly if year == 2099 , yaxis(1) color(black) lwidth(medthick) ||
-	loc gr `gr' rarea y95_`fuel'_2099 y05_`fuel'_2099 anomaly if year == 2099 , col(grey%5) lwidth(none) ||
+	loc gr `gr' sc `fuel'_na anomaly if rcp=="rcp85" & year>=2095, mlcolor(red%30) msymbol(O) mlw(vthin) mfcolor(red%30) msize(vsmall) ||       
+	loc gr `gr' sc `fuel'_na anomaly if rcp=="rcp45"& year>=2095, mlcolor(ebblue%30) msymbol(O) mlw(vthin) mfcolor(ebblue%30) msize(vsmall)   ||
+	loc gr `gr' line yhat_`fuel'_2099_na anomaly if year == 2099 , yaxis(1) color(black) lwidth(medthick) ||
+	loc gr `gr' rarea y95_`fuel'_2099_na y05_`fuel'_2099_na anomaly if year == 2099 , col(grey%5) lwidth(none) ||
+	loc gr `gr' line yhat_`fuel'_2099_fa anomaly if year == 2099 , yaxis(1) color(green) lwidth(medthick) ||
 	
 	di "Graphing time..."
 	sort anomaly
@@ -142,7 +197,7 @@ foreach fuel in "total_energy_price014" "other_energy" "electricity" {
 	    	ytitle(`ytitle') xtitle("GMST Anomaly") ///
 	        legend(order(1 "RCP 8.5" 2 "RCP 4.5" 3 "2099 damage fn.") size(*0.5)) name("`fuel'", replace) ///
 	        xscale(r(0(1)10)) xlabel(0(1)10) scheme(s1mono) ///
-	        title("`title' Damage Function, End of Century", tstyle(size(medsmall)))  ///
+	        title("`title' Damage Function (No Adaptation), End of Century", tstyle(size(medsmall)))  ///
 	        yscale(r(`ymin'(`ystep')`ymax')) ylabel(`ymin'(`ystep')`ymax')  
 	        
 	capture drop vbl
@@ -153,7 +208,7 @@ foreach fuel in "total_energy_price014" "other_energy" "electricity" {
 	loc xmax = r(max)
 	loc xmin = r(min)
 	loc Dx = r(max) - r(min)
-	sum yhat_`fuel'_`yr' if year>=`yr'-2 & year <= `yr'+2 
+	sum yhat_`fuel'_`yr'_na if year>=`yr'-2 & year <= `yr'+2 
 	loc Dy = r(max) - r(min)
 	loc slope = `Dy'/`Dx'
 	di "average slope of `fuel' is `slope'"
