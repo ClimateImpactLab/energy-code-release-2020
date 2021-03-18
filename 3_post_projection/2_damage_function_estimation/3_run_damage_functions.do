@@ -30,7 +30,7 @@ glob dir "$DB_data/projection_system_outputs/damage_function_estimation"
 * SSP toggle - options are "SSP2", "SSP3", or "SSP4"
 loc ssp = "SSP3" 
 
-* Model toggle  - options are "main", "lininter", or "lininter_double"
+* Model toggle  - options are "main", "lininter", "lininter_double", or "lininter_half"
 loc model = "main"
 
 * What year do we use data from for determining DF estimates used for the out of sample extrapolation
@@ -53,7 +53,7 @@ if("`model'" == "main") {
 		loc pricelist price014 
 	}
 } 
-else if (inlist("`model'", "lininter", "lininter_double")){
+else if (inlist("`model'", "lininter", "lininter_double", "lininter_half")){
 	loc model_tag = "_`model'"
 	assert("`ssp'" == "SSP3")
 	loc pricelist price014 

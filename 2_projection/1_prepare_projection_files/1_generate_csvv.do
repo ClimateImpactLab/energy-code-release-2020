@@ -38,10 +38,10 @@ cap mkdir "`output_csvv'"
 local break_data "$root/data/break_data_TINV_clim.dta"
 
 * Loop over model type - creating csvvs for each type. 
-* Note TINV_clim_lininter_double is exactly the same csvv as TINV_clim_lininter
+* Note TINV_clim_lininter_double and TINV_clim_lininter_half are exactly the same csvv as TINV_clim_lininter
 * Hence we copy the csvv made for TINV_clim_lininter
 * 
-foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double"{
+foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double" "TINV_clim_lininter_half"{
 	
 	if(inlist("`model_tt'", "TINV_clim", "TINV_clim_lininter")){
 
@@ -90,6 +90,16 @@ foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double"
 		foreach product in "_other_energy" "_electricity" ""{
 			copy "`output_csvv'/TINV_clim_lininter/FD_FGLS_inter_OTHERIND`product'_TINV_clim_lininter.csvv" ///
 				"`output_csvv'/TINV_clim_lininter_double/FD_FGLS_inter_OTHERIND`product'_TINV_clim_lininter_double.csvv", replace 
+		}
+
+	}
+	else if("`model_tt'" == "TINV_clim_lininter_half"){
+
+		cap mkdir "`output_csvv'/TINV_clim_lininter_half"
+		
+		foreach product in "_other_energy" "_electricity" ""{
+			copy "`output_csvv'/TINV_clim_lininter/FD_FGLS_inter_OTHERIND`product'_TINV_clim_lininter.csvv" ///
+				"`output_csvv'/TINV_clim_lininter_half/FD_FGLS_inter_OTHERIND`product'_TINV_clim_lininter_half.csvv", replace 
 		}
 
 	}

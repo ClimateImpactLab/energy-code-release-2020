@@ -17,7 +17,7 @@
     - `fuel` is either electricity, other_energy, or total_energy.
     - `price_scenario` is one of the pricing scenarios we apply to our projected impacts to convert them into dollars. See Appendix Section D for more information. 
     - `ssp` is the Shared Socioeconomic Pathway scenario used in the projection to define our income and population covariates. We include some projection results for SSP2, SSP3, and SSP4 in this code release. 
-    - `model_tag` refers to the econometric specification. If this is blank, then we are refering to the main model described in the main text of the paper. Other options are `lininter` (which includes a linear time interaction, as detailed in Appendix Section I.3) and `lininter_double` (which deterministically doubles the time trend estimated in the `lininter` model as detailed in Appendix Section I.3).
+    - `model_tag` refers to the econometric specification. If this is blank, then we are refering to the main model described in the main text of the paper. Other options are `lininter` (which includes a linear time interaction, as detailed in Appendix Section I.3) and `lininter_double`, `lininter_half` (which deterministically doubles or halves the time trend estimated in the `lininter` model as detailed in Appendix Section I.3).
 - We also use Global Mean Surface Temperature (GMST) anomaly data that contains warming relative to the average GMST over 2001-2010 under each of the 33 climate projections in the SMME. These data are contained in: 
   - `code_release_data_pixel_interaction/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010.csv`
 

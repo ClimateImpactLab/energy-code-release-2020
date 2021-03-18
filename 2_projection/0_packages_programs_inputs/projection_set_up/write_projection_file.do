@@ -367,6 +367,9 @@ syntax , product(string) proj_type(string) [ proj_mode(string) ] break_data(stri
 	if("`proj_model'" == "TINV_clim_lininter_double"){
 		file write yml "yearcovarscale: 2" _n
 	}
+	if("`proj_model'" == "TINV_clim_lininter_half"){
+		file write yml "yearcovarscale: 0.5" _n
+	}
 
 	file close yml
 end

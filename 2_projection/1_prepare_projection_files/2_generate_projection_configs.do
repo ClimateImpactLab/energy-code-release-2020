@@ -62,9 +62,9 @@ local IF "_all-issues" //second-reading-issues revised-first-reading-issues matc
 //Climate Data type
 local clim_data "GMFD"
 
-//Model type-- Options: TINV_clim, TINV_clim_lininter, TINV_clim_lininter_double
+//Model type-- Options: TINV_clim, TINV_clim_lininter, TINV_clim_lininter_double, TINV_clim_lininter_half
 
-foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double" {
+foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double" "TINV_clim_lininter_half"{
 
 
 	if("`model_tt'" == "TINV_clim"){

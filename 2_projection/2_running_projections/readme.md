@@ -81,6 +81,16 @@ In the paper, we include projection results for:
 ./generate.sh {your path}/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim_lininter_double/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_electricity.yml  30
 ```
 
+
+### Econometric specification with linear time trend, deterministically doubled (`lininter_half`) (Appendix Section I.3)
+In the paper, we include projection results for: 
+  - SSP3 point estimate 
+```
+./generate.sh {your path}/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim_lininter_half/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_other_energy.yml  30
+./generate.sh {your path}/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim_lininter_half/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_electricity.yml  30
+```
+
+
 ### Slow adaptation model (Appendix Section I.1)
 In the paper, we include projection results for: 
 - SSP3, climate projections from the CCSM4 climate model

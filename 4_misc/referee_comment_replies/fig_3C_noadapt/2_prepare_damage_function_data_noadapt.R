@@ -72,6 +72,8 @@ get_values_csv = function(price, fuel, years = NULL, pop_df= NULL, ssp = "SSP3",
 		model_tag = "_lininter"
 	}else if (model == "TINV_clim_lininter_double"){
 		model_tag = "_lininter_double"
+	}else if (model == "TINV_clim_lininter_half"){
+		model_tag = "_lininter_half"
 	}
 
 	args = list(
