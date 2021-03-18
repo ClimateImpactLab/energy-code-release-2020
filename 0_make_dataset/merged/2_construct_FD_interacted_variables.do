@@ -47,15 +47,22 @@ forval i=1/2 {
 	
 ** First Difference temp, temp x year, temp x year^2, and temp x decade **
 
+// generate a year variable centered around 1971
+gen cyear = year - 1971
+
 forval i=1/4 {
 	
 	// temp
 	qui gen double FD_temp`i'_GMFD = temp`i'_GMFD - L1.temp`i'_GMFD
 	
 	// temp x year
-	qui gen double FD_yeartemp`i'_GMFD = (year * temp`i'_GMFD) - (L1.year * L1.temp`i'_GMFD)
+	//qui gen double FD_yeartemp`i'_GMFD = (year * temp`i'_GMFD) - (L1.year * L1.temp`i'_GMFD)
+
+	// temp x year
+	qui gen double FD_yeartemp`i'_GMFD = (cyear * temp`i'_GMFD) - (L1.cyear * L1.temp`i'_GMFD)
 
 	// temp x year^2
+
 	qui gen double FD_year2temp`i'_GMFD = (year * year * temp`i'_GMFD) - (L1.year * L1.year * L1.temp`i'_GMFD)
 
 	// temp x decade
@@ -77,9 +84,13 @@ forval lg = 1/10 {
 
 forval lg=1/2 {
 	forval i=1/4 {
-		qui gen double FD_dc1_lgdppc_MA15yearI`lg'temp`i' = ///
+/* 		qui gen double FD_dc1_lgdppc_MA15yearI`lg'temp`i' = ///
 		( dc1_lgdppc_MA15 * temp`i'_GMFD * largeind`lg' * year ) ///
 		- ( L1.dc1_lgdppc_MA15 * L1.temp`i'_GMFD * L1.largeind`lg' * L1.year )
+ */	
+ 		qui gen double FD_dc1_lgdppc_MA15yearI`lg'temp`i' = ///
+		( dc1_lgdppc_MA15 * temp`i'_GMFD * largeind`lg' * cyear ) ///
+		- ( L1.dc1_lgdppc_MA15 * L1.temp`i'_GMFD * L1.largeind`lg' * L1.cyear )
 	}
 }		
 		

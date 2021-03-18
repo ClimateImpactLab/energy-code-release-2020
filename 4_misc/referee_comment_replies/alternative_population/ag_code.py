@@ -8,6 +8,8 @@
 #   `stat` (eg. "sum" or "median") to aggregate pixels and save
 #   output as a csv in `out_dir`
 
+# purpose: to aggregate the gridded pop to IR level
+
 from pprint import pprint
 import fiona
 from rasterstats import zonal_stats
