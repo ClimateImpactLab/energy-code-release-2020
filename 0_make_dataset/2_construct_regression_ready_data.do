@@ -115,6 +115,9 @@ replace hdd20_TINV_GMFD = hdd20_other_TINV_GMFD if inlist(product,"other_energy"
 		qui replace largegpid_other_energy = 2 if (gpid >= 3) & (gpid <= 6) 
 		qui replace largegpid_other_energy = 2 if (gpid >= 7) & (gpid <= 10)				
 
+		** center the year around 1971
+		gen cyear = year - 1971
+
 		//keep only necessary vars
 		keep cdd20_TINV_GMFD hdd20_TINV_GMFD country year cyear lgdppc_MA15 gpid tpid tgpid large*
 
