@@ -21,9 +21,11 @@ else local model_name = "`model'"
 
 if (strpos("`model_name'", "EX") == 0) {
 	use "$root/data/GMFD_`model'_regsort.dta", clear
+	di "$root/data/GMFD_`model'_regsort.dta"
 }
 else {
 	use "$root/data/GMFD_`model_name'_regsort.dta", clear
+	di "$root/data/GMFD_`model_name'_regsort.dta"
 }
 
 ********************************************************************************
