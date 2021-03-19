@@ -49,7 +49,7 @@ restore
 * load temporal trend ster file
 
 
-estimates use "$root/sters/FD_FGLS_inter_`model'_lininter.ster"
+estimates use "$root/sters/FD_FGLS_inter_`model'_lininter_cyear.ster"
 
 * set product specific index for coefficients
 

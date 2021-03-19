@@ -28,7 +28,9 @@ local col_ov "`col_`var'_ov'"
 
 local cyear = 2099 - 1971
 			
-********************************************************************************
+********************************************
+
+************************************
 * Step 1: Load Data and Clean for Plotting
 ********************************************************************************
 		
@@ -195,7 +197,8 @@ forval lg=3(-1)1 {	//Income tercile
 			}
 			
 			// trace out does response equation and add to local for plotting 
-			estimates use "$root/sters/FD_FGLS_inter_`plot_model'"
+			estimates use "$root/sters/FD_FGLS_inter_`plot_model'_cyear"
+			di "$root/sters/FD_FGLS_inter_`plot_model'_cyear"
 
 			predictnl yhat`cellid'`type' = `line', se(se`cellid'`type') ci(lower`cellid'`type' upper`cellid'`type')
 

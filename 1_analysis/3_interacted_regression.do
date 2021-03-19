@@ -24,7 +24,7 @@ global model "TINV_clim"
 ********************************************************************************
 * Step 1: Estimate Energy Temperature Response
 ********************************************************************************
-
+/* 
 foreach submodel in "" "EX" "lininter" "quadinter"  {
 
 	global submodel "`submodel'"
@@ -33,11 +33,11 @@ foreach submodel in "" "EX" "lininter" "quadinter"  {
 
 } 
 
-
+ */
 ********************************************************************************
 * Step 2: Plot Energy Temperature Response
 ********************************************************************************
-
+/* 
 foreach product in "other_energy" "electricity" {
 	foreach submodel in "" "EX" "lininter" "quadinter" {
 		
@@ -48,7 +48,7 @@ foreach product in "other_energy" "electricity" {
 		do $root/1_analysis/interacted_regression_year_centered/plot_stacked.do
 
 	}
-}
+} */
  
 ********************************************************************************
 * Step 3: Plot Marginal Effect of Time on Energy Temperature Response 

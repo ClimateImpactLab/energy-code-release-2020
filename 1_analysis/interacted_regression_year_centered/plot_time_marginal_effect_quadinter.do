@@ -62,7 +62,7 @@ pause on
 
 * load temporal trend ster file
 
-estimates use "$root/sters/FD_FGLS_inter_`model'_quadinter.ster"
+estimates use "$root/sters/FD_FGLS_inter_`model'_quadinter_cyear.ster"
 
 * set product specific index for coefficients
 
