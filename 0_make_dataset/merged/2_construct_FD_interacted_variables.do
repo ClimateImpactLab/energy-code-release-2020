@@ -20,7 +20,7 @@ qui replace decade=4 if (year<=2012 & year>=2001)
 qui tab decade, gen(decind)
 
 ** center the year around 1971
-cyear = year - 1971
+gen cyear = year - 1971
 
 ** Generate income spline variable **
 
