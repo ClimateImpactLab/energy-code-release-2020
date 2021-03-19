@@ -25,18 +25,15 @@ local MEgraphic
 use "$root/data/GMFD_`model'_regsort.dta", clear
 
 //Set up locals for plotting
-local obs = 35 + abs(-5) + 1
+local obs = 2100 - 1971 + 1
 
 //clean data for plotting
 drop if _n > 0
 set obs `obs'
 
-replace temp1_GMFD = _n - 6
+replace year = _n 
+replace cyear = year + 1970
 
-foreach k of num 1/2 {
-	rename temp`k'_GMFD temp`k'
-	replace temp`k' = temp1 ^ `k'
-}
 
 ********************************************************************************
 * Step 2: Set up for plotting by: 
@@ -54,7 +51,6 @@ local ibar = `r(max)'
 restore
 
 * load temporal trend ster file
-
 
 
 ***** note to self: not done from here!!! &^&*^&&^#@%#!WETERTR*
@@ -110,9 +106,10 @@ forval lg = 1/3 {
 	di "`line'"
 	** trace out dose response marginal effect
 	predictnl yhat`lg' = `line', se(se`lg') ci(lower`lg' upper`lg')
+	list yhat* cyear year
 
 	* plot dose response
-	tw rarea upper`lg' lower`lg' year, col(ltbluishgray) || line yhat`lg' temp1, lc (dknavy) ///
+	tw rarea upper`lg' lower`lg' year, col(ltbluishgray) || line yhat`lg' year, lc (dknavy) ///
 	yline(0, lwidth(vthin)) xlabel(-5(10)35, labsize(vsmall)) ///
 	ylabel(, labsize(vsmall) nogrid) legend(off) ///
 	subtitle("Income Tercile `lg'", size(vsmall) color(dkgreen)) ///
@@ -130,7 +127,4 @@ plotregion(color(white)) graphregion(color(white)) name(comb`i', replace)
 graph export "$root/figures/`fig'_ME_time_`model'_quadinter_`var'_cyear.pdf", replace
 graph drop _all
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 254a5cafd2aae66a1d2c7b3cb21397a7597baeb6
