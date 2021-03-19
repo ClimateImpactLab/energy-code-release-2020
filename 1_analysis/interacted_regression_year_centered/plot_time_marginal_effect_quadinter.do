@@ -31,8 +31,8 @@ local obs = 2100 - 1971 + 1
 drop if _n > 0
 set obs `obs'
 
-replace year = _n 
-replace cyear = year + 1970
+replace cyear = _n 
+replace year = cyear + 1970
 
 
 ********************************************************************************
@@ -110,7 +110,7 @@ forval lg = 1/3 {
 
 	* plot dose response
 	tw rarea upper`lg' lower`lg' year, col(ltbluishgray) || line yhat`lg' year, lc (dknavy) ///
-	yline(0, lwidth(vthin)) xlabel(-5(10)35, labsize(vsmall)) ///
+	yline(0, lwidth(vthin))  ///
 	ylabel(, labsize(vsmall) nogrid) legend(off) ///
 	subtitle("Income Tercile `lg'", size(vsmall) color(dkgreen)) ///
 	ytitle("", size(small)) xtitle("", size(small)) ///
