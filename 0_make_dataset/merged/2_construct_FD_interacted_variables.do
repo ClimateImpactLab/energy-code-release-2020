@@ -19,6 +19,9 @@ qui replace decade=3 if (year<=2000 & year>=1991)
 qui replace decade=4 if (year<=2012 & year>=2001)
 qui tab decade, gen(decind)
 
+** center the year around 1971
+cyear = year - 1971
+
 ** Generate income spline variable **
 
 gen dc1_lgdppc_MA15 = .
@@ -56,10 +59,11 @@ forval i=1/4 {
 	
 	// temp x year
 	qui gen double FD_yeartemp`i'_GMFD = (year * temp`i'_GMFD) - (L1.year * L1.temp`i'_GMFD)
+	qui gen double FD_cyeartemp`i'_GMFD = (cyear * temp`i'_GMFD) - (L1.cyear * L1.temp`i'_GMFD)
 
 	// temp x year^2
-
 	qui gen double FD_year2temp`i'_GMFD = (year * year * temp`i'_GMFD) - (L1.year * L1.year * L1.temp`i'_GMFD)
+	qui gen double FD_cyear2temp`i'_GMFD = (cyear * cyear * temp`i'_GMFD) - (L1.cyear * L1.cyear * L1.temp`i'_GMFD)
 
 	// temp x decade
 	forval dg=1/2 {
@@ -83,6 +87,11 @@ forval lg=1/2 {
  		qui gen double FD_dc1_lgdppc_MA15yearI`lg'temp`i' = ///
 		( dc1_lgdppc_MA15 * temp`i'_GMFD * largeind`lg' * year ) ///
 		- ( L1.dc1_lgdppc_MA15 * L1.temp`i'_GMFD * L1.largeind`lg' * L1.year )
+
+ 		qui gen double FD_dc1_lgdppc_MA15cyearI`lg'temp`i' = ///
+		( dc1_lgdppc_MA15 * temp`i'_GMFD * largeind`lg' * cyear ) ///
+		- ( L1.dc1_lgdppc_MA15 * L1.temp`i'_GMFD * L1.largeind`lg' * L1.cyear )
+
 	}
 }		
 		
@@ -93,6 +102,10 @@ forval lg=1/2 {
 		qui gen double FD_dc1_lgdppc_MA15year2I`lg'temp`i' = ///
 		( dc1_lgdppc_MA15 * temp`i'_GMFD * largeind`lg' * year * year ) ///
 		- ( L1.dc1_lgdppc_MA15 * L1.temp`i'_GMFD * L1.largeind`lg' * L1.year * L1.year )
+		
+		qui gen double FD_dc1_lgdppc_MA15cyear2I`lg'temp`i' = ///
+		( dc1_lgdppc_MA15 * temp`i'_GMFD * largeind`lg' * cyear * cyear ) ///
+		- ( L1.dc1_lgdppc_MA15 * L1.temp`i'_GMFD * L1.largeind`lg' * L1.cyear * L1.cyear )
 	}
 }		
 		

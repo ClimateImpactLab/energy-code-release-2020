@@ -31,8 +31,8 @@ else {
 ********************************************************************************
 
 // set time
-sort region_i year 
-tset region_i year
+sort region_i cyear 
+tset region_i cyear
 
 * long run income x income group
 
@@ -97,24 +97,24 @@ forval pg=1/2 {
 
 if ("`submodel'" == "lininter" | "`submodel'" == "quadinter" ) {
 	
-	* temp x year
+	* temp x cyear
 
-	local year_temp_r = ""
+	local cyear_temp_r = ""
 
 	forval pg=1/2 {
 		forval k = 1/2 {
-			local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#c.FD_yeartemp`k'_GMFD"
+			local cyear_temp_r = "`cyear_temp_r' c.indp`pg'#c.indf1#c.FD_cyeartemp`k'_GMFD"
 		}	
 	}
 		
-	* temp x year x income spline
+	* temp x cyear x income spline
 
-	local year_income_spline_r = ""
+	local cyear_income_spline_r = ""
 	
 	forval pg=1/2 {
 		forval lg = 1/2 {
 			forval k = 1/2 {
-				local year_income_spline_r = "`year_income_spline_r' c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15yearI`lg'temp`k'"
+				local cyear_income_spline_r = "`cyear_income_spline_r' c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15cyearI`lg'temp`k'"
 			}
 		}		
 	}
@@ -125,20 +125,20 @@ if ("`submodel'" == "lininter" | "`submodel'" == "quadinter" ) {
 
 if ("`submodel'" == "quadinter") {
 	
-	* temp x year^2
+	* temp x cyear^2
 
 	forval pg=1/2 {
 		forval k = 1/2 {
-			local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#c.FD_year2temp`k'_GMFD"
+			local cyear_temp_r = "`cyear_temp_r' c.indp`pg'#c.indf1#c.FD_cyear2temp`k'_GMFD"
 		}	
 	}
 		
-	* temp x year^2 x income spline
+	* temp x cyear^2 x income spline
 	
 	forval pg=1/2 {
 		forval lg = 1/2 {
 			forval k = 1/2 {
-				local year_income_spline_r = "`year_income_spline_r' c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15year2I`lg'temp`k'"
+				local cyear_income_spline_r = "`cyear_income_spline_r' c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15cyear2I`lg'temp`k'"
 			}
 		}		
 	}
@@ -147,9 +147,9 @@ if ("`submodel'" == "quadinter") {
 
 //run first stage regression
 reghdfe FD_load_pc `temp_r' `precip_r' `climate_r' ///
-`lgdppc_MA15_r' `income_spline_r' `year_temp_r' `year_income_spline_r' ///
-DumInc*, absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i) residuals(resid)
-estimates save "$root/sters/FD_inter_`model_name'", replace	
+`lgdppc_MA15_r' `income_spline_r' `cyear_temp_r' `cyear_income_spline_r' ///
+DumInc*, absorb(i.flow_i#i.product_i#i.cyear#i.subregionid) cluster(region_i) residuals(resid)
+estimates save "$root/sters/FD_inter_`model_name'_cyear", replace	
 
 
 
@@ -161,9 +161,9 @@ drop resid //included
 
 //run second stage FGLS regression
 reghdfe FD_load_pc `temp_r' `precip_r' `climate_r' ///
-`lgdppc_MA15_r' `income_spline_r' `year_temp_r' `year_income_spline_r' ///
-DumInc* [pw = weight], absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i)
-estimates save "$root/sters/FD_FGLS_inter_`model_name'", replace
+`lgdppc_MA15_r' `income_spline_r' `cyear_temp_r' `cyear_income_spline_r' ///
+DumInc* [pw = weight], absorb(i.flow_i#i.product_i#i.cyear#i.subregionid) cluster(region_i)
+estimates save "$root/sters/FD_FGLS_inter_`model_name'_cyear", replace
 
 
 
