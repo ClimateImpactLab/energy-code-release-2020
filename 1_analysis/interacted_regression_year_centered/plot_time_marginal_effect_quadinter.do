@@ -74,7 +74,7 @@ else if "`var'"=="other_energy" {
 foreach temp in 0 35 {
 	* loop over income terciles
 	cap drop *yhat* *lower* *upper* *se*
-
+	local MEgraphic 
 	forval lg = 1/3 {
 
 		// get income spline for plotting
@@ -142,7 +142,7 @@ foreach temp in 0 35 {
 	* loop over income terciles
  
 	cap drop *yhat* *lower* *upper*  *se*
-
+	local MEgraphic
 	forval lg = 1/3 {
 
 		// get income spline for plotting
