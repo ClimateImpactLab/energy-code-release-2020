@@ -69,62 +69,129 @@ else if "`var'"=="other_energy" {
 	local pg=2
 }
 
-* loop over income terciles
 
-forval lg = 1/3 {
+// loop over temperature
+foreach temp in 0 35 {
+	* loop over income terciles
+	cap drop *yhat* *lower* *upper* *se*
 
-	// get income spline for plotting
-	
-	preserve
-	
-		use "$root/data/break_data_`model'.dta", clear
-		duplicates drop tpid tgpid, force
-		sort tpid tgpid 
-		local subInc = avgInc_tgpid[`lg']
-		local deltacut_subInc = `subInc' - `ibar'
+	forval lg = 1/3 {
 
-	restore
+		// get income spline for plotting
+		
+		preserve
+		
+			use "$root/data/break_data_`model'.dta", clear
+			duplicates drop tpid tgpid, force
+			sort tpid tgpid 
+			local subInc = avgInc_tgpid[`lg']
+			local deltacut_subInc = `subInc' - `ibar'
 
-	// assign the large income group based on the cell's income covariate
-	if `subInc' > `ibar' local ig = 2
-	else if `subInc' <= `ibar' local ig = 1
+		restore
 
-	// construct energy temperature response marginal effect of time in tech trend model
-	local line ""
-	local add ""
-	forval k=1/2 {
-		local line " `line' `add' _b[c.indp`pg'#c.indf1#c.FD_cyeartemp`k'_GMFD] * (35^`k' - 20^`k') * cyear "
-		local line "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15cyearI`ig'temp`k'] * `deltacut_subInc' * (35^`k' - 20^`k') * cyear"
-		local add " + "
+		// assign the large income group based on the cell's income covariate
+		if `subInc' > `ibar' local ig = 2
+		else if `subInc' <= `ibar' local ig = 1
+
+		// construct energy temperature response marginal effect of time in tech trend model
+		local line ""
+		local add ""
+		forval k=1/2 {
+			local line " `line' `add' _b[c.indp`pg'#c.indf1#c.FD_cyeartemp`k'_GMFD] * (`temp'^`k' - 20^`k') * cyear "
+			local line "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15cyearI`ig'temp`k'] * `deltacut_subInc' * (`temp'^`k' - 20^`k') * cyear"
+			local add " + "
+		}
+		forval k=1/2 {
+			local line " `line' `add' _b[c.indp`pg'#c.indf1#c.FD_cyear2temp`k'_GMFD] * (`temp'^`k' - 20^`k') * cyear^2"
+			local line "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15cyear2I`ig'temp`k'] * `deltacut_subInc' * (`temp'^`k' - 20^`k') * cyear^2 "
+			local add " + "
+		}
+		* pause
+		di "`line'"
+		** trace out dose response marginal effect
+		predictnl yhat`lg' = `line', se(se`lg') ci(lower`lg' upper`lg')
+		list yhat* cyear year
+
+		* plot dose response
+		tw rarea upper`lg' lower`lg' year, col(ltbluishgray) || line yhat`lg' year, lc (dknavy) ///
+		yline(0, lwidth(vthin))  ///
+		ylabel(, labsize(vsmall) nogrid) legend(off) ///
+		subtitle("Income Tercile `lg'", size(vsmall) color(dkgreen)) ///
+		ytitle("", size(small)) xtitle("", size(small)) ///
+		plotregion(color(white)) graphregion(color(white)) nodraw ///
+		name(MEaddgraph`lg', replace)			
+		**add graphic**
+		local MEgraphic= "`MEgraphic' MEaddgraph`lg'"
 	}
-	forval k=1/2 {
-		local line " `line' `add' _b[c.indp`pg'#c.indf1#c.FD_cyear2temp`k'_GMFD] * (35^`k' - 20^`k') * cyear^2"
-		local line "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15cyear2I`ig'temp`k'] * `deltacut_subInc' * (35^`k' - 20^`k') * cyear^2 "
-		local add " + "
-	}
-	* pause
-	di "`line'"
-	** trace out dose response marginal effect
-	predictnl yhat`lg' = `line', se(se`lg') ci(lower`lg' upper`lg')
-	list yhat* cyear year
+		
+	graph combine `MEgraphic', imargin(zero) ycomm rows(1) xsize(9) ysize(3) ///
+	subtitle("Marginal Effect of Time `var'", size(small)) ///
+	plotregion(color(white)) graphregion(color(white)) name(comb`i', replace)
+	graph export "$root/figures/`fig'_ME_time_`model'_quadinter_`var'_`temp'C_cyear.pdf", replace
+	graph drop _all
 
-	* plot dose response
-	tw rarea upper`lg' lower`lg' year, col(ltbluishgray) || line yhat`lg' year, lc (dknavy) ///
-	yline(0, lwidth(vthin))  ///
-	ylabel(, labsize(vsmall) nogrid) legend(off) ///
-	subtitle("Income Tercile `lg'", size(vsmall) color(dkgreen)) ///
-	ytitle("", size(small)) xtitle("", size(small)) ///
-	plotregion(color(white)) graphregion(color(white)) nodraw ///
-	name(MEaddgraph`lg', replace)			
-	**add graphic**
-	local MEgraphic= "`MEgraphic' MEaddgraph`lg'"
 }
-	
-	
-graph combine `MEgraphic', imargin(zero) ycomm rows(1) xsize(9) ysize(3) ///
-subtitle("Marginal Effect of Time `var'", size(small)) ///
-plotregion(color(white)) graphregion(color(white)) name(comb`i', replace)
-graph export "$root/figures/`fig'_ME_time_`model'_quadinter_`var'_cyear.pdf", replace
-graph drop _all
 
 
+
+
+// plot lininter in the same manner as sanity check
+estimates use "$root/sters/FD_FGLS_inter_`model'_lininter_cyear.ster"
+// loop over temperature
+foreach temp in 0 35 {
+	* loop over income terciles
+ 
+	cap drop *yhat* *lower* *upper*  *se*
+
+	forval lg = 1/3 {
+
+		// get income spline for plotting
+		
+		preserve
+		
+			use "$root/data/break_data_`model'.dta", clear
+			duplicates drop tpid tgpid, force
+			sort tpid tgpid 
+			local subInc = avgInc_tgpid[`lg']
+			local deltacut_subInc = `subInc' - `ibar'
+
+		restore
+
+		// assign the large income group based on the cell's income covariate
+		if `subInc' > `ibar' local ig = 2
+		else if `subInc' <= `ibar' local ig = 1
+
+		// construct energy temperature response marginal effect of time in tech trend model
+		local line ""
+		local add ""
+		forval k=1/2 {
+			local line " `line' `add' _b[c.indp`pg'#c.indf1#c.FD_cyeartemp`k'_GMFD] * (`temp'^`k' - 20^`k') * cyear "
+			local line "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15cyearI`ig'temp`k'] * `deltacut_subInc' * (`temp'^`k' - 20^`k') * cyear"
+			local add " + "
+		}
+
+		* pause
+		di "`line'"
+		** trace out dose response marginal effect
+		predictnl yhat`lg' = `line', se(se`lg') ci(lower`lg' upper`lg')
+		list yhat* cyear year
+
+		* plot dose response
+		tw rarea upper`lg' lower`lg' year, col(ltbluishgray) || line yhat`lg' year, lc (dknavy) ///
+		yline(0, lwidth(vthin))  ///
+		ylabel(, labsize(vsmall) nogrid) legend(off) ///
+		subtitle("Income Tercile `lg'", size(vsmall) color(dkgreen)) ///
+		ytitle("", size(small)) xtitle("", size(small)) ///
+		plotregion(color(white)) graphregion(color(white)) nodraw ///
+		name(MEaddgraph`lg', replace)			
+		**add graphic**
+		local MEgraphic= "`MEgraphic' MEaddgraph`lg'"
+	}
+		
+	graph combine `MEgraphic', imargin(zero) ycomm rows(1) xsize(9) ysize(3) ///
+	subtitle("Marginal Effect of Time `var'", size(small)) ///
+	plotregion(color(white)) graphregion(color(white)) name(comb`i', replace)
+	graph export "$root/figures/`fig'_ME_time_`model'_lininter_`var'_`temp'C_cyear.pdf", replace
+	graph drop _all
+
+}
