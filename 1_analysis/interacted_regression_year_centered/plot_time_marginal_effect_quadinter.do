@@ -130,3 +130,4 @@ subtitle("Marginal Effect of Time `var'", size(small)) ///
 plotregion(color(white)) graphregion(color(white)) name(comb`i', replace)
 graph export "$root/figures/`fig'_ME_time_`model'_quadinter_`var'_cyear.pdf", replace
 graph drop _all
+
