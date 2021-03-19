@@ -181,5 +181,3 @@ write_csv(df, paste0(output, '/projection_system_outputs/covariates/',
 	'SSP3-low-IR_level-gdppc-pop-gdp-all-years.csv'))
 
 
-
-
