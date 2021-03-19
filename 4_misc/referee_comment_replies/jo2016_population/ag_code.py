@@ -90,3 +90,6 @@ results.to_csv("/home/liruixue/temp/pop.csv", index = False)
 
 
 results[results.year == "2010"].sort_values(by = ["sum_value"])
+
+
+

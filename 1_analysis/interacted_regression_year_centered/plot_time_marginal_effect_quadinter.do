@@ -97,14 +97,13 @@ forval lg = 1/3 {
 	local line ""
 	local add ""
 	forval k=1/2 {
-		local line " `line' `add' _b[c.indp`pg'#c.indf1#c.FD_cyeartemp`k'_GMFD] * (temp`k' - 20^`k') "
-		local line "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15cyearI`ig'temp`k'] * `deltacut_subInc' * (temp`k' - 20^`k')"
+		local line " `line' `add' _b[c.indp`pg'#c.indf1#c.FD_cyeartemp`k'_GMFD] * (35^`k' - 20^`k') * cyear "
+		local line "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15cyearI`ig'temp`k'] * `deltacut_subInc' * (35^`k' - 20^`k') * cyear"
 		local add " + "
 	}
-
 	forval k=1/2 {
-		local line " `line' `add' _b[c.indp`pg'#c.indf1#c.FD_cyear2temp`k'_GMFD] * (temp`k' - 20^`k') * cyear * 2"
-		local line "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15cyear2I`ig'temp`k'] * `deltacut_subInc' * (temp`k' - 20^`k') * cyear * 2"
+		local line " `line' `add' _b[c.indp`pg'#c.indf1#c.FD_cyear2temp`k'_GMFD] * (35^`k' - 20^`k') * cyear^2"
+		local line "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15cyear2I`ig'temp`k'] * `deltacut_subInc' * (35^`k' - 20^`k') * cyear^2 "
 		local add " + "
 	}
 	* pause
@@ -113,7 +112,7 @@ forval lg = 1/3 {
 	predictnl yhat`lg' = `line', se(se`lg') ci(lower`lg' upper`lg')
 
 	* plot dose response
-	tw rarea upper`lg' lower`lg' temp1, col(ltbluishgray) || line yhat`lg' temp1, lc (dknavy) ///
+	tw rarea upper`lg' lower`lg' year, col(ltbluishgray) || line yhat`lg' temp1, lc (dknavy) ///
 	yline(0, lwidth(vthin)) xlabel(-5(10)35, labsize(vsmall)) ///
 	ylabel(, labsize(vsmall) nogrid) legend(off) ///
 	subtitle("Income Tercile `lg'", size(vsmall) color(dkgreen)) ///
@@ -130,3 +129,5 @@ subtitle("Marginal Effect of Time `var'", size(small)) ///
 plotregion(color(white)) graphregion(color(white)) name(comb`i', replace)
 graph export "$root/figures/`fig'_ME_time_`model'_quadinter_`var'_cyear.pdf", replace
 graph drop _all
+
+
