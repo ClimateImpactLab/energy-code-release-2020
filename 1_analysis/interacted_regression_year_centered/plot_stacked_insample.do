@@ -17,12 +17,16 @@ local submodel_ov = "$submodel_ov" // What submodel is gettting overlayed on thi
 // plotting color for main specification and overlay
 
 local col_electricity "dknavy"
-local col_electricity_ov "red"
+local col_electricity_ov1971 "red"
+local col_electricity_ov2010 "pink"
+
 local col_other_energy "dkorange"
-local col_other_energy_ov "black"
+local col_other_energy_ov1971 "black"
+local col_other_energy_ov2010 "grey"
 
 local col_main "`col_`var''"
-local col_ov "`col_`var'_ov'"
+local col_ov1971 "`col_`var'_ov1971'"
+local col_ov2010 "`col_`var'_ov2010'"
 
 ********************************************
 
@@ -67,7 +71,8 @@ restore
 the income spline knot location will vary because the income decile
 locations are different.*/
 
-local ibar_ov = `ibar_main'
+local ibar_ov1971 = `ibar_main'
+local ibar_ov2010 = `ibar_main'
 
 * Set plotting locals and name tags 
 
@@ -81,7 +86,7 @@ local type_list " _main "
 local type_list " _ov1971 _ov2010 `type_list' " 
 
 // create colorguide to help viewer decipher between overlayed spec and non overlayed spec
-local colorGuide "`colorGuide' Overlay Spec: `model_main'_`submodel_ov' (`col_ov') "
+local colorGuide "`colorGuide' Overlay Spec: `model_main'_`submodel_ov' 1971(`col_ov1971') 2010(`col_ov2010') "
 
 local plot_title "main_model_`plot_title'_overlay_model_`submodel_ov'"
 
@@ -130,31 +135,27 @@ forval lg=3(-1)1 {	//Income tercile
 		// loop over plotting models
 		foreach type in `type_list' {
 
-
 			// year to plot temporal trend model:
-
 			if (strpos("`type'", "1971") > 0) {
 				local cyear = 2099 - 1971
-			}else if  (strpos("`type'", "2010") {
+			} 
+			else if (strpos("`type'", "2010") > 0) {
 				local cyear = 2099 - 2010
 			}
 
 			// assign model to be plotted
 			if (strpos("`type'", "ov") > 0) {
 				local plot_model = "`model_main'_`submodel_ov'"
-			}
+			} 
 			else {
 				local plot_model = "`model_main'"
 			}
-			
+
 			// construct income spline
 			local deltacut_subInc = `subInc' - `ibar`type''
-
 			// assign the large income group based on the cell's income covariate
-			
 			if `subInc' > `ibar`type'' local ig = 2
 			else if `subInc' <= `ibar`type'' local ig = 1
-
 			// create dose response function equation
 
 			local line ""
@@ -180,7 +181,7 @@ forval lg=3(-1)1 {	//Income tercile
 				local add " + "
 
 			}
-			
+
 			// trace out does response equation and add to local for plotting 
 			estimates use "$root/sters/FD_FGLS_inter_`plot_model'_cyear"
 			di "$root/sters/FD_FGLS_inter_`plot_model'_cyear"
