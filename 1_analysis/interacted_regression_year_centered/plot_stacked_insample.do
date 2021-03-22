@@ -18,11 +18,11 @@ local submodel_ov = "$submodel_ov" // What submodel is gettting overlayed on thi
 
 local col_electricity "dknavy"
 local col_electricity_ov1971 "red"
-local col_electricity_ov2010 "pink"
+local col_electricity_ov2010 "maroon"
 
 local col_other_energy "dkorange"
 local col_other_energy_ov1971 "black"
-local col_other_energy_ov2010 "grey"
+local col_other_energy_ov2010 "gray"
 
 local col_main "`col_`var''"
 local col_ov1971 "`col_`var'_ov1971'"
