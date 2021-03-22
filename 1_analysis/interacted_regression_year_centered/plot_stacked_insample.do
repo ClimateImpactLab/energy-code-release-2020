@@ -1,7 +1,7 @@
 /*
 
 Purpose: Make 3 x 3 Arrays and Array Overlays energy temperature response with heterogeneity by climate and by income
-
+for lininter and quadinter models, year 1971 and 2010
 */
 
 set scheme s1color
@@ -24,11 +24,9 @@ local col_other_energy_ov "black"
 local col_main "`col_`var''"
 local col_ov "`col_`var'_ov'"
 
-// year to plot temporal trend model:
+********************************************
 
-local year = 2099
-			
-********************************************************************************
+************************************
 * Step 1: Load Data and Clean for Plotting
 ********************************************************************************
 		
@@ -69,16 +67,7 @@ restore
 the income spline knot location will vary because the income decile
 locations are different.*/
 
-if ( "`submodel_ov'" == "EX"  ) {
-	preserve
-	use "$root/data/break_data_`model_main'_`submodel_ov'.dta", clear
-	summ maxInc_largegpid_`var' if largegpid_`var' == 1
-	local ibar_ov = `r(max)'
-	restore
-}
-else {
-	local ibar_ov = `ibar_main'
-}
+local ibar_ov = `ibar_main'
 
 * Set plotting locals and name tags 
 
@@ -88,28 +77,17 @@ local plot_title "`model_main'"
 // create list of model types to loop over
 local type_list " _main "
 
-if ( "`submodel_ov'" != "" ) {
-	
-	// add to list of model types to loop over
-	local type_list " _ov `type_list' "
-	
-	// create colorguide to help viewer decipher between overlayed spec and non overlayed spec
-	local colorGuide "`colorGuide' Overlay Spec: `model_main'_`submodel_ov' (`col_ov') "
+// add to list of model types to loop over
+local type_list " _ov1971 _ov2010 `type_list' " 
 
-	local plot_title "main_model_`plot_title'_overlay_model_`submodel_ov'"
+// create colorguide to help viewer decipher between overlayed spec and non overlayed spec
+local colorGuide "`colorGuide' Overlay Spec: `model_main'_`submodel_ov' (`col_ov') "
 
-	if ("`submodel_ov'" == "lininter" |"`submodel_ov'" == "quadinter") {
-		local fig "fig_Appendix-G3B"
-	}
-	
-	if "`submodel_ov'" == "EX" {
-		local fig "fig_Appendix-G2"
-	}
+local plot_title "main_model_`plot_title'_overlay_model_`submodel_ov'"
 
+if ("`submodel_ov'" == "lininter" |"`submodel_ov'" == "quadinter") {
+	local fig "fig_Appendix-G3B"
 }
-else{
-	local fig "fig_1C"
-}		
 
 ********************************************************************************
 * Step 3: Plot, Plot, Plot
@@ -151,7 +129,16 @@ forval lg=3(-1)1 {	//Income tercile
 
 		// loop over plotting models
 		foreach type in `type_list' {
-			
+
+
+			// year to plot temporal trend model:
+
+			if (strpos("`type'", "1971") > 0) {
+				local cyear = 2099 - 1971
+			}else if  (strpos("`type'", "2010") {
+				local cyear = 2099 - 2010
+			}
+
 			// assign model to be plotted
 			if (strpos("`type'", "ov") > 0) {
 				local plot_model = "`model_main'_`submodel_ov'"
@@ -181,13 +168,13 @@ forval lg=3(-1)1 {	//Income tercile
 				local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
 
 				if ((strpos("`plot_model'", "lininter") > 0) | (strpos("`plot_model'", "quadinter") > 0)) {
-					local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_yeartemp`k'_GMFD] * (temp`k' - 20^`k')*`year'"
-					local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15yearI`ig'temp`k']*`deltacut_subInc'*`year'*(temp`k' - 20^`k')"
+					local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_cyeartemp`k'_GMFD] * (temp`k' - 20^`k')*`cyear'"
+					local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15cyearI`ig'temp`k']*`deltacut_subInc'*`cyear'*(temp`k' - 20^`k')"
 				}
 
 				if (strpos("`plot_model'", "quadinter") > 0) {
-					local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_year2temp`k'_GMFD] * (temp`k' - 20^`k')*`year'*`year'"
-					local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15year2I`ig'temp`k']*`deltacut_subInc'*`year'*`year'*(temp`k' - 20^`k')"
+					local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_cyear2temp`k'_GMFD] * (temp`k' - 20^`k')*`cyear'*`cyear'"
+					local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15cyear2I`ig'temp`k']*`deltacut_subInc'*`cyear'*`cyear'*(temp`k' - 20^`k')"
 				}
 
 				local add " + "
@@ -195,7 +182,8 @@ forval lg=3(-1)1 {	//Income tercile
 			}
 			
 			// trace out does response equation and add to local for plotting 
-			estimates use "$root/sters/FD_FGLS_inter_`plot_model'"
+			estimates use "$root/sters/FD_FGLS_inter_`plot_model'_cyear"
+			di "$root/sters/FD_FGLS_inter_`plot_model'_cyear"
 
 			predictnl yhat`cellid'`type' = `line', se(se`cellid'`type') ci(lower`cellid'`type' upper`cellid'`type')
 
@@ -203,25 +191,13 @@ forval lg=3(-1)1 {	//Income tercile
 			loc noSE = "`noSE' line yhat`cellid'`type' temp1, lc (`col`type'') ||"
 			
 		}
-		
-		if ( "`submodel_ov'" == "" ) {
-			// Main model plots include standard errors
-			tw `SE' , yline(0, lwidth(vthin)) xlabel(-5(10)35, labsize(vsmall)) ///
-				ylabel(, labsize(vsmall) nogrid) legend(off) ///
-				subtitle("", size(vsmall) color(dkgreen)) ///
-				ytitle("", size(vsmall)) xtitle("", size(small)) ///
-				plotregion(color(white)) graphregion(color(white)) nodraw ///
-				name(Maddgraph`cellid', replace)
-		}
-		else{
-			//plot with no SE for overlay plots
-			tw `noSE' , yline(0, lwidth(vthin)) xlabel(-5(10)35, labsize(vsmall)) ///
-				ylabel(, labsize(vsmall) nogrid) legend(off) ///
-				subtitle("", size(vsmall) color(dkgreen)) ///
-				ytitle("", size(vsmall)) xtitle("", size(small)) ///
-				plotregion(color(white)) graphregion(color(white)) nodraw ///
-				name(Maddgraph`cellid', replace)
-		}			
+		//plot with no SE for overlay plots
+		tw `noSE' , yline(0, lwidth(vthin)) xlabel(-5(10)35, labsize(vsmall)) ///
+			ylabel(, labsize(vsmall) nogrid) legend(off) ///
+			subtitle("", size(vsmall) color(dkgreen)) ///
+			ytitle("", size(vsmall)) xtitle("", size(small)) ///
+			plotregion(color(white)) graphregion(color(white)) nodraw ///
+			name(Maddgraph`cellid', replace)
 		//add graphic no SE
 		local graphicM="`graphicM' Maddgraph`cellid'"
 	}
@@ -235,7 +211,6 @@ graph combine `graphicM', imargin(zero) ycomm rows(3) ///
 	title("Split Degree Days Poly 2 Interaction Model `var'", size(small)) ///
 	subtitle("`colorGuide'", size(vsmall)) ///
 	plotregion(color(white)) graphregion(color(white)) name(comb_nose, replace)
-graph export "$root/figures/`fig'_`var'_interacted_`plot_title'.pdf", replace
+graph export "$root/figures/`fig'_`var'_interacted_`plot_title'_cyear_insample.pdf", replace
 
 graph drop _all	
-
