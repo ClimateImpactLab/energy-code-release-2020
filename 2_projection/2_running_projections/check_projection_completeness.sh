@@ -3,14 +3,16 @@
 # can be run from anywhere, just set the correct paths
 
 # set some paths and parameters
-# energy=electricity
-energy=other_energy
-dm=_dm
-# dm=""
+energy=electricity
+# energy=other_energy
+# dm=_dm
+dm=""
 # dm="_slow_adapt"
-suffix=""
+# suffix=""
 # suffix=_lininter
 # suffix=_lininter_double
+suffix=_lininter_half
+
 output_root="/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost"
 # output_root="/global/scratch/liruixue/outputs/energy_pixel_interaction/impacts-blueghost"
 output_dir="median_OTHERIND_${energy}_TINV_clim${suffix}_GMFD${dm}" 
