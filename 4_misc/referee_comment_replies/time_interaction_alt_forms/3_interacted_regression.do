@@ -36,14 +36,14 @@ global model "TINV_clim"
 ********************************************************************************
 * Step 2: Plot Energy Temperature Response
 ********************************************************************************
-/* 
+ 
 foreach product in "other_energy" "electricity" {		
 //		global submodel_ov "`submodel'"
 		global product "`product'"
 //		do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_plininter.do
-//		do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_decinter.do
+		do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_decinter.do
 
-} */
+} 
 
 ********************************************************************************
 * Step 3: Plot Marginal Effect of Time on Energy Temperature Response 
@@ -53,8 +53,7 @@ foreach product in "other_energy" "electricity" {
  foreach product in "other_energy" "electricity" {
 	global product "`product'"
 **	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_time_marginal_effect_plininter.do
-	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_time_marginal_effect_over_time_plininter.do
-//	do $root/1_analysis/interacted_regression_year_centered/plot_time_marginal_effect_quadinter.do
+**	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_time_marginal_effect_over_time_plininter.do
 }
 
 
