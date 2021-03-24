@@ -1,7 +1,7 @@
 /*
 
 Purpose: Make 3 x 3 Arrays and Array Overlays energy temperature response with heterogeneity by climate and by income
-for plininter model, 3 curves per cell: 1971 response, 2010 response, main response
+for plininter model, 2 curves per cell: 2099 response, main response
 
 */
 
@@ -25,7 +25,7 @@ local col_other_energy "dkorange"
 local col_other_energy_ov "black"
 
 local col_main "`col_`var''"
-local col_ov1971 "`col_`var'_ov'"
+local col_ov "`col_`var'_ov'"
 
 			
 ********************************************************************************
