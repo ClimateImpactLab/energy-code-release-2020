@@ -92,31 +92,40 @@ foreach temp in 0 35 {
 		if `subInc' > `ibar' local ig = 2
 		else if `subInc' <= `ibar' local ig = 1
 
-		// construct energy temperature response marginal effect of time in tech trend model
-		local line ""
-		local add ""
-		forval k=1/2 {
-			// two cases for the time interaction term: >= and < 1991
-			// turn indt on and off for to select which part of the curve to plot
-			foreach pt in 0 1 {
-				if `pt' == 0 {
-					local sign "(-1) *"
-					replace indt = 1 if year < `tbar'
-					replace indt = 0 if year >= `tbar'					
-				}
-				else {
-					local sign ""
-					replace indt = 1 if year >= `tbar'
-					replace indt = 0 if year < `tbar'
-				}
-				local line " `line' `add' `sign' indt * _b[`pt'.indt#c.indp`pg'#c.indf1#c.FD_pyeartemp`k'_GMFD] * (`temp'^`k' - 20^`k') * pyear "
-				local line "`line' + `sign' indt * _b[`pt'.indt#c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15pyearI`ig'temp`k'] * `deltacut_subInc' * (`temp'^`k' - 20^`k') * pyear"
+	
+		// two cases for the time interaction term: >= and < 1991
+		// turn indt on and off for to select which part of the curve to plot	
+		foreach pt in 0 1 {
+	
+			// construct energy temperature response marginal effect of time in tech trend model
+			local line0 ""
+			local line1 ""
+			local add ""
+
+			if `pt' == 0 {
+				local sign "(-1) *"
+				replace indt = 1 if year < `tbar'
+				replace indt = 0 if year >= `tbar'					
+			}
+			else {
+				local sign ""
+				replace indt = 1 if year >= `tbar'
+				replace indt = 0 if year < `tbar'
+			}
+
+			forval k=1/2 {
+				local line`pt' " `line`pt'' `add' `sign' indt * _b[`pt'.indt#c.indp`pg'#c.indf1#c.FD_pyeartemp`k'_GMFD] * (`temp'^`k' - 20^`k') * pyear "
+				local line`pt' "`line`pt'' + `sign' indt * _b[`pt'.indt#c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15pyearI`ig'temp`k'] * `deltacut_subInc' * (`temp'^`k' - 20^`k') * pyear"
 				local add " + "
 			}
+			** trace out dose response marginal effect
+			predictnl yhat`lg'`pt' = `line`pt'', se(se`lg'`pt') ci(lower`lg'`pt' upper`lg'`pt')
 		}
 
-		** trace out dose response marginal effect
-		predictnl yhat`lg' = `line', se(se`lg') ci(lower`lg' upper`lg')
+		* sum up the two segments
+		foreach v in yhat se lower upper {
+			gen `v'`lg' = `v'`lg'0 + `v'`lg'1
+		}
 
 		* plot dose response
 		tw rarea upper`lg' lower`lg' year, col(ltbluishgray) || line yhat`lg' year, lc (dknavy) ///
