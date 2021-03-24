@@ -35,7 +35,7 @@ sort region_i year
 tset region_i year
 
 // set time variable to be interacted
-if ("`submodel'" == "plinter") {
+if ("`submodel'" == "plininter") {
 	local yr pyear
 	local indv indt
 } 
@@ -113,7 +113,7 @@ local year_temp_r = ""
 
 forval pg=1/2 {
 	forval k = 1/2 {
-		local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#i.indv#c.FD_`yr'temp`k'_GMFD"
+		local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#i.`indv'#c.FD_`yr'temp`k'_GMFD"
 	}	
 }
 * temp x year x income spline
@@ -123,11 +123,10 @@ local year_income_spline_r = ""
 forval pg=1/2 {
 	forval lg = 1/2 {
 		forval k = 1/2 {
-			local year_income_spline_r = "`year_income_spline_r' c.indp`pg'#c.indf1#i.indv#c.FD_dc1_lgdppc_MA15`yr'I`lg'temp`k'"
+			local year_income_spline_r = "`year_income_spline_r' c.indp`pg'#c.indf1#i.`indv'#c.FD_dc1_lgdppc_MA15`yr'I`lg'temp`k'"
 		}
 	}		
 }
-
 
 
 //run first stage regression

@@ -26,41 +26,37 @@ global model "TINV_clim"
 * Step 1: Estimate Energy Temperature Response
 ********************************************************************************
 
-foreach submodel in "plininter" "decinter"  {
+/* foreach submodel in "plininter" "decinter"  {
 
 	global submodel "`submodel'"
-	do $root/4_misc/time_interaction_alt_forms/interacted_regression/stacked.do
+	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/stacked.do
 } 
-
+ */
 
 ********************************************************************************
 * Step 2: Plot Energy Temperature Response
 ********************************************************************************
-
-/* foreach product in "other_energy" "electricity" {
-	foreach submodel in  "plininter" "decinter"  {
-		
-		global submodel_ov "`submodel'"
+/* 
+foreach product in "other_energy" "electricity" {		
+//		global submodel_ov "`submodel'"
 		global product "`product'"
-		do $root/4_misc/time_interaction_alt_forms/plot_stacked.do
+//		do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_plininter.do
+//		do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_decinter.do
 
-	}
-}
-  */
+} */
+
 ********************************************************************************
 * Step 3: Plot Marginal Effect of Time on Energy Temperature Response 
 * for Temporal Trend Model
 ********************************************************************************
  
-/* foreach product in "other_energy" "electricity" {
-	foreach submodel in  "plininter" "decinter"  {
-		global product "`product'"
-		do $root/4_misc/time_interaction_alt_forms/plot_time_marginal_effect.do
+ foreach product in "other_energy" "electricity" {
+	global product "`product'"
+**	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_time_marginal_effect_plininter.do
 //	do $root/1_analysis/interacted_regression_year_centered/plot_time_marginal_effect.do
 //	do $root/1_analysis/interacted_regression_year_centered/plot_time_marginal_effect_quadinter.do
-
 }
- */
+
 
 ********************************************************************************
 * Step 4: Extra Plots Energy Temperature Response (insample)
