@@ -45,7 +45,7 @@ forval lg=1/2 {
 forval i=1/2 {
 	qui gen double FD_precip`i'_GMFD = precip`i'_GMFD - L1.precip`i'_GMFD
 }
-	
+
 ** First Difference temp, temp x year, temp x year^2, and temp x decade **
 
 // generate a year variable centered around 1971
@@ -55,14 +55,23 @@ forval i=1/4 {
 	// temp
 	qui gen double FD_temp`i'_GMFD = temp`i'_GMFD - L1.temp`i'_GMFD
 	
+	foreach yr in year cyear pyear {
+		// temp x year
+		qui gen double FD_`yr'temp`i'_GMFD = (`yr' * temp`i'_GMFD) - (L1.`yr' * L1.temp`i'_GMFD)
+		
+		// temp x year^2
+		qui gen double FD_`yr'2temp`i'_GMFD = (`yr' * `yr' * temp`i'_GMFD) - (L1.`yr' * L1.`yr' * L1.temp`i'_GMFD)
+	}
 	// temp x year
-	qui gen double FD_yeartemp`i'_GMFD = (year * temp`i'_GMFD) - (L1.year * L1.temp`i'_GMFD)
+/* 	qui gen double FD_yeartemp`i'_GMFD = (year * temp`i'_GMFD) - (L1.year * L1.temp`i'_GMFD)
 	qui gen double FD_cyeartemp`i'_GMFD = (cyear * temp`i'_GMFD) - (L1.cyear * L1.temp`i'_GMFD)
+	qui gen double FD_pyeartemp`i'_GMFD = (pyear * temp`i'_GMFD) - (L1.pyear * L1.temp`i'_GMFD)
 
 	// temp x year^2
 	qui gen double FD_year2temp`i'_GMFD = (year * year * temp`i'_GMFD) - (L1.year * L1.year * L1.temp`i'_GMFD)
 	qui gen double FD_cyear2temp`i'_GMFD = (cyear * cyear * temp`i'_GMFD) - (L1.cyear * L1.cyear * L1.temp`i'_GMFD)
-
+	qui gen double FD_pyear2temp`i'_GMFD = (pyear * pyear * temp`i'_GMFD) - (L1.pyear * L1.pyear * L1.temp`i'_GMFD)
+ */
 	// temp x decade
 	forval dg=1/2 {
 		qui gen double FD_D`dg'temp`i'_GMFD = (decind`dg' * temp`i'_GMFD) - (L1.decind`dg' * L1.temp`i'_GMFD)
@@ -82,6 +91,15 @@ forval lg = 1/10 {
 
 forval lg=1/2 {
 	forval i=1/4 {
+
+		foreach yr in year cyear pyear {
+
+	 		qui gen double FD_dc1_lgdppc_MA15`yr'I`lg'temp`i' = ///
+			( dc1_lgdppc_MA15 * temp`i'_GMFD * largeind`lg' * `yr' ) ///
+			- ( L1.dc1_lgdppc_MA15 * L1.temp`i'_GMFD * L1.largeind`lg' * L1.`yr' )
+		
+		}
+/* 
  		qui gen double FD_dc1_lgdppc_MA15yearI`lg'temp`i' = ///
 		( dc1_lgdppc_MA15 * temp`i'_GMFD * largeind`lg' * year ) ///
 		- ( L1.dc1_lgdppc_MA15 * L1.temp`i'_GMFD * L1.largeind`lg' * L1.year )
@@ -90,6 +108,10 @@ forval lg=1/2 {
 		( dc1_lgdppc_MA15 * temp`i'_GMFD * largeind`lg' * cyear ) ///
 		- ( L1.dc1_lgdppc_MA15 * L1.temp`i'_GMFD * L1.largeind`lg' * L1.cyear )
 
+ 		qui gen double FD_dc1_lgdppc_MA15pyearI`lg'temp`i' = ///
+		( dc1_lgdppc_MA15 * temp`i'_GMFD * largeind`lg' * pyear ) ///
+		- ( L1.dc1_lgdppc_MA15 * L1.temp`i'_GMFD * L1.largeind`lg' * L1.pyear )
+ */
 	}
 }		
 		
@@ -97,16 +119,26 @@ forval lg=1/2 {
 
 forval lg=1/2 {
 	forval i=1/4 {
-		qui gen double FD_dc1_lgdppc_MA15year2I`lg'temp`i' = ///
+		foreach yr in year cyear pyear {
+			qui gen double FD_dc1_lgdppc_MA15`yr'2I`lg'temp`i' = ///
+			( dc1_lgdppc_MA15 * temp`i'_GMFD * largeind`lg' * `yr' * `yr' ) ///
+			- ( L1.dc1_lgdppc_MA15 * L1.temp`i'_GMFD * L1.largeind`lg' * L1.`yr' * L1.`yr' )
+		}
+/* 		qui gen double FD_dc1_lgdppc_MA15year2I`lg'temp`i' = ///
 		( dc1_lgdppc_MA15 * temp`i'_GMFD * largeind`lg' * year * year ) ///
 		- ( L1.dc1_lgdppc_MA15 * L1.temp`i'_GMFD * L1.largeind`lg' * L1.year * L1.year )
 		
 		qui gen double FD_dc1_lgdppc_MA15cyear2I`lg'temp`i' = ///
 		( dc1_lgdppc_MA15 * temp`i'_GMFD * largeind`lg' * cyear * cyear ) ///
 		- ( L1.dc1_lgdppc_MA15 * L1.temp`i'_GMFD * L1.largeind`lg' * L1.cyear * L1.cyear )
+
+		qui gen double FD_dc1_lgdppc_MA15pyear2I`lg'temp`i' = ///
+		( dc1_lgdppc_MA15 * temp`i'_GMFD * largeind`lg' * pyear * pyear ) ///
+		- ( L1.dc1_lgdppc_MA15 * L1.temp`i'_GMFD * L1.largeind`lg' * L1.pyear * L1.pyear )
+ */
 	}
 }		
-		
+
 
 ** First difference income spline x temp
 

@@ -164,4 +164,3 @@ DumInc* [pw = weight], absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster
 estimates save "$root/sters/FD_FGLS_inter_`model_name'", replace
 
 
-
