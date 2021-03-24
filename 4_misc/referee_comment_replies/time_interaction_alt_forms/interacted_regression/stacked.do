@@ -34,6 +34,17 @@ else {
 sort region_i year 
 tset region_i year
 
+// set time variable to be interacted
+if ("`submodel'" == "plinter") {
+	local yr pyear
+	local indv indt
+} 
+else {
+	local yr year
+	local indv indd
+
+}
+
 * long run income x income group
 
 local lgdppc_MA15_r = ""
@@ -95,54 +106,28 @@ forval pg=1/2 {
 	}		
 }
 
-if ("`submodel'" == "lininter" | "`submodel'" == "quadinter" ) {
-	
-	* temp x year
 
-	local year_temp_r = ""
+* temp x year
 
-	forval pg=1/2 {
+local year_temp_r = ""
+
+forval pg=1/2 {
+	forval k = 1/2 {
+		local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#i.indv#c.FD_`yr'temp`k'_GMFD"
+	}	
+}
+* temp x year x income spline
+
+local year_income_spline_r = ""
+
+forval pg=1/2 {
+	forval lg = 1/2 {
 		forval k = 1/2 {
-			local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#c.FD_yeartemp`k'_GMFD"
-		}	
-	}
-		
-	* temp x year x income spline
-
-	local year_income_spline_r = ""
-	
-	forval pg=1/2 {
-		forval lg = 1/2 {
-			forval k = 1/2 {
-				local year_income_spline_r = "`year_income_spline_r' c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15yearI`lg'temp`k'"
-			}
-		}		
-	}
+			local year_income_spline_r = "`year_income_spline_r' c.indp`pg'#c.indf1#i.indv#c.FD_dc1_lgdppc_MA15`yr'I`lg'temp`k'"
+		}
+	}		
 }
 
-
-
-
-if ("`submodel'" == "quadinter") {
-	
-	* temp x year^2
-
-	forval pg=1/2 {
-		forval k = 1/2 {
-			local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#c.FD_year2temp`k'_GMFD"
-		}	
-	}
-		
-	* temp x year^2 x income spline
-	
-	forval pg=1/2 {
-		forval lg = 1/2 {
-			forval k = 1/2 {
-				local year_income_spline_r = "`year_income_spline_r' c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15year2I`lg'temp`k'"
-			}
-		}		
-	}
-}
 
 
 //run first stage regression
