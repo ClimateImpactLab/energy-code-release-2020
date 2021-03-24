@@ -176,6 +176,20 @@ egen product_i = group(product)
 tab flow, gen(indf)
 egen flow_i = group(flow)
 
+
+* generate time period dummies for interaction
+** for piecewise linear interaction
+gen indt = 1 if year >= 1991
+replace indt = 0 if year < 1991
+
+** for decades interaction
+gen indd = 0
+replace indd = 1 if year >= 1980
+replace indd = 2 if year >= 1990
+replace indd = 3 if year >= 2000
+
+
+
 // Classify world into 13 regions based on UN World Regions Classifications (for fixed effect... reference Temperature Response of Energy Consumption Section )
 
 **Clean the region data**
