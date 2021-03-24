@@ -106,11 +106,8 @@ foreach temp in 0 35 {
 			local line "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15cyear2I`ig'temp`k'] * `deltacut_subInc' * (`temp'^`k' - 20^`k') * cyear^2 "
 			local add " + "
 		}
-		* pause
-		di "`line'"
 		** trace out dose response marginal effect
 		predictnl yhat`lg' = `line', se(se`lg') ci(lower`lg' upper`lg')
-		list yhat* cyear year
 
 		* plot dose response
 		tw rarea upper`lg' lower`lg' year, col(ltbluishgray) || line yhat`lg' year, lc (dknavy) ///
@@ -170,11 +167,8 @@ foreach temp in 0 35 {
 			local add " + "
 		}
 
-		* pause
-		di "`line'"
 		** trace out dose response marginal effect
 		predictnl yhat`lg' = `line', se(se`lg') ci(lower`lg' upper`lg')
-		list yhat* cyear year
 
 		* plot dose response
 		tw rarea upper`lg' lower`lg' year, col(ltbluishgray) || line yhat`lg' year, lc (dknavy) ///
