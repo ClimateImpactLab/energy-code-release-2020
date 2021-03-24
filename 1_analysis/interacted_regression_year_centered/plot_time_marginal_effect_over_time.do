@@ -52,12 +52,6 @@ restore
 
 * load temporal trend ster file
 
-
-***** note to self: not done from here!!! &^&*^&&^#@%#!WETERTR*
-pause on
-
-* load temporal trend ster file
-
 estimates use "$root/sters/FD_FGLS_inter_`model'_quadinter_cyear.ster"
 
 * set product specific index for coefficients

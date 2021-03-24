@@ -1,0 +1,124 @@
+
+********************************************************************************/* 
+  */repeat the process for quadinter model for referee comment
+********************************************************************************
+
+set scheme s1color
+
+****** Set Model Specification Locals ******************************************
+
+// What is the main model for this plot?
+local model = "$model" 
+
+// What product's response function are we plotting?
+local var = "$product" 
+
+// Whats the plots figure number in the paper?
+local fig = "fig_Appendix-G3A" 
+
+local MEgraphic 
+********************************************************************************
+* Step 1: Load Data and Clean for Plotting
+********************************************************************************
+		
+use "$root/data/GMFD_`model'_regsort.dta", clear
+
+//Set up locals for plotting
+local obs = 2100 - 1971 + 1
+
+//clean data for plotting
+drop if _n > 0
+set obs `obs'
+
+local tbar = 1991
+
+gen year = _n + 1970 
+gen pyear = year - `tbar' if year >= `tbar'
+replace pyear = `tbar' - year if year < `tbar'
+gen indt = 1 if year >= `tbar'
+replace indt = 0 if year < `tbar'
+
+
+********************************************************************************
+* Step 2: Set up for plotting by: 
+	* a) finding knot location 
+	* b) load ster
+	* b) assigning product index
+********************************************************************************
+
+* Get Income Spline Knot Location 
+	
+preserve
+use "$root/data/break_data_`model'.dta", clear
+summ maxInc_largegpid_`var' if largegpid_`var' == 1
+local ibar = `r(max)'
+restore
+
+* load temporal trend ster file
+
+// plot lininter in the same manner as sanity check
+estimates use "$root/sters/FD_FGLS_inter_`model'_plininter.ster"
+// loop over temperature
+foreach temp in 0 35 {
+	* loop over income terciles
+ 
+	cap drop *yhat* *lower* *upper*  *se*
+	local MEgraphic
+	forval lg = 1/3 {
+
+		// get income spline for plotting
+		
+		preserve
+		
+			use "$root/data/break_data_`model'.dta", clear
+			duplicates drop tpid tgpid, force
+			sort tpid tgpid 
+			local subInc = avgInc_tgpid[`lg']
+			local deltacut_subInc = `subInc' - `ibar'
+
+		restore
+
+		// assign the large income group based on the cell's income covariate
+		if `subInc' > `ibar' local ig = 2
+		else if `subInc' <= `ibar' local ig = 1
+
+		// construct energy temperature response marginal effect of time in tech trend model
+		local line ""
+		local add ""
+		forval k=1/2 {
+			// two cases for the time interaction term: >= and < 1991
+			foreach pt in 0 1 {
+				if `pt' == 0 {
+					local sign "(-1) *"
+				}
+				else {
+					local sign ""
+				}
+				local line " `line' `add' `sign' indt * _b[`pt'.indt#c.indp`pg'#c.indf1#c.FD_pyeartemp`k'_GMFD] * (`temp'^`k' - 20^`k') * pyear "
+				local line "`line' + `sign' indt * _b[`pt'.indt#c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15pyearI`ig'temp`k'] * `deltacut_subInc' * (`temp'^`k' - 20^`k') * pyear"
+				local add " + "
+			}
+		}
+
+		** trace out dose response marginal effect
+		predictnl yhat`lg' = `line', se(se`lg') ci(lower`lg' upper`lg')
+
+		* plot dose response
+		tw rarea upper`lg' lower`lg' year, col(ltbluishgray) || line yhat`lg' year, lc (dknavy) ///
+		yline(0, lwidth(vthin))  ///
+		ylabel(, labsize(vsmall) nogrid) legend(off) ///
+		subtitle("Income Tercile `lg'", size(vsmall) color(dkgreen)) ///
+		ytitle("", size(small)) xtitle("", size(small)) ///
+		plotregion(color(white)) graphregion(color(white)) nodraw ///
+		name(MEaddgraph`lg', replace)			
+		**add graphic**
+		local MEgraphic= "`MEgraphic' MEaddgraph`lg'"
+	}
+		
+	graph combine `MEgraphic', imargin(zero) ycomm rows(1) xsize(9) ysize(3) ///
+	subtitle("Marginal Effect of Time `var'", size(small)) ///
+	plotregion(color(white)) graphregion(color(white)) name(comb`i', replace)
+	graph export "$root/figures/`fig'_ME_time_`model'_plininter_`var'_`temp'C_over_time.pdf", replace
+	graph drop _all
+
+}
