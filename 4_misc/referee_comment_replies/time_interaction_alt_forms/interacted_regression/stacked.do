@@ -105,29 +105,47 @@ forval pg=1/2 {
 		}
 	}		
 }
-
-
+ 
 * temp x year
 
 local year_temp_r = ""
 
-forval pg=1/2 {
-	forval k = 1/2 {
-		local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#i.`indv'#c.FD_`yr'temp`k'_GMFD"
-	}	
+if ("`submodel'" == "plininter") {
+	forval pg=1/2 {
+		forval k = 1/2 {
+			local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#i.`indv'#c.FD_`yr'temp`k'_GMFD"
+		}	
+	}
+} 
+else { // for decadal interaction, use temp interacted with decadal indicator
+	forval pg=1/2 {
+		forval k=1/2 {
+			local year_temp_r = "`year_temp_r' i.indd#c.indp`pg'#c.indf1#c.FD_temp`k'_GMFD"
+		}
+	}
 }
 * temp x year x income spline
 
 local year_income_spline_r = ""
 
-forval pg=1/2 {
-	forval lg = 1/2 {
-		forval k = 1/2 {
-			local year_income_spline_r = "`year_income_spline_r' c.indp`pg'#c.indf1#i.`indv'#c.FD_dc1_lgdppc_MA15`yr'I`lg'temp`k'"
-		}
-	}		
+if ("`submodel'" == "plininter") {
+	forval pg=1/2 {
+		forval lg = 1/2 {
+			forval k = 1/2 {
+				local year_income_spline_r = "`year_income_spline_r' c.indp`pg'#c.indf1#i.`indv'#c.FD_dc1_lgdppc_MA15`yr'I`lg'temp`k'"
+			}
+		}		
+	}
+} 
+else {
+	forval pg=1/2 {
+		forval lg = 1/2 {
+			forval k = 1/2 {
+				local year_income_spline_r = "`year_income_spline_r' i.indd#c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`lg'temp`k'"
+			}
+		}		
+	}
 }
-
 
 //run first stage regression
 reghdfe FD_load_pc `temp_r' `precip_r' `climate_r' ///

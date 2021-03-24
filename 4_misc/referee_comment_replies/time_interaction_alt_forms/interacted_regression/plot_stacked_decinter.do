@@ -16,17 +16,17 @@ local submodel_ov = "decinter" // What submodel is gettting overlayed on this pl
 
 // plotting color for main specification and overlay
 
-local col_electricity "dknavy"
-local col_electricity_ov0 "red"
-local col_electricity_ov1 "maroon"
+local col_electricity "red"
+local col_electricity_ov0 "olive_teal"
+local col_electricity_ov1 "midgreen"
 local col_electricity_ov2 "green"
-local col_electricity_ov3 "blue"
+local col_electricity_ov3 "dkgreen"
 
-local col_other_energy "dkorange"
-local col_other_energy_ov0 "black"
-local col_other_energy_ov1 "gray"
-local col_other_energy_ov2 "red"
-local col_other_energy_ov3 "yellow"
+local col_other_energy "red"
+local col_other_energy_ov0 "olive_teal"
+local col_other_energy_ov1 "midgreen"
+local col_other_energy_ov2 "green"
+local col_other_energy_ov3 "dkgreen"
 
 local col_main "`col_`var''"
 local col_ov0 "`col_`var'_ov0'"
@@ -168,13 +168,12 @@ forval lg=3(-1)1 {	//Income tercile
 				local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
 
 				if (strpos("`plot_model'", "inter") > 0) {
-					local line = "`line' + _b[`pt'.indd#c.indp`pg'#c.indf1#c.FD_yeartemp`k'_GMFD] * (temp`k' - 20^`k')"
-					local line = "`line' + _b[`pt'.indd#c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15yearI`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
+					local line = "`line' + _b[`pt'.indd#c.indp`pg'#c.indf1#c.FD_temp`k'_GMFD] * (temp`k' - 20^`k')"
+					local line = "`line' + _b[`pt'.indd#c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
 				}
 
 				local add " + "
 			}
-			di "`line'"
 
 			// trace out does response equation and add to local for plotting 
 			estimates use "$root/sters/FD_FGLS_inter_`plot_model'"
