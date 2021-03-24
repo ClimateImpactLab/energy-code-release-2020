@@ -32,11 +32,9 @@ set obs `obs'
 
 local tbar = 1991
 
-gen year = _n + 1970 
-gen pyear = year - `tbar' if year >= `tbar'
+replace year = _n + 1970 
+replace pyear = year - `tbar' if year >= `tbar'
 replace pyear = `tbar' - year if year < `tbar'
-gen indt = 1 if year >= `tbar'
-replace indt = 0 if year < `tbar'
 
 
 ********************************************************************************
@@ -58,6 +56,18 @@ restore
 
 // plot lininter in the same manner as sanity check
 estimates use "$root/sters/FD_FGLS_inter_`model'_plininter.ster"
+
+
+* set product specific index for coefficients
+
+if "`var'"=="electricity" {
+	local pg=1
+}
+else if "`var'"=="other_energy" {
+	local pg=2
+}
+
+
 // loop over temperature
 foreach temp in 0 35 {
 	* loop over income terciles
@@ -87,12 +97,17 @@ foreach temp in 0 35 {
 		local add ""
 		forval k=1/2 {
 			// two cases for the time interaction term: >= and < 1991
+			// turn indt on and off for to select which part of the curve to plot
 			foreach pt in 0 1 {
 				if `pt' == 0 {
 					local sign "(-1) *"
+					replace indt = 1 if year < `tbar'
+					replace indt = 0 if year >= `tbar'					
 				}
 				else {
 					local sign ""
+					replace indt = 1 if year >= `tbar'
+					replace indt = 0 if year < `tbar'
 				}
 				local line " `line' `add' `sign' indt * _b[`pt'.indt#c.indp`pg'#c.indf1#c.FD_pyeartemp`k'_GMFD] * (`temp'^`k' - 20^`k') * pyear "
 				local line "`line' + `sign' indt * _b[`pt'.indt#c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15pyearI`ig'temp`k'] * `deltacut_subInc' * (`temp'^`k' - 20^`k') * pyear"
