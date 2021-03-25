@@ -58,18 +58,18 @@ get_main_model_impacts_maps = function(fuel, price_scen, unit, year, output){
                     clim_data = "GMFD", 
                     yearlist = year,  
                     spec = spec,
-                    grouping_test = "semi-parametric") %>%
+                    grouping_test = "semi-parametric",
+                    regenerate = FALSE) %>%
 		dplyr::select(region, year, mean) %>%
 		dplyr::filter(year == !!year)
 
 	price_tag = ifelse(is.null(price_scen), "impact_pc", price)
-
-	write_csv(df, 
+  write_csv(df, 
 		paste0(output, '/projection_system_outputs/mapping_data/', 
 			'main_model-', fuel, '-SSP3-rcp85-high-fulladapt-',price_tag ,'-',year,'-map.csv'))
 }
 
-fuels = c("electricity", "other_energy")
+fuels = c("electricity","other_energy")
 
 df = lapply(fuels, get_main_model_impacts_maps, 
 	price_scen = NULL, unit = "impactpc", year = 2099, output = output)
