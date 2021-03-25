@@ -3,10 +3,11 @@
 # can be run from anywhere, just set the correct paths
 
 # set some paths and parameters
-energy_type="electricity"
-# energy_type="other_energy"
+# energy_type="electricity"
+energy_type="other_energy"
 dm=""
 # dm="_dm"
+suffix=_lininter_half
 # aggregation_scenario=""
 # aggregation_scenario="-MERGEETL60_rcp45"
 # aggregation_scenario="-MERGEETL60_rcp85"
@@ -25,16 +26,16 @@ aggregation_scenario="-price014"
 
 
 output_root="/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost"
-output_dir="median_OTHERIND_${energy_type}_TINV_clim_GMFD${dm}" 
+output_dir="median_OTHERIND_${energy_type}_TINV_clim${suffix}_GMFD${dm}" 
 
 # the size of files above which we consider complete
 # look at the completed output files to determine this size
 levels_file_size_above=100
-aggregated_file_size_above=10
+aggregated_file_size_above=5
 # 130 for one SSP
 n_folders_total=520
 
-filename_stem="FD_FGLS_inter_OTHERIND_${energy_type}_TINV_clim"
+filename_stem="FD_FGLS_inter_OTHERIND_${energy_type}_TINV_clim${suffix}"
 
 cd "${output_root}/${output_dir}"
 
