@@ -31,7 +31,7 @@ glob dir "$DB_data/projection_system_outputs/damage_function_estimation"
 loc ssp = "SSP3" 
 
 * Model toggle  - options are "main", "lininter", "lininter_double", or "lininter_half"
-loc model = "main"
+loc model = "lininter_half"
 
 * What year do we use data from for determining DF estimates used for the out of sample extrapolation
 loc subset = 2085
