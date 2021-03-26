@@ -70,6 +70,7 @@ drop if subregionid == .
 
 encode country, gen(countrycode)
 bysort countrycode: egen c = count(year)
+// drop if we don't have a complete time series
 drop if c < 40
 xtset countrycode year
 
@@ -78,9 +79,11 @@ replace regioncode = 142 if subregionid == 7
 replace regionname = "Asia" if subregionid == 7
 
 //separate south and north americas
-replace regionname = "South America" if subregionname == "Caribbean and Central America"
 replace regionname = "South America" if subregionname == "South America"
+replace regionname = "North America" if subregionname == "Caribbean and Central America"
 replace regionname = "North America" if subregionname == "Northern America"
+drop c countrycode subregionid regioncode
+
 save "`DATA'/continental_regression_dataset.dta", replace
 
 
