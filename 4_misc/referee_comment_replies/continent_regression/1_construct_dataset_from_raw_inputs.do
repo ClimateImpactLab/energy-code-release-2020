@@ -86,28 +86,22 @@ drop c countrycode subregionid regioncode
 
 save `climate_data', replace
 
+use `climate_data', clear
 
-do "$dataset_construction/pop_and_income/1_extract_and_clean.do"
-
-tempfile population_and_income_data
-save `population_and_income_data', replace
-
-use `population_and_income_data', clear
-drop if year < 1971 
-drop if year > 2010
-
-* use `climate_data', clear
-
+// import world bank pop data
+import delimited using "`DATA'/worldbank_pop.csv", varnames(4) clear
+reshape long v, i(countrycode) j(year)
+rename v pop 
+replace year = year + 1955
+keep countrycode year pop 
+rename countrycode country
 
 merge 1:m country year using `climate_data'
 
-list in 1/10 if _merge == 1
-
-list in 1/10 if _merge == 2
-
-keep if _merge==2
-levelsof country
+keep if _merge == 3
 drop _merge
 
 save "`DATA'/continental_regression_dataset.dta", replace
 
+encode country, gen(countrycode)
+xtset countrycode year
