@@ -103,5 +103,6 @@ drop _merge
 
 save "`DATA'/continental_regression_dataset.dta", replace
 
-encode country, gen(countrycode)
-xtset countrycode year
+//check if the panel is strongly balanced
+//encode country, gen(countrycode)
+//xtset countrycode year
