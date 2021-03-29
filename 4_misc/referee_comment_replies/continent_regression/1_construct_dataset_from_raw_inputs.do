@@ -84,8 +84,19 @@ replace regionname = "North America" if subregionname == "Caribbean and Central 
 replace regionname = "North America" if subregionname == "Northern America"
 drop c countrycode subregionid regioncode
 
+save `climate_data', replace
+
+
+do "$dataset_construction/pop_and_income/1_extract_and_clean.do"
+
+tempfile population_and_income_data
+save `population_and_income_data', replace
+
+merge m:1 country year using `climate_data'
+
+
+keep if _merge!=2
+drop _merge
+
 save "`DATA'/continental_regression_dataset.dta", replace
-
-
-
 
