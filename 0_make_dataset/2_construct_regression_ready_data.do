@@ -126,7 +126,7 @@ replace hdd20_TINV_GMFD = hdd20_other_TINV_GMFD if inlist(product,"other_energy"
 		gen p80yr = year - 1980
 
 		//keep only necessary vars
-		keep cdd20_TINV_GMFD hdd20_TINV_GMFD country *year lgdppc_MA15 gpid tpid tgpid large*
+		keep cdd20_TINV_GMFD hdd20_TINV_GMFD country *year p80yr lgdppc_MA15 gpid tpid tgpid large*
 
 		// generate average variables for climate and income quantiles for plotting
 		//average CDD in each cell

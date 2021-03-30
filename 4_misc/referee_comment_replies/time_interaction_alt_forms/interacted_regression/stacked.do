@@ -131,8 +131,7 @@ else {
 	// include only electricity terms
 	// note that unlike in plininter model, here indp80 is prefixed with c., not i. 
 	// since we don't want the case for indp80==0
-	local indv 
-	forval pg=1 {
+	forval pg=1/1 {
 		forval k = 1/2 {
 			local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#c.indp80#c.FD_p80yrtemp`k'_GMFD"
 		}	
@@ -153,7 +152,7 @@ if ("`submodel'" == "plininter") {
 		}		
 	}
 } 
-else  if ("`submodel'" == "decinter") {
+else if ("`submodel'" == "decinter") {
 	forval pg=1/2 {
 		forval lg = 1/2 {
 			forval k = 1/2 {
@@ -168,7 +167,7 @@ else {
 	// include only electricity terms
 	// note that unlike in plininter model, here indp80 is prefixed with c., not i. 
 	// since we don't want the case for indp80==0
-	forval pg=1 {
+	forval pg=1/1 {
 		forval lg = 1/2 {
 			forval k = 1/2 {
 				local year_income_spline_r = "`year_income_spline_r' c.indp`pg'#c.indf1#c.indp80#c.FD_dc1_lgdppc_MA15p80yrI`lg'temp`k'"
