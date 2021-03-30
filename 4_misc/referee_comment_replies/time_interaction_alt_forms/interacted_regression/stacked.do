@@ -134,7 +134,7 @@ else {
 	local indv 
 	forval pg=1 {
 		forval k = 1/2 {
-			local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#c.indp80#c.FD_p80yeartemp`k'_GMFD"
+			local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#c.indp80#c.FD_p80yrtemp`k'_GMFD"
 		}	
 	}
 
@@ -171,7 +171,7 @@ else {
 	forval pg=1 {
 		forval lg = 1/2 {
 			forval k = 1/2 {
-				local year_income_spline_r = "`year_income_spline_r' c.indp`pg'#c.indf1#c.indp80#c.FD_dc1_lgdppc_MA15p80yearI`lg'temp`k'"
+				local year_income_spline_r = "`year_income_spline_r' c.indp`pg'#c.indf1#c.indp80#c.FD_dc1_lgdppc_MA15p80yrI`lg'temp`k'"
 			}
 		}		
 	}

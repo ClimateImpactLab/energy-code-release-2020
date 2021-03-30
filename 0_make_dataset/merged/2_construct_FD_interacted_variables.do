@@ -55,7 +55,7 @@ forval i=1/4 {
 	// temp
 	qui gen double FD_temp`i'_GMFD = temp`i'_GMFD - L1.temp`i'_GMFD
 	
-	foreach yr in year cyear pyear p80year {
+	foreach yr in year cyear pyear p80yr {
 		// temp x year
 		qui gen double FD_`yr'temp`i'_GMFD = (`yr' * temp`i'_GMFD) - (L1.`yr' * L1.temp`i'_GMFD)
 		
@@ -82,7 +82,7 @@ forval lg = 1/10 {
 forval lg=1/2 {
 	forval i=1/4 {
 
-		foreach yr in year cyear pyear p80year {
+		foreach yr in year cyear pyear p80yr {
 
 	 		qui gen double FD_dc1_lgdppc_MA15`yr'I`lg'temp`i' = ///
 			( dc1_lgdppc_MA15 * temp`i'_GMFD * largeind`lg' * `yr' ) ///
@@ -96,7 +96,7 @@ forval lg=1/2 {
 
 forval lg=1/2 {
 	forval i=1/4 {
-		foreach yr in year cyear pyear p80year {
+		foreach yr in year cyear pyear p80yr {
 			qui gen double FD_dc1_lgdppc_MA15`yr'2I`lg'temp`i' = ///
 			( dc1_lgdppc_MA15 * temp`i'_GMFD * largeind`lg' * `yr' * `yr' ) ///
 			- ( L1.dc1_lgdppc_MA15 * L1.temp`i'_GMFD * L1.largeind`lg' * L1.`yr' * L1.`yr' )
