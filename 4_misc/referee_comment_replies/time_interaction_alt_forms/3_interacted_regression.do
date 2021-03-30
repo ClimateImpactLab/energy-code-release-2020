@@ -26,7 +26,7 @@ global model "TINV_clim"
 * Step 1: Estimate Energy Temperature Response
 ********************************************************************************
 
-//foreach submodel in "plininter" "decinter" "p80elecinter" {
+foreach submodel in "plininter" "decinter" "p80elecinter" {
 /* 
 foreach submodel in  "p80elecinter" {
 
@@ -39,19 +39,19 @@ foreach submodel in  "p80elecinter" {
 * Step 2: Plot Energy Temperature Response
 ********************************************************************************
  
-/* foreach product in "other_energy" "electricity" {		
+foreach product in "other_energy" "electricity" {		
 		global submodel_ov "`submodel'"
 		global product "`product'"
 		do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_plininter.do
 		do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_plininter_2099.do
 		do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_decinter.do
- */
+
 
 foreach product in "other_energy" "electricity" {		
 	global submodel_ov "p80elecinter"
 	global product "`product'"
 	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_p80elecinter.do
-	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_p80elecinter_2099.do
+	//do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_p80elecinter_2099.do
 }
 
 ********************************************************************************

@@ -1,7 +1,7 @@
 /*
 
 Purpose: Make 3 x 3 Arrays and Array Overlays energy temperature response with heterogeneity by climate and by income
-for p80elecinter model, 3 curves per cell: 1980 response, 2010 response, main response
+for p80elecinter model, 3 curves per cell: 1971 response, 2010 response, main response
 
 */
 
@@ -19,15 +19,15 @@ local submodel_ov = "p80elecinter" // What submodel is gettting overlayed on thi
 
 
 local col_electricity "dknavy"
-local col_electricity_ov1980 "red"
+local col_electricity_ov1971 "red"
 local col_electricity_ov2010 "maroon"
 
 local col_other_energy "dkorange"
-local col_other_energy_ov1980 "black"
+local col_other_energy_ov1971 "black"
 local col_other_energy_ov2010 "gray"
 
 local col_main "`col_`var''"
-local col_ov1980 "`col_`var'_ov1980'"
+local col_ov1971 "`col_`var'_ov1971'"
 local col_ov2010 "`col_`var'_ov2010'"
 
 			
@@ -72,7 +72,7 @@ restore
 the income spline knot location will vary because the income decile
 locations are different.*/
 
-local ibar_ov1980 = `ibar_main'
+local ibar_ov1971 = `ibar_main'
 local ibar_ov2010 = `ibar_main'
 
 * Set plotting locals and name tags 
@@ -85,10 +85,10 @@ local type_list " _main "
 
 	
 // add to list of model types to loop over
-local type_list " _ov1980 _ov2010 `type_list' " 
+local type_list " _ov1971 _ov2010 `type_list' " 
 
 // create colorguide to help viewer decipher between overlayed spec and non overlayed spec
-local colorGuide "`colorGuide' Overlay Spec: `model_main'_`submodel_ov' 1980(`col_ov1980') 2010(`col_ov2010') "
+local colorGuide "`colorGuide' Overlay Spec: `model_main'_`submodel_ov' 1971(`col_ov1971') 2010(`col_ov2010') "
 
 local plot_title "main_model_`plot_title'_overlay_model_`submodel_ov'"
 
@@ -137,8 +137,8 @@ forval lg=3(-1)1 {	//Income tercile
 		foreach type in `type_list' {
 
 			// year to plot temporal trend model:
-			if (strpos("`type'", "1980") > 0) {
-				local p80yr = 1980 - 1980
+			if (strpos("`type'", "1971") > 0) {
+				local p80yr = 5
 			} 
 			else if (strpos("`type'", "2010") > 0) {
 				local p80yr = 2010 - 1980
@@ -185,6 +185,7 @@ forval lg=3(-1)1 {	//Income tercile
 			
 			// trace out does response equation and add to local for plotting 
 			estimates use "$root/sters/FD_FGLS_inter_`plot_model'"
+			di "$root/sters/FD_FGLS_inter_`plot_model'"
 
 			predictnl yhat`cellid'`type' = `line', se(se`cellid'`type') ci(lower`cellid'`type' upper`cellid'`type')
 
@@ -214,6 +215,6 @@ graph combine `graphicM', imargin(zero) ycomm rows(3) ///
 	title("Split Degree Days Poly 2 Interaction Model `var'", size(small)) ///
 	subtitle("`colorGuide'", size(vsmall)) ///
 	plotregion(color(white)) graphregion(color(white)) name(comb_nose, replace)
-graph export "$root/figures/`fig'_`var'_interacted_`plot_title'_1980_2010.pdf", replace
+graph export "$root/figures/`fig'_`var'_interacted_`plot_title'_1971_2010.pdf", replace
 
 graph drop _all	
