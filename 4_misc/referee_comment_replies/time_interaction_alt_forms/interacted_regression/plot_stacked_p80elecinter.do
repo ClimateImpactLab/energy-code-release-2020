@@ -138,7 +138,7 @@ forval lg=3(-1)1 {	//Income tercile
 
 			// year to plot temporal trend model:
 			if (strpos("`type'", "1971") > 0) {
-				local p80yr = 5
+				local p80yr = 0
 			} 
 			else if (strpos("`type'", "2010") > 0) {
 				local p80yr = 2010 - 1980
