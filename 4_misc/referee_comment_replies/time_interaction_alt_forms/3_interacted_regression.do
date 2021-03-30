@@ -57,8 +57,8 @@ foreach product in "other_energy" "electricity" {
   
  foreach product in "other_energy" "electricity" {
 	global product "`product'"
-	//do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_time_marginal_effect_plininter.do
-	//do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_time_marginal_effect_over_time_plininter.do
+	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_time_marginal_effect_plininter.do
+	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_time_marginal_effect_over_time_plininter.do
 	
 } 
 
