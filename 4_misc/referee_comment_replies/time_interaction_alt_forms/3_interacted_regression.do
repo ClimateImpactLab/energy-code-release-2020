@@ -26,7 +26,7 @@ global model "TINV_clim"
 * Step 1: Estimate Energy Temperature Response
 ********************************************************************************
 
-foreach submodel in "plininter" "decinter"  {
+foreach submodel in "plininter" "decinter" "p80elecinter" {
 
 	global submodel "`submodel'"
 	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/stacked.do
@@ -56,5 +56,13 @@ foreach product in "other_energy" "electricity" {
 	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_time_marginal_effect_plininter.do
 	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_time_marginal_effect_over_time_plininter.do
 }
+
+********************************************************************************
+* Step 4: run and plot post1980 linear time interaction 
+* for Temporal Trend Model
+********************************************************************************
+ 
+global submodel "`submodel'"
+do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/stacked.do
 
 

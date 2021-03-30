@@ -117,13 +117,29 @@ if ("`submodel'" == "plininter") {
 		}	
 	}
 } 
-else { // for decadal interaction, use temp interacted with decadal indicator
+else if ("`submodel'" == "decinter") { 
+	// for decadal interaction, use temp interacted with decadal indicator
 	forval pg=1/2 {
 		forval k=1/2 {
 			local year_temp_r = "`year_temp_r' i.indd#c.indp`pg'#c.indf1#c.FD_temp`k'_GMFD"
 		}
 	}
 }
+else {
+	// p80elecinter model
+	// * 1 = electricity, 2 = other_energy
+	// include only electricity terms
+	// note that unlike in plininter model, here indp80 is prefixed with c., not i. 
+	// since we don't want the case for indp80==0
+	local indv 
+	forval pg=1 {
+		forval k = 1/2 {
+			local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#c.indp80#c.FD_p80yeartemp`k'_GMFD"
+		}	
+	}
+
+}
+
 * temp x year x income spline
 
 local year_income_spline_r = ""
@@ -137,11 +153,25 @@ if ("`submodel'" == "plininter") {
 		}		
 	}
 } 
-else {
+else  if ("`submodel'" == "decinter") {
 	forval pg=1/2 {
 		forval lg = 1/2 {
 			forval k = 1/2 {
 				local year_income_spline_r = "`year_income_spline_r' i.indd#c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`lg'temp`k'"
+			}
+		}		
+	}
+}
+else {
+	// p80elecinter model
+	// * 1 = electricity, 2 = other_energy
+	// include only electricity terms
+	// note that unlike in plininter model, here indp80 is prefixed with c., not i. 
+	// since we don't want the case for indp80==0
+	forval pg=1 {
+		forval lg = 1/2 {
+			forval k = 1/2 {
+				local year_income_spline_r = "`year_income_spline_r' c.indp`pg'#c.indf1#c.indp80#c.FD_dc1_lgdppc_MA15p80yearI`lg'temp`k'"
 			}
 		}		
 	}

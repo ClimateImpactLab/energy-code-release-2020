@@ -122,6 +122,8 @@ replace hdd20_TINV_GMFD = hdd20_other_TINV_GMFD if inlist(product,"other_energy"
 		gen pyear = year - 1991 if year >= 1991
 		replace pyear = 1991 - year if year < 1991
 
+		** generate year variable for post1980 linear time effect interaction
+		gen p80year = year - 1980
 
 		//keep only necessary vars
 		keep cdd20_TINV_GMFD hdd20_TINV_GMFD country *year lgdppc_MA15 gpid tpid tgpid large*
@@ -181,6 +183,10 @@ egen flow_i = group(flow)
 ** for piecewise linear interaction
 gen indt = 1 if year >= 1991
 replace indt = 0 if year < 1991
+
+** for post 1980 linear interaction
+gen indp80 = 1 if year >= 1980
+replace indp80 = 0 if year < 1980
 
 ** for decades interaction
 gen indd = 0
