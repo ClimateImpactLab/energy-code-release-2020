@@ -90,7 +90,7 @@ forval lg = 1/3 {
 
 	forval k=1/2 {
 		local line " `line' `add' _b[c.indp`pg'#c.indf1#c.indp80#c.FD_p80yrtemp`k'_GMFD] * (temp`k' - 20^`k') "
-		local line "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_dc1_lgdppc_MA15p80yrrI`ig'temp`k'] * `deltacut_subInc' * (temp`k' - 20^`k')"
+		local line "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_dc1_lgdppc_MA15p80yrI`ig'temp`k'] * `deltacut_subInc' * (temp`k' - 20^`k')"
 		local add " + "
 	}
 

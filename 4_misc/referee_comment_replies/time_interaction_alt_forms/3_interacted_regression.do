@@ -31,7 +31,7 @@ global model "TINV_clim"
 foreach submodel in  "p80elecinter" {
 
 	global submodel "`submodel'"
-	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/stacked.do
+	//do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/stacked.do
 } 
 
 
@@ -63,5 +63,5 @@ foreach product in "other_energy" "electricity" {
 } 
 
 global product "electricity"
-do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_time_marginal_effect_p90elecinter.do
+do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_time_marginal_effect_p80elecinter.do
 
