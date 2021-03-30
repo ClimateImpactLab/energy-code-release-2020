@@ -31,7 +31,7 @@ global model "TINV_clim"
 foreach submodel in  "p80elecinter" {
 
 	global submodel "`submodel'"
-	//do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/stacked.do
+	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/stacked.do
 } 
 
 
@@ -40,12 +40,12 @@ foreach submodel in  "p80elecinter" {
 ********************************************************************************
  
 foreach product in "other_energy" "electricity" {		
-		global product "`product'"
-//		do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_plininter.do
-//		do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_plininter_2099.do
-//		do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_decinter.do
-//	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_p80elecinter.do
-//	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_p80elecinter_2099.do
+	global product "`product'"
+	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_plininter.do
+	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_plininter_2099.do
+	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_decinter.do
+	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_p80elecinter.do
+	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_p80elecinter_2099.do
 
 }
 
