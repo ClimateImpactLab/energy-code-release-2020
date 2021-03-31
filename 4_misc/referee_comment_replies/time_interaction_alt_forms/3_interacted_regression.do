@@ -28,7 +28,7 @@ global model "TINV_clim"
 
 //foreach submodel in "plininter" "decinter" "p80elecinter" {
  
-foreach submodel in  "codeside" {
+foreach submodel in  "coldside" {
 
 	global submodel "`submodel'"
 	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/stacked.do
@@ -41,11 +41,11 @@ foreach submodel in  "codeside" {
  
 foreach product in "other_energy" "electricity" {		
 	global product "`product'"
-	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_plininter.do
-	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_plininter_2099.do
-	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_decinter.do
-	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_p80elecinter.do
-	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_p80elecinter_2099.do
+//	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_plininter.do
+//	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_plininter_2099.do
+//	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_decinter.do
+//	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_p80elecinter.do
+//	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_p80elecinter_2099.do
 
 }
 
@@ -57,11 +57,11 @@ foreach product in "other_energy" "electricity" {
   
  foreach product in "other_energy" "electricity" {
 	global product "`product'"
-	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_time_marginal_effect_plininter.do
-	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_time_marginal_effect_over_time_plininter.do
+//	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_time_marginal_effect_plininter.do
+//	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_time_marginal_effect_over_time_plininter.do
 	
 } 
 
 global product "electricity"
-do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_time_marginal_effect_p80elecinter.do
+//do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_time_marginal_effect_p80elecinter.do
 
