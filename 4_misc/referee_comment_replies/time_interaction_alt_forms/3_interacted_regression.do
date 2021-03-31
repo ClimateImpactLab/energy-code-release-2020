@@ -28,7 +28,7 @@ global model "TINV_clim"
 
 //foreach submodel in "plininter" "decinter" "p80elecinter" {
  
-foreach submodel in  "p80elecinter" {
+foreach submodel in  "codeside" {
 
 	global submodel "`submodel'"
 	//do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/stacked.do

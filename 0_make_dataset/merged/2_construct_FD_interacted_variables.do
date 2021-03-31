@@ -141,4 +141,14 @@ forval i=1/4 {
 }
 
 
+** First difference polyBreak terms for codeside interaction ** 
+
+forval i=1/4 {
+	
+	qui gen double FD_polyAbove`i'_GMFD = ///
+			polyAbove`i'_GMFD - L1.polyAbove`i'_GMFD
+	
+	qui gen double FD_polyBelow`i'_GMFD = ///
+			polyBelow`i'_GMFD - L1.polyBelow`i'_GMFD
+}
 
