@@ -66,8 +66,13 @@ forval i=1/4 {
 	forval dg=1/2 {
 		qui gen double FD_D`dg'temp`i'_GMFD = (decind`dg' * temp`i'_GMFD) - (L1.decind`dg' * L1.temp`i'_GMFD)
 	}
+		
+	// polyBelow x year post 1980 for code-side interaction
+	qui gen double FD_p80yrpolyBelow`i'_GMFD = (p80yr * polyBelow`i'_GMFD) - (L1.p80yr * L1.polyBelow`i'_GMFD)
+
 
 }
+
 
 ** First difference temp x income decile
 
@@ -89,6 +94,11 @@ forval lg=1/2 {
 			- ( L1.dc1_lgdppc_MA15 * L1.temp`i'_GMFD * L1.largeind`lg' * L1.`yr' )
 		
 		}
+		// temp(polyBelow) x year(post 1980) x income spline terms for code-side interaction
+ 		qui gen double FD_lgdppc_MA15p80yrI`lg'polyBelow`i' = ///
+		( dc1_lgdppc_MA15 * polyBelow`i'_GMFD * largeind`lg' * p80yr ) ///
+		- ( L1.dc1_lgdppc_MA15 * L1.polyBelow`i'_GMFD * L1.largeind`lg' * L1.p80yr )
+	
 	}
 }		
 		
@@ -141,14 +151,5 @@ forval i=1/4 {
 }
 
 
-** First difference polyBreak terms for codeside interaction ** 
 
-forval i=1/4 {
-	
-	qui gen double FD_polyAbove`i'_GMFD = ///
-			polyAbove`i'_GMFD - L1.polyAbove`i'_GMFD
-	
-	qui gen double FD_polyBelow`i'_GMFD = ///
-			polyBelow`i'_GMFD - L1.polyBelow`i'_GMFD
-}
 

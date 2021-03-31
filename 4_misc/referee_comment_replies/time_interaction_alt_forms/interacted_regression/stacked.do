@@ -125,7 +125,7 @@ else if ("`submodel'" == "decinter") {
 		}
 	}
 }
-else {
+else if ("`submodel'" == "p80elecinter"){
 	// p80elecinter model
 	// * 1 = electricity, 2 = other_energy
 	// include only electricity terms
@@ -136,8 +136,16 @@ else {
 			local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#c.indp80#c.FD_p80yrtemp`k'_GMFD"
 		}	
 	}
-
 }
+else if ("`submodel'" == "codeside") {
+	// * 1 = electricity, 2 = other_energy
+	// include only electricity terms
+	forval pg=1/1 {
+		forval k = 1/2 {
+			local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1##c.FD_poly`k'_GMFD"
+		}	
+	}
+} 
 
 * temp x year x income spline
 
