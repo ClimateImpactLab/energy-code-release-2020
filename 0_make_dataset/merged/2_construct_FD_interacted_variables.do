@@ -67,8 +67,8 @@ forval i=1/4 {
 		qui gen double FD_D`dg'temp`i'_GMFD = (decind`dg' * temp`i'_GMFD) - (L1.decind`dg' * L1.temp`i'_GMFD)
 	}
 		
-	// polyBelow x year post 1980 for code-side interaction
-	qui gen double FD_p80yrpolyBelow`i'_GMFD = (p80yr * polyBelow`i'_GMFD) - (L1.p80yr * L1.polyBelow`i'_GMFD)
+	// polyBelow x year post 1980 for coldside interaction
+	qui gen double FD_p80yr_polyBelow`i'_GMFD = (p80yr * polyBelow`i'_GMFD) - (L1.p80yr * L1.polyBelow`i'_GMFD)
 
 
 }
@@ -94,7 +94,7 @@ forval lg=1/2 {
 			- ( L1.dc1_lgdppc_MA15 * L1.temp`i'_GMFD * L1.largeind`lg' * L1.`yr' )
 		
 		}
-		// temp(polyBelow) x year(post 1980) x income spline terms for code-side interaction
+		// temp(polyBelow) x year(post 1980) x income spline terms for coldside interaction
  		qui gen double FD_lgdppc_MA15p80yrI`lg'polyBelow`i' = ///
 		( dc1_lgdppc_MA15 * polyBelow`i'_GMFD * largeind`lg' * p80yr ) ///
 		- ( L1.dc1_lgdppc_MA15 * L1.polyBelow`i'_GMFD * L1.largeind`lg' * L1.p80yr )

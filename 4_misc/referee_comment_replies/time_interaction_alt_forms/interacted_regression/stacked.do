@@ -137,12 +137,12 @@ else if ("`submodel'" == "p80elecinter"){
 		}	
 	}
 }
-else if ("`submodel'" == "codeside") {
+else if ("`submodel'" == "coldside") {
 	// * 1 = electricity, 2 = other_energy
 	// include only electricity terms
 	forval pg=1/1 {
-		forval k = 1/2 {
-			local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1##c.FD_poly`k'_GMFD"
+		forval k = 1/2 {   
+			local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#c.indp80#c.FD_p80yr_polyBelow`k'_GMFD"
 		}	
 	}
 } 
@@ -169,7 +169,7 @@ else if ("`submodel'" == "decinter") {
 		}		
 	}
 }
-else {
+else if ("`submodel'" == "p80elecinter") {
 	// p80elecinter model
 	// * 1 = electricity, 2 = other_energy
 	// include only electricity terms
@@ -183,6 +183,19 @@ else {
 		}		
 	}
 }
+
+else if ("`submodel'" == "coldside") {
+	// * 1 = electricity, 2 = other_energy
+	// include only electricity terms
+	forval pg=1/1 {
+		forval lg = 1/2 {
+			forval k = 1/2 {
+				local year_income_spline_r = "`year_income_spline_r' c.indp`pg'#c.indf1#c.indp80#c.FD_lgdppc_MA15p80yrI`lg'polyBelow`k'"
+			}
+		}		
+	}
+}
+
 
 //run first stage regression
 reghdfe FD_load_pc `temp_r' `precip_r' `climate_r' ///
