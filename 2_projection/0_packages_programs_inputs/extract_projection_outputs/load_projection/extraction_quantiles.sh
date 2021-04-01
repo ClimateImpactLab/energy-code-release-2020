@@ -25,7 +25,7 @@ eval "$1" # fetch parameters from the command line
 # Parameters:
 ## note -- parameters are written with a very specific syntax so they can be read into R please stick to the syntax below if you are adding or changing parameters
 ## / parameter:grouping_test / options:semi-parametric, visual / required:yes /
-## / parameter:model / options:TINV_clim, TINV_clim_lininter, TINV_clim_lininter_double, TINV_clim_lininter_half / required:yes /
+## / parameter:model / options:TINV_clim, TINV_clim_lininter, TINV_clim_lininter_double, TINV_clim_lininter_half, TINV_clim_mixed / required:yes /
 ### or etc. (look to other scripts for info on other models... you should just be able to plop whatever model name in here)
 ## / parameter:clim_data / options:GMFD, BEST / required:yes /
 ## / parameter:conda_env / options:UNDEFINED / required:yes /
