@@ -107,6 +107,7 @@ forval lg = 1/3 {
 			local line "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_dc1_lgdppc_MA15p80yrI`ig'temp`k'] * `deltacut_subInc' * (temp`k' - 20^`k')"
 		}
 		else if ("`submodel'" == "coldside") {
+			// (polyBelow`k' - 0) because at t=20C, the term polyBelow will be 0
 			local line " `line' `add' _b[c.indp`pg'#c.indf1#c.indp80#c.FD_p80yr_polyBelow`k'_GMFD] * (polyBelow`k' - 0) "
 			local line "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_lgdppc_MA15p80yrI`ig'polyBelow`k'] * `deltacut_subInc' * (polyBelow`k' - 0)"			
 		}
