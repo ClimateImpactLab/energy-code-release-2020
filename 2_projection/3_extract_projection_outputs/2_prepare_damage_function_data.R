@@ -198,52 +198,52 @@ get_values_csv = function(price, fuel, years = NULL, pop_df= NULL, ssp = "SSP3",
 }
 
 
-# ####################################
-# # Stuff needed for figure 3C...
-# df_elec = get_values_csv(price = NULL, fuel = "OTHERIND_electricity", pop_df = pop_df, save = TRUE) 
+####################################
+# Stuff needed for figure 3C...
+df_elec = get_values_csv(price = NULL, fuel = "OTHERIND_electricity", pop_df = pop_df, save = TRUE) 
 
-# df_oe = get_values_csv(price = NULL, fuel = "OTHERIND_other_energy", pop_df = pop_df, save = TRUE) 
+df_oe = get_values_csv(price = NULL, fuel = "OTHERIND_other_energy", pop_df = pop_df, save = TRUE) 
 
-# # Save values csvs needed for damage functions generally (starting with the price014 needed for )
-# df = get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", save = FALSE) 
-# write_csv(df, paste0(output, '/impact_values/gcm_damages_OTHERIND_total_energy_price014_SSP3.csv'))
-
-
-
-# # done
-# # Loop over each price scenario, for getting the values csvs needed for all damage functions in the paper for SSP3: 
-# pricelist = c("price014", "price0", "price03", "WITCHGLOBIOM42", 
-# 	"MERGEETL60", "REMINDMAgPIE1730", "REMIND17CEMICS", "REMIND17") 
-
-# df = lapply(pricelist, get_values_csv, fuel = "OTHERIND_total_energy")
+# Save values csvs needed for damage functions generally (starting with the price014 needed for )
+df = get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", save = FALSE) 
+write_csv(df, paste0(output, '/impact_values/gcm_damages_OTHERIND_total_energy_price014_SSP3.csv'))
 
 
-# #######################not aggregated yet#############################
-# # Get values csvs for SSP2 and SSP4, which are used to calculate SCCs after estimating damage functions
 
-# get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP1", 
-# 	save = TRUE, include_variance = FALSE)
+# done
+# Loop over each price scenario, for getting the values csvs needed for all damage functions in the paper for SSP3: 
+pricelist = c("price014", "price0", "price03", "WITCHGLOBIOM42", 
+	"MERGEETL60", "REMINDMAgPIE1730", "REMIND17CEMICS", "REMIND17") 
 
-# get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP2", 
-# 	save = TRUE, include_variance = FALSE)
-
-# get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP4", 
-# 	save = TRUE, include_variance = FALSE)
-
-# get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP5", 
-# 	save = TRUE, include_variance = FALSE)
+df = lapply(pricelist, get_values_csv, fuel = "OTHERIND_total_energy")
 
 
-# ##########################not aggregated yet##########################
-# # Get values csvs for SSP2 and SSP4, which are used to calculate SCCs after estimating damage functions
-# get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP3", 
-# 	save = TRUE, include_variance = FALSE, model = "TINV_clim_lininter")
+#######################not aggregated yet#############################
+# Get values csvs for SSP2 and SSP4, which are used to calculate SCCs after estimating damage functions
 
-# get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP3", 
-# 	save = TRUE, include_variance = FALSE, model = "TINV_clim_lininter_double")
+get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP1", 
+	save = TRUE, include_variance = FALSE)
 
-# get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP3", 
-# 	save = TRUE, include_variance = FALSE, model = "TINV_clim_lininter_half")
+get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP2", 
+	save = TRUE, include_variance = FALSE)
+
+get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP4", 
+	save = TRUE, include_variance = FALSE)
+
+get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP5", 
+	save = TRUE, include_variance = FALSE)
+
+
+##########################not aggregated yet##########################
+# Get values csvs for SSP2 and SSP4, which are used to calculate SCCs after estimating damage functions
+get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP3", 
+	save = TRUE, include_variance = FALSE, model = "TINV_clim_lininter")
+
+get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP3", 
+	save = TRUE, include_variance = FALSE, model = "TINV_clim_lininter_double")
+
+get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP3", 
+	save = TRUE, include_variance = FALSE, model = "TINV_clim_lininter_half")
 
 get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP3", 
 	save = TRUE, include_variance = FALSE, model = "TINV_clim_mixed")
