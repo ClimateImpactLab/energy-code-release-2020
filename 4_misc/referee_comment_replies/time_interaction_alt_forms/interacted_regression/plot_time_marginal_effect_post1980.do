@@ -11,6 +11,7 @@ set scheme s1color
 local model = "$model" // What is the main model for this plot?
 local var = "$product" // What product's response function are we plotting?
 local fig = "fig_Appendix-G3A" // Whats the plots figure number in the paper?
+local submodel = "$submodel" 
 
 ********************************************************************************
 * Step 1: Load Data and Clean for Plotting
@@ -26,6 +27,8 @@ set obs `obs'
 
 replace temp1_GMFD = _n - 6
 
+
+//TO-DO: change here according to submodel!
 foreach k of num 1/2 {
 	rename temp`k'_GMFD temp`k'
 	replace temp`k' = temp1 ^ `k'
@@ -89,8 +92,14 @@ forval lg = 1/3 {
 	local add ""
 
 	forval k=1/2 {
-		local line " `line' `add' _b[c.indp`pg'#c.indf1#c.indp80#c.FD_p80yrtemp`k'_GMFD] * (temp`k' - 20^`k') "
-		local line "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_dc1_lgdppc_MA15p80yrI`ig'temp`k'] * `deltacut_subInc' * (temp`k' - 20^`k')"
+		if ("`submodel'" == "p80elecinter") {
+			local line " `line' `add' _b[c.indp`pg'#c.indf1#c.indp80#c.FD_p80yrtemp`k'_GMFD] * (temp`k' - 20^`k') "
+			local line "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_dc1_lgdppc_MA15p80yrI`ig'temp`k'] * `deltacut_subInc' * (temp`k' - 20^`k')"
+		}
+		else (if "`submodel'" == "coldside") {
+			local line " `line' `add' _b[c.indp`pg'#c.indf1#c.indp80#c.FD_p80yr_polyBelow`k'_GMFD] * (temp`k' - 20^`k') "
+			local line "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_lgdppc_MA15p80yrI`ig'polyBelow`k'] * `deltacut_subInc' * (temp`k' - 20^`k')"			
+		}
 		local add " + "
 	}
 
@@ -112,7 +121,7 @@ forval lg = 1/3 {
 graph combine `MEgraphic', imargin(zero) ycomm rows(1) xsize(9) ysize(3) ///
 subtitle("Marginal Effect of Time `var'", size(small)) ///
 plotregion(color(white)) graphregion(color(white)) name(comb`i', replace)
-graph export "$root/figures/`fig'_ME_time_`model'_p80elecinter_`var'.pdf", replace
+graph export "$root/figures/`fig'_ME_time_`model'_`submodel'_`var'.pdf", replace
 graph drop _all
 drop yhat* se* lower* upper*
 

@@ -179,9 +179,9 @@ forval lg=3(-1)1 {	//Income tercile
 						local line = "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_p80yrtemp`k'_GMFD] * (temp`k' - 20^`k')*`p80yr'"
 						local line = "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_dc1_lgdppc_MA15p80yrI`ig'temp`k']*`deltacut_subInc'*`p80yr'*(temp`k' - 20^`k')"
 					}
-					else if ("`submodel_ov'" == "coldside") {
-						local line = "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_p80yrtemp`k'_GMFD] * (temp`k' - 20^`k')*`p80yr'"
-						local line = "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_dc1_lgdppc_MA15p80yrI`ig'temp`k']*`deltacut_subInc'*`p80yr'*(temp`k' - 20^`k')"	
+					else if ("`submodel_ov'" == "coldside") {    //FD_p80yr_polyBelow`i'_GMFD FD_lgdppc_MA15p80yrI`lg'polyBelow`i'
+						local line = "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_p80yr_polyBelow`k'_GMFD] * (temp`k' - 20^`k')*`p80yr'"
+						local line = "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_lgdppc_MA15p80yrI`ig'polyBelow`k']*`deltacut_subInc'*`p80yr'*(temp`k' - 20^`k')"	
 					}
 				}
 
