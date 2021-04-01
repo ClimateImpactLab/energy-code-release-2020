@@ -45,8 +45,8 @@ foreach product in "other_energy" "electricity" {
 //	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_decinter.do
 	foreach submodel in "p80elecinter" "coldside" {
 		global submodel "`submodel'"
-//		do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_post1980.do
-//		do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_post1980_2099.do
+		do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_post1980.do
+		do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_post1980_2099.do
 	}
 }
 
