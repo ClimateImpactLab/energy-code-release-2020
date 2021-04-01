@@ -26,12 +26,19 @@ drop if _n > 0
 set obs `obs'
 
 replace temp1_GMFD = _n - 6
-
+// for coldside interaction
+replace polyBelow1_GMFD = 20 - temp1_GMFD
+replace polyBelow1_GMFD = 0 if polyBelow1_GMFD < 0
 
 //TO-DO: change here according to submodel!
 foreach k of num 1/2 {
 	rename temp`k'_GMFD temp`k'
 	replace temp`k' = temp1 ^ `k'
+	// for coldside interaction
+	rename polyBelow`k'_GMFD polyBelow`k'
+	replace polyBelow`k' = 20 ^ `k' - temp1 ^ `k'
+	replace polyBelow`k' = 0 if polyBelow`k' < 0
+
 }
 
 ********************************************************************************
@@ -52,7 +59,7 @@ restore
 * load temporal trend ster file
 
 
-estimates use "$root/sters/FD_FGLS_inter_`model'_p80elecinter.ster"
+estimates use "$root/sters/FD_FGLS_inter_`model'_`submodel'.ster"
 
 * set product specific index for coefficients
 
@@ -91,21 +98,26 @@ forval lg = 1/3 {
 	local line ""
 	local add ""
 
+	di "*************"
+	di  "`submodel'"
+
 	forval k=1/2 {
 		if ("`submodel'" == "p80elecinter") {
 			local line " `line' `add' _b[c.indp`pg'#c.indf1#c.indp80#c.FD_p80yrtemp`k'_GMFD] * (temp`k' - 20^`k') "
 			local line "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_dc1_lgdppc_MA15p80yrI`ig'temp`k'] * `deltacut_subInc' * (temp`k' - 20^`k')"
 		}
-		else (if "`submodel'" == "coldside") {
-			local line " `line' `add' _b[c.indp`pg'#c.indf1#c.indp80#c.FD_p80yr_polyBelow`k'_GMFD] * (temp`k' - 20^`k') "
-			local line "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_lgdppc_MA15p80yrI`ig'polyBelow`k'] * `deltacut_subInc' * (temp`k' - 20^`k')"			
+		else if ("`submodel'" == "coldside") {
+			local line " `line' `add' _b[c.indp`pg'#c.indf1#c.indp80#c.FD_p80yr_polyBelow`k'_GMFD] * (polyBelow`k' - 0) "
+			local line "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_lgdppc_MA15p80yrI`ig'polyBelow`k'] * `deltacut_subInc' * (polyBelow`k' - 0)"			
 		}
 		local add " + "
 	}
 
+	di "`line'"
 	** trace out dose response marginal effect
 	predictnl yhat`lg' = `line', se(se`lg') ci(lower`lg' upper`lg')
 
+	di "here"
 	* plot dose response
 	tw rarea upper`lg' lower`lg' temp1, col(ltbluishgray) || line yhat`lg' temp1, lc (dknavy) ///
 	yline(0, lwidth(vthin)) xlabel(-5(10)35, labsize(vsmall)) ///
