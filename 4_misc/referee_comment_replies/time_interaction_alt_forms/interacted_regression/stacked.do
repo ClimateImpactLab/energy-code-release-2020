@@ -152,7 +152,7 @@ else if ("`submodel'" == "coldside") {
 	// include only electricity terms
 	forval pg=1/1 {
 		forval k = 1/2 {   
-			local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#c.FD_p80yr_polyBelow`k'_GMFD"
+			local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#c.FD_year_polyBelow`k'_GMFD"
 		}	
 	}
 } 
