@@ -131,10 +131,11 @@ forval lg = 1/3 {
 		}
 		else if ("`submodel'" == "coldsidepwl") {
 			// (polyBelow`k' - 0) because at t=20C, the term polyBelow will be 0
+			// note that the pre 1980 effects are substracted 
 			local line " `line' `add' _b[c.indp`pg'#c.indf1#1.indp80#c.FD_p80yr_polyBelow`k'_GMFD] * (polyBelow`k' - 0) "
 			local line "`line' + _b[c.indp`pg'#c.indf1#1.indp80#c.FD_lgdppc_MA15p80yrI`ig'polyBelow`k'] * `deltacut_subInc' * (polyBelow`k' - 0)"			
-			local line "`line' + _b[c.indp`pg'#c.indf1#0.indp80#c.FD_p80yr_polyBelow`k'_GMFD] * (polyBelow`k' - 0) "
-			local line "`line' + _b[c.indp`pg'#c.indf1#0.indp80#c.FD_lgdppc_MA15p80yrI`ig'polyBelow`k'] * `deltacut_subInc' * (polyBelow`k' - 0)"			
+			local line "`line' - _b[c.indp`pg'#c.indf1#0.indp80#c.FD_p80yr_polyBelow`k'_GMFD] * (polyBelow`k' - 0) "
+			local line "`line' - _b[c.indp`pg'#c.indf1#0.indp80#c.FD_lgdppc_MA15p80yrI`ig'polyBelow`k'] * `deltacut_subInc' * (polyBelow`k' - 0)"			
 
 		}
 		
