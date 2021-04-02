@@ -210,7 +210,7 @@ forval lg=3(-1)1 {	//Income tercile
 			
 			// trace out does response equation and add to local for plotting 
 			estimates use "$root/sters/FD_FGLS_inter_`plot_model'"
-di  "$root/sters/FD_FGLS_inter_`plot_model'"
+			di  "$root/sters/FD_FGLS_inter_`plot_model'"
 
 			predictnl yhat`cellid'`type' = `line', se(se`cellid'`type') ci(lower`cellid'`type' upper`cellid'`type')
 

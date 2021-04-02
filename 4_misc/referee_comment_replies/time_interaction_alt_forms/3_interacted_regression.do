@@ -30,7 +30,7 @@ foreach submodel in "plininter" "decinter" "p80elecinter" "coldsidep80" "coldsid
 //foreach submodel in  "coldsidep80" {
 
 	global submodel "`submodel'"
-	//do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/stacked.do
+	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/stacked.do
 } 
 
 
