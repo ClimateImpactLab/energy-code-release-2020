@@ -76,7 +76,6 @@ forval i=1/4 {
 	// polyAbove x year post 1980 for twosidedp80 interaction
 	qui gen double FD_p80yr_polyAbove`i'_GMFD = (p80yr * polyAbove`i'_GMFD) - (L1.p80yr * L1.polyAbove`i'_GMFD)
 
-
 }
 
 

@@ -146,7 +146,6 @@ else if ("`submodel'" == "coldsidep80") {
 		}	
 	}
 } 
-
 else if ("`submodel'" == "coldside") {
 	// * 1 = electricity, 2 = other_energy
 	// include only electricity terms
@@ -166,7 +165,17 @@ else if ("`submodel'" == "twosidedp80") {
 		}	
 	}
 } 
-
+else if ("`submodel'" == "coldsidepwl") {
+	// * 1 = electricity, 2 = other_energy
+	// include only electricity terms
+	// note that the only difference with coldsidep80 model
+	// is that here indp80 is prefixed with i.,  
+	forval pg=1/1 {
+		forval k = 1/2 {   
+			local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#i.indp80#c.FD_p80yr_polyBelow`k'_GMFD"
+		}	
+	}
+} 
 
 * temp x year x income spline
 
@@ -238,7 +247,17 @@ else if ("`submodel'" == "twosidedp80") {
 		}		
 	}
 }
-
+else if ("`submodel'" == "coldsidepwl") {
+	// * 1 = electricity, 2 = other_energy
+	// include only electricity terms
+	forval pg=1/1 {
+		forval lg = 1/2 {
+			forval k = 1/2 {
+				local year_income_spline_r = "`year_income_spline_r' c.indp`pg'#c.indf1#i.indp80#c.FD_lgdppc_MA15p80yrI`lg'polyBelow`k'"
+			}
+		}		
+	}
+}
 
 
 

@@ -149,6 +149,7 @@ forval lg=3(-1)1 {	//Income tercile
 			// year to plot temporal trend model:
 			local p80yr = 2099 - 1980
 			local year = 2099
+			local pre80yr = 0
 
 
 			// assign model to be plotted
@@ -202,7 +203,16 @@ forval lg=3(-1)1 {	//Income tercile
 						local line = "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_p80yr_polyAbove`k'_GMFD] * (polyAbove`k' - 0)*`p80yr'"
 						local line = "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_lgdppc_MA15p80yrI`ig'polyAbove`k']*`deltacut_subInc'*`p80yr'*(polyAbove`k' - 0)"	
 					}
+					else if ("`submodel_ov'" == "coldsidepwl") {    
+						// (polyBelow`k' - 0) because at t=20C, the term polyBelow will be 0
+						local line = "`line' + _b[c.indp`pg'#c.indf1#1.indp80#c.FD_p80yr_polyBelow`k'_GMFD] * (polyBelow`k' - 0)*`p80yr'"
+						local line = "`line' + _b[c.indp`pg'#c.indf1#1.indp80#c.FD_lgdppc_MA15p80yrI`ig'polyBelow`k']*`deltacut_subInc'*`p80yr'*(polyBelow`k' - 0)"	
+						local line = "`line' + _b[c.indp`pg'#c.indf1#0.indp80#c.FD_p80yr_polyBelow`k'_GMFD] * (polyBelow`k' - 0)*`pre80yr'"
+						local line = "`line' + _b[c.indp`pg'#c.indf1#0.indp80#c.FD_lgdppc_MA15p80yrI`ig'polyBelow`k']*`deltacut_subInc'*`pre80yr'*(polyBelow`k' - 0)"	
+
+					}
 				}
+
 
 				local add " + "
 

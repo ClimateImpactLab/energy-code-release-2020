@@ -123,7 +123,8 @@ replace hdd20_TINV_GMFD = hdd20_other_TINV_GMFD if inlist(product,"other_energy"
 		replace pyear = 1991 - year if year < 1991
 
 		** generate year variable for post1980 linear time effect interaction
-		gen p80yr = year - 1980
+		gen p80yr = year - 1980 if year >= 1980
+		replace p80yr = 1980 - year if year < 2980
 
 		//keep only necessary vars
 		keep cdd20_TINV_GMFD hdd20_TINV_GMFD country *year p80yr lgdppc_MA15 gpid tpid tgpid large*
