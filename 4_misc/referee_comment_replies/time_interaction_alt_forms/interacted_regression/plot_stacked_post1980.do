@@ -45,17 +45,24 @@ drop if _n > 0
 set obs `obs'
 
 replace temp1_GMFD = _n - 6
-// for coldside interaction
+// for coldsidep80 and coldside interaction
 replace polyBelow1_GMFD = 20 - temp1_GMFD
 replace polyBelow1_GMFD = 0 if polyBelow1_GMFD < 0
+// for twosidedp80 interaction
+replace polyAbove1_GMFD = temp1_GMFD - 20
+replace polyAbove1_GMFD = 0 if polyAbove1_GMFD < 0
 
 foreach k of num 1/2 {
 	rename temp`k'_GMFD temp`k'
 	replace temp`k' = temp1 ^ `k'
-	// for coldside interaction
+	// for coldsidep80 and coldside interaction
 	rename polyBelow`k'_GMFD polyBelow`k'
 	replace polyBelow`k' = 20 ^ `k' - temp1 ^ `k'
 	replace polyBelow`k' = 0 if polyBelow`k' < 0
+	// for twosidedp80 interaction
+	rename polyAbove`k'_GMFD polyAbove`k'
+	replace polyAbove`k' = temp1 ^ `k' - 20 ^ `k'
+	replace polyAbove`k' = 0 if polyAbove`k' < 0
 
 }
 
@@ -147,9 +154,11 @@ forval lg=3(-1)1 {	//Income tercile
 			// year to plot temporal trend model:
 			if (strpos("`type'", "1971") > 0) {
 				local p80yr = 0
+				local year = 1971
 			} 
 			else if (strpos("`type'", "2010") > 0) {
 				local p80yr = 2010 - 1980
+				local year = 2010
 			}
 
 
@@ -187,11 +196,24 @@ forval lg=3(-1)1 {	//Income tercile
 						local line = "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_p80yrtemp`k'_GMFD] * (temp`k' - 20^`k')*`p80yr'"
 						local line = "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_dc1_lgdppc_MA15p80yrI`ig'temp`k']*`deltacut_subInc'*`p80yr'*(temp`k' - 20^`k')"
 					}
-					else if ("`submodel_ov'" == "coldside") {    
+					else if ("`submodel_ov'" == "coldsidep80") {    
 						// (polyBelow`k' - 0) because at t=20C, the term polyBelow will be 0
 						local line = "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_p80yr_polyBelow`k'_GMFD] * (polyBelow`k' - 0)*`p80yr'"
 						local line = "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_lgdppc_MA15p80yrI`ig'polyBelow`k']*`deltacut_subInc'*`p80yr'*(polyBelow`k' - 0)"	
 					}
+					else if ("`submodel_ov'" == "coldside") {    
+						// (polyBelow`k' - 0) because at t=20C, the term polyBelow will be 0
+						local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_year_polyBelow`k'_GMFD] * (polyBelow`k' - 0)*`year'"
+						local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_lgdppc_MA15yearI`ig'polyBelow`k']*`deltacut_subInc'*`year'*(polyBelow`k' - 0)"	
+					}
+					else if ("`submodel_ov'" == "twosidedp80") {    
+						// (polyBelow`k' - 0) and (polyAbove`k' - 0) because at t=20C, the term polyBelow will be 0
+						local line = "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_p80yr_polyBelow`k'_GMFD] * (polyBelow`k' - 0)*`p80yr'"
+						local line = "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_lgdppc_MA15p80yrI`ig'polyBelow`k']*`deltacut_subInc'*`p80yr'*(polyBelow`k' - 0)"	
+						local line = "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_p80yr_polyAbove`k'_GMFD] * (polyAbove`k' - 0)*`p80yr'"
+						local line = "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_lgdppc_MA15p80yrI`ig'polyAbove`k']*`deltacut_subInc'*`p80yr'*(polyAbove`k' - 0)"	
+					}
+
 				}
 
 				local add " + "

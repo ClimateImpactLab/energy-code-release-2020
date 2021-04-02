@@ -67,8 +67,14 @@ forval i=1/4 {
 		qui gen double FD_D`dg'temp`i'_GMFD = (decind`dg' * temp`i'_GMFD) - (L1.decind`dg' * L1.temp`i'_GMFD)
 	}
 		
-	// polyBelow x year post 1980 for coldside interaction
+	// polyBelow x year post 1980 for coldsidep80 interaction
 	qui gen double FD_p80yr_polyBelow`i'_GMFD = (p80yr * polyBelow`i'_GMFD) - (L1.p80yr * L1.polyBelow`i'_GMFD)
+		
+	// polyBelow x year  for coldside interaction
+	qui gen double FD_year_polyBelow`i'_GMFD = (year * polyBelow`i'_GMFD) - (L1.year * L1.polyBelow`i'_GMFD)
+
+	// polyAbove x year post 1980 for twosidedp80 interaction
+	qui gen double FD_p80yr_polyAbove`i'_GMFD = (p80yr * polyAbove`i'_GMFD) - (L1.p80yr * L1.polyAbove`i'_GMFD)
 
 
 }
@@ -94,10 +100,20 @@ forval lg=1/2 {
 			- ( L1.dc1_lgdppc_MA15 * L1.temp`i'_GMFD * L1.largeind`lg' * L1.`yr' )
 		
 		}
-		// temp(polyBelow) x year(post 1980) x income spline terms for coldside interaction
+		// temp(polyBelow) x year(post 1980) x income spline terms for coldsidep80 interaction
  		qui gen double FD_lgdppc_MA15p80yrI`lg'polyBelow`i' = ///
 		( dc1_lgdppc_MA15 * polyBelow`i'_GMFD * largeind`lg' * p80yr ) ///
 		- ( L1.dc1_lgdppc_MA15 * L1.polyBelow`i'_GMFD * L1.largeind`lg' * L1.p80yr )
+
+		// temp(polyBelow) x year x income spline terms for coldside interaction
+ 		qui gen double FD_lgdppc_MA15yearI`lg'polyBelow`i' = ///
+		( dc1_lgdppc_MA15 * polyBelow`i'_GMFD * largeind`lg' * year ) ///
+		- ( L1.dc1_lgdppc_MA15 * L1.polyBelow`i'_GMFD * L1.largeind`lg' * L1.year )
+
+		// temp(polyAbove) x year(post 1980) x income spline terms for twosidedp80 interaction
+ 		qui gen double FD_lgdppc_MA15p80yrI`lg'polyAbove`i' = ///
+		( dc1_lgdppc_MA15 * polyAbove`i'_GMFD * largeind`lg' * p80yr ) ///
+		- ( L1.dc1_lgdppc_MA15 * L1.polyAbove`i'_GMFD * L1.largeind`lg' * L1.p80yr )
 	
 	}
 }		

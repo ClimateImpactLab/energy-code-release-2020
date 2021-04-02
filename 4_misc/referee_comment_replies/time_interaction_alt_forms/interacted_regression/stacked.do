@@ -137,6 +137,16 @@ else if ("`submodel'" == "p80elecinter"){
 		}	
 	}
 }
+else if ("`submodel'" == "coldsidep80") {
+	// * 1 = electricity, 2 = other_energy
+	// include only electricity terms
+	forval pg=1/1 {
+		forval k = 1/2 {   
+			local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#c.indp80#c.FD_p80yr_polyBelow`k'_GMFD"
+		}	
+	}
+} 
+
 else if ("`submodel'" == "coldside") {
 	// * 1 = electricity, 2 = other_energy
 	// include only electricity terms
@@ -146,6 +156,17 @@ else if ("`submodel'" == "coldside") {
 		}	
 	}
 } 
+else if ("`submodel'" == "twosidedp80") {
+	// * 1 = electricity, 2 = other_energy
+	// include only electricity terms
+	forval pg=1/1 {
+		forval k = 1/2 {   
+			local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#c.indp80#c.FD_p80yr_polyBelow`k'_GMFD"
+			local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#c.indp80#c.FD_p80yr_polyAbove`k'_GMFD"
+		}	
+	}
+} 
+
 
 * temp x year x income spline
 
@@ -183,8 +204,7 @@ else if ("`submodel'" == "p80elecinter") {
 		}		
 	}
 }
-
-else if ("`submodel'" == "coldside") {
+else if ("`submodel'" == "coldsidep80") {
 	// * 1 = electricity, 2 = other_energy
 	// include only electricity terms
 	forval pg=1/1 {
@@ -195,6 +215,31 @@ else if ("`submodel'" == "coldside") {
 		}		
 	}
 }
+else if ("`submodel'" == "coldside") {
+	// * 1 = electricity, 2 = other_energy
+	// include only electricity terms
+	forval pg=1/1 {
+		forval lg = 1/2 {
+			forval k = 1/2 {
+				local year_income_spline_r = "`year_income_spline_r' c.indp`pg'#c.indf1#c.FD_lgdppc_MA15yearI`lg'polyBelow`k'"
+			}
+		}		
+	}
+}
+else if ("`submodel'" == "twosidedp80") {
+	// * 1 = electricity, 2 = other_energy
+	// include only electricity terms
+	forval pg=1/1 {
+		forval lg = 1/2 {
+			forval k = 1/2 {
+				local year_income_spline_r = "`year_income_spline_r' c.indp`pg'#c.indf1#c.indp80#c.FD_lgdppc_MA15p80yrI`lg'polyBelow`k'"
+				local year_income_spline_r = "`year_income_spline_r' c.indp`pg'#c.indf1#c.indp80#c.FD_lgdppc_MA15p80yrI`lg'polyAbove`k'"
+			}
+		}		
+	}
+}
+
+
 
 
 //run first stage regression

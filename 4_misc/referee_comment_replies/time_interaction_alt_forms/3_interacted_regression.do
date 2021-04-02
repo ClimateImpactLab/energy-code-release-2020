@@ -26,8 +26,8 @@ global model "TINV_clim"
 * Step 1: Estimate Energy Temperature Response
 ********************************************************************************
 
-foreach submodel in "plininter" "decinter" "p80elecinter" "coldside" { 
-//foreach submodel in  "coldside" {
+foreach submodel in "plininter" "decinter" "p80elecinter" "coldsidep80" "coldside" "twosidedp80" { 
+//foreach submodel in  "coldsidep80" {
 
 	global submodel "`submodel'"
 	//do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/stacked.do
@@ -43,7 +43,7 @@ foreach product in "other_energy" "electricity" {
 //	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_plininter.do
 //	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_plininter_2099.do
 //	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_decinter.do
-	foreach submodel in "p80elecinter" "coldside" {
+	foreach submodel in "p80elecinter" "coldsidep80" "coldside" "twosidedp80" {
 		global submodel "`submodel'"
 		do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_post1980.do
 		do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_post1980_2099.do
@@ -62,7 +62,7 @@ foreach product in "other_energy" "electricity" {
 //	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_time_marginal_effect_over_time_plininter.do
 	
 } 
-foreach submodel in "p80elecinter" "coldside" {
+foreach submodel in "p80elecinter" "coldsidep80" "coldside" "twosidedp80" {
 	global submodel "`submodel'"
 	global product "electricity"
 	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_time_marginal_effect_post1980.do
