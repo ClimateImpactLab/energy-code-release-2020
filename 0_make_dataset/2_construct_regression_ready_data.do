@@ -169,6 +169,11 @@ drop largegpid_electricity largegpid_other_energy
 tab gpid, gen(ind)
 tab largegpid, gen(largeind)
 
+// generate dummy variable with value = 1 indicating being high income group
+// for coldsidep80highinc regression
+gen largeind = 1 if largegpid == 2
+replace largeind = 0 if largegpid == 1
+
 //Generate sector and fuel dummies
 
 * 1 = electricity, 2 = other_energy
