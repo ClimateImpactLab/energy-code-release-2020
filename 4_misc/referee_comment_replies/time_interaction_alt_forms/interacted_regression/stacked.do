@@ -125,6 +125,15 @@ else if ("`submodel'" == "decinter") {
 		}
 	}
 }
+else if ("`submodel'" == "dechighinc") { 
+	// for decadal interaction, use temp interacted with decadal indicator
+	// only for electricity (pg==1)
+	forval pg=1/1 {
+		forval k=1/2 {
+			local year_temp_r = "`year_temp_r' i.indd#c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_temp`k'_GMFD"
+		}
+	}
+}
 else if ("`submodel'" == "p80elecinter"){
 	// p80elecinter model
 	// * 1 = electricity, 2 = other_energy
@@ -203,6 +212,17 @@ else if ("`submodel'" == "decinter") {
 		forval lg = 1/2 {
 			forval k = 1/2 {
 				local year_income_spline_r = "`year_income_spline_r' i.indd#c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`lg'temp`k'"
+			}
+		}		
+	}
+}
+
+else if ("`submodel'" == "dechighinc") {
+	// only for electricity (pg==1) and for high income (lg == 2)
+	forval pg=1/1 {
+		forval lg = 2/2 {
+			forval k = 1/2 {
+				local year_income_spline_r = "`year_income_spline_r' i.indd#c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_dc1_lgdppc_MA15I`lg'temp`k'"
 			}
 		}		
 	}

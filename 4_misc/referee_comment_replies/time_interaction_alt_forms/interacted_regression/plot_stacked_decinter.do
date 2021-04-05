@@ -6,11 +6,12 @@ for lininter and quadinter models, year 1971 and 2010
 
 set scheme s1color
 
+
 ****** Set Model Specification Locals ******************************************
 
 local model_main = "$model" // What is the main model for this plot?
 local var = "$product" // What product's response function are we plotting?
-local submodel_ov = "decinter" // What submodel is gettting overlayed on this plot?
+local submodel_ov = "$submodel" // What submodel is gettting overlayed on this plot?
 
 ****** Set Plotting Toggles ****************************************************
 
@@ -167,9 +168,20 @@ forval lg=3(-1)1 {	//Income tercile
 				local line = "`line' + below20*_b[c.indp`pg'#c.indf1#c.FD_hdd20_TINVtemp`k'_GMFD]*`subHDD' * (20^`k' - temp`k')"
 				local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
 
-				if (strpos("`plot_model'", "inter") > 0) {
+				if (strpos("`plot_model'", "decinter") > 0) {
 					local line = "`line' + _b[`pt'.indd#c.indp`pg'#c.indf1#c.FD_temp`k'_GMFD] * (temp`k' - 20^`k')"
 					local line = "`line' + _b[`pt'.indd#c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
+				}
+
+				if (strpos("`plot_model'", "dechighinc") > 0) {
+					// only interact for electricity
+					if `pg' == 1 {
+						local line = "`line' + _b[`pt'.indd#c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_temp`k'_GMFD] * (temp`k' - 20^`k')"
+						// only include inc x decade x temp term for high inc cells
+						if `ig' == 2 {
+							local line = "`line' + _b[`pt'.indd#c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
+						}
+					}
 				}
 
 				local add " + "
