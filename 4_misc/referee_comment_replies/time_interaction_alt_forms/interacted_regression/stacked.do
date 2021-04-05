@@ -137,12 +137,12 @@ else if ("`submodel'" == "p80elecinter"){
 		}	
 	}
 }
-else if ("`submodel'" == "coldsidep80") | ("`submodel'" == "coldsidep80lowinc") {
+else if ("`submodel'" == "coldsidep80") | ("`submodel'" == "coldsidep80highinc") {
 	// * 1 = electricity, 2 = other_energy
 	// include only electricity terms
 	forval pg=1/1 {
 		forval k = 1/2 {   
-			local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#c.indp80#c.FD_p80yr_polyBelow`k'_GMFD"
+			local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#c.indp80#c.largeind#c.FD_p80yr_polyBelow`k'_GMFD"
 		}	
 	}
 } 
@@ -224,7 +224,7 @@ else if ("`submodel'" == "coldsidep80") {
 		}		
 	}
 }
-else if ("`submodel'" == "coldsidep80lowinc") {
+else if ("`submodel'" == "coldsidep80highinc") {
 	// * 1 = electricity, 2 = other_energy
 	// include only electricity terms
 	// only include low income terms lg=1

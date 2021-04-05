@@ -169,10 +169,22 @@ drop largegpid_electricity largegpid_other_energy
 tab gpid, gen(ind)
 tab largegpid, gen(largeind)
 
-// generate dummy variable with value = 1 indicating being high income group
+*********************************************************
+// generate dummy variable with value = 1 indicating 
+// a country being in high income group for all years
 // for coldsidep80highinc regression
-gen largeind = 1 if largegpid == 2
-replace largeind = 0 if largegpid == 1
+
+// generate indicator for electricity observations with high income
+gen largeind_electricity = 1 if largeind2 == 1 & product == "electricity"
+
+// generate the number of observations and high income nobs for each country 
+bysort country: egen nobs_electricity = count(product == "electricity")
+bysort country: egen nobs_largeind = sum(largeind_electricity == 1)
+
+// generate indicator for a country having as many high inc observations
+// as electricity observations 
+gen largeind_allyears = (nobs_electricity == nobs_largeind)
+*********************************************************
 
 //Generate sector and fuel dummies
 
