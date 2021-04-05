@@ -203,18 +203,17 @@ forval lg=3(-1)1 {	//Income tercile
 						local line = "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_p80yr_polyBelow`k'_GMFD] * (polyBelow`k' - 0)*`p80yr'"
 						local line = "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_lgdppc_MA15p80yrI`ig'polyBelow`k']*`deltacut_subInc'*`p80yr'*(polyBelow`k' - 0)"	
 					}
-					else if ("`submodel_ov'" == "coldsidep80lowinc") {    
-						// (polyBelow`k' - 0) because at t=20C, the term polyBelow will be 0
-						local line = "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_p80yr_polyBelow`k'_GMFD] * (polyBelow`k' - 0)*`p80yr'"
-						// add income interaction if in low income group
-						if (`ig' == 1) {
-							local line = "`line' + _b[c.indp`pg'#c.indf1#c.indp80#c.FD_lgdppc_MA15p80yrI`ig'polyBelow`k']*`deltacut_subInc'*`p80yr'*(polyBelow`k' - 0)"	
-						}
-					}
 					else if ("`submodel_ov'" == "coldside") {    
 						// (polyBelow`k' - 0) because at t=20C, the term polyBelow will be 0
 						local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_year_polyBelow`k'_GMFD] * (polyBelow`k' - 0)*`year'"
 						local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_lgdppc_MA15yearI`ig'polyBelow`k']*`deltacut_subInc'*`year'*(polyBelow`k' - 0)"	
+					}
+					else if ("`submodel_ov'" == "coldsidehighinc") {    
+						// (polyBelow`k' - 0) because at t=20C, the term polyBelow will be 0
+						local line = "`line' + _b[c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_year_polyBelow`k'_GMFD] * (polyBelow`k' - 0)*`year'"
+						if `ig' == 2 {
+							local line = "`line' + _b[c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_lgdppc_MA15yearI`ig'polyBelow`k']*`deltacut_subInc'*`year'*(polyBelow`k' - 0)"
+						}	
 					}
 					else if ("`submodel_ov'" == "twosidedp80") {    
 						// (polyBelow`k' - 0) and (polyAbove`k' - 0) because at t=20C, the term polyBelow will be 0
