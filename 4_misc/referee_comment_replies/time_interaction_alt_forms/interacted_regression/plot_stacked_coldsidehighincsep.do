@@ -196,8 +196,8 @@ forval lg=3(-1)1 {	//Income tercile
 					local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
 				}
 				// plotting interacted model, high income group, but not always rich
-				if (strpos("`type'", "ov") > 0) & (`ig' == 2 ) & ("`submodel_ov'" == "coldsidehighincsep_alwaysrich") {
-					local line = "`line' + _b[c.indp`pg'#c.indf1#c.largeind_notallyears#c.FD_lgdppc_MA15yearI`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
+				if (strpos("`type'", "ov") > 0) & (`ig' == 2 ) & ("`submodel_ov'" == "coldsidehighincsep") {
+					local line = "`line' + _b[c.indp`pg'#c.indf1#c.largeind_notallyears#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
 				}
 				// plotting interacted model, high income group, electricity always rich
 				if (strpos("`type'", "ov") > 0) & (`ig' == 2 ) & ("`var'" == "electricity") & ("`submodel_ov'" == "coldsidehighincsep_alwaysrich") {    

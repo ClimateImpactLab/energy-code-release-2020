@@ -30,7 +30,7 @@ foreach submodel in /*"plininter" "decinter" "p80elecinter" "coldsidep80" "colds
 //foreach submodel in  "coldsidep80" {
 
 	global submodel "`submodel'"
-	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/stacked.do
+	//do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/stacked.do
 } 
 
 
@@ -53,12 +53,12 @@ foreach product in "other_energy" "electricity" {
 	}
 	foreach submodel in  "coldsidehighincsep"  "coldsidehighincsep_alwaysrich" {
 		global submodel "`submodel'"
-		do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_coldsidehighincsep.do
-		do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_coldsidehighincsep_2099.do
+	//	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_coldsidehighincsep.do
+	//	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_coldsidehighincsep_2099.do
 	}
 	foreach submodel in  "dechighincsep"  "dechighincsep_alwaysrich" {
 		global submodel "`submodel'"
-		do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_dechighincsep.do
+	//	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_dechighincsep.do
 	}
 }
 
