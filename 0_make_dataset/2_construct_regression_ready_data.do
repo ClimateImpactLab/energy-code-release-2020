@@ -186,6 +186,8 @@ bysort country: egen last_year = max(year)
 // generate indicator for a country having as many high inc observations
 // as electricity observations, while also spanning the whole period
 gen largeind_allyears = (nobs_electricity == nobs_largeind & first_year == 1971 & last_year == 2010)
+gen largeind_notallyears = 1 - largeind_allyears
+
 *********************************************************
 
 //Generate sector and fuel dummies

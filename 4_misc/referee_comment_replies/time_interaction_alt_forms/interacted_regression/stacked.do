@@ -98,14 +98,43 @@ forval pg = 1/2 {
 * temp x income spline
 
 local income_spline_r = ""
-forval pg=1/2 {
-	forval lg = 1/2 {
-		forval k = 1/2 {
-			local income_spline_r = "`income_spline_r' c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`lg'temp`k'"
-		}
-	}		
+if ("`submodel'" != "coldsidehighincsep") & ("`submodel'" != "dechighincsep") {
+	forval pg=1/2 {
+		forval lg = 1/2 {
+			forval k = 1/2 {
+				local income_spline_r = "`income_spline_r' c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`lg'temp`k'"
+			}
+		}		
+	}
 }
- 
+else {
+	// low income terms
+	forval pg=1/2 {
+		forval lg = 1/1 {
+			forval k = 1/2 {
+				local income_spline_r = "`income_spline_r' c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`lg'temp`k'"
+			}
+		}		
+	}
+	// high income but not always rich terms
+	forval pg=1/2 {
+		forval lg = 2/2 {
+			forval k = 1/2 {
+				local income_spline_r = "`income_spline_r' c.indp`pg'#c.indf1#c.largeind_notallyears#c.FD_dc1_lgdppc_MA15I`lg'temp`k'"
+			}
+		}		
+	}
+	// high income always rich terms, electricity only
+	forval pg=1/1 {
+		forval lg = 2/2 {
+			forval k = 1/2 {
+				local income_spline_r = "`income_spline_r' c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_dc1_lgdppc_MA15I`lg'temp`k'"
+			}
+		}		
+	}
+
+}
+
 * temp x year
 
 local year_temp_r = ""
@@ -125,7 +154,7 @@ else if ("`submodel'" == "decinter") {
 		}
 	}
 }
-else if ("`submodel'" == "dechighinc") { 
+else if ("`submodel'" == "dechighinc") | ("`submodel'" == "dechighincsep")  { 
 	// for decadal interaction, use temp interacted with decadal indicator
 	// only for electricity (pg==1)
 	forval pg=1/1 {
@@ -163,7 +192,7 @@ else if ("`submodel'" == "coldside") {
 		}	
 	}
 } 
-else if ("`submodel'" == "coldsidehighinc") {
+else if ("`submodel'" == "coldsidehighinc") | ("`submodel'" == "coldsidehighincsep"){
 	// * 1 = electricity, 2 = other_energy
 	// include only electricity terms
 	forval pg=1/1 {
@@ -216,8 +245,7 @@ else if ("`submodel'" == "decinter") {
 		}		
 	}
 }
-
-else if ("`submodel'" == "dechighinc") {
+else if ("`submodel'" == "dechighinc") | ("`submodel'" == "dechighincsep") {
 	// only for electricity (pg==1) and for high income (lg == 2)
 	forval pg=1/1 {
 		forval lg = 2/2 {
@@ -252,7 +280,7 @@ else if ("`submodel'" == "coldsidep80") {
 		}		
 	}
 }
-else if ("`submodel'" == "coldsidehighinc") {
+else if ("`submodel'" == "coldsidehighinc") | ("`submodel'" == "coldsidehighincsep"){
 	// * 1 = electricity, 2 = other_energy
 	// include only electricity terms
 	// only include high income terms lg=2
@@ -307,6 +335,11 @@ reghdfe FD_load_pc `temp_r' `precip_r' `climate_r' ///
 DumInc*, absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i) residuals(resid)
 estimates save "$root/sters/FD_inter_`model_name'", replace	
 
+// copy the ster file for plotting separately for always rich and sometimes rich groups 
+if  (strpos("`model_name'", "sep") > 0) {
+	estimates save "$root/sters/FD_inter_`model_name'_alwaysrich", replace	
+}
+
 //calculating weigts for FGLS
 drop if resid==.
 bysort region_i: egen omega = var(resid)
@@ -318,5 +351,10 @@ reghdfe FD_load_pc `temp_r' `precip_r' `climate_r' ///
 `lgdppc_MA15_r' `income_spline_r' `year_temp_r' `year_income_spline_r' ///
 DumInc* [pw = weight], absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i)
 estimates save "$root/sters/FD_FGLS_inter_`model_name'", replace
+
+// copy the ster file for plotting separately for always rich and sometimes rich groups 
+if  (strpos("`model_name'", "sep") > 0) {
+	estimates save "$root/sters/FD_FGLS_inter_`model_name'_alwaysrich", replace	
+}
 
 
