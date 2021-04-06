@@ -133,7 +133,6 @@ else {
 			}
 		}		
 	}
-
 }
 
 * temp x year

@@ -75,7 +75,7 @@ foreach product in "other_energy" "electricity" {
 	
 }
 
-foreach submodel in /* "p80elecinter" "coldsidep80" "coldsidehighinc" */  "coldsidehighincsep_alwaysrich"  /*"coldside" "twosidedp80" "coldsidepwl" */ {
+foreach submodel in /* "p80elecinter" "coldsidep80" */ "coldsidehighinc"  "coldsidehighincsep"  "coldsidehighincsep_alwaysrich"  /*"coldside" "twosidedp80" "coldsidepwl" */ {
 	global submodel "`submodel'"
 	global product "electricity"
 	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_time_marginal_effect_post1980.do
