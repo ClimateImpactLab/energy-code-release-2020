@@ -119,9 +119,9 @@ forval lg = 1/3 {
 		}
 		else if ("`submodel'" == "coldsidehighinc") {
 			// (polyBelow`k' - 0) because at t=20C, the term polyBelow will be 0
-			local line " `line' `add' _b[c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_year_polyBelow`k'_GMFD] * (polyBelow`k' - 0) "
 			// add income interaction when above income threshold
 			if (`ig' == 2) {
+				local line " `line' `add' _b[c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_year_polyBelow`k'_GMFD] * (polyBelow`k' - 0) "
 				local line "`line' + _b[c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_lgdppc_MA15yearI`ig'polyBelow`k'] * `deltacut_subInc' * (polyBelow`k' - 0)"			
 			}
 		}

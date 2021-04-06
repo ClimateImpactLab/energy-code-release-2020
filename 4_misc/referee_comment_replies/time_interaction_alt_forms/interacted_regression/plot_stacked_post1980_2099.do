@@ -193,8 +193,8 @@ forval lg=3(-1)1 {	//Income tercile
 					}
 					else if ("`submodel_ov'" == "coldsidehighinc") {    
 						// (polyBelow`k' - 0) because at t=20C, the term polyBelow will be 0
-						local line = "`line' + _b[c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_year_polyBelow`k'_GMFD] * (polyBelow`k' - 0)*`year'"
 						if `ig' == 2 {
+							local line = "`line' + _b[c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_year_polyBelow`k'_GMFD] * (polyBelow`k' - 0)*`year'"
 							local line = "`line' + _b[c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_lgdppc_MA15yearI`ig'polyBelow`k']*`deltacut_subInc'*`year'*(polyBelow`k' - 0)"
 						}	
 					}
