@@ -180,7 +180,7 @@ forval lg=3(-1)1 {	//Income tercile
 				local line = "`line' + below20*_b[c.indp`pg'#c.indf1#c.FD_hdd20_TINVtemp`k'_GMFD]*`subHDD' * (20^`k' - temp`k')"
 
 				// if plotting interacted model, and low income group 				
-				if (strpos("`type'", "ov") > 0) & (`ig' == 1)
+				if (strpos("`type'", "ov") > 0) & (`ig' == 1) {
 					local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
 				}
 				// plotting interacted model, high income group, but not always rich
