@@ -107,6 +107,7 @@ if ("`submodel'" != "coldsidehighincsep") & ("`submodel'" != "dechighincsep") {
 		}		
 	}
 }
+// for the two models separating low income, high income but not always rich, and electricity always rich:
 else {
 	// low income terms
 	forval pg=1/2 {
