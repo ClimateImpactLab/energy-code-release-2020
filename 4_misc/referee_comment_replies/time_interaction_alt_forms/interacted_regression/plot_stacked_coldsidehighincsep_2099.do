@@ -172,25 +172,42 @@ forval lg=3(-1)1 {	//Income tercile
 
 			local line ""
 			local add ""
+			
 			foreach k of num 1/2 {
 				
 				local line = " `line' `add' _b[c.indp`pg'#c.indf1#c.FD_temp`k'_GMFD] * (temp`k' - 20^`k')"
 				local line = "`line' + above20*_b[c.indp`pg'#c.indf1#c.FD_cdd20_TINVtemp`k'_GMFD]*`subCDD' * (temp`k' - 20^`k')"
 				local line = "`line' + below20*_b[c.indp`pg'#c.indf1#c.FD_hdd20_TINVtemp`k'_GMFD]*`subHDD' * (20^`k' - temp`k')"
-
-				// if plotting interacted model, and low income group 				
-				if (strpos("`type'", "ov") > 0) & (`ig' == 1) {
+				// if plotting interacted model			
+				if (strpos("`type'", "ov") > 0) {
+					// low income group
+					if (`ig' == 1) {
+						local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
+					} 
+					// high income group
+					else if (`ig' == 2) {
+						// not always rich case
+						if ("`submodel_ov'" == "coldsidehighincsep") {
+							local line = "`line' + _b[c.indp`pg'#c.indf1#c.largeind_notallyears#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
+				
+						}
+						// always rich case 
+						else if ("`submodel_ov'" == "coldsidehighincsep_alwaysrich") {
+							if  ("`var'" == "electricity") {
+								local line = "`line' + _b[c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_year_polyBelow`k'_GMFD] * (polyBelow`k' - 0)*`year'"
+								local line = "`line' + _b[c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
+								local line = "`line' + _b[c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_lgdppc_MA15yearI`ig'polyBelow`k']*`deltacut_subInc'*`year'*(polyBelow`k' - 0)"
+							}
+							// for other energy, plot the same as not always case
+							else if ("`var'" == "other_energy") {
+								local line = "`line' + _b[c.indp`pg'#c.indf1#c.largeind_notallyears#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
+							}
+						}
+					}
+				} 
+				// plotting main model 
+				else {
 					local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
-				}
-				// plotting interacted model, high income group, but not always rich
-				if (strpos("`type'", "ov") > 0) & (`ig' == 2 ) & ("`submodel_ov'" == "coldsidehighincsep") {
-					local line = "`line' + _b[c.indp`pg'#c.indf1#c.largeind_notallyears#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
-				}
-				// plotting interacted model, high income group, electricity always rich
-				if (strpos("`type'", "ov") > 0) & (`ig' == 2 ) & ("`var'" == "electricity") & ("`submodel_ov'" == "coldsidehighincsep_alwaysrich") {    
-					local line = "`line' + _b[c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_year_polyBelow`k'_GMFD] * (polyBelow`k' - 0)*`year'"
-					local line = "`line' + _b[c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
-					local line = "`line' + _b[c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_lgdppc_MA15yearI`ig'polyBelow`k']*`deltacut_subInc'*`year'*(polyBelow`k' - 0)"
 				}
 				local add " + "
 			}
