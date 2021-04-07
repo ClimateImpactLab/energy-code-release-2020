@@ -51,15 +51,29 @@ drop if _n > 0
 set obs `obs'
 
 replace temp1_GMFD = _n - 6
+// for coldsidep80 and coldside interaction
+replace polyBelow1_GMFD = 20 - temp1_GMFD
+replace polyBelow1_GMFD = 0 if polyBelow1_GMFD < 0
+// for twosidedp80 interaction
+replace polyAbove1_GMFD = temp1_GMFD - 20
+replace polyAbove1_GMFD = 0 if polyAbove1_GMFD < 0
 
 foreach k of num 1/2 {
 	rename temp`k'_GMFD temp`k'
 	replace temp`k' = temp1 ^ `k'
+	// for coldsidep80 and coldside interaction
+	rename polyBelow`k'_GMFD polyBelow`k'
+	replace polyBelow`k' = 20 ^ `k' - temp1 ^ `k'
+	replace polyBelow`k' = 0 if polyBelow`k' < 0
+	// for twosidedp80 interaction
+	rename polyAbove`k'_GMFD polyAbove`k'
+	replace polyAbove`k' = temp1 ^ `k' - 20 ^ `k'
+	replace polyAbove`k' = 0 if polyAbove`k' < 0
+
 }
 
 gen above20 = (temp1 >= 20) //above 20 indicator
 gen below20 = (temp1 < 20) //below 20 indicator
-
 ********************************************************************************
 * Step 2: Set up for plotting by: 
 	* a) finding knot location 
@@ -177,7 +191,7 @@ forval lg=3(-1)1 {	//Income tercile
 					// high income group
 					else if (`ig' == 2) {
 						// not always rich case
-						if ("`submodel_ov'" == "dechighincsep") {
+						if ("`submodel_ov'" == "dechighincsep") | ("`submodel_ov'" == "dechighincsepcold") {
 							local line = "`line' + _b[c.indp`pg'#c.indf1#c.largeind_notallyears#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
 				
 						}
@@ -187,6 +201,17 @@ forval lg=3(-1)1 {	//Income tercile
 								local line = "`line' + _b[`pt'.indd#c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_temp`k'_GMFD] * (temp`k' - 20^`k')"
 								local line = "`line' + _b[c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
 								local line = "`line' + _b[`pt'.indd#c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
+							}
+							// for other energy, plot the same as not always case
+							else if ("`var'" == "other_energy") {
+								local line = "`line' + _b[c.indp`pg'#c.indf1#c.largeind_notallyears#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
+							}
+						}
+						else if ("`submodel_ov'" == "dechighincsepcold_alwaysrich") {
+							if  ("`var'" == "electricity") {
+								local line = "`line' + _b[`pt'.indd#c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_polyBelow`k'_GMFD] * (polyBelow`k' - 0)"
+								local line = "`line' + _b[c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
+								local line = "`line' + _b[`pt'.indd#c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_dc1_lgdppc_MA15I`ig'polyBelow`k']*`deltacut_subInc'*(polyBelow`k' - 0)"
 							}
 							// for other energy, plot the same as not always case
 							else if ("`var'" == "other_energy") {

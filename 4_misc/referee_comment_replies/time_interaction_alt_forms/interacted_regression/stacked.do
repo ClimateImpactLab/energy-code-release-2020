@@ -98,7 +98,7 @@ forval pg = 1/2 {
 * temp x income spline
 
 local income_spline_r = ""
-if ("`submodel'" != "coldsidehighincsep") & ("`submodel'" != "dechighincsep") {
+if ("`submodel'" != "coldsidehighincsep") & ("`submodel'" != "dechighincsep") & ("`submodel'" != "dechighincsepcold") {
 	forval pg=1/2 {
 		forval lg = 1/2 {
 			forval k = 1/2 {
@@ -160,6 +160,15 @@ else if ("`submodel'" == "dechighinc") | ("`submodel'" == "dechighincsep")  {
 	forval pg=1/1 {
 		forval k=1/2 {
 			local year_temp_r = "`year_temp_r' i.indd#c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_temp`k'_GMFD"
+		}
+	}
+}
+else if ("`submodel'" == "dechighincsepcold")  { 
+	// for decadal interaction, use temp interacted with decadal indicator
+	// only for electricity (pg==1)
+	forval pg=1/1 {
+		forval k=1/2 {
+			local year_temp_r = "`year_temp_r' i.indd#c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_polyBelow`k'_GMFD"
 		}
 	}
 }
@@ -251,6 +260,16 @@ else if ("`submodel'" == "dechighinc") | ("`submodel'" == "dechighincsep") {
 		forval lg = 2/2 {
 			forval k = 1/2 {
 				local year_income_spline_r = "`year_income_spline_r' i.indd#c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_dc1_lgdppc_MA15I`lg'temp`k'"
+			}
+		}		
+	}
+}
+else if ("`submodel'" == "dechighincsepcold") {
+	// only for electricity (pg==1) and for high income (lg == 2)
+	forval pg=1/1 {
+		forval lg = 2/2 {
+			forval k = 1/2 {
+				local year_income_spline_r = "`year_income_spline_r' i.indd#c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_dc1_lgdppc_MA15I`lg'polyBelow`k'"
 			}
 		}		
 	}
