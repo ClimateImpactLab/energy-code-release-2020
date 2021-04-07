@@ -163,7 +163,7 @@ else if ("`submodel'" == "dechighinc") | ("`submodel'" == "dechighincsep")  {
 		}
 	}
 }
-else if ("`submodel'" == "dechighincsepcold")  { 
+else if ("`submodel'" == "dechighincsepcold") | ("`submodel'" == "dechighinccold")   { 
 	// for decadal interaction, use temp interacted with decadal indicator
 	// only for electricity (pg==1)
 	forval pg=1/1 {
@@ -189,7 +189,8 @@ else if ("`submodel'" == "coldsidep80") {
 	// include only electricity terms
 	forval pg=1/1 {
 		forval k = 1/2 {   
-			local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#c.indp80#c.FD_p80yr_polyBelow`k'_GMFD"		}	
+			local year_temp_r = "`year_temp_r' c.indp`pg'#c.indf1#c.indp80#c.FD_p80yr_polyBelow`k'_GMFD"		
+		}	
 	}
 } 
 else if ("`submodel'" == "coldside") {
@@ -264,7 +265,7 @@ else if ("`submodel'" == "dechighinc") | ("`submodel'" == "dechighincsep") {
 		}		
 	}
 }
-else if ("`submodel'" == "dechighincsepcold") {
+else if ("`submodel'" == "dechighincsepcold") |  ("`submodel'" == "dechighinccold") {
 	// only for electricity (pg==1) and for high income (lg == 2)
 	forval pg=1/1 {
 		forval lg = 2/2 {
@@ -355,7 +356,7 @@ DumInc*, absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i) res
 estimates save "$root/sters/FD_inter_`model_name'", replace	
 
 // copy the ster file for plotting separately for always rich and sometimes rich groups 
-if  (strpos("`model_name'", "sep") > 0) {
+if  (strpos("`model_name'", "sep") > 0) | (strpos("`model_name'", "highinc") > 0) {
 	estimates save "$root/sters/FD_inter_`model_name'_alwaysrich", replace	
 }
 
@@ -372,7 +373,7 @@ DumInc* [pw = weight], absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster
 estimates save "$root/sters/FD_FGLS_inter_`model_name'", replace
 
 // copy the ster file for plotting separately for always rich and sometimes rich groups 
-if  (strpos("`model_name'", "sep") > 0) {
+if  (strpos("`model_name'", "sep") > 0) | (strpos("`model_name'", "highinc") > 0) {
 	estimates save "$root/sters/FD_FGLS_inter_`model_name'_alwaysrich", replace	
 }
 

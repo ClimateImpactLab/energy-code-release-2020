@@ -168,18 +168,28 @@ forval lg=3(-1)1 {	//Income tercile
 				local line = "`line' + below20*_b[c.indp`pg'#c.indf1#c.FD_hdd20_TINVtemp`k'_GMFD]*`subHDD' * (20^`k' - temp`k')"
 				local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
 
-				if (strpos("`plot_model'", "decinter") > 0) {
+				if "`plot_model'" == "decinter" {
 					local line = "`line' + _b[`pt'.indd#c.indp`pg'#c.indf1#c.FD_temp`k'_GMFD] * (temp`k' - 20^`k')"
 					local line = "`line' + _b[`pt'.indd#c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
 				}
-
-				if (strpos("`plot_model'", "dechighinc") > 0) {
+				else if "`plot_model'" == "dechighinc" {
 					// only interact for electricity
 					if (`pg' == 1)& (`ig' == 2) {
 						local line = "`line' + _b[`pt'.indd#c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_temp`k'_GMFD] * (temp`k' - 20^`k')"
 						local line = "`line' + _b[`pt'.indd#c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
 					}
 				}
+				else if "`plot_model'" == "dechighinccold" {
+					// left empty because if plotting for not always rich group, no extra terms
+				}
+				else if "`plot_model'" == "dechighinccold_alwaysrich" {
+					// only interact for electricity
+					if (`pg' == 1)& (`ig' == 2) {
+						local line = "`line' + _b[`pt'.indd#c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_polyBelow`k'_GMFD] * (polyBelow`k' - 0)"
+						local line = "`line' + _b[`pt'.indd#c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_dc1_lgdppc_MA15I`ig'polyBelow`k']*`deltacut_subInc'*(polyBelow`k' - 0)"
+					}
+				}
+
 
 				local add " + "
 			}

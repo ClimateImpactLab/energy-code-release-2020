@@ -26,7 +26,7 @@ global model "TINV_clim"
 * Step 1: Estimate Energy Temperature Response
 ********************************************************************************
 
-foreach submodel in /*"plininter" "decinter" "p80elecinter" "coldsidep80" "coldsidehighinc" "dechighinc"  "coldsidehighincsep" "dechighincsep"*/ "dechighincsepcold" /* "coldside" "twosidedp80" "coldsidepwl"  */{ 
+foreach submodel in /*"plininter" "decinter" "p80elecinter" "coldsidep80" "coldsidehighinc" "dechighinc"  "coldsidehighincsep" "dechighincsep" "dechighincsepcold" */ "dechighinccold" /* "coldside" "twosidedp80" "coldsidepwl"  */{ 
 //foreach submodel in  "coldsidep80" {
 
 	global submodel "`submodel'"
@@ -43,8 +43,8 @@ foreach product in "other_energy" "electricity" {
 //	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_plininter.do
 //	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_plininter_2099.do
 
-	foreach submodel in "decinter" "dechighinc" {
-	//	do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_decinter.do
+	foreach submodel in /* "decinter" "dechighinc" */ "dechighinccold" "dechighinccold_alwaysrich"{
+		do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_decinter.do
 	}
 	foreach submodel in /* "p80elecinter" "coldsidep80"  "coldsidehighinc" */   /* "coldside" "twosidedp80" "coldsidepwl"  */{
 		global submodel "`submodel'"
@@ -56,9 +56,9 @@ foreach product in "other_energy" "electricity" {
 		//do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_coldsidehighincsep.do
 		//do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_coldsidehighincsep_2099.do
 	}
-	foreach submodel in /* "dechighincsep"  "dechighincsep_alwaysrich" */ "dechighincsepcold" "dechighincsepcold_alwaysrich" {
+	foreach submodel in /* "dechighincsep"  "dechighincsep_alwaysrich" "dechighincsepcold" "dechighincsepcold_alwaysrich" */ {
 		global submodel "`submodel'"
-			do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_dechighincsep.do
+			//do $root/4_misc/referee_comment_replies/time_interaction_alt_forms/interacted_regression/plot_stacked_dechighincsep.do
 	}
 }
 

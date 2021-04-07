@@ -29,7 +29,7 @@ local col_other_energy_ov2010 "gray"
 local col_main "`col_`var''"
 local col_ov1971 "`col_`var'_ov1971'"
 local col_ov2010 "`col_`var'_ov2010'"
-
+ 
 			
 ********************************************************************************
 * Step 1: Load Data and Clean for Plotting
