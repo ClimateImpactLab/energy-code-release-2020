@@ -390,6 +390,13 @@ if (strpos("`model_name'", "decinter") > 0) {
 
 	sepscatter resid year, separate(category)
 	graph export "$root/figures/scatterplot_decinter_residuals_by_income_group.pdf", replace
+	
+	scatter resid year if category == "always rich"
+	graph export "$root/figures/scatterplot_decinter_residuals_always_rich.pdf", replace
+	scatter resid year if category == "rich"
+	graph export "$root/figures/scatterplot_decinter_residuals_rich.pdf", replace
+	scatter resid year if category == "poor"
+	graph export "$root/figures/scatterplot_decinter_residuals_poor.pdf", replace
 
 }
 
