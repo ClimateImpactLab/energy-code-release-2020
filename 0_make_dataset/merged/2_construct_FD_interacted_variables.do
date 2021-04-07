@@ -54,6 +54,7 @@ forval i=1/4 {
 	
 	// temp
 	qui gen double FD_temp`i'_GMFD = temp`i'_GMFD - L1.temp`i'_GMFD
+	qui gen double FD_polyBelow`i'_GMFD = polyBelow`i'_GMFD - L1.polyBelow`i'_GMFD
 	
 	foreach yr in year cyear pyear p80yr {
 		// temp x year
@@ -139,6 +140,18 @@ forval lg=1/2 {
 		( L1.dc1_lgdppc_MA15 * L1.temp`i'_GMFD * L1.largeind`lg' )
 	}
 }
+
+** First difference income spline x temp (polyBelow)
+
+forval lg=1/2 {
+	forval i=1/4 {
+		qui gen double FD_dc1_lgdppc_MA15I`lg'polyBelow`i' = ///
+		( dc1_lgdppc_MA15 * polyBelow`i'_GMFD * largeind`lg' ) - ///
+		( L1.dc1_lgdppc_MA15 * L1.polyBelow`i'_GMFD * L1.largeind`lg' )
+	}
+}
+
+
 
 ** First difference dd20 x polyBreak ** 
 
