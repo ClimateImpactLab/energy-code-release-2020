@@ -51,11 +51,27 @@ drop if _n > 0
 set obs `obs'
 
 replace temp1_GMFD = _n - 6
+// for coldsidep80 and coldside interaction
+replace polyBelow1_GMFD = 20 - temp1_GMFD
+replace polyBelow1_GMFD = 0 if polyBelow1_GMFD < 0
+// for twosidedp80 interaction
+replace polyAbove1_GMFD = temp1_GMFD - 20
+replace polyAbove1_GMFD = 0 if polyAbove1_GMFD < 0
 
 foreach k of num 1/2 {
 	rename temp`k'_GMFD temp`k'
 	replace temp`k' = temp1 ^ `k'
+	// for coldsidep80 and coldside interaction
+	rename polyBelow`k'_GMFD polyBelow`k'
+	replace polyBelow`k' = 20 ^ `k' - temp1 ^ `k'
+	replace polyBelow`k' = 0 if polyBelow`k' < 0
+	// for twosidedp80 interaction
+	rename polyAbove`k'_GMFD polyAbove`k'
+	replace polyAbove`k' = temp1 ^ `k' - 20 ^ `k'
+	replace polyAbove`k' = 0 if polyAbove`k' < 0
+
 }
+
 
 gen above20 = (temp1 >= 20) //above 20 indicator
 gen below20 = (temp1 < 20) //below 20 indicator
@@ -168,21 +184,21 @@ forval lg=3(-1)1 {	//Income tercile
 				local line = "`line' + below20*_b[c.indp`pg'#c.indf1#c.FD_hdd20_TINVtemp`k'_GMFD]*`subHDD' * (20^`k' - temp`k')"
 				local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
 
-				if "`plot_model'" == "decinter" {
+				if "`plot_model'" == "TINV_clim_decinter" {
 					local line = "`line' + _b[`pt'.indd#c.indp`pg'#c.indf1#c.FD_temp`k'_GMFD] * (temp`k' - 20^`k')"
 					local line = "`line' + _b[`pt'.indd#c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
 				}
-				else if "`plot_model'" == "dechighinc" {
+				else if "`plot_model'" == "TINV_clim_dechighinc" {
 					// only interact for electricity
-					if (`pg' == 1)& (`ig' == 2) {
+					if (`pg' == 1) & (`ig' == 2) {
 						local line = "`line' + _b[`pt'.indd#c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_temp`k'_GMFD] * (temp`k' - 20^`k')"
 						local line = "`line' + _b[`pt'.indd#c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
 					}
 				}
-				else if "`plot_model'" == "dechighinccold" {
+				else if "`plot_model'" == "TINV_clim_dechighinccold" {
 					// left empty because if plotting for not always rich group, no extra terms
 				}
-				else if "`plot_model'" == "dechighinccold_alwaysrich" {
+				else if "`plot_model'" == "TINV_clim_dechighinccold_alwaysrich" {
 					// only interact for electricity
 					if (`pg' == 1)& (`ig' == 2) {
 						local line = "`line' + _b[`pt'.indd#c.indp`pg'#c.indf1#c.largeind_allyears#c.FD_polyBelow`k'_GMFD] * (polyBelow`k' - 0)"
@@ -194,6 +210,7 @@ forval lg=3(-1)1 {	//Income tercile
 				local add " + "
 			}
 
+			//di "`line'"
 			// trace out does response equation and add to local for plotting 
 			estimates use "$root/sters/FD_FGLS_inter_`plot_model'"
 			di "$root/sters/FD_FGLS_inter_`plot_model'"
