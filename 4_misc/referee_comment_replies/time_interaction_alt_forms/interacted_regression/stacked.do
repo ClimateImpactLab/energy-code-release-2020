@@ -369,12 +369,33 @@ drop resid //included
 //run second stage FGLS regression
 reghdfe FD_load_pc `temp_r' `precip_r' `climate_r' ///
 `lgdppc_MA15_r' `income_spline_r' `year_temp_r' `year_income_spline_r' ///
-DumInc* [pw = weight], absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i)
+DumInc* [pw = weight], absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i) residuals(resid)
 estimates save "$root/sters/FD_FGLS_inter_`model_name'", replace
 
 // copy the ster file for plotting separately for always rich and sometimes rich groups 
 if  (strpos("`model_name'", "sep") > 0) | (strpos("`model_name'", "highinc") > 0) {
 	estimates save "$root/sters/FD_FGLS_inter_`model_name'_alwaysrich", replace	
 }
+
+
+ssc install sepscatter
+
+/* some summary statistics for decadal regression residuals */
+if (strpos("`model_name'", "decinter") > 0) {
+	keep if product == "electricity"
+	// always rich
+	gen category = "always rich" if largeind_allyears == 1
+	replace category = "rich" if largeind2 == 1 & largeind_allyears == 0
+	replace category = "poor" if largeind1 == 1 
+
+	sepscatter resid year, separate(category)
+	graph export "$root/figures/scatterplot_decinter_residuals_by_income_group.pdf", replace
+
+}
+
+
+
+
+
 
 
