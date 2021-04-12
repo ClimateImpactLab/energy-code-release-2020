@@ -98,7 +98,7 @@ write_csv(df_pct,
 DB_data = output
 
 # get anomalies
-GMST_anom <- read_csv(glue("{DB_data}/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010.csv"))
+GMST_anom <- read_csv(glue("{DB_data}/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010_smooth.csv"))
 GMST_anom <- GMST_anom %>% 
   dplyr::filter(year == 2099) %>% 
   dplyr::select(-year) %>% 

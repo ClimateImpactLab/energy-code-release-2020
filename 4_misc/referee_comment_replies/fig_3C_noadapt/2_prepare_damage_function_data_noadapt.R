@@ -35,8 +35,8 @@ miceadds::source.all(paste0(projection.packages,"load_projection/"))
 
 # 1. GMST anomolies: moving from our server into a shared directory
 gmst_dir = "/mnt/Global_ACP/damage_function/GMST_anomaly"
-gmst_df = read_csv(paste0(gmst_dir, "/GMTanom_all_temp_2001_2010.csv"))
-write_csv(gmst_df, paste0(output, "/GMTanom_all_temp_2001_2010.csv"))
+gmst_df = read_csv(paste0(gmst_dir, "/GMTanom_all_temp_2001_2010_smooth.csv"))
+write_csv(gmst_df, paste0(output, "/GMTanom_all_temp_2001_2010_smooth.csv"))
 
 # 2. Values csvs to allow for draws from uncertainty 
 

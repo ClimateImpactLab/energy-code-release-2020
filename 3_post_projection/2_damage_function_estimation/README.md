@@ -19,7 +19,7 @@
     - `ssp` is the Shared Socioeconomic Pathway scenario used in the projection to define our income and population covariates. We include some projection results for SSP2, SSP3, and SSP4 in this code release. 
     - `model_tag` refers to the econometric specification. If this is blank, then we are refering to the main model described in the main text of the paper. Other options are `lininter` (which includes a linear time interaction, as detailed in Appendix Section I.3) and `lininter_double`, `lininter_half` (which deterministically doubles or halves the time trend estimated in the `lininter` model as detailed in Appendix Section I.3).
 - We also use Global Mean Surface Temperature (GMST) anomaly data that contains warming relative to the average GMST over 2001-2010 under each of the 33 climate projections in the SMME. These data are contained in: 
-  - `code_release_data_pixel_interaction/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010.csv`
+  - `code_release_data_pixel_interaction/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010_smooth.csv`
 
 ## Contents
 
@@ -61,7 +61,7 @@
 ### `5_plot_damage_function_over_time.do`
 - This code plots damage functions for a selection of years, showing how our empirically derived damage functions evolve over time, for our main model, price014 SSP3 scenario. The resulting plot is included as Figure 3C in the Appendix.
 - Code inputs:
-  - `code_release_data_pixel_interaction/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010.csv`
+  - `code_release_data_pixel_interaction/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010_smooth.csv`
   - `code_release_data_pixel_interaction/projection_system_outputs/damage_function_estimation/coefficients/df_mean_output_SSP3.csv`
 - Code outputs:
   - `fig_3C_total_energy_damage_function_evolution_SSP3-price014.pdf`
@@ -69,7 +69,7 @@
 ### `6_get_end_of_century_df_slopes_p_vals.do`
 - This code computes the slope and the p values, confidence intervals, of end of century damage function.
 - Code inputs:
-  - `code_release_data_pixel_interaction/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010.csv`
+  - `code_release_data_pixel_interaction/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010_smooth.csv`
   - `code_release_data_pixel_interaction/projection_system_outputs/damage_function_estimation/coefficients/df_mean_output_SSP3.csv`
 - Code outputs:
   - console output

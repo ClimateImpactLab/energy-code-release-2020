@@ -27,7 +27,7 @@ foreach subset in 2085 2050 2010 {
 	* **********************************************************************************
 
 	* import and reformat the gmst anomaly data, used for defining the range of GMST we plot each damage funciton for 
-	insheet using "$DB_data/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010.csv", comma names clear
+	insheet using "$DB_data/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010_smooth.csv", comma names clear
 	tempfile GMST_anom
 	save `GMST_anom', replace
 	preserve
