@@ -12,9 +12,11 @@ set more off
 set scheme s1color
 
 glob DB "/mnt"
-glob dir_output "$DB_data/referee_comments/damage_function_estimation"
+
+glob dir_temp "/mnt/CIL_energy/code_release_data_pixel_interaction/referee_comments/damage_function_estimation/"
 glob DB_data "$DB/CIL_energy/code_release_data_pixel_interaction"
 glob dir "$DB_data/projection_system_outputs/damage_function_estimation"
+glob dir_output "/home/$USER/energy-code-release-2020/figures/referee_comments/"
 
 * SSP toggle - options are "SSP2", "SSP3", or "SSP4"
 loc ssp = "SSP3" 
@@ -165,8 +167,8 @@ foreach subset in 2085 2050 2010 {
 		}
 	}
 
-	save "$dir_output/percent_gdp_vs_dollar_df_comparison_`subset'.dta", replace
-	use "$dir_output/percent_gdp_vs_dollar_df_comparison_`subset'.dta", clear
+	save "$dir_temp/percent_gdp_vs_dollar_df_comparison_`subset'.dta", replace
+	use "$dir_temp/percent_gdp_vs_dollar_df_comparison_`subset'.dta", clear
 
 
 	* CHECK:

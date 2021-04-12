@@ -32,8 +32,8 @@ pacman::p_load(ggplot2,
 
 user= 'liruixue'
 
-db = '/mnt/norgay_synology_drive/CIL_energy/'
-output = '/mnt/norgay_synology_drive/CIL_energy/code_release_data_pixel_interaction/'
+db = '/mnt/CIL_energy/'
+output = '/mnt/CIL_energy/code_release_data_pixel_interaction/'
 dir = paste0('/shares/gcp/social/parameters/energy/extraction/',
                     'multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/')
 
@@ -60,7 +60,7 @@ df_dmg = load.median(conda_env = "risingverse-py27",
                uncertainty = "values", # full, climate, values
                geo_level = "aggregated", # aggregated (ir agglomerations) or 'levels' (single irs)
                # iam = "high", 
-               model = "TINV_clim_income_spline", 
+               model = "TINV_clim", 
                adapt_scen = "fulladapt", 
                clim_data = "GMFD", 
                yearlist = as.character(seq(2010,2099,1)),  
