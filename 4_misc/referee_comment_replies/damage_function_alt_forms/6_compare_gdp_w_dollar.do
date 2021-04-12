@@ -16,7 +16,7 @@ glob DB "/mnt"
 glob dir_temp "/mnt/CIL_energy/code_release_data_pixel_interaction/referee_comments/damage_function_estimation/"
 glob DB_data "$DB/CIL_energy/code_release_data_pixel_interaction"
 glob dir "$DB_data/projection_system_outputs/damage_function_estimation"
-glob dir_output "/home/$USER/energy-code-release-2020/figures/referee_comments/"
+glob dir_output "/home/liruixue/repos/energy-code-release-2020/figures/referee_comments/"
 
 * SSP toggle - options are "SSP2", "SSP3", or "SSP4"
 loc ssp = "SSP3" 
