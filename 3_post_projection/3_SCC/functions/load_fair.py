@@ -149,7 +149,7 @@ def temperatures_anomaly(PULSE_YEAR,
 	# Create new emissions scenarios corresponding to each RCP with the additional pulse
 	for scen in [rcp3pd, rcp45, rcp6, rcp85]:
 	    # copy the emissions object
-	    scen.Plus = copy.deepcopy(scen.Emissions)
+	    scen.Plus = copy.deepcopy(scen.Emissions.emissions)
 	    # add an additional impulse of fossil CO2
 	    scen.Plus.co2_fossil = (
 	        scen.Plus.co2_fossil + np.where(scen.Plus.year == PULSE_YEAR, PULSE_AMT, 0))
