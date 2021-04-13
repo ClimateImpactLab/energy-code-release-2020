@@ -21,6 +21,7 @@ glob output "$root/figures/"
 * Load in GMTanom data file, save as a tempfile 
 insheet using "$DB_data/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010_smooth.csv", comma names clear
 drop if year < 2015 | year > 2099
+drop if temp == .
 tempfile GMST_anom
 save `GMST_anom', replace
 

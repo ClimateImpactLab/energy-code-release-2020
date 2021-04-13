@@ -28,10 +28,10 @@ glob DB_data "$DB/CIL_energy/code_release_data_pixel_interaction"
 glob dir "$DB_data/projection_system_outputs/damage_function_estimation"
 
 * SSP toggle - options are "SSP2", "SSP3", or "SSP4"
-loc ssp = "SSP3" 
+loc ssp = "SSP5" 
 
 * Model toggle  - options are "main", "lininter", "lininter_double", or "lininter_half","mixed"
-loc model = "mixed"
+loc model = "main"
 
 * What year do we use data from for determining DF estimates used for the out of sample extrapolation
 loc subset = 2085
