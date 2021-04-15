@@ -223,7 +223,7 @@ fi
 
 # set up some variables to make the calling line not a gazillion characters --
 ecp=${repo_root}/${extraction_config_path}/${unit}/${price_scen}/${uncertainty}/${geo_level}/median/energy-extract-${unit}${geo_level_tag}${price_scen_tag}-median_${spec}${proj_mode}.yml 
-suffix=_${region_tag}${unit}${price_scen_tag}_median${uncertainty_tag}${iam_tag}${ssp_tag}${rcp_tag}_${adapt_scen}${geo_level_tag}${proj_mode}
+suffix=_${region_tag}${unit}${price_scen_tag}_median${uncertainty_tag}${iam_tag}_${adapt_scen}${geo_level_tag}${proj_mode}
 log_file=${log_file_path}/${region_log_tag}log${suffix}_${spec}.txt
 
 # print out information about call

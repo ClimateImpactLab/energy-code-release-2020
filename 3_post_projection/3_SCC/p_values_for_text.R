@@ -42,7 +42,7 @@ git <- paste0("/home/liruixue/repos")
 prospectus.tools.lib <- paste0("/home/liruixue/repos",'/prospectus-tools/gcp/extract/')
 p_p_tools <- paste0(git, "/post-projection-tools/")
 # # Enable python use by R
-use_python(paste0('/home/',user,'/miniconda3/envs/', env, '/bin/python'), required = T)
+use_python(paste0('/home/',"liruixue",'/miniconda3/envs/', "risingverse-py27", '/bin/python'), required = T)
 # # Source the relevant codes (including python code for getting weights and GCM names) 
 setwd(prospectus.tools.lib)
 
