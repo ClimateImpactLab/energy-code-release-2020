@@ -184,7 +184,8 @@ forval lg=3(-1)1 {
 			local upper = cond(r(min)==r(max),r(min),.)
 
 	*		post `memhold'  ("`type'") ("`lg'") ("`tr'") ("35") ("`yhat'") 
-			*di "model:`type' inc:`lg' clim:`tr' temp:35 yhat:" %6.5f `yhat' "  lower:" %6.5f `lower'  "  upper:" %6.5f `upper'
+			* display the statistics
+			di "model:`type' inc:`lg' clim:`tr' temp:35 yhat:" %6.5f `yhat' "  lower:" %6.5f `lower'  "  upper:" %6.5f `upper'
 		}
 	}
 }
