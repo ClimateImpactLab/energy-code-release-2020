@@ -6,7 +6,7 @@ set scheme s1color
 ****** Set Model Specification Locals ******************************************
 
 local model_main = "TINV_clim" 
-local var = "electricity" 
+local var = "other_energy" 
 local submodel_ov = "decinter"
 ****** Set Plotting Toggles ****************************************************
 

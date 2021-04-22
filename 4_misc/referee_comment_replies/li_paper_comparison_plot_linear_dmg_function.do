@@ -12,7 +12,7 @@ glob root "/home/liruixue/repos/energy-code-release-2020"
 glob output "/home/liruixue/repos/energy-code-release-2020/figures/referee_comments/li_et_al_shanghai_comparison"
 
 
-//Load in GMTanom data file, save as a tempfile 
+* Load in GMTanom data file, save as a tempfile 
 insheet using "$DB_data/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010_smooth.csv", comma names clear
 drop if year < 2015 | year > 2099
 tempfile GMST_anom
@@ -22,8 +22,8 @@ save `GMST_anom', replace
 * * STEP 1: Pull in Damage CSVs and Merge with GMST Anomaly Data
 * **********************************************************************************
 
-*foreach fuel in "shanghai_impact" "shanghai_impact_no_srg" {
-foreach fuel in "shanghai_impact" {
+foreach fuel in "shanghai_impact" "shanghai_impact_no_srg" {
+*foreach fuel in "shanghai_impact" {
 
 	di "`fuel'"
 	*loc fuel shanghai_impact
@@ -87,21 +87,22 @@ foreach fuel in "shanghai_impact" "shanghai_impact_no_srg"{
 	}
 
 	* Nonparametric model for use pre-2100 
+	di "`fuel'"
     reg `fuel' anomaly if year>=2080 & year <= 2099 
     predict yhat_`fuel' if year>=2080 & year <= 2099 
 
-	loc gr
-	loc gr `gr' sc `fuel' anomaly if rcp=="rcp85" & year>=2080, mlcolor(red%30) msymbol(O) mlw(vthin) mfcolor(red%30) msize(vsmall) ||       
-	loc gr `gr' sc `fuel' anomaly if rcp=="rcp45"& year>=2080, mlcolor(ebblue%30) msymbol(O) mlw(vthin) mfcolor(ebblue%30) msize(vsmall)   ||
-	loc gr `gr' line yhat_`fuel' anomaly if year == 2099 , yaxis(1) color(black) lwidth(medthick) ||
+* 	loc gr
+* 	loc gr `gr' sc `fuel' anomaly if rcp=="rcp85" & year>=2080, mlcolor(red%30) msymbol(O) mlw(vthin) mfcolor(red%30) msize(vsmall) ||       
+* 	loc gr `gr' sc `fuel' anomaly if rcp=="rcp45"& year>=2080, mlcolor(ebblue%30) msymbol(O) mlw(vthin) mfcolor(ebblue%30) msize(vsmall)   ||
+* 	loc gr `gr' line yhat_`fuel' anomaly if year == 2099 , yaxis(1) color(black) lwidth(medthick) ||
 	
-	di "Graphing time..."
-	sort anomaly
-	graph twoway `gr', yline(0, lwidth(vthin)) ytitle(`ytitle') xtitle("GMST Anomaly") legend(order(1 "RCP 8.5" 2 "RCP 4.5" 3 "2097 damage fn.") size(*0.5)) name("`fuel'", replace) xscale(r(0(1)10)) xlabel(0(1)10) scheme(s1mono) title("`title' Damage Function, End of Century", tstyle(size(medsmall))) yscale(r(`ymin'(`ystep')`ymax')) ylabel(`ymin'(`ystep')`ymax')  
+* 	di "Graphing time..."
+* 	sort anomaly
+* 	graph twoway `gr', yline(0, lwidth(vthin)) ytitle(`ytitle') xtitle("GMST Anomaly") legend(order(1 "RCP 8.5" 2 "RCP 4.5" 3 "2097 damage fn.") size(*0.5)) name("`fuel'", replace) xscale(r(0(1)10)) xlabel(0(1)10) scheme(s1mono) title("`title' Damage Function, End of Century", tstyle(size(medsmall))) yscale(r(`ymin'(`ystep')`ymax')) ylabel(`ymin'(`ystep')`ymax')  
 	        
-	capture drop vbl
+* 	capture drop vbl
 
 	
-	graph export "$output/li_et_al_comparison_damage_function_`fuel'_2099_SSP3.pdf", replace 
+* 	graph export "$output/li_et_al_comparison_damage_function_`fuel'_2099_SSP3.pdf", replace 
 	restore
 }

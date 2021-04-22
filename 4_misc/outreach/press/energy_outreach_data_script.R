@@ -17,7 +17,7 @@ out = wrap_mapply(
   resolution=c("all_IRs"), 
   rcp=c("rcp85"),
   stats="mean",
-  fuel = c("other_energy"),
+  fuel = c("electricity", "other_energy"),
   export = TRUE,
   regenerate = FALSE,
   FUN=ProcessImpacts,
@@ -54,83 +54,106 @@ out = wrap_mapply(
 
 # ***************extract files****************
 
-# # extract files - levels quantity - electricity -  done
-# out = wrap_mapply(  
-#   time_step="all",
-#   impact_type="impacts_gj",
-#   resolution=c("all_IRs"), 
-#   rcp=c("rcp45", "rcp85"),
-#   stats="mean",
-#   fuel = c("electricity"),
-#   export = TRUE,
-#   regenerate = TRUE,
-#   FUN=ProcessImpacts,
-#   mc.cores=1,
-#   mc.silent=FALSE
-# )
+# extract files - levels quantity - electricity -  done
+out = wrap_mapply(  
+  time_step="all",
+  impact_type="impacts_gj",
+  resolution=c("all_IRs"), 
+  rcp=c("rcp45", "rcp85"),
+  stats="mean",
+  fuel = c("electricity"),
+  export = TRUE,
+  regenerate = FALSE,
+  FUN=ProcessImpacts,
+  mc.cores=1,
+  mc.silent=FALSE
+)
 
 
-# # extract files - levels quantity - other_energy rcp45 -  done
-# out = wrap_mapply(  
-#   time_step="all",
-#   impact_type="impacts_gj",
-#   resolution=c("all_IRs"), 
-#   rcp=c("rcp45"),
-#   stats="mean",
-#   fuel = c("other_energy"),
-#   export = TRUE,
-#   regenerate = TRUE,
-#   FUN=ProcessImpacts,
-#   mc.cores=1,
-#   mc.silent=FALSE
-# )
+# extract files - levels quantity - other_energy rcp45 -  done
+out = wrap_mapply(  
+  time_step="all",
+  impact_type="impacts_gj",
+  resolution=c("all_IRs"), 
+  rcp=c("rcp45"),
+  stats="mean",
+  fuel = c("other_energy"),
+  export = TRUE,
+  regenerate = FALSE,
+  FUN=ProcessImpacts,
+  mc.cores=1,
+  mc.silent=FALSE
+)
 
 
-# # extract files - levels quantity - gdp rcp45 -  done
-# out = wrap_mapply(  
-#   time_step="all",
-#   impact_type="impacts_pct_gdp",
-#   resolution=c("all_IRs"), 
-#   rcp=c("rcp45"),
-#   stats="mean",
-#   fuel = c("total_energy"),
-#   export = TRUE,
-#   regenerate = TRUE,
-#   FUN=ProcessImpacts,
-#   mc.cores=1,
-#   mc.silent=FALSE
-# )
+# extract files - levels quantity - gdp rcp45 -  done
+out = wrap_mapply(  
+  time_step="all",
+  impact_type="impacts_pct_gdp",
+  resolution=c("all_IRs"), 
+  rcp=c("rcp45"),
+  stats="mean",
+  fuel = c("total_energy"),
+  export = TRUE,
+  regenerate = FALSE,
+  FUN=ProcessImpacts,
+  mc.cores=1,
+  mc.silent=FALSE
+)
 
 
-# # extract files - aggregated quantity - done
+# extract files - aggregated quantity - electricity all done
+# ***** done! 
 # out = wrap_mapply(  
 #   time_step="all",
 #   impact_type="impacts_gj",
 #   resolution=c("states","global","iso"), 
 #   rcp=c("rcp45", "rcp85"),
 #   stats="mean",
-#   fuel = c("electricity", "other_energy"),
+#   fuel = c("electricity","other_energy"),
 #   export = TRUE,
+#   regenerate = FALSE,
 #   FUN=ProcessImpacts,
 #   mc.cores=1,
 #   mc.silent=FALSE
 # )
+# **** done! 
 
-# # extract files - aggregated dollar - done
+
 # out = wrap_mapply(  
 #   time_step="all",
-#   impact_type="impacts_pct_gdp",
-#   resolution=c("global", "states", "iso"), 
+#   impact_type="impacts_gj",
+#   resolution=c("states","global","iso"), 
 #   rcp=c("rcp45", "rcp85"),
 #   stats="mean",
-#   fuel = c("total_energy"),
+#   fuel = c("other_energy"),
 #   export = TRUE,
+#   regenerate = TRUE,
 #   FUN=ProcessImpacts,
-#   mc.cores=1,
+#   mc.cores=6,
 #   mc.silent=FALSE
 # )
 
 
+
+# extract files - aggregated dollar - done
+out = wrap_mapply(  
+  time_step="all",
+  impact_type="impacts_pct_gdp",
+  resolution=c("global", "states", "iso"), 
+  rcp=c("rcp45", "rcp85"),
+  stats="mean",
+  fuel = c("total_energy"),
+  export = TRUE,
+  regenerate = TRUE,
+  FUN=ProcessImpacts,
+  mc.cores=1,
+  mc.silent=FALSE
+)
+
+df = read_csv("/shares/gcp/social/parameters/energy_pixel_interaction/extraction/multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/TINV_clim_GMFD/total_energy/SSP3-rcp85_states_damage-price014_median_fulluncertainty_low_fulladapt-aggregated.csv")
+
+df = read_csv("/shares/gcp/social/parameters/energy_pixel_interaction/extraction/multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/TINV_clim_GMFD/total_energy/SSP3-rcp45_global_damage-price014_median_fulluncertainty_low_fulladapt-aggregated.csv")
 
 # generate all aggregated file stats
 out = wrap_mapply(  
@@ -156,7 +179,7 @@ out = wrap_mapply(
   rcp=c("rcp45", "rcp85"),
   stats=c("mean", "q5", "q17", "q50", "q83", "q95"),
   fuel = "total_energy",
-  regenerate = FALSE,
+  regenerate = TRUE,
   export = TRUE,
   FUN=ProcessImpacts,
   mc.cores=32,
