@@ -127,6 +127,8 @@ get.paths <- function(code.path.getter = get.energy.code.paths, ...) {
 
     print("Getting file paths...")
     file.paths = do.call(get.file.paths, kwargs)
+    print("file path is: ")
+    print(file.paths)
 
     paths = append(code.paths, file.paths)
     return(paths)

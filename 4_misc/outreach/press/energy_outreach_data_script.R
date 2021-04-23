@@ -15,7 +15,7 @@ out = wrap_mapply(
   time_step="all",
   impact_type="impacts_gj",
   resolution=c("all_IRs"), 
-  rcp=c("rcp85"),
+  rcp=c("rcp45"),
   stats="mean",
   fuel = c("electricity", "other_energy"),
   export = TRUE,
@@ -154,6 +154,8 @@ out = wrap_mapply(
 df = read_csv("/shares/gcp/social/parameters/energy_pixel_interaction/extraction/multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/TINV_clim_GMFD/total_energy/SSP3-rcp85_states_damage-price014_median_fulluncertainty_low_fulladapt-aggregated.csv")
 
 df = read_csv("/shares/gcp/social/parameters/energy_pixel_interaction/extraction/multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/TINV_clim_GMFD/total_energy/SSP3-rcp45_global_damage-price014_median_fulluncertainty_low_fulladapt-aggregated.csv")
+
+df = read_csv("/shares/gcp/social/parameters/energy_pixel_interaction/extraction/multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/TINV_clim_GMFD/median_OTHERIND_electricity_TINV_clim_GMFD/SSP3-rcp45_impactpc_median_fulluncertainty_low_fulladapt.csv")
 
 # generate all aggregated file stats
 out = wrap_mapply(  
