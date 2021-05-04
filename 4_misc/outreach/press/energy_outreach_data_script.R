@@ -19,23 +19,21 @@ ProcessImpacts(time_step = "all",
   export = TRUE,
   regenerate = FALSE)
 
-
-
-
-# # extract files - levels quantity
 out = wrap_mapply(  
   time_step="all",
-  impact_type="impacts_gj",
+  impact_type="impacts_pct_gdp",
   resolution=c("all_IRs"), 
-  rcp=c("rcp45", "rcp85"),
+  rcp=c("rcp85"),
   stats="mean",
-  fuel = c("electricity", "other_energy"),
+  fuel = c("total_energy"),
   export = TRUE,
-  regenerate = FALSE,
+  regenerate = TRUE,
   FUN=ProcessImpacts,
   mc.cores=1,
   mc.silent=FALSE
 )
+
+
 
 ###########################################################
 ###########################################################
@@ -70,6 +68,23 @@ out = wrap_mapply(
   mc.silent=FALSE
 )
 
+
+
+# # extract files - levels quantity
+out = wrap_mapply(  
+  time_step="all",
+  impact_type="impacts_gj",
+  resolution=c("all_IRs"), 
+  rcp=c("rcp45", "rcp85"),
+  stats="mean",
+  fuel = c("electricity", "other_energy"),
+  export = TRUE,
+  regenerate = FALSE,
+  FUN=ProcessImpacts,
+  mc.cores=1,
+  mc.silent=FALSE
+)
+
 # **** done! 
 ###########################################################
 ###########################################################
@@ -101,19 +116,6 @@ out = wrap_mapply(
 
 # df = read_csv("/shares/gcp/social/parameters/energy_pixel_interaction/extraction/multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/TINV_clim_GMFD/total_energy/SSP3-rcp85_damage-price014_median_fulluncertainty_low_SSP3_rcp85_fulladapt-levels.csv")
 
-# out = wrap_mapply(  
-#   time_step="all",
-#   impact_type="impacts_pct_gdp",
-#   resolution=c("all_IRs"), 
-#   rcp=c("rcp85"),
-#   stats="mean",
-#   fuel = c("total_energy"),
-#   export = TRUE,
-#   regenerate = FALSE,
-#   FUN=ProcessImpacts,
-#   mc.cores=1,
-#   mc.silent=FALSE
-# )
 
 
 

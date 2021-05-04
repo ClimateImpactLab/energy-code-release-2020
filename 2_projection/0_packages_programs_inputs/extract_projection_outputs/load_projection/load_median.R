@@ -48,7 +48,7 @@ load.median.check.params <- function(proj_mode = '', dollar_convert=NULL,
   testit::assert(!(proj_mode == '_dm' && uncertainty == 'full')) 
   
   if (uncertainty == 'values') {    
-    testit::assert(!is.null(region))
+    # testit::assert(!is.null(region))
     testit::assert(is.null(rcp))
     testit::assert(is.null(iam))
 
