@@ -138,6 +138,7 @@ load.median <- function(yearlist = as.character(seq(1980,2100,1)),
   # browser()
   print('Adding data identifiers to data frame...')
   print(colnames(df))
+  # browser()
   kwargs = rlist::list.append(kwargs, df = as.data.frame(df))
   df <- do.call(assign.names, kwargs)
   print('Data frame column names:')

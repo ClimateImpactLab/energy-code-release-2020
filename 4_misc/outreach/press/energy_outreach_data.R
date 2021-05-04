@@ -40,6 +40,7 @@ ProcessImpacts = function(
     regenerate = FALSE,
     ...){
 
+    # browser()
     # get a df with all impacts and all stats at that resolution
     df = wrap_mapply(
         impact_type = impact_type,
@@ -51,7 +52,7 @@ ProcessImpacts = function(
         mc.silent=FALSE,
         FUN=get_energy_impacts
         ) 
-
+    # browser()
     df = select_and_transform(
         df = df, 
         impact_type = impact_type,
@@ -153,6 +154,10 @@ get_geo_level = function(resolution) {
 }
 
 
+
+
+# get_energy_impacts("impacts_gj", "electricity","rcp45","iso",FALSE)
+
 get_energy_impacts = function(impact_type, fuel, rcp, resolution, regenerate,...) {
 
 
@@ -181,7 +186,7 @@ get_energy_impacts = function(impact_type, fuel, rcp, resolution, regenerate,...
     if (geo_level == "aggregated") {
         regions = return_region_list(resolution)
         # regions = get_regions_string(region_list)
-    
+        
         df = load.median(conda_env = "risingverse-py27",
                         proj_mode = '', # '' and _dm are the two options
                         # region = region, # needs to be specified for 
