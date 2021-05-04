@@ -86,10 +86,10 @@ check.file.complete <- function(file = '', ...) {
 
     diff = get.diff(file = file)
     
-    while(diff < 2) {
+    while(diff < 10) {
       print('Still not done. The file is writing away...')
       print(glue::glue('{file} was last worked on {diff} seconds ago.'))
-      Sys.sleep(2)
+      Sys.sleep(10)
       diff = get.diff(file = file)
     }  
 }
