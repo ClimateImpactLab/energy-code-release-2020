@@ -11,72 +11,72 @@ source(glue("{REPO}/energy-code-release-2020/4_misc/",
 
 
 
-###########################################################
-###########################################################
-# extract files - aggregated quantity - electricity all done
-# ***** done! 
-out = wrap_mapply(  
-  time_step="all",
-  impact_type="impacts_gj",
-  resolution=c("states","global","iso"), 
-  rcp=c("rcp45", "rcp85"),
-  stats="mean",
-  fuel = c("electricity","other_energy"),
-  export = TRUE,
-  regenerate = FALSE,
-  FUN=ProcessImpacts,
-  mc.cores=6,
-  mc.silent=FALSE
-)
+# ###########################################################
+# ###########################################################
+# # extract files - aggregated quantity - electricity all done
+# # ***** done! 
+# out = wrap_mapply(  
+#   time_step="all",
+#   impact_type="impacts_gj",
+#   resolution=c("states","global","iso"), 
+#   rcp=c("rcp45", "rcp85"),
+#   stats="mean",
+#   fuel = c("electricity","other_energy"),
+#   export = TRUE,
+#   regenerate = FALSE,
+#   FUN=ProcessImpacts,
+#   mc.cores=6,
+#   mc.silent=FALSE
+# )
 
-# extract files - aggregated dollar - done
-out = wrap_mapply(  
-  time_step="all",
-  impact_type="impacts_pct_gdp",
-  resolution=c("global", "iso"), 
-  rcp=c("rcp45"),
-  stats="mean",
-  fuel = c("total_energy"),
-  export = TRUE,
-  regenerate = TRUE,
-  FUN=ProcessImpacts,
-  mc.cores=2,
-  mc.silent=FALSE
-)
-
-
-
-# # extract files - levels quantity
-out = wrap_mapply(  
-  time_step="all",
-  impact_type="impacts_gj",
-  resolution=c("all_IRs"), 
-  rcp=c("rcp45", "rcp85"),
-  stats="mean",
-  fuel = c("electricity", "other_energy"),
-  export = TRUE,
-  regenerate = FALSE,
-  FUN=ProcessImpacts,
-  mc.cores=1,
-  mc.silent=FALSE
-)
+# # extract files - aggregated dollar - done
+# out = wrap_mapply(  
+#   time_step="all",
+#   impact_type="impacts_pct_gdp",
+#   resolution=c("global", "iso"), 
+#   rcp=c("rcp45"),
+#   stats="mean",
+#   fuel = c("total_energy"),
+#   export = TRUE,
+#   regenerate = FALSE,
+#   FUN=ProcessImpacts,
+#   mc.cores=2,
+#   mc.silent=FALSE
+# )
 
 
-# # extract files - levels dollar
 
-out = wrap_mapply(  
-  time_step="all",
-  impact_type="impacts_pct_gdp",
-  resolution=c("all_IRs"), 
-  rcp=c("rcp45", "rcp85"),
-  stats="mean",
-  fuel = c("total_energy"),
-  export = TRUE,
-  regenerate = TRUE,
-  FUN=ProcessImpacts,
-  mc.cores=1,
-  mc.silent=FALSE
-)
+# # # extract files - levels quantity
+# out = wrap_mapply(  
+#   time_step="all",
+#   impact_type="impacts_gj",
+#   resolution=c("all_IRs"), 
+#   rcp=c("rcp45", "rcp85"),
+#   stats="mean",
+#   fuel = c("electricity", "other_energy"),
+#   export = TRUE,
+#   regenerate = FALSE,
+#   FUN=ProcessImpacts,
+#   mc.cores=1,
+#   mc.silent=FALSE
+# )
+
+
+# # # extract files - levels dollar
+
+# out = wrap_mapply(  
+#   time_step="all",
+#   impact_type="impacts_pct_gdp",
+#   resolution=c("all_IRs"), 
+#   rcp=c("rcp45", "rcp85"),
+#   stats="mean",
+#   fuel = c("total_energy"),
+#   export = TRUE,
+#   regenerate = FALSE,
+#   FUN=ProcessImpacts,
+#   mc.cores=1,
+#   mc.silent=FALSE
+# )
 
 
 # **** done! 
@@ -95,7 +95,7 @@ out = wrap_mapply(
   regenerate = FALSE,
   export = TRUE,
   FUN=ProcessImpacts,
-  mc.cores=32,
+  mc.cores=6,
   mc.silent=FALSE
 )
 
@@ -108,46 +108,31 @@ out = wrap_mapply(
   rcp=c("rcp45", "rcp85"),
   stats=c("mean", "q5", "q17", "q50", "q83", "q95"),
   fuel = "total_energy",
-  regenerate = TRUE,
+  regenerate = FALSE,
   export = TRUE,
   FUN=ProcessImpacts,
-  mc.cores=32,
+  mc.cores=6,
   mc.silent=FALSE
 )
 
 
-# IR level electricity 
+# IR level quantity 
 out = wrap_mapply(  
   time_step=c("all", "averaged"),
   impact_type=c("impacts_gj", "impacts_kwh"),
   resolution=c("all_IRs"), 
   rcp=c("rcp45", "rcp85"),
   stats=c("mean", "q5", "q17", "q50", "q83", "q95"),
-  fuel = c("electricity"),
+  fuel = c("electricity","other_energy"),
   regenerate = FALSE,
   export = TRUE,
   FUN=ProcessImpacts,
-  mc.cores=16,
+  mc.cores=4,
   mc.silent=FALSE
 )
 
 
-# IR level other energy - rcp45
-out = wrap_mapply(  
-  time_step=c("all", "averaged"),
-  impact_type="impacts_gj",
-  resolution=c("all_IRs"), 
-  rcp=c("rcp45"),
-  stats=c("mean", "q5", "q17", "q50", "q83", "q95"),
-  fuel = c("other_energy"),
-  export = TRUE,
-  regenerate = FALSE,
-  FUN=ProcessImpacts,
-  mc.cores=16,
-  mc.silent=FALSE
-)
-
-# IR level impacts in pct gdp - rcp45
+# IR level impacts in pct gdp
 out = wrap_mapply(  
   time_step=c("all", "averaged"),
   impact_type="impacts_pct_gdp",
@@ -163,3 +148,4 @@ out = wrap_mapply(
 )
 
 
+df = read.csv("/mnt/CIL_energy/impacts_outreach/total_energy_impacts_pct_gdp_geography_states_years_averaged_SSP3_low_rcp85_q95.csv")
