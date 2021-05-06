@@ -29,6 +29,48 @@ projection.packages <- paste0(REPO,
 miceadds::source.all(paste0(projection.packages,"load_projection/"))
 
 
+
+
+df = load.median(  
+		conda_env = "risingverse-py27",
+        proj_mode = '', # '' and _dm are the two options
+        # region = "", # needs to be specified for 
+        rcp = NULL, 
+        ssp = "SSP3", 
+        price_scen = "price014", # have this as NULL, "price014", "MERGEETL", ...
+        unit =  "damage", # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
+        uncertainty = "values", # full, climate, values
+        geo_level = "levels", # aggregated (ir agglomerations) or 'levels' (single irs)
+        iam = NULL, 
+        model = "TINV_clim", 
+        adapt_scen = "fulladapt", 
+        clim_data = "GMFD", 
+        regenerate = FALSE,
+        yearlist = as.character(seq(1980,2100,1)),  
+        spec = "OTHERIND_total_energy",
+        grouping_test = "semi-parametric")
+
+
+df = load.median(  
+		conda_env = "risingverse-py27",
+        proj_mode = '_dm', # '' and _dm are the two options
+        # region = "", # needs to be specified for 
+        rcp = NULL, 
+        ssp = "SSP3", 
+        price_scen = "price014", # have this as NULL, "price014", "MERGEETL", ...
+        unit =  "damage", # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
+        uncertainty = "values", # full, climate, values
+        geo_level = "levels", # aggregated (ir agglomerations) or 'levels' (single irs)
+        iam = NULL, 
+        model = "TINV_clim", 
+        adapt_scen = "fulladapt", 
+        clim_data = "GMFD", 
+        regenerate = FALSE,
+        yearlist = as.character(seq(1980,2100,1)),  
+        spec = "OTHERIND_total_energy",
+        grouping_test = "semi-parametric")
+
+
 # Data needed to construct damage functions: 
 # 1. GMST anomalies
 # 2. Values csvs for each SSP/Price scenario we want to calculate a damage function for.
@@ -79,7 +121,7 @@ get_values_csv = function(price, fuel, years = NULL, pop_df= NULL, ssp = "SSP3",
 	args = list(
             conda_env = "risingverse-py27",
             # proj_mode = '', # '' and _dm are the two options
-            region =NULL, # needs to be specified for 
+            regions = c("CHN.24.253.1698","CHN.24.253.1699"), # needs to be specified for 
             rcp = NULL, 
             ssp = ssp, 
             price_scen = price, # have this as NULL, "price014", "MERGEETL", ...
@@ -93,7 +135,8 @@ get_values_csv = function(price, fuel, years = NULL, pop_df= NULL, ssp = "SSP3",
             yearlist = as.character(seq(2010,2099,1)),  
             dollar_convert = "yes",
             spec = paste(fuel),
-            grouping_test = "semi-parametric")
+            grouping_test = "semi-parametric",
+            regenerate = FALSE)
 
     if(is.null(price)) {
 
@@ -198,13 +241,33 @@ get_values_csv = function(price, fuel, years = NULL, pop_df= NULL, ssp = "SSP3",
 
 ####################################
 # Stuff needed for figure 3C...
-df_elec = get_values_csv(price = NULL, fuel = "OTHERIND_electricity", pop_df = pop_df, save = TRUE) 
+# df_elec = get_values_csv(price = NULL, fuel = "OTHERIND_electricity", pop_df = pop_df, save = TRUE) 
 
-df_oe = get_values_csv(price = NULL, fuel = "OTHERIND_other_energy", pop_df = pop_df, save = TRUE) 
-
+# df_oe = get_values_csv(price = NULL, fuel = "OTHERIND_other_energy", pop_df = pop_df, save = TRUE) 
 # Save values csvs needed for damage functions generally (starting with the price014 needed for )
 df = get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", save = FALSE) 
 write_csv(df, paste0(output, '/impact_values/gcm_damages_OTHERIND_total_energy_price014_SSP3_IR_level.csv'))
 
+
+
+	args = list(
+            conda_env = "risingverse-py27",
+            # proj_mode = '', # '' and _dm are the two options
+            regions = c("CHN.24.253.1698","CHN.24.253.1699"), # needs to be specified for 
+            rcp = NULL, 
+            ssp = ssp, 
+            price_scen = price, # have this as NULL, "price014", "MERGEETL", ...
+            unit =  "damage", # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
+            uncertainty = "values", # full, climate, values
+            geo_level = "levels", # aggregated (ir agglomerations) or 'levels' (single irs)
+            iam = NULL, 
+            model = model, 
+            adapt_scen = "fulladapt", 
+            clim_data = "GMFD", 
+            yearlist = as.character(seq(2010,2099,1)),  
+            dollar_convert = "yes",
+            spec = paste(fuel),
+            grouping_test = "semi-parametric",
+            regenerate = FALSE)
 
 

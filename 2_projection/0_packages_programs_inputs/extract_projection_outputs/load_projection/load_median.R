@@ -57,6 +57,8 @@ load.median.check.params <- function(proj_mode = '', dollar_convert=NULL,
     # we either extract a certain set of regions, or extract all regions from levels file only
     # because there's a bug with extracted all regions from the aggregated files 
     # which james is fixing here https://github.com/jrising/prospectus-tools/issues/41
+    # update: james has changed the code to ignore those regions
+    # those are all small regions with no population data
     testit::assert(!is.null(ssp)) # due to memory constraints
     testit::assert(!is.null(rcp)) # rcp should only be null for values (possibly this might not hold when OTHERIND_total_energy gets integrated)
 
