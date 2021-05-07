@@ -31,243 +31,28 @@ miceadds::source.all(paste0(projection.packages,"load_projection/"))
 
 
 
-df = load.median(  
-		conda_env = "risingverse-py27",
-        proj_mode = '', # '' and _dm are the two options
-        # region = "", # needs to be specified for 
-        rcp = NULL, 
-        ssp = "SSP3", 
-        price_scen = "price014", # have this as NULL, "price014", "MERGEETL", ...
-        unit =  "damage", # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
-        uncertainty = "values", # full, climate, values
-        geo_level = "levels", # aggregated (ir agglomerations) or 'levels' (single irs)
-        iam = NULL, 
-        model = "TINV_clim", 
-        adapt_scen = "fulladapt", 
-        clim_data = "GMFD", 
-        regenerate = FALSE,
-        yearlist = as.character(seq(1980,2100,1)),  
-        spec = "OTHERIND_total_energy",
-        grouping_test = "semi-parametric")
+# rcp85
+python -u quantiles.py /home/liruixue/repos/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Extraction_Configs/sacagawea/damage/price014/values_press/levels/median/energy-extract-damage-levels-price014-median_OTHERIND_total_energy.yml  --only-ssp=SSP3  --only-rcp=rcp85 --suffix=_damage-price014_median_fulladapt-levels_press FD_FGLS_inter_OTHERIND_electricity_TINV_clim-price014-levels -FD_FGLS_inter_OTHERIND_electricity_TINV_clim-histclim-price014-levels FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-price014-levels -FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-histclim-price014-levels 
+# rcp45
+python -u quantiles.py /home/liruixue/repos/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Extraction_Configs/sacagawea/damage/price014/values_press/levels/median/energy-extract-damage-levels-price014-median_OTHERIND_total_energy.yml  --only-ssp=SSP3  --only-rcp=rcp45 --suffix=_damage-price014_median_fulladapt-levels_press FD_FGLS_inter_OTHERIND_electricity_TINV_clim-price014-levels -FD_FGLS_inter_OTHERIND_electricity_TINV_clim-histclim-price014-levels FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-price014-levels -FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-histclim-price014-levels 
+
+# _dm
+# rcp85
+python -u quantiles.py /home/liruixue/repos/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Extraction_Configs/sacagawea/damage/price014/values_press/levels/median/energy-extract-damage-levels-price014-median_OTHERIND_total_energy_dm.yml  --only-ssp=SSP3   --only-rcp=rcp85 --suffix=_damage-price014_median_fulladapt-levels_dm_press FD_FGLS_inter_OTHERIND_electricity_TINV_clim-price014-levels -FD_FGLS_inter_OTHERIND_electricity_TINV_clim-histclim-price014-levels FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-price014-levels -FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-histclim-price014-levels
+# rcp45
+python -u quantiles.py /home/liruixue/repos/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Extraction_Configs/sacagawea/damage/price014/values_press/levels/median/energy-extract-damage-levels-price014-median_OTHERIND_total_energy_dm.yml  --only-ssp=SSP3   --only-rcp=rcp45 --suffix=_damage-price014_median_fulladapt-levels_dm_press FD_FGLS_inter_OTHERIND_electricity_TINV_clim-price014-levels -FD_FGLS_inter_OTHERIND_electricity_TINV_clim-histclim-price014-levels FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-price014-levels -FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-histclim-price014-levels
 
 
-df = load.median(  
-		conda_env = "risingverse-py27",
-        proj_mode = '_dm', # '' and _dm are the two options
-        # region = "", # needs to be specified for 
-        rcp = NULL, 
-        ssp = "SSP3", 
-        price_scen = "price014", # have this as NULL, "price014", "MERGEETL", ...
-        unit =  "damage", # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
-        uncertainty = "values", # full, climate, values
-        geo_level = "levels", # aggregated (ir agglomerations) or 'levels' (single irs)
-        iam = NULL, 
-        model = "TINV_clim", 
-        adapt_scen = "fulladapt", 
-        clim_data = "GMFD", 
-        regenerate = FALSE,
-        yearlist = as.character(seq(1980,2100,1)),  
-        spec = "OTHERIND_total_energy",
-        grouping_test = "semi-parametric")
+if (price %in% c("price014", "price0", "price03")) {
 
+    mean = do.call(load.median, c(args, proj_mode = '')) %>%
+		rename(mean=value) %>% 
+		dplyr::select(rcp, year, region, gcm, iam, mean) %>% 
+		mutate(mean = mean / 0.0036)
 
-# Data needed to construct damage functions: 
-# 1. GMST anomalies
-# 2. Values csvs for each SSP/Price scenario we want to calculate a damage function for.
-
-# # 1. GMST anomolies: moving from our server into a shared directory
-# gmst_dir = "/mnt/Global_ACP/damage_function/GMST_anomaly"
-# gmst_df = read_csv(paste0(gmst_dir, "/GMTanom_all_temp_2001_2010_smooth.csv"))
-# write_csv(gmst_df, paste0(output, "/GMTanom_all_temp_2001_2010_smooth.csv"))
-
-# 2. Values csvs to allow for draws from uncertainty 
-
-# 2.1 Get population values, so we can convert PC impacts to impacts
-pop_df = read_csv(paste0(data_dir,'/projection_system_outputs/covariates/' ,
-	'SSP3_IR_level_population.csv')) %>% 
-  tidyr::complete(year = seq(2010,2100,1)) %>%
-  tidyr::fill(pop)
-
-# 2.2 Extract and load values csvs
-get_values_csv = function(price, fuel, years = NULL, pop_df= NULL, ssp = "SSP3", save = TRUE, 
-	include_variance = TRUE, model = "TINV_clim") {
-	
-	# Function loads in mean and variances for a given price scenario
-	# Deals with three cases: 
-		# Price0, price014 and price03 are simply loading their means and variances
-		# impacts (so price is null) are in pc, so are multiplied by population
-		# other price scenarios are rcp specific 
-
-	# set strings for saving outputs  
-	if(is.null(price)){
-		type = "impacts"
-		price_tag = ""
-	}else{
-		type = "damages"
-		price_tag = paste0("_", price)
+	if(include_variance == TRUE){	
+		var = do.call(load.median, c(args, proj_mode = '_dm')) %>% 
+			mutate(sd=sqrt(value))%>% 
+			dplyr::select(rcp, year, region, gcm, iam, sd) %>% 
+			mutate(sd = sd / 0.0036)
 	}
-	if(model == "TINV_clim"){
-		model_tag = ""
-	}else if (model == "TINV_clim_lininter") {
-		model_tag = "_lininter"
-	}else if (model == "TINV_clim_lininter_double"){
-		model_tag = "_lininter_double"
-	}else if (model == "TINV_clim_lininter_half"){
-		model_tag = "_lininter_half"
-	}else if (model == "TINV_clim_mixed"){
-		model_tag = "_mixed"
-	}
-
-	args = list(
-            conda_env = "risingverse-py27",
-            # proj_mode = '', # '' and _dm are the two options
-            regions = c("CHN.24.253.1698","CHN.24.253.1699"), # needs to be specified for 
-            rcp = NULL, 
-            ssp = ssp, 
-            price_scen = price, # have this as NULL, "price014", "MERGEETL", ...
-            unit =  "damage", # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
-            uncertainty = "values", # full, climate, values
-            geo_level = "levels", # aggregated (ir agglomerations) or 'levels' (single irs)
-            iam = NULL, 
-            model = model, 
-            adapt_scen = "fulladapt", 
-            clim_data = "GMFD", 
-            yearlist = as.character(seq(2010,2099,1)),  
-            dollar_convert = "yes",
-            spec = paste(fuel),
-            grouping_test = "semi-parametric",
-            regenerate = FALSE)
-
-    if(is.null(price)) {
-
-		args$dollar_convert = NULL
-		args$unit = "impactpc"
-
-		mean = do.call(load.median, c(args, proj_mode = '')) %>%
-			rename(mean=value) %>% 
-			dplyr::select(rcp, year, region, gcm, iam, mean) %>% 
-	      	left_join(pop_df, by=c("year","region")) %>%
-			mutate(mean = mean * pop) %>%
-			dplyr::select(-pop) 
-			# %>% 
-			# mutate(mean = mean * 0.0036)
-
-		if(include_variance == TRUE){
-			var = do.call(load.median, c(args, proj_mode = '_dm')) %>% 
-				mutate(sd=sqrt(value))%>% 
-				dplyr::select(rcp, year,region, gcm, iam, sd) %>% 
-				left_join(pop_df, by=c("year","region")) %>%
-				mutate(sd = sd * pop) %>%
-				dplyr::select(-pop) 
-		}
-
-    } else{
-
-    	if (price %in% c("price014", "price0", "price03")) {
-
-		    mean = do.call(load.median, c(args, proj_mode = '')) %>%
-				rename(mean=value) %>% 
-				dplyr::select(rcp, year, region, gcm, iam, mean) %>% 
-				mutate(mean = mean / 0.0036)
-
-			if(include_variance == TRUE){	
-				var = do.call(load.median, c(args, proj_mode = '_dm')) %>% 
-					mutate(sd=sqrt(value))%>% 
-					dplyr::select(rcp, year, region, gcm, iam, sd) %>% 
-					mutate(sd = sd / 0.0036)
-			}
-   		} else{
-
-	    	print('doing an rcp specific price!')
-	    	args$price_scen = paste0(price, '_rcp45')
-
-		    mean45 = do.call(load.median, c(args, proj_mode = '')) %>%
-				rename(mean=value) %>% 
-				dplyr::select(rcp, year, region, gcm, iam, mean) %>% 
-				mutate(mean = mean / 0.0036)
-			
-			if(include_variance == TRUE){
-		    	var45 = do.call(load.median, c(args, proj_mode = '_dm')) %>% 
-					mutate(sd=sqrt(value))%>% 
-					dplyr::select(rcp, year, region, gcm, iam, sd) %>% 
-					mutate(sd = sd / 0.0036) 
-		  	}
-
-		    args$price_scen = paste0(price, '_rcp85')
-
-		    mean85 = do.call(load.median, c(args, proj_mode = '')) %>%
-				rename(mean=value) %>% 
-				dplyr::select(rcp, year, region, gcm, iam, mean) %>% 
-				mutate(mean = mean / 0.0036)
-			
-			if(include_variance == TRUE){
-		   		var85 = do.call(load.median, c(args, proj_mode = '_dm')) %>% 
-					mutate(sd=sqrt(value))%>% 
-					dplyr::select(rcp, year, region, gcm, iam, sd)  %>% 
-					mutate(sd = sd / 0.0036)
-			}
-
-		    mean = rbind(mean45, mean85)
-		    
-		    if(include_variance == TRUE){
-		    	var = rbind(var45, var85)
-			}
-		}
-    }
-    print('all data loaded')
-    if(include_variance == TRUE){
-    	df_joined = left_join(mean, var, by=c("rcp", "year", "region", "gcm", "iam"))
-	}else{
-		df_joined = mean
-	}
-
-    if(!is.null(years)){
-    	df_joined = df_joined %>% 
-    		dplyr::filter(year %in% years)
-    }
-
-    print('adding price information to dataframe')
-    df_joined$price = price
-
-    
-    if(save == TRUE){
-    	write_csv(df_joined, paste0(output, '/impact_values/gcm_', type, '_', fuel,price_tag, '_', ssp,model_tag,'.csv'))
-    	print(paste0(output, '/impact_values/gcm_', type, '_', fuel,price_tag, '_', ssp,model_tag,'.csv',"  saved"))
-	}else{
-		return(df_joined)
-	}
-}
-
-
-####################################
-# Stuff needed for figure 3C...
-# df_elec = get_values_csv(price = NULL, fuel = "OTHERIND_electricity", pop_df = pop_df, save = TRUE) 
-
-# df_oe = get_values_csv(price = NULL, fuel = "OTHERIND_other_energy", pop_df = pop_df, save = TRUE) 
-# Save values csvs needed for damage functions generally (starting with the price014 needed for )
-df = get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", save = FALSE) 
-write_csv(df, paste0(output, '/impact_values/gcm_damages_OTHERIND_total_energy_price014_SSP3_IR_level.csv'))
-
-
-
-	args = list(
-            conda_env = "risingverse-py27",
-            # proj_mode = '', # '' and _dm are the two options
-            regions = c("CHN.24.253.1698","CHN.24.253.1699"), # needs to be specified for 
-            rcp = NULL, 
-            ssp = ssp, 
-            price_scen = price, # have this as NULL, "price014", "MERGEETL", ...
-            unit =  "damage", # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
-            uncertainty = "values", # full, climate, values
-            geo_level = "levels", # aggregated (ir agglomerations) or 'levels' (single irs)
-            iam = NULL, 
-            model = model, 
-            adapt_scen = "fulladapt", 
-            clim_data = "GMFD", 
-            yearlist = as.character(seq(2010,2099,1)),  
-            dollar_convert = "yes",
-            spec = paste(fuel),
-            grouping_test = "semi-parametric",
-            regenerate = FALSE)
-
-

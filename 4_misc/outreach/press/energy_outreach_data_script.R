@@ -38,12 +38,11 @@ out = wrap_mapply(
   stats="mean",
   fuel = c("total_energy"),
   export = TRUE,
-  regenerate = TRUE,
+  regenerate = FALSE,
   FUN=ProcessImpacts,
   mc.cores=2,
   mc.silent=FALSE
 )
-
 
 
 # # extract files - levels quantity
@@ -72,7 +71,7 @@ out = wrap_mapply(
   stats="mean",
   fuel = c("total_energy"),
   export = TRUE,
-  regenerate = TRUE,
+  regenerate = FALSE,
   FUN=ProcessImpacts,
   mc.cores=1,
   mc.silent=FALSE
@@ -108,7 +107,7 @@ out = wrap_mapply(
   rcp=c("rcp45", "rcp85"),
   stats=c("mean", "q5", "q17", "q50", "q83", "q95"),
   fuel = "total_energy",
-  regenerate = TRUE,
+  regenerate = FALSE,
   export = TRUE,
   FUN=ProcessImpacts,
   mc.cores=32,
