@@ -10,7 +10,6 @@ source(glue("{REPO}/energy-code-release-2020/4_misc/",
 
 
 
-
 # ###########################################################
 # ###########################################################
 # # extract files - aggregated quantity - electricity all done
@@ -148,4 +147,4 @@ out = wrap_mapply(
 )
 
 
-df = read.csv("/mnt/CIL_energy/impacts_outreach/total_energy_impacts_pct_gdp_geography_states_years_averaged_SSP3_low_rcp85_q95.csv")
+# filter 500k cities
