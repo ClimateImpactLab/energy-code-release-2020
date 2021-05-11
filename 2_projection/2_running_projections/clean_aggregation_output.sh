@@ -3,8 +3,8 @@
 # can be run from anywhere, just set the correct paths
 
 # set some paths and parameters
-energy="other_energy"
-# energy="electricity"
+# energy="other_energy"
+energy="electricity"
 output_root="/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost"
 output_dir="median_OTHERIND_${energy}_TINV_clim_GMFD_dm" 
 
@@ -13,7 +13,7 @@ output_dir="median_OTHERIND_${energy}_TINV_clim_GMFD_dm"
 levels_file_size_above=10
 aggregated_file_size_above=2
 # 130 for one SSP
-n_folders_total=390
+n_folders_total=520
 
 aggregation_scenario=price014
 filename_stem="FD_FGLS_inter_OTHERIND_${energy}_TINV_clim"
@@ -22,8 +22,8 @@ cd "${output_root}/${output_dir}"
 
 # choose to delete or print. recommended: print once first,
 # if everything looks ok, then delete
+action=print
 # action=delete
-action=delete
 
 # if the projection is still running, set to the second
 # so that the folders that are currently working on will not be affected

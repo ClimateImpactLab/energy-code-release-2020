@@ -52,11 +52,11 @@ extract_file <- function(gcm, ssp, rcp, dm, iam) {
 		"/home/liruixue/repos/energy-code-release-2020",
 		"/projection_inputs/configs/GMFD/TINV_clim/",
 		"break2_Exclude/semi-parametric/Extraction_Configs",
-		"/sacagawea/damage/price014/values_press/levels/",
+		"/sacagawea/damage/price014/values_integration/levels/",
 		"median/energy-extract-damage-levels-price014-median_OTHERIND_total_energy", dm, ".yml  ",
 		"--only-ssp=", ssp, "  --only-rcp=", rcp, "  --only-models=", gcm, 
 		"  --only-iam=",iam, "  --do-gcmweights=no  ",
-		"--suffix=_",iam, "_", gcm, "_damage-price014_median_fulladapt-levels", dm, "_press ",
+		"--suffix=_",iam, "_", gcm, "_damage-price014_median_fulladapt-levels", dm, "_integration ",
 		"FD_FGLS_inter_OTHERIND_electricity_TINV_clim-price014-levels ",
 		"-FD_FGLS_inter_OTHERIND_electricity_TINV_clim-histclim-price014-levels ",
 		"FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-price014-levels ",
@@ -66,121 +66,62 @@ extract_file <- function(gcm, ssp, rcp, dm, iam) {
 	system(command)
 }
 
-out = wrap_mapply(  
-  gcm = gcms$rcp45,
-  rcp="rcp45",
-  iam = c("high","low"),
-  ssp = c("SSP1","SSP2","SSP3","SSP4","SSP5"),
-  FUN=extract_file,
-  dm = "",
-  mc.cores=34,
-  mc.silent=FALSE
-)
+# # both rcps, median
+# out = wrap_mapply(  
+#   gcm = gcms$rcp45,
+#   rcp="rcp45",
+#   iam = c("high","low"),
+#   ssp = c("SSP5"),
+#   FUN=extract_file,
+#   dm = "",
+#   mc.cores=34,
+#   mc.silent=FALSE
+# )
+
+# out = wrap_mapply(  
+#   gcm = gcms$rcp85,
+#   rcp="rcp85",
+#   ssp = c("SSP5"),
+#   dm = "",
+#   iam = c("high","low"),
+#   FUN=extract_file,
+#   mc.cores=34,
+#   mc.silent=FALSE
+# )
+
+# # both rcps, delta methods
+# out = wrap_mapply(  
+#   gcm = gcms$rcp45,
+#   rcp="rcp45",
+#   iam = c("high","low"),
+#   ssp = c("SSP4","SSP5"),
+#   FUN=extract_file,
+#   dm = "_dm",
+#   mc.cores=2,
+#   mc.silent=FALSE
+# )
+
+# out = wrap_mapply(  
+#   gcm = gcms$rcp85,
+#   rcp="rcp85",
+#   ssp = c("SSP5"),
+#   dm = "_dm",
+#   iam = c("high","low"),
+#   FUN=extract_file,
+#   mc.cores=3,
+#   mc.silent=FALSE
+# )
+
 
 out = wrap_mapply(  
-  gcm = gcms$rcp85,
+  gcm = "surrogate_CanESM2_89",
   rcp="rcp85",
-  ssp = c("SSP1","SSP2","SSP3","SSP4","SSP5"),
-  dm = "",
-  iam = c("high","low"),
-  FUN=extract_file,
-  mc.cores=34,
-  mc.silent=FALSE
-)
-
-
-out = wrap_mapply(  
-  gcm = gcms$rcp45,
-  rcp="rcp45",
-  iam = c("high","low"),
-  ssp = c("SSP1","SSP2","SSP3","SSP4","SSP5"),
-  FUN=extract_file,
+  ssp = c("SSP5"),
   dm = "_dm",
-  mc.cores=34,
-  mc.silent=FALSE
-)
-
-out = wrap_mapply(  
-  gcm = gcms$rcp85,
-  rcp="rcp85",
-  ssp = c("SSP1","SSP2","SSP3","SSP4","SSP5"),
-  dm = "_dm",
-  iam = c("high","low"),
+  iam = c("high"),
   FUN=extract_file,
-  mc.cores=34,
+  mc.cores=1,
   mc.silent=FALSE
 )
 
 
-out = wrap_mapply(  
-  gcm = gcms$rcp45,
-  rcp="rcp45",
-  iam = c("high","low"),
-  ssp = c("SSP1","SSP2","SSP3","SSP4","SSP5"),
-  FUN=extract_file,
-  dm = "_dm",
-  mc.cores=34,
-  mc.silent=FALSE
-)
-
-
-out = wrap_mapply(  
-  gcm = gcms$rcp85,
-  rcp="rcp85",
-  iam = c("high","low"),
-  ssp = c("SSP1","SSP2","SSP3","SSP4","SSP5"),
-  FUN=extract_file,
-  dm = "_dm",
-  mc.cores=34,
-  mc.silent=FALSE
-)
-
-
-# extract_file(gcm = "surrogate_GFDL-CM3_89", ssp = "SSP3", rcp = "rcp45")
-
-
-
-# ssp = "SSP3"
-# rcp = "rcp45"
-# gcm = "CanESM2"
-# command = paste0("nohup python -u quantiles.py ",
-# 	"/home/liruixue/repos/energy-code-release-2020",
-# 	"/projection_inputs/configs/GMFD/TINV_clim/",
-# 	"break2_Exclude/semi-parametric/Extraction_Configs",
-# 	"/sacagawea/damage/price014/values_press/levels/",
-# 	"median/energy-extract-damage-levels-price014-median_OTHERIND_total_energy.yml  ",
-# 	"--only-ssp=", ssp, "  --only-rcp=", rcp, "  --only-models=", gcm, 
-# 	"  --do-gcmweights=no  ",
-# 	"--suffix=_", gcm, "_damage-price014_median_fulladapt-levels_press ",
-# 	"FD_FGLS_inter_OTHERIND_electricity_TINV_clim-price014-levels ",
-# 	"-FD_FGLS_inter_OTHERIND_electricity_TINV_clim-histclim-price014-levels ",
-# 	"FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-price014-levels ",
-# 	"-FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-histclim-price014-levels ")
-
-
-
-# python -u quantiles.py /home/liruixue/repos/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Extraction_Configs/sacagawea/damage/price014/values_press/levels/median/energy-extract-damage-levels-price014-median_OTHERIND_total_energy.yml  --only-ssp=SSP3  --only-rcp=rcp85 --only-models=CanESM2 --do-gcmweights=no --only-iam=high  --suffix=_CanESM2_damage-price014_median_fulladapt-levels_press FD_FGLS_inter_OTHERIND_electricity_TINV_clim-price014-levels -FD_FGLS_inter_OTHERIND_electricity_TINV_clim-histclim-price014-levels FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-price014-levels -FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-histclim-price014-levels
-
-
-# # bash script:
-# for ssp in {1..5}
-# do 
-# 	# python -u quantiles.py /home/liruixue/repos/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Extraction_Configs/sacagawea/damage/price014/values_press/levels/median/energy-extract-damage-levels-price014-median_OTHERIND_total_energy.yml  --only-ssp=SSP3  --only-rcp=rcp85 --suffix=_damage-price014_median_fulladapt-levels_press FD_FGLS_inter_OTHERIND_electricity_TINV_clim-price014-levels -FD_FGLS_inter_OTHERIND_electricity_TINV_clim-histclim-price014-levels FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-price014-levels -FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-histclim-price014-levels 
-# 	python -u quantiles.py /home/liruixue/repos/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Extraction_Configs/sacagawea/damage/price014/values_press/levels/median/energy-extract-damage-levels-price014-median_OTHERIND_total_energy.yml  --only-ssp=SSP3  --only-rcp=rcp45 --suffix=_damage-price014_median_fulladapt-levels_press FD_FGLS_inter_OTHERIND_electricity_TINV_clim-price014-levels -FD_FGLS_inter_OTHERIND_electricity_TINV_clim-histclim-price014-levels FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-price014-levels -FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-histclim-price014-levels 
-# done 
-
-# # run under risingverse-py27 environment, prospectus-tools/gcp/extract directory
-# # # rcp85
-# # python -u quantiles.py /home/liruixue/repos/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Extraction_Configs/sacagawea/damage/price014/values_press/levels/median/energy-extract-damage-levels-price014-median_OTHERIND_total_energy.yml  --only-ssp=SSP3  --only-rcp=rcp85 --suffix=_damage-price014_median_fulladapt-levels_press FD_FGLS_inter_OTHERIND_electricity_TINV_clim-price014-levels -FD_FGLS_inter_OTHERIND_electricity_TINV_clim-histclim-price014-levels FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-price014-levels -FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-histclim-price014-levels 
-# # # rcp45
-# # python -u quantiles.py /home/liruixue/repos/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Extraction_Configs/sacagawea/damage/price014/values_press/levels/median/energy-extract-damage-levels-price014-median_OTHERIND_total_energy.yml  --only-ssp=SSP3  --only-rcp=rcp45 --suffix=_damage-price014_median_fulladapt-levels_press FD_FGLS_inter_OTHERIND_electricity_TINV_clim-price014-levels -FD_FGLS_inter_OTHERIND_electricity_TINV_clim-histclim-price014-levels FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-price014-levels -FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-histclim-price014-levels 
-
-# # # _dm
-# # # rcp85
-# # python -u quantiles.py /home/liruixue/repos/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Extraction_Configs/sacagawea/damage/price014/values_press/levels/median/energy-extract-damage-levels-price014-median_OTHERIND_total_energy_dm.yml  --only-ssp=SSP3   --only-rcp=rcp85 --suffix=_damage-price014_median_fulladapt-levels_dm_press FD_FGLS_inter_OTHERIND_electricity_TINV_clim-price014-levels -FD_FGLS_inter_OTHERIND_electricity_TINV_clim-histclim-price014-levels FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-price014-levels -FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-histclim-price014-levels
-# # # rcp45
-# # # 
-# python -u quantiles.py /home/liruixue/repos/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Extraction_Configs/sacagawea/damage/price014/values_press/levels/median/energy-extract-damage-levels-price014-median_OTHERIND_total_energy_dm.yml --only-ssp=SSP3   --only-rcp=rcp45 --suffix=_damage-price014_median_fulladapt-levels_dm_press FD_FGLS_inter_OTHERIND_electricity_TINV_clim-price014-levels -FD_FGLS_inter_OTHERIND_electricity_TINV_clim-histclim-price014-levels FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-price014-levels -FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-histclim-price014-levels
-
-
-# python -u quantiles.py /home/liruixue/repos/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Extraction_Configs/sacagawea/damage/price014/values_press/levels/median/energy-extract-damage-levels-price014-median_OTHERIND_total_energy_dm.yml  --only-ssp=SSP3  --only-rcp=rcp85  --only-models=CCSM4  --only-iam=high  --do-gcmweights=no  --suffix=_low_CanESM2_damage-price014_median_fulladapt-levels_dm_press FD_FGLS_inter_OTHERIND_electricity_TINV_clim-price014-levels -FD_FGLS_inter_OTHERIND_electricity_TINV_clim-histclim-price014-levels FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-price014-levels -FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-histclim-price014-levels
