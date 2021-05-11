@@ -123,8 +123,8 @@ reshape_and_save = function(df, stats, resolution, impact_type, time_step, rcp, 
 
     setnames(df, "region", resolution)
 
-    if(resolution=="global") 
-    df[,resolution:="global"][]
+    # if(resolution=="global") 
+    # df[,resolution:="global"][]
 
     if (export) {
         fwrite(
@@ -270,13 +270,12 @@ YearChunks = function(df,intervals,...){
 
 #directories and files names
 Path = function(impact_type, resolution, rcp, stats, fuel, time_step, suffix='', ...){
-    dir = glue("/mnt/CIL_energy/impacts_outreach/")
-    file = glue("{fuel}_{impact_type}_geography_{resolution}_years_{time_step}_SSP3_low_{rcp}_{stats}{suffix}.csv")
+    dir = glue("/mnt/CIL_energy/impacts_outreach/{resolution}/{rcp}/SSP3/low/")
+    file = glue("{fuel}_unit_{impact_type}_geography_{resolution}_years_{time_step}_{rcp}_SSP3_low_quantiles_{stats}{suffix}.csv")
 
     print(glue('{dir}/{file}'))
     dir.create(dir, recursive = TRUE, showWarnings = FALSE)
     return(file.path(dir, file))
-
 }
 
 

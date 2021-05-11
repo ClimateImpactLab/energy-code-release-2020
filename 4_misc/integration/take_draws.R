@@ -45,8 +45,8 @@ take_draws = function(df) {
 # reads extracted mean and sd of each ssp/rcp/iam/gcp combination, and take draws
 process_results <- function(input_dir, output_dir, gcm, ssp, rcp, iam, num_iterations=15) {
   
-  mean_path = glue("{input_dir}/{ssp}-{rcp}_{iam}_{gcm}_damage-price014_median_fulladapt-levels_press.csv")
-  sd_path = glue("{input_dir}/{ssp}-{rcp}_{iam}_{gcm}_damage-price014_median_fulladapt-levels_dm_press.csv")
+  mean_path = glue("{input_dir}/{ssp}-{rcp}_{iam}_{gcm}_damage-price014_median_fulladapt-levels_integration.csv")
+  sd_path = glue("{input_dir}/{ssp}-{rcp}_{iam}_{gcm}_damage-price014_median_fulladapt-levels_dm_integration.csv")
   # if (file.exists(mean_path) & file.exists(sd_path)) {
     mean = vroom(mean_path)
     sd = vroom(sd_path)
@@ -88,17 +88,17 @@ process_results <- function(input_dir, output_dir, gcm, ssp, rcp, iam, num_itera
 
 # run all combinations
 # rcp45
-# out = wrap_mapply(  
-#   input_dir=input_dir, 
-#   output_dir=output_dir, 
-#   gcm = gcms$rcp45,
-#   rcp="rcp45",
-#   iam = c("high","low"),
-#   ssp = c("SSP1","SSP2","SSP3","SSP4"),
-#   FUN=process_results,
-#   mc.cores=34,
-#   mc.silent=FALSE
-# )
+out = wrap_mapply(  
+  input_dir=input_dir, 
+  output_dir=output_dir, 
+  gcm = gcms$rcp45,
+  rcp="rcp45",
+  iam = c("high","low"),
+  ssp = c("SSP1","SSP2","SSP3","SSP4"),
+  FUN=process_results,
+  mc.cores=34,
+  mc.silent=FALSE
+)
 
 # # rcp85
 out = wrap_mapply(  
@@ -107,9 +107,11 @@ out = wrap_mapply(
   gcm = gcms$rcp85,
   rcp="rcp85",
   iam = c("high","low"),
-  ssp = c("SSP5"),
+  ssp = c("SSP2","SSP3","SSP4","SSP5"),
   FUN=process_results,
   mc.cores=34,
   mc.silent=FALSE
 )
+
+
 

@@ -66,61 +66,49 @@ extract_file <- function(gcm, ssp, rcp, dm, iam) {
 	system(command)
 }
 
-# # both rcps, median
-# out = wrap_mapply(  
-#   gcm = gcms$rcp45,
-#   rcp="rcp45",
-#   iam = c("high","low"),
-#   ssp = c("SSP5"),
-#   FUN=extract_file,
-#   dm = "",
-#   mc.cores=34,
-#   mc.silent=FALSE
-# )
-
-# out = wrap_mapply(  
-#   gcm = gcms$rcp85,
-#   rcp="rcp85",
-#   ssp = c("SSP5"),
-#   dm = "",
-#   iam = c("high","low"),
-#   FUN=extract_file,
-#   mc.cores=34,
-#   mc.silent=FALSE
-# )
-
-# # both rcps, delta methods
-# out = wrap_mapply(  
-#   gcm = gcms$rcp45,
-#   rcp="rcp45",
-#   iam = c("high","low"),
-#   ssp = c("SSP4","SSP5"),
-#   FUN=extract_file,
-#   dm = "_dm",
-#   mc.cores=2,
-#   mc.silent=FALSE
-# )
-
-# out = wrap_mapply(  
-#   gcm = gcms$rcp85,
-#   rcp="rcp85",
-#   ssp = c("SSP5"),
-#   dm = "_dm",
-#   iam = c("high","low"),
-#   FUN=extract_file,
-#   mc.cores=3,
-#   mc.silent=FALSE
-# )
-
+# both rcps, median
+out = wrap_mapply(  
+  gcm = gcms$rcp45,
+  rcp="rcp45",
+  iam = c("high","low"),
+  ssp = c("SSP1","SSP2","SSP3","SSP4","SSP5"),
+  FUN=extract_file,
+  dm = "",
+  mc.cores=17,
+  mc.silent=FALSE
+)
 
 out = wrap_mapply(  
-  gcm = "surrogate_CanESM2_89",
+  gcm = gcms$rcp85,
   rcp="rcp85",
-  ssp = c("SSP5"),
-  dm = "_dm",
-  iam = c("high"),
+  ssp = c("SSP1","SSP2","SSP3","SSP4","SSP5"),
+  dm = "",
+  iam = c("high","low"),
   FUN=extract_file,
-  mc.cores=1,
+  mc.cores=17,
+  mc.silent=FALSE
+)
+
+# both rcps, delta methods
+out = wrap_mapply(  
+  gcm = gcms$rcp45,
+  rcp="rcp45",
+  iam = c("high","low"),
+  dm = "_dm",
+  ssp = c("SSP1","SSP2","SSP3","SSP4","SSP5"),
+  FUN=extract_file,
+  mc.cores=3,
+  mc.silent=FALSE
+)
+
+out = wrap_mapply(  
+  gcm = gcms$rcp85,
+  rcp="rcp85",
+  ssp = c("SSP1","SSP2","SSP3","SSP4","SSP5"),
+  dm = "_dm",
+  iam = c("high","low"),
+  FUN=extract_file,
+  mc.cores=3,
   mc.silent=FALSE
 )
 
