@@ -120,7 +120,10 @@ reshape_and_save = function(df, stats, resolution, impact_type, time_step, rcp, 
         as.character(seq(2020,2099)), 
         glue("year_{as.character(seq(2020,2099))}"))
 
-    setnames(df, "region", resolution)
+    # define a named vector to rename column names
+    region_colname = c("Global","states_abbrev","ISO_code","Region_ID")
+    names(region_colname) = c("global", "states", "iso", "all_IRs")
+    setnames(df, "region", region_colname(resolution))
 
     if (export) {
         fwrite(
@@ -253,8 +256,13 @@ YearChunks = function(df,intervals,...){
 
 #directories and files names
 Path = function(impact_type, resolution, rcp, stats, fuel, time_step, suffix='', ...){
-    dir = glue("/mnt/CIL_energy/impacts_outreach/{resolution}/{rcp}/SSP3/low/")
-    file = glue("{fuel}_unit_{impact_type}_geography_{resolution}_years_{time_step}_{rcp}_SSP3_low_quantiles_{stats}{suffix}.csv")
+
+    # define a named vector to rename folders and files
+    geography = c("Global","states_abbrev","ISO_code","Region_ID")
+    names(geography) = c("global", "US_states", "country_level", "impact_regions")
+    
+    dir = glue("/mnt/CIL_energy/impacts_outreach/{resolution}/{rcp}/SSP3/")
+    file = glue("unit_{fuel}_{impact_type}_geography_{geography}_years_{time_step}_{rcp}_SSP3_quantiles_{stats}{suffix}.csv")
 
     print(glue('{dir}/{file}'))
     dir.create(dir, recursive = TRUE, showWarnings = FALSE)
