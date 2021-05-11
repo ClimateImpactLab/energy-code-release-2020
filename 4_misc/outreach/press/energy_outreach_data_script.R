@@ -153,49 +153,42 @@ source(glue("{REPO}/energy-code-release-2020/4_misc/",
 
 path = "/mnt/CIL_energy/impacts_outreach/"
 setwd(path)
-# all_IRs_files = Sys.glob("*all_IRs*.csv")
-# regions_500k_cities = read_csv("~/repos/energy-code-release-2020/data/500k_cities.csv") %>%
-#   select(Region_ID)
-# regions_500k_cities = unlist(regions_500k_cities)
 
-# filter_500k_cities <- function(path, regions_500k_cities) {
-#   save_path = gsub("all_IRs", "500k_cities", path)
-#   print(save_path)  
+all_IRs_files = Sys.glob("*all_IRs*.csv")
 
-#   if (!file.exists(save_path)) {
-#     print("generating")
-#     dt = vroom(path)
-#     dt = dt %>% filter(all_IRs %in% regions_500k_cities)
-#     write_csv(dt, save_path)
-#   }
-# }
+cities_500k = read_csv("~/repos/energy-code-release-2020/data/500k_cities.csv")	%>% 
+	select(city, country, Region_ID) %>% rename(region_id = Region_ID)
 
-# # testing function
-# # filter_500k_cities(all_IRs_files[1], regions_500k_cities)
+cities_500k_regions = unlist(cities_500k$region_id)
+
+
+
+filter_500k_cities <- function(path, cities_500k, cities_500k_regions) {
+  save_path = gsub("all_IRs", "500k_cities", path)
+  print(save_path)  
+
+  if (!file.exists(save_path)) {
+    print("generating")
+    dt = vroom(path)
+    dt = dt %>% filter(all_IRs %in% cities_500k_regions) %>%
+    	rename(region_id = all_IRs)
+    dt=setkey(as.data.table(dt),region_id)
+    cities_500k_lookup = setkey(as.data.table(cities_500k), region_id)
+    merged = merge(cities_500k, dt)
+    write_csv(dt, save_path)
+  }
+}
+
+# testing function
+# filter_500k_cities(all_IRs_files[1], cities_500k, cities_500k_regions)
 
 # # run all files
-# out = wrap_mapply(  
-#   path = all_IRs_files,
-#   regions_500k_cities = regions_500k_cities,
-#   FUN=filter_500k_cities,
-#   mc.cores=5,
-#   mc.silent=FALSE
-# )
+out = wrap_mapply(  
+  path = all_IRs_files,
+  regions_500k_cities = regions_500k_cities,
+  FUN=filter_500k_cities,
+  mc.cores=5,
+  mc.silent=FALSE
+)
 
 
-# check values
-dt = vroom("electricity_impacts_gj_geography_global_years_all_SSP3_low_rcp85_q95.csv")
-dt = vroom("other_energy_impacts_gj_geography_global_years_all_SSP3_low_rcp85_mean.csv")
-
-dt = vroom("total_energy_impacts_pct_gdp_geography_global_years_all_SSP3_low_rcp85_mean.csv")
-
-dt = vroom("other_energy_impacts_kwh_geography_global_years_all_SSP3_low_rcp85_mean.csv")
-
-dt = vroom("other_energy_impacts_gj_geography_global_years_averaged_SSP3_low_rcp85_mean.csv")
-
-dt = vroom("other_energy_impacts_gj_geography_iso_years_all_SSP3_low_rcp85_mean.csv")
-dt = vroom("other_energy_impacts_gj_geography_states_years_all_SSP3_low_rcp85_mean.csv")
-dt = vroom("other_energy_impacts_gj_geography_states_years_all_SSP3_low_rcp85_q5.csv")
-
-
-dt = vroom("other_energy_impacts_gj_geography_all_IRs_years_all_SSP3_low_rcp85_q5.csv")
