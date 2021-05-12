@@ -40,7 +40,6 @@ ProcessImpacts = function(
     regenerate = FALSE,
     ...){
 
-    # browser()
     # get a df with all impacts and all stats at that resolution
     df = wrap_mapply(
         impact_type = impact_type,
@@ -52,7 +51,7 @@ ProcessImpacts = function(
         mc.silent=FALSE,
         FUN=get_energy_impacts
         ) 
-    # browser()
+
     df = select_and_transform(
         df = df, 
         impact_type = impact_type,
@@ -99,7 +98,7 @@ reshape_and_save = function(df, stats, resolution, impact_type, time_step, rcp, 
 
     rownames(df) <- c()
     if(resolution=="states") 
-    df = StatesNames(df)
+        df = StatesNames(df)
 
     years_list = list(
         all=NULL,
@@ -109,9 +108,9 @@ reshape_and_save = function(df, stats, resolution, impact_type, time_step, rcp, 
             seq(2080,2099)))
 
     if (!is.null(years_list[[time_step]]))
-    df = YearChunks(df,years_list[[time_step]])
+        df = YearChunks(df,years_list[[time_step]])
     else
-    setnames(df, old='year', new='years')
+        setnames(df, old='year', new='years')
 
     df = YearsReshape(df)
 
@@ -121,10 +120,10 @@ reshape_and_save = function(df, stats, resolution, impact_type, time_step, rcp, 
         as.character(seq(2020,2099)), 
         glue("year_{as.character(seq(2020,2099))}"))
 
-    setnames(df, "region", resolution)
-
-    # if(resolution=="global") 
-    # df[,resolution:="global"][]
+    # define a named vector to rename column names
+    region_colname = c("Global","states_abbrev","ISO_code","Region_ID")
+    names(region_colname) = c("global", "states", "iso", "all_IRs")
+    setnames(df, "region", region_colname(resolution))
 
     if (export) {
         fwrite(
@@ -154,14 +153,9 @@ get_geo_level = function(resolution) {
 }
 
 
-
-
-# get_energy_impacts("impacts_gj", "electricity","rcp45","iso",FALSE)
-
 get_energy_impacts = function(impact_type, fuel, rcp, resolution, regenerate,...) {
 
 
-    # browser()
     if (impact_type == "impacts_gj" | impact_type == "impacts_kwh"  ) {
         price_scen = NULL
         unit = "impactpc"
@@ -181,11 +175,9 @@ get_energy_impacts = function(impact_type, fuel, rcp, resolution, regenerate,...
     }
 
     geo_level = get_geo_level(resolution)
-    # browser()
         
     if (geo_level == "aggregated") {
         regions = return_region_list(resolution)
-        # regions = get_regions_string(region_list)
         
         df = load.median(conda_env = "risingverse-py27",
                         proj_mode = '', # '' and _dm are the two options
@@ -229,9 +221,6 @@ get_energy_impacts = function(impact_type, fuel, rcp, resolution, regenerate,...
     }
 
     return(df)
-    # %>%
-    #     dplyr::filter(region %in% region_codes)
-
 
 }
 
@@ -239,7 +228,6 @@ get_energy_impacts = function(impact_type, fuel, rcp, resolution, regenerate,...
 #reshapes the data to get region in rows and years in columns
 YearsReshape = function(df){
 
-    # browser()
     var = names(df)[!(names(df) %in% c('region', 'years'))]
     setnames(df,var,"value")
     df=reshape2:::dcast(df,region + value ~ years, value.var='value')
@@ -253,13 +241,11 @@ YearsReshape = function(df){
 #get two-decades means
 YearChunks = function(df,intervals,...){
 
-    # browser()
     df = as.data.table(df)
     df[,years:=dplyr:::case_when(year %in% intervals[[1]] ~ 'years_2020_2039',
         year %in% intervals[[2]] ~ 'years_2040_2059',
         year %in% intervals[[3]] ~ 'years_2080_2099')][,year:=NULL]
 
-    # bk = df
     df=df[!is.na(years)]
 
     df=df[,lapply(.SD, mean), by=.(region,years)]
@@ -270,8 +256,13 @@ YearChunks = function(df,intervals,...){
 
 #directories and files names
 Path = function(impact_type, resolution, rcp, stats, fuel, time_step, suffix='', ...){
-    dir = glue("/mnt/CIL_energy/impacts_outreach/{resolution}/{rcp}/SSP3/low/")
-    file = glue("{fuel}_unit_{impact_type}_geography_{resolution}_years_{time_step}_{rcp}_SSP3_low_quantiles_{stats}{suffix}.csv")
+
+    # define a named vector to rename folders and files
+    geography = c("Global","states_abbrev","ISO_code","Region_ID")
+    names(geography) = c("global", "US_states", "country_level", "impact_regions")
+    
+    dir = glue("/mnt/CIL_energy/impacts_outreach/{resolution}/{rcp}/SSP3/")
+    file = glue("unit_{fuel}_{impact_type}_geography_{geography}_years_{time_step}_{rcp}_SSP3_quantiles_{stats}{suffix}.csv")
 
     print(glue('{dir}/{file}'))
     dir.create(dir, recursive = TRUE, showWarnings = FALSE)
@@ -316,7 +307,6 @@ return_country_for_IR = function(IR_list) {
 #' @return List of IRs or region codes.
 return_region_list = function(regions) {
 
-    # browser()
     if (length(regions) > 1) {
         return(regions)
     }
@@ -326,21 +316,13 @@ return_region_list = function(regions) {
     list = check %>%
     dplyr::filter(is_terminal == "True")
 
-    # browser()
     if (regions == 'all_IRs'){
-        # return(c("JPN.41.R5148cbf71a2651b4","USA.33.1854"))
         return(list$region.key)
     }
-    else if (regions == 'cities_500k'){
-            cities_500k = memo.csv('/home/liruixue/repos/energy-code-release-2020/data/500k_cities.csv') %>%
-            select(Region_ID)
-            return(unique(cities_500k$Region_ID))
-    }
+
     else if (regions == 'iso')
-        # return(c("CAN","CHN"))
         return(unique(substr(list$region.key, 1, 3)))
     else if (regions == 'states'){
-        # return(c("CAN","CHN"))
         df = list %>% 
         dplyr::filter(substr(region.key, 1, 3)=="USA") %>%
         dplyr::mutate(region.key = gsub('^([^.]*.[^.]*).*$', '\\1', region.key))
@@ -359,7 +341,7 @@ return_region_gdp = function(resolution) {
     gdp = read_csv(
         paste0(DB_data, '/projection_system_outputs/covariates/', 
          'SSP3-low-IR_level-gdppc-pop-gdp-all-years.csv')) 
-    # browser()
+
     if (resolution == 'all_IRs') {
             return(gdp[c("region","year","gdp")])
         } else if (resolution == 'iso' | resolution == "states") {
@@ -382,8 +364,6 @@ return_region_gdp = function(resolution) {
             return(global_gdp)
         }
     }
-
-# return_region_gdp("all_IRs")
 
 #' Identifies IRs within a more aggregated region code.
 #'
