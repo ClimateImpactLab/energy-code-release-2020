@@ -83,7 +83,15 @@ source(glue("{REPO}/energy-code-release-2020/4_misc/",
 # **** done! 
 ###########################################################
 ###########################################################
-
+ProcessImpacts(
+  time_step="averaged",
+  impact_type="impacts_gj",
+  resolution="iso", 
+  rcp="rcp85",
+  stats="mean",
+  fuel = "electricity",
+  regenerate = FALSE,
+  export = TRUE)
 
 # generate all aggregated file stats
 out = wrap_mapply(  
@@ -96,7 +104,7 @@ out = wrap_mapply(
   regenerate = FALSE,
   export = TRUE,
   FUN=ProcessImpacts,
-  mc.cores=24,
+  mc.cores=30,
   mc.silent=FALSE
 )
 
@@ -112,7 +120,7 @@ out = wrap_mapply(
   regenerate = FALSE,
   export = TRUE,
   FUN=ProcessImpacts,
-  mc.cores=24,
+  mc.cores=30,
   mc.silent=FALSE
 )
 
@@ -128,7 +136,7 @@ out = wrap_mapply(
   regenerate = FALSE,
   export = TRUE,
   FUN=ProcessImpacts,
-  mc.cores=24,
+  mc.cores=30,
   mc.silent=FALSE
 )
 
