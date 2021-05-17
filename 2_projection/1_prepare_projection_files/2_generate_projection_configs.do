@@ -36,7 +36,7 @@ qui do $root/2_projection/0_packages_programs_inputs/projection_set_up/write_pro
 ******Set Script Toggles********************************************************
 
 // which ssps do you want to project results for?
-local ssp_list  "[SSP2, SSP3, SSP4]"
+local ssp_list  "[SSP1, SSP2, SSP3, SSP4, SSP5]"
 *local ssp_list  "SSP3"
 *local ssp_list "[SSP2, SSP4]"
 
@@ -70,7 +70,7 @@ foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double"
 	if("`model_tt'" == "TINV_clim"){
 		local ssp_list  "[SSP1,SSP2,SSP3,SSP4,SSP5]"
 		// which prices do you want to generate aggregation and extraction configs for? 
-		local price_list = " price014 price0 price03 WITCHGLOBIOM42_rcp45 WITCHGLOBIOM42_rcp85 REMINDMAgPIE1730_rcp85 REMINDMAgPIE1730_rcp45 REMIND17CEMICS_rcp85 REMIND17CEMICS_rcp45 REMIND17_rcp85 REMIND17_rcp45 MERGEETL60_rcp85 MERGEETL60_rcp45 "
+		local price_list = " price0027 price0082 price014 price0 price03 WITCHGLOBIOM42_rcp45 WITCHGLOBIOM42_rcp85 REMINDMAgPIE1730_rcp85 REMINDMAgPIE1730_rcp45 REMIND17CEMICS_rcp85 REMIND17CEMICS_rcp45 REMIND17_rcp85 REMIND17_rcp45 MERGEETL60_rcp85 MERGEETL60_rcp45 "
 	}
 	else{
 		local ssp_list   "SSP3"
