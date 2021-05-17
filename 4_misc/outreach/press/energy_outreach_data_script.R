@@ -81,17 +81,8 @@ source(glue("{REPO}/energy-code-release-2020/4_misc/",
 
 
 # **** done! 
-###########################################################
-###########################################################
-ProcessImpacts(
-  time_step="averaged",
-  impact_type="impacts_gj",
-  resolution="iso", 
-  rcp="rcp85",
-  stats="mean",
-  fuel = "electricity",
-  regenerate = FALSE,
-  export = TRUE)
+##########################################################
+##########################################################
 
 # generate all aggregated file stats
 out = wrap_mapply(  
@@ -162,41 +153,53 @@ out = wrap_mapply(
 path = "/mnt/CIL_energy/impacts_outreach/"
 setwd(path)
 
-all_IRs_files = Sys.glob("*all_IRs*.csv")
+all_IRs_files = list.files(path = path, 
+  pattern = "geography_impact_regions",
+  recursive = TRUE,
+  include.dirs = TRUE)
 
 cities_500k = read_csv("~/repos/energy-code-release-2020/data/500k_cities.csv")	%>% 
 	select(city, country, Region_ID)
 
 cities_500k_regions = unlist(cities_500k$Region_ID)
 
-
-
-filter_500k_cities <- function(path, cities_500k, cities_500k_regions) {
-  save_path = gsub("all_IRs", "500k_cities", path)
+filter_500k_cities <- function(path, cities_500k_arg = cities_500k, cities_500k_regions_arg = cities_500k_regions) {
+  save_path = gsub("impact_regions", "500kcities", path)
   print(save_path)  
-
+  # browser()
   if (!file.exists(save_path)) {
+    dir.create(dirname(save_path), recursive = TRUE, showWarnings = FALSE)
     print("generating")
     dt = vroom(path)
-    dt = dt %>% filter(all_IRs %in% cities_500k_regions) %>%
-    	rename(Region_ID = all_IRs)
+    dt = dt %>% filter(Region_ID %in% cities_500k_regions_arg) 
     dt=setkey(as.data.table(dt),Region_ID)
-    cities_500k_lookup = setkey(as.data.table(cities_500k), Region_ID)
-    merged = merge(cities_500k, dt)
+    cities_500k_lookup = setkey(as.data.table(cities_500k_arg), Region_ID)
+    merged = merge(cities_500k_arg, dt)
     write_csv(dt, save_path)
+    return(dt)
   }
+  else return("abc")
 }
 
 # testing function
-# filter_500k_cities(all_IRs_files[1], cities_500k, cities_500k_regions)
+dt = filter_500k_cities(all_IRs_files[3], cities_500k, cities_500k_regions)
 
 # # run all files
 out = wrap_mapply(  
   path = all_IRs_files,
-  regions_500k_cities = regions_500k_cities,
   FUN=filter_500k_cities,
-  mc.cores=5,
+  mc.cores=40,
   mc.silent=FALSE
 )
 
+# # testing function
+# out = ProcessImpacts(
+#   time_step="averaged",
+#   impact_type="impacts_gj",
+#   resolution="all_IRs", 
+#   rcp="rcp85",
+#   stats="mean",
+#   fuel = "electricity",
+#   regenerate = FALSE,
+#   export = TRUE)
 

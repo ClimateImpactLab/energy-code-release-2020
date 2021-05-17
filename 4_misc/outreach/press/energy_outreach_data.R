@@ -9,7 +9,7 @@ library(haven)
 library(ncdf4)
 library(tidyr)
 
-print("test6")
+print("test7")
 cilpath.r:::cilpath()
 db = '/mnt/CIL_energy/'
 output = '/mnt/CIL_energy/code_release_data_pixel_interaction/'
@@ -59,7 +59,7 @@ ProcessImpacts = function(
         stats = stats,
         ) 
 
-    reshape_and_save(
+    df = reshape_and_save(
         df = df, 
         stats = stats, 
         resolution = resolution, 
@@ -69,6 +69,7 @@ ProcessImpacts = function(
         rcp = rcp,
         export = export)
 
+    return(df)
 
 }
 
@@ -121,9 +122,9 @@ reshape_and_save = function(df, stats, resolution, impact_type, time_step, rcp, 
         glue("year_{as.character(seq(2020,2099))}"))
 
     # define a named vector to rename column names
-    region_colname = c("Global","states_abbrev","ISO_code","Region_ID")
+    region_colname = c("Global","state_abbrev","ISO_code","Region_ID")
     names(region_colname) = c("global", "states", "iso", "all_IRs")
-    setnames(df, "region", region_colname(resolution))
+    setnames(df, "region", region_colname[resolution])
 
     if (export) {
         fwrite(
@@ -258,11 +259,11 @@ YearChunks = function(df,intervals,...){
 Path = function(impact_type, resolution, rcp, stats, fuel, time_step, suffix='', ...){
 
     # define a named vector to rename folders and files
-    geography = c("Global","states_abbrev","ISO_code","Region_ID")
-    names(geography) = c("global", "US_states", "country_level", "impact_regions")
+    geography = c("global","US_states","country_level","impact_regions")
+    names(geography) = c("global", "states", "iso", "all_IRs")
     
-    dir = glue("/mnt/CIL_energy/impacts_outreach/{resolution}/{rcp}/SSP3/")
-    file = glue("unit_{fuel}_{impact_type}_geography_{geography}_years_{time_step}_{rcp}_SSP3_quantiles_{stats}{suffix}.csv")
+    dir = glue("/mnt/CIL_energy/impacts_outreach/{geography[resolution]}/{rcp}/SSP3/")
+    file = glue("unit_{fuel}_{impact_type}_geography_{geography[resolution]}_years_{time_step}_{rcp}_SSP3_quantiles_{stats}{suffix}.csv")
 
     print(glue('{dir}/{file}'))
     dir.create(dir, recursive = TRUE, showWarnings = FALSE)
