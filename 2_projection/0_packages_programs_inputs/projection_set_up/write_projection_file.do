@@ -173,6 +173,11 @@ syntax , unit(string) [ price_scen(string) ] product(string)
 	else if (strpos("`price_scen'", "price") != 0) {
 
 		local growth_rate = substr("`price_scen'",strpos("`price_scen'","0"),.)
+
+		if strpos("`price_scen'", "0027") > 0{
+			local growth_rate = "m0027"
+		}
+		
 		local pricing = substr("`price_scen'",1,strpos("`price_scen'","0") - 1)
 		local price_data = "`price_data'/IEA_Price_FIN_Clean_gr`growth_rate'_GLOBAL_COMPILE.dta"
 
