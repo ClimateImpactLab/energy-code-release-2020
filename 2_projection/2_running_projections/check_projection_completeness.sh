@@ -3,15 +3,15 @@
 # can be run from anywhere, just set the correct paths
 
 # set some paths and parameters
-energy=electricity
-# energy=other_energy
-# dm=_dm
-dm=""
+# energy=electricity
+energy=other_energy
+dm=_dm
+# dm=""
 # dm="_slow_adapt"
-# suffix=""
+suffix=""
 # suffix=_lininter
 # suffix=_lininter_double
-suffix=_lininter_half
+# suffix=_lininter_half
 
 output_root="/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost"
 # output_root="/global/scratch/liruixue/outputs/energy_pixel_interaction/impacts-blueghost"
@@ -19,7 +19,7 @@ output_dir="median_OTHERIND_${energy}_TINV_clim${suffix}_GMFD${dm}"
 
 # the size of files above which we consider complete
 # look at the completed output files to determine this åsize
-output_file_size_above=10
+output_file_size_above=895
 
 # 130 for one SSP
 n_folders_total=520
@@ -49,6 +49,7 @@ do
 	n_complete=$(find . -name "${filename_stem}${filename_suffix}.nc4" -size +${output_file_size_above}M| wc -l)
 	echo "find . -name ${filename_stem}${filename_suffix}.nc4 -size +${output_file_size_above}M| wc -l"
 	n_incomplete=$(find . -name "${filename_stem}${filename_suffix}.nc4" -size -${output_file_size_above}M | wc -l)
+	find . -name "${filename_stem}${filename_suffix}.nc4" -size -${output_file_size_above}M
 	n_total=$(find . -name "${filename_stem}${filename_suffix}.nc4" | wc -l)
 	
 	printf "${scenario}: \n"
@@ -57,8 +58,8 @@ done
 
 # uncomment to look for files with HDF error
 # printf "\nFiles with HDF errors:"
-HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
-echo "${HDF_errors}"
+# HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
+# echo "${HDF_errors}"
 
 # # if needed, modify the following command to find folders that doesn't contain a certain file
 # find . -mindepth 5 -type d  '!' -exec test -e "{}/${filename_stem}.nc4" ';' -print

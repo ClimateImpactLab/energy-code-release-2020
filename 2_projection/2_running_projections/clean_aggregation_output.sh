@@ -3,8 +3,8 @@
 # can be run from anywhere, just set the correct paths
 
 # set some paths and parameters
-# energy="other_energy"
-energy="electricity"
+energy="other_energy"
+# energy="electricity"
 output_root="/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost"
 output_dir="median_OTHERIND_${energy}_TINV_clim_GMFD_dm" 
 
@@ -15,7 +15,7 @@ aggregated_file_size_above=2
 # 130 for one SSP
 n_folders_total=520
 
-aggregation_scenario=price014
+aggregation_scenario=price0082
 filename_stem="FD_FGLS_inter_OTHERIND_${energy}_TINV_clim"
 
 cd "${output_root}/${output_dir}"
