@@ -74,7 +74,7 @@ out = wrap_mapply(
   ssp = c("SSP1","SSP2","SSP3","SSP4","SSP5"),
   FUN=extract_file,
   dm = "",
-  mc.cores=10,
+  mc.cores=9,
   mc.silent=FALSE
 )
 
@@ -85,7 +85,7 @@ out = wrap_mapply(
   dm = "",
   iam = c("high","low"),
   FUN=extract_file,
-  mc.cores=10,
+  mc.cores=9,
   mc.silent=FALSE
 )
 

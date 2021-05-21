@@ -251,7 +251,7 @@ def temperatures_anomaly(PULSE_YEAR,
 	# Calculate temperature anomalies
 	fair_temperatures_anomaly = (
 	    fair_temperatures
-	    - fair_temperatures.sel(year=slice(2001, 2011)).mean(dim='year'))
+	    - fair_temperatures.sel(year=slice(2001, 2010)).mean(dim='year'))
 
 	print('Finished loading FAIR')
 
