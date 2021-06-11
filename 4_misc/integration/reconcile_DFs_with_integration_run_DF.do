@@ -28,7 +28,7 @@ glob DB_data "$DB/CIL_energy/code_release_data_pixel_interaction"
 glob dir "$DB_data/projection_system_outputs/damage_function_estimation"
 
 * SSP toggle - options are "SSP2", "SSP3", or "SSP4"
-loc ssp = "SSP5" 
+loc ssp = "SSP3" 
 
 * Model toggle  - options are "main", "lininter", "lininter_double", or "lininter_half","mixed"
 loc model = "main"
@@ -37,66 +37,8 @@ loc model = "main"
 loc subset = 2085
 
 
-
-******************************************
-* Set locals based on options 
-* We run only the price014 scenario, except for SSP3 main model
-
-if("`model'" == "main") {
-	
-	loc model_tag = ""
-
-	if ("`ssp'" == "SSP3") {
-		loc pricelist price014 price0 price03 WITCHGLOBIOM42 MERGEETL60 REMINDMAgPIE1730 REMIND17CEMICS REMIND17
-	}
-	else {
-		loc pricelist price014 
-	}
-} 
-else if (inlist("`model'", "lininter", "lininter_double", "lininter_half", "mixed")){
-	loc model_tag = "_`model'"
-	assert("`ssp'" == "SSP3")
-	loc pricelist price014 
-}
-
-
-*import delim "$dir/impact_values/gcm_damages_OTHERIND_total_energy_price014_SSP3.csv", clear
-
-**********************************************************************************
-* STEP 1: Pull in and format each price scenarios csv
-**********************************************************************************
-foreach price in `pricelist' {
-	di "`price'"
-	import delim "$dir/impact_values/gcm_damages_OTHERIND_total_energy_`price'_`ssp'`model_tag'.csv", clear
-	keep rcp year gcm iam mean
-	ren mean `price'
-	tempfile `price'
-	save ``price'', replace 
-}
-
-local price1 : word 1 of `pricelist'
-local pricelist_sub: list pricelist- `price1'
-
-use ``price1'', clear
-foreach price in `pricelist_sub' {
-	merge 1:1 rcp year gcm iam using ``price'', nogen assert(3)
-}
-
-* Merge in GMST anomaly data 
-preserve
-	insheet using "$DB_data/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010_smooth.csv", comma names clear
-	tempfile GMST
-	save `GMST', replace
-restore
-merge m:1 year rcp gcm using `GMST', nogen keep(3)
-sort rcp gcm iam year 
-drop if year < 2010
-ren temp anomaly
-
-**********************************************************************************
-* STEP 2: Regressions & construction of time-varying damage function coefficients 
-**********************************************************************************
-
+import delim using "/home/liruixue/repos/labor-code-release-2020//data/misc/energy_damage_function_points_integration.csv", clear
+rename global_damages_constant_model_co price014
 **  INITIALIZE FILE WE WILL POST RESULTS TO
 capture postutil clear
 tempfile coeffs
@@ -104,10 +46,14 @@ postfile damage_coeffs str20(var_type) year cons beta1 beta2 anomalymin anomalym
 
 gen t = year-2010
 
+loc pricelist price014
+destring anomaly, replace force
+
+
 ** Regress, and output coeffs	
 foreach vv in `pricelist' {
 	* Nonparametric model for use pre-2100 
-	foreach yr of numlist 2015/2099 {
+	foreach yr of numlist 2020/2099 {
 		di "`vv' `yr'"
 		qui reg `vv' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2 
 		
@@ -148,4 +94,6 @@ gen placeholder = "ss"
 ren var_type growth_rate
 order year placeholder growth_rate
 
-outsheet using "$dir/coefficients/df_mean_output_`ssp'`model_tag'.csv", comma replace	
+format cons beta1 beta2 %20.0f
+
+outsheet using "$dir/coefficients/df_mean_output_`ssp'`model_tag'_integration.csv", comma replace	

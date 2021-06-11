@@ -5,14 +5,14 @@
 # set some paths and parameters
 # energy_type="electricity"
 energy_type="other_energy"
-dm=""
+# dm=""
 dm="_dm"
 # suffix=""
 # aggregation_scenario=""
 # aggregation_scenario="-MERGEETL60_rcp45"
 # aggregation_scenario="-MERGEETL60_rcp85"
-# aggregation_scenario="-price014" 
-aggregation_scenario="-price0082" 
+aggregation_scenario="-price014" 
+# aggregation_scenario="-price0082" 
 # aggregation_scenario="-pricem0027" 
 
 # aggregation_scenario="-price03"
@@ -33,8 +33,8 @@ output_dir="median_OTHERIND_${energy_type}_TINV_clim${suffix}_GMFD${dm}"
 
 # the size of files above which we consider complete
 # look at the completed output files to determine this size
-levels_file_size_above=800
-aggregated_file_size_above=200
+levels_file_size_above=10
+aggregated_file_size_above=2
 # 130 for one SSP
 n_folders_total=520
 # time_constraint=" -mtime -1 "
@@ -87,12 +87,12 @@ do
 	done
 done
 
-# # uncomment to look for files with HDF error
-printf "\nFiles with HDF errors:"
-HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
-echo "${HDF_errors}"
+# # # uncomment to look for files with HDF error
+# printf "\nFiles with HDF errors:"
+# HDF_errors=$(find . -name "*.nc4" -exec ncdump -h {} \; -print |& grep HDF)
+# echo "${HDF_errors}"
 
-missing_file="FD_FGLS_inter_OTHERIND_other_energy_TINV_clim.nc4"
+missing_file="FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-price014-levels.nc4"
 # if needed, modify the following command to find folders that doesn't contain a certain file
 find . -mindepth 5 -type d '!' -exec test -e "{}/${missing_file}" ';' -print
 

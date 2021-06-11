@@ -115,6 +115,26 @@ gdp = gdp %>% as.data.frame() %>%
 write_csv(gdp, paste0(output, 
 	'/projection_system_outputs/covariates/SSP3-global-gdp-time_series.csv'))
 
+
+# generate some data for labor
+write_csv(gdp, paste0(output, 
+	'/projection_system_outputs/covariates/SSP3-high-global-gdp-time_series.csv'))
+
+gdppc = get_gdppc_all_regions('low', 'SSP3')
+
+gdp = convert_global_gdp(gdppc,'SSP3') 
+gdp$year = seq(2010,2100,1) 
+
+gdp = gdp %>% as.data.frame() %>% 
+	mutate(gdp = gdp * conversion_value)
+
+write_csv(gdp, paste0(output, 
+	'/projection_system_outputs/covariates/SSP3-low-global-gdp-time_series.csv'))
+
+
+
+
+
 # also get SSP2 gdp time series for referee comments
 gdppc = get_gdppc_all_regions('high', 'SSP2')
 
