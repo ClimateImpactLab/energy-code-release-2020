@@ -3,12 +3,13 @@ library(glue)
 library(parallel)
 library(vroom)
 
-cilpath.r:::cilpath()
+REPO <- "/home/liruixue/repos"
 
 source(glue("{REPO}/mortality/utils/wrap_mapply.R"))
 
 source(glue("{REPO}/energy-code-release-2020/4_misc/",
     "outreach/press/energy_outreach_data.R"))
+
 
 
 

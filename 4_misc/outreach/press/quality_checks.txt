@@ -1,0 +1,17 @@
+Quality checks:
+
+Code review - Emile
+
+# Check number of directories and files:
+- 5 spatial resolutions directories
+- 2 rcps directories
+- 1 ssp directories
+- 2 time resolutions * (2 fuels * 2 units * 6 stats + 1 fuel * 1 unit * 6 stats) = 60 files per directory
+
+
+# Check completeless of data
+## year: 
+1. All : Individual years 2020-2099
+2. Averaged : Two-decades averages (2020-2039, 2040-2059, 2080-2099)
+
+## regions: 

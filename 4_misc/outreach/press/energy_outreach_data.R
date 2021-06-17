@@ -9,9 +9,11 @@ library(haven)
 library(ncdf4)
 library(tidyr)
 
-cilpath.r:::cilpath()
+# cilpath.r:::cilpath()
 db = '/mnt/CIL_energy/'
 output = '/mnt/CIL_energy/code_release_data_pixel_interaction/'
+
+REPO <- "/home/liruixue/repos"
 
 dir = paste0('/shares/gcp/social/parameters/energy_pixel_interaction/extraction/',
     'multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/')
