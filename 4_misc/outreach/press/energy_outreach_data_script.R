@@ -182,9 +182,9 @@ filter_500k_cities <- function(path, cities_500k_arg = cities_500k, cities_500k_
 }
 
 # testing function
-dt = filter_500k_cities(all_IRs_files[3], cities_500k, cities_500k_regions)
+# dt = filter_500k_cities(all_IRs_files[3], cities_500k, cities_500k_regions)
 
-# # run all files
+# run over all files
 out = wrap_mapply(  
   path = all_IRs_files,
   FUN=filter_500k_cities,

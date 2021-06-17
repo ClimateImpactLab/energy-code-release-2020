@@ -9,7 +9,6 @@ library(haven)
 library(ncdf4)
 library(tidyr)
 
-print("test7")
 cilpath.r:::cilpath()
 db = '/mnt/CIL_energy/'
 output = '/mnt/CIL_energy/code_release_data_pixel_interaction/'
@@ -24,16 +23,22 @@ setwd(paste0(REPO))
 # Source codes that help us load projection system outputs
 miceadds::source.all(paste0(projection.packages,"load_projection/"))
 
-#' Wrapper that calls get_mortality_impacts with converted parameters.
-#' @param years what years to output ("averaged","all")
-#' @param ... other parameters as in the DB outreach paper
+#' Wrapper that calls get_energy_impacts, transform, reshape and save results
+#' @param time_step what years to output ("averaged","all")
+#' @param impact_type unit of output ("impacts_gj", "impacts_kwh", "impacts_pct_gdp")
+#' @param resolution spatial resolution of output, ("all_IRs", "states", "iso", "global")
+#' @param rcp ("rcp45", "rcp85")
+#' @param stats the statistics to produce, ("mean", "q5", "q17", "q50", "q83", "q95")
+#' @param fuel ("electricity", "other_energy")
+#' @param export set to TRUE if want to write output to file
+#' @param regenerate set to TRUE if want to re-run load.median function (use when the extraction is not done correctly) 
+
 #' @return Data table of processed impacts.
 ProcessImpacts = function(
     time_step,
     impact_type, 
     resolution, 
     rcp=NULL, 
-    # ssp=NULL, 
     stats=NULL,
     fuel = NULL,
     export = TRUE,
@@ -73,6 +78,14 @@ ProcessImpacts = function(
 
 }
 
+
+#' convert raw impacts to required impact type and keep only required statistics
+#' @param df 
+#' @param impact_type unit of output ("impacts_gj", "impacts_kwh", "impacts_pct_gdp")
+#' @param resolution spatial resolution of output, ("all_IRs", "states", "iso", "global")
+#' @param stats the statistics to produce, ("mean", "q5", "q17", "q50", "q83", "q95")
+#' @return Data table of processed impacts.
+
 select_and_transform = function(df, impact_type, resolution, stats, ...) {
 
     df_stats = do.call("rbind", df) %>% dplyr::select(year, region, !!stats) 
@@ -94,7 +107,7 @@ select_and_transform = function(df, impact_type, resolution, stats, ...) {
 }
 
 
-
+# reshape output and save to file
 reshape_and_save = function(df, stats, resolution, impact_type, time_step, rcp, fuel, export,...) {
 
     rownames(df) <- c()
@@ -141,7 +154,8 @@ reshape_and_save = function(df, stats, resolution, impact_type, time_step, rcp, 
     return(df)
 }
 
-
+# identify which type of files to extract results from
+# IR level - "levels.nc4" file, other levels - "aggeregated.nc4" files
 get_geo_level = function(resolution) {
 
     geo_level_lookup = list(
@@ -154,9 +168,11 @@ get_geo_level = function(resolution) {
 }
 
 
+# a function to call load.median package and get projection output
+# note that to percentage gdp impacts are only applicable for total energy (electricity + other energy)
 get_energy_impacts = function(impact_type, fuel, rcp, resolution, regenerate,...) {
 
-
+    # set parameters for the load.median function call based on impact_type parameter
     if (impact_type == "impacts_gj" | impact_type == "impacts_kwh"  ) {
         price_scen = NULL
         unit = "impactpc"
@@ -178,6 +194,8 @@ get_energy_impacts = function(impact_type, fuel, rcp, resolution, regenerate,...
     geo_level = get_geo_level(resolution)
         
     if (geo_level == "aggregated") {
+
+        # get a list of region codes to filter the data with
         regions = return_region_list(resolution)
         
         df = load.median(conda_env = "risingverse-py27",
@@ -246,11 +264,8 @@ YearChunks = function(df,intervals,...){
     df[,years:=dplyr:::case_when(year %in% intervals[[1]] ~ 'years_2020_2039',
         year %in% intervals[[2]] ~ 'years_2040_2059',
         year %in% intervals[[3]] ~ 'years_2080_2099')][,year:=NULL]
-
     df=df[!is.na(years)]
-
     df=df[,lapply(.SD, mean), by=.(region,years)]
-
     return(df)
 }
 
@@ -271,13 +286,6 @@ Path = function(impact_type, resolution, rcp, stats, fuel, time_step, suffix='',
 }
 
 
-#open the processed data
-OpenProcessed = function(...){
-
-    fread(do.call(Path,list(...)))
-
-}
-
 memo.csv = addMemoization(read.csv)
 
 #add US states name to states ID
@@ -294,10 +302,6 @@ StatesNames = function(df){
     return(df)
 }
 
-return_country_for_IR = function(IR_list) {
-    
-    return(country_list)
-}
 
 #' Translates key words into list of impact region codes.
 #'
@@ -335,7 +339,7 @@ return_region_list = function(regions) {
     return(regions)
 }
 
-
+# get regional GDP time series at the spatial resolution specified
 return_region_gdp = function(resolution) {
 
     DB_data = "/mnt/CIL_energy/code_release_data_pixel_interaction"
@@ -346,7 +350,6 @@ return_region_gdp = function(resolution) {
     if (resolution == 'all_IRs') {
             return(gdp[c("region","year","gdp")])
         } else if (resolution == 'iso' | resolution == "states") {
-            # regions = "states"
             regions_list = return_region_list(resolution)
             IR_list = get_children(regions_list)
             IR_df = data.frame(agg_region = rep(names(IR_list),sapply(IR_list, length))
