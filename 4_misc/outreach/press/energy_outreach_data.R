@@ -11,7 +11,7 @@ library(tidyr)
 
 # cilpath.r:::cilpath()
 db = '/mnt/CIL_energy/'
-output = '/mnt/CIL_energy/code_release_data_pixel_interaction/'
+output = '/mnt/CIL_energy/'
 
 REPO <- "/home/liruixue/repos"
 
@@ -94,7 +94,7 @@ select_and_transform = function(df, impact_type, resolution, stats, ...) {
     if (impact_type == "impacts_gj") {
         return(df_stats)
     } else if (impact_type == "impacts_kwh") {
-        gj_to_kwh <- function(x) (x * 0.0036) 
+        gj_to_kwh <- function(x) (x * 277.78) 
         df_stats = df_stats %>% dplyr::mutate_at(vars(-c(year,region)), gj_to_kwh)
         return(df_stats)        
     } else if (impact_type == "impacts_pct_gdp") {
@@ -304,6 +304,7 @@ StatesNames = function(df){
     return(df)
 }
 
+return_region_list("all_IRs")
 
 #' Translates key words into list of impact region codes.
 #'

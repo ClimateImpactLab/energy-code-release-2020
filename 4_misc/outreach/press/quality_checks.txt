@@ -1,17 +1,31 @@
 Quality checks:
 
-Code review - Emile
-
-# Check number of directories and files:
+# Check number of directories and files (done)
 - 5 spatial resolutions directories
 - 2 rcps directories
 - 1 ssp directories
 - 2 time resolutions * (2 fuels * 2 units * 6 stats + 1 fuel * 1 unit * 6 stats) = 60 files per directory
-
+## results
+removed a few extra files generate during testing
 
 # Check completeless of data
-## year: 
-1. All : Individual years 2020-2099
-2. Averaged : Two-decades averages (2020-2039, 2040-2059, 2080-2099)
+## year: verify that files with the following filenames have the corresponding columns (done)
+1. "*years_all*" : year_2020 ~ year_2099
+2. "*years_averaged*" : years_2020_2039, years_2040_2059, years_2080_2099
 
-## regions: 
+## regions: verify that files have correct number of regions (done)
+
+## check for zeros, NAs, Infs in all files (a few concerning NAs)
+## check percentage gdp is always <1 (not necessarily true, but found a few weird median files)
+
+
+# Randomly check that values are extracted and calculated correctly
+## check kwh and gj conversion (reversed, need to regenerate)
+## check actual values 
+
+
+Extraction code and checking code review - Emile
+
+
+
+

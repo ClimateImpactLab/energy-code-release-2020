@@ -189,7 +189,7 @@ filter_500k_cities <- function(path, cities_500k_arg = cities_500k, cities_500k_
 out = wrap_mapply(  
   path = all_IRs_files,
   FUN=filter_500k_cities,
-  mc.cores=40,
+  mc.cores=60,
   mc.silent=FALSE
 )
 
