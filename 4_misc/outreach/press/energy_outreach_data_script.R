@@ -13,6 +13,52 @@ source(glue("{REPO}/energy-code-release-2020/4_misc/",
 
 
 
+############## make corrections ############### 
+out = wrap_mapply(  
+  time_step=c("all", "averaged"),
+  impact_type="impacts_pct_gdp",
+  resolution=c("all_IRs","states","global","iso"), 
+  rcp=c("rcp45","rcp85"),
+  stats=c("q50"),
+  fuel = "total_energy",
+  regenerate = FALSE,
+  export = TRUE,
+  FUN=ProcessImpacts,
+  mc.cores=60,
+  mc.silent=FALSE
+)
+
+
+out = wrap_mapply(  
+  time_step=c("all", "averaged"),
+  impact_type="impacts_kwh",
+  resolution=c("all_IRs","states","global","iso"), 
+  rcp=c("rcp45","rcp85"),
+  stats=c("mean", "q5", "q17", "q50", "q83", "q95"),
+  fuel = c("electricity","other_energy"),
+  regenerate = FALSE,
+  export = TRUE,
+  FUN=ProcessImpacts,
+  mc.cores=60,
+  mc.silent=FALSE
+)
+
+
+# # testing function
+# out = ProcessImpacts(
+#   time_step="averaged",
+#   impact_type="impacts_pct_gdp",
+#   resolution="states", 
+#   rcp="rcp85",
+#   stats="q50",
+#   fuel = "total_energy",
+#   regenerate = FALSE,
+#   export = TRUE)
+
+
+
+
+
 # ###########################################################
 # ###########################################################
 # # extract files - aggregated quantity - electricity all done
@@ -164,11 +210,11 @@ cities_500k = read_csv("~/repos/energy-code-release-2020/data/500k_cities.csv")	
 
 cities_500k_regions = unlist(cities_500k$Region_ID)
 
-filter_500k_cities <- function(path, cities_500k_arg = cities_500k, cities_500k_regions_arg = cities_500k_regions) {
+filter_500k_cities <- function(path, overwrite, cities_500k_arg = cities_500k, cities_500k_regions_arg = cities_500k_regions) {
   save_path = gsub("impact_regions", "500kcities", path)
   print(save_path)  
   # browser()
-  if (!file.exists(save_path)) {
+  if ((!file.exists(save_path)) || overwrite ) {
     dir.create(dirname(save_path), recursive = TRUE, showWarnings = FALSE)
     print("generating")
     dt = vroom(path)
@@ -179,7 +225,7 @@ filter_500k_cities <- function(path, cities_500k_arg = cities_500k, cities_500k_
     write_csv(dt, save_path)
     return(dt)
   }
-  else return("abc")
+  else return(glue("{save_path} exists"))
 }
 
 # testing function
@@ -188,19 +234,12 @@ filter_500k_cities <- function(path, cities_500k_arg = cities_500k, cities_500k_
 # run over all files
 out = wrap_mapply(  
   path = all_IRs_files,
+  overwrite == TRUE,
   FUN=filter_500k_cities,
   mc.cores=60,
   mc.silent=FALSE
 )
 
-# # testing function
-# out = ProcessImpacts(
-#   time_step="averaged",
-#   impact_type="impacts_gj",
-#   resolution="all_IRs", 
-#   rcp="rcp85",
-#   stats="mean",
-#   fuel = "electricity",
-#   regenerate = FALSE,
-#   export = TRUE)
+
+
 

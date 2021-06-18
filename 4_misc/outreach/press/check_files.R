@@ -3,6 +3,7 @@ library(glue)
 library(vroom)
 source(glue("{REPO}/energy-code-release-2020/4_misc/",
     "outreach/press/energy_outreach_data.R"))
+data_root <- "/mnt/CIL_energy/impacts_outreach/"
 
 
 
@@ -11,7 +12,6 @@ source(glue("{REPO}/energy-code-release-2020/4_misc/",
 # 1. "*years_all*" : year_2020 ~ year_2099
 # 2. "*years_averaged*" : years_2020_2039, years_2040_2059, years_2080_2099
 
-data_root <- "/mnt/CIL_energy/impacts_outreach/"
 
 # a function that checks if a column is in a file
 check_col_existence <- function(file, col) {
@@ -175,7 +175,7 @@ check_pct_gdp <- function(file) {
 		if (!is.na(y)) return(y)
 		else return(FALSE)
 	}
-	if (apply_function(func = function(x) x>=1, dat)) {return(glue("{file} has >1 values"))}
+	if (apply_function(func = function(x) abs(x)>=100, dat)) {return(glue("{file} has >100 values"))}
 }
 
 d = do.call(rbind, mcmapply(
@@ -184,6 +184,7 @@ d = do.call(rbind, mcmapply(
 	SIMPLIFY = FALSE,
 	mc.cores = 70
 	))
+
 
 ## check kwh and gj conversion 
 
@@ -223,18 +224,10 @@ d = do.call(rbind, mcmapply(
 
 # check actual values
 
+d = vroom(paste0("/shares/gcp/social/parameters/energy_pixel_interaction/extraction/multi-models/",
+	"rationalized_code/break2_Exclude_all-issues_semi-parametric/TINV_clim_GMFD/total_energy/",
+	"SSP3-rcp85_states_damage-price014_median_fulluncertainty_low_fulladapt-aggregated.csv"))
 
-
-
-
-
-
-
-
-
-
-
-
-
+d %>% filter(region == "USA.10", year == 2020)
 
 
