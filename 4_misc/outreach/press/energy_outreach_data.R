@@ -304,8 +304,6 @@ StatesNames = function(df){
     return(df)
 }
 
-return_region_list("all_IRs")
-
 #' Translates key words into list of impact region codes.
 #'
 #' @param regions Regions, can be IRs or aggregated regions. Also accepts:
