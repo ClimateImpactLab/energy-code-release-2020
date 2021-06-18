@@ -6,7 +6,7 @@ Quality checks:
 - 1 ssp directories
 - 2 time resolutions * (2 fuels * 2 units * 6 stats + 1 fuel * 1 unit * 6 stats) = 60 files per directory
 ## action
-removed a few extra files with wrong names generated during testing
+Removed a few extra files with wrong names generated during testing
 
 # Check that files have the correct dimension
 ## year: verify that files with the following filenames have the corresponding columns (passed)
@@ -16,15 +16,17 @@ removed a few extra files with wrong names generated during testing
 ## regions: verify that files have correct number of regions (passed)
 
 ## check for zeros, NAs, Infs in all files 
-1. found a few non-concerning NAs (small islands with no population)
-1. florida (USA.10) 2020, missing q50 value in the extracted data, need to further check what caused it
+1. Found a few non-concerning NAs (small islands with no population)
+1. Florida (USA.10) 2020, missing q50 value in the extracted data
+## action
+Need to investigate why florida 2020 is missing
 
 ## check percentage gdp is always <1
-1. i then realized that this is not necessarily true, but did find a few weird q50 files with abnormally large values. this is found to be cause by a bug in the load median package, and fixed now.
+1. I then realized that this is not necessarily true, but did find a few weird q50 files with abnormally large values. this is found to be cause by a bug in the load median package, and fixed now.
 
 # Check that the actual values are extracted and calculated correctly
-## check kwh and gj conversion (passed)
-## compare values with raw projection output (to be done)
+## Check kwh and gj conversion (passed)
+## Compare values with raw projection output (to be done)
 
 
 # Extraction code and checking code review - Emile (time needed: less than a day)
