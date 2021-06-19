@@ -199,8 +199,8 @@ check_unit_conversion <- function(file) {
 
 	matrix_gj = data.matrix(dat_gj[,-1])
 	matrix_kwh = data.matrix(dat_kwh[,-1])
-	r = matrix_gj / matrix_kwh
-
+	r = matrix_kwh/ matrix_gj 
+	browser()
 	# a function that apply a user-defined function to every element of a dataset
 	apply_function <- function(func, dat) {
 		# browser()
@@ -222,6 +222,7 @@ d = do.call(rbind, mcmapply(
 	mc.cores = 70
 	))
 
+check_unit_conversion(gj_files[50])
 # check actual values
 
 d = vroom(paste0("/shares/gcp/social/parameters/energy_pixel_interaction/extraction/multi-models/",
