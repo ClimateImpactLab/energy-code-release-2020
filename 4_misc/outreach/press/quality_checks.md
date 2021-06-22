@@ -16,7 +16,7 @@ Removed a few extra files with wrong names generated during testing
 ## regions: verify that files have correct number of regions (passed)
 
 ## check for zeros, NAs, Infs in all files 
-1. Found a few non-concerning NAs (small islands with no population)
+1. Found a few non-concerning NAs (small islands with no population), same missingness with mortality press data
 1. Florida (USA.10) 2020, missing q50 value in the extracted data
 ## action
 Need to investigate why florida 2020 is missing
@@ -30,7 +30,6 @@ Need to investigate why florida 2020 is missing
 
 
 # Extraction code and checking code review - Emile (time needed: less than a day)
-
 
 
 

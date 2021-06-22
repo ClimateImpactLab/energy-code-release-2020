@@ -89,7 +89,6 @@ ProcessImpacts = function(
 #' @return Data table of processed impacts.
 
 select_and_transform = function(df, impact_type, resolution, stats, ...) {
-
     df_stats = do.call("rbind", df) %>% dplyr::select(year, region, !!stats) 
     if (impact_type == "impacts_gj") {
         return(df_stats)
@@ -179,7 +178,7 @@ get_energy_impacts = function(impact_type, fuel, rcp, resolution, regenerate,...
         price_scen = NULL
         unit = "impactpc"
         spec = paste0("OTHERIND_", fuel)
-        dollar_convert = "no"
+        dollar_convert = NULL
     } else if (impact_type == "impacts_pct_gdp") {
         if (fuel != "total_energy") {
             print("to get percentage gdp, fuel must be total energy!")
@@ -194,12 +193,12 @@ get_energy_impacts = function(impact_type, fuel, rcp, resolution, regenerate,...
     }
 
     geo_level = get_geo_level(resolution)
-        
     if (geo_level == "aggregated") {
 
         # get a list of region codes to filter the data with
         regions = return_region_list(resolution)
         
+
         df = load.median(conda_env = "risingverse-py27",
                         proj_mode = '', # '' and _dm are the two options
                         # region = region, # needs to be specified for 
@@ -370,6 +369,7 @@ return_region_gdp = function(resolution) {
         }
     }
 
+
 #' Identifies IRs within a more aggregated region code.
 #'
 #' @param region_list Vect. of aggregated regions.
@@ -408,3 +408,9 @@ get_children = function(region_list) {
 
     return(child)
 }
+
+
+
+# g = return_region_gdp("states") %>% filter(region == "USA.10")
+# g%>%filter(year == 2021)
+

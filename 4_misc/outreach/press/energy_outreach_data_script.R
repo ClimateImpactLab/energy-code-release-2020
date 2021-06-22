@@ -11,52 +11,16 @@ source(glue("{REPO}/energy-code-release-2020/4_misc/",
     "outreach/press/energy_outreach_data.R"))
 
 
-
-
-############## make corrections ############### 
-out = wrap_mapply(  
-  time_step=c("all", "averaged"),
-  impact_type="impacts_pct_gdp",
-  resolution=c("all_IRs","states","global","iso"), 
-  rcp=c("rcp45","rcp85"),
-  stats=c("q50"),
-  fuel = "total_energy",
-  regenerate = FALSE,
-  export = TRUE,
-  FUN=ProcessImpacts,
-  mc.cores=60,
-  mc.silent=FALSE
-)
-
-
-out = wrap_mapply(  
-  time_step=c("all", "averaged"),
-  impact_type="impacts_kwh",
-  resolution=c("global","iso","states","all_IRs"), 
-  rcp=c("rcp45","rcp85"),
-  stats=c("mean", "q5", "q17", "q50", "q83", "q95"),
-  fuel = c("electricity","other_energy"),
-  regenerate = FALSE,
-  export = TRUE,
-  FUN=ProcessImpacts,
-  mc.cores=60,
-  mc.silent=FALSE
-)
-
-
 # # testing function
-# out = ProcessImpacts(
-#   time_step="averaged",
-#   impact_type="impacts_pct_gdp",
-#   resolution="states", 
-#   rcp="rcp85",
-#   stats="q50",
-#   fuel = "total_energy",
-#   regenerate = FALSE,
-#   export = TRUE)
-
-
-
+out = ProcessImpacts(
+  time_step="all",
+  impact_type="impacts_gj",
+  resolution="global", 
+  rcp="rcp85",
+  stats="q83",
+  fuel = "electricity",
+  regenerate = FALSE,
+  export = FALSE)
 
 
 # ###########################################################
@@ -142,9 +106,10 @@ out = wrap_mapply(
   regenerate = FALSE,
   export = TRUE,
   FUN=ProcessImpacts,
-  mc.cores=30,
+  mc.cores=60,
   mc.silent=FALSE
 )
+
 
 
 # aggregated files impacts in pct gdp
@@ -158,7 +123,7 @@ out = wrap_mapply(
   regenerate = FALSE,
   export = TRUE,
   FUN=ProcessImpacts,
-  mc.cores=30,
+  mc.cores=60,
   mc.silent=FALSE
 )
 
@@ -174,7 +139,7 @@ out = wrap_mapply(
   regenerate = FALSE,
   export = TRUE,
   FUN=ProcessImpacts,
-  mc.cores=30,
+  mc.cores=60,
   mc.silent=FALSE
 )
 
@@ -190,7 +155,7 @@ out = wrap_mapply(
   regenerate = FALSE,
   export = TRUE,
   FUN=ProcessImpacts,
-  mc.cores=24,
+  mc.cores=60,
   mc.silent=FALSE
 )
 
@@ -234,7 +199,7 @@ filter_500k_cities <- function(path, overwrite, cities_500k_arg = cities_500k, c
 # run over all files
 out = wrap_mapply(  
   path = all_IRs_files,
-  overwrite == TRUE,
+  overwrite = TRUE,
   FUN=filter_500k_cities,
   mc.cores=60,
   mc.silent=FALSE

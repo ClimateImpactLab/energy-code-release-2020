@@ -10,7 +10,8 @@ Units:
  
 1. impacts_gj: per capita change in energy consumption in Gigajoules.
 2. impacts_gj: per capita change in energy consumption in kwh.
-3. impacts_pct_gdp : change in energy costs in 2019$ as percentage of GDP
+3. impacts_pct_gdp : change in energy costs in 2019$ as percentage of GDP (this is fractions already multiplied by 100)
+
  
 Geographical levels :
 
