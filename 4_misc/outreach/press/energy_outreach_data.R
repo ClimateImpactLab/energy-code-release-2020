@@ -409,8 +409,3 @@ get_children = function(region_list) {
     return(child)
 }
 
-
-
-# g = return_region_gdp("states") %>% filter(region == "USA.10")
-# g%>%filter(year == 2021)
-

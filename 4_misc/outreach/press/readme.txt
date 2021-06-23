@@ -9,7 +9,7 @@ The files in this folder contain projected energy-related outputs, for various c
 Units:
  
 1. impacts_gj: per capita change in energy consumption in Gigajoules.
-2. impacts_gj: per capita change in energy consumption in kwh.
+2. impacts_kwh: per capita change in energy consumption in kwh.
 3. impacts_pct_gdp : change in energy costs in 2019$ as percentage of GDP (this is fractions already multiplied by 100)
 
  
@@ -30,7 +30,7 @@ RCP, IAM and SSP (see details below):
 
 1. RCP 4.5, RCP 8.5
 2. SSP3
-3. IAM: IIASA
+3. IAM: IIASA (low)
 
 Summary statistic : 
 1. Quantiles [0.05,0.17,0.50,0.83,0.95]

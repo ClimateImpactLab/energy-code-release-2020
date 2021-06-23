@@ -6,7 +6,7 @@ library(glue)
 library(data.table)
 library(ncdf4)
 library(easyNCDF)
-
+library(tidyverse)
 
 #' Converts the N-dimensional array data of a netcdf into a flat, tabular data.
 #' @param nc_file character. The full path to the netcdf file, including '.nc4'. 
@@ -485,12 +485,10 @@ summary(d %>% filter(adapt == "-histclim-price014-aggregated"))
 
 
 d = read_csv("/shares/gcp/social/parameters/energy_pixel_interaction/extraction/multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/TINV_clim_GMFD/total_energy/SSP3-rcp85_states_damage-price014_median_fulluncertainty_low_fulladapt-aggregated.csv")
-d %>% filter(region == "USA.10", year == 2021)
+d %>% filter(region == "USA.10", year == 2020)
 
 
 d = read_csv("/shares/gcp/social/parameters/energy_pixel_interaction/extraction/multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/TINV_clim_GMFD/median_OTHERIND_electricity_TINV_clim_GMFD/SSP3-rcp85_global_impactpc_median_fulluncertainty_low_fulladapt-aggregated.csv")
  
-
-
 
 
