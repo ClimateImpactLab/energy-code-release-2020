@@ -149,13 +149,11 @@ args = list(
       dollar_convert = "yes",
       yearlist = 2099,  
       spec = "OTHERIND_total_energy",
-      grouping_test = "semi-parametric")
+      grouping_test = "semi-parametric",
+      regenerate = FALSE)
 
-impacts = do.call(load.median, args) 
-
-
-%>%
-	dplyr::select(region, mean, q5, q95) %>%
+impacts = do.call(load.median, args) %>%
+	dplyr::select(region, mean, q5, q10, q25, q50, q75, q90, q95) %>%
 	rename(damage = mean)
 
 write_csv(impacts, 
