@@ -74,8 +74,12 @@ foreach prod in "electricity" "other_energy" {
 	ren mean `prod'
 	ren q5 `prod'_q5
 	ren q95 `prod'_q95
-	collapse (mean) `prod' `prod'_q5 `prod'_q95 [aw=pop], by(country year)
-	keep country year `prod' `prod'_q5 `prod'_q95
+
+	ren q10 `prod'_q10
+	ren q90 `prod'_q90
+
+	collapse (mean) `prod' `prod'_q5 `prod'_q95 `prod'_q10 `prod'_q90 [aw=pop], by(country year)
+	keep country year `prod' `prod'_q5 `prod'_q95 `prod'_q10 `prod'_q90
 	tempfile `prod'_impacts
 	save ``prod'_impacts', replace
 	di "saving `prod' 2099 impacts tempfile"
@@ -115,6 +119,9 @@ foreach prod in "electricity" "other_energy" {
 	gen levels_`prod' = `prod' * pop
 	gen levels_`prod'_q5 = `prod'_q5 * pop
 	gen levels_`prod'_q95 = `prod'_q95 * pop
+
+	gen levels_`prod'_q10 = `prod'_q10 * pop
+	gen levels_`prod'_q90 = `prod'_q90 * pop
 
 }
 * Save as a csv for plotting in R using ggplot

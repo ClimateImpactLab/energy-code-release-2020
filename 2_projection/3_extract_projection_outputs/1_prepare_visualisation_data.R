@@ -60,7 +60,7 @@ get_main_model_impacts_maps = function(fuel, price_scen, unit, year, output){
                     spec = spec,
                     grouping_test = "semi-parametric",
                     regenerate = FALSE) %>%
-		dplyr::select(region, year, mean, q5, q95) %>%
+		dplyr::select(region, year, mean,  q5, q10, q25, q50, q75, q90, q95) %>%
 		dplyr::filter(year == !!year)
 
 	price_tag = ifelse(is.null(price_scen), "impact_pc", price)

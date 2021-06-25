@@ -33,6 +33,13 @@ get_df = function(region, rcp, fuel, price_scen = NULL, unit = "impactpc", dolla
 	print(paste0('------------------------------', region, '------------------------------'))
 
 	# browser()
+	# adapt = "incadapt"
+	# rcp = "rcp85"
+	# unit = "damage" 
+	# price_scen = "price014" 
+	# fuel = "OTHERIND_total_energy" 
+	# dollar_convert = "yes"
+
 
 	args = list(
 	    conda_env = "risingverse-py27",
@@ -51,13 +58,11 @@ get_df = function(region, rcp, fuel, price_scen = NULL, unit = "impactpc", dolla
 	    dollar_convert = dollar_convert, 
 	    yearlist = 2099,  
 	    spec = fuel,
-	    grouping_test = "semi-parametric")
+	    grouping_test = "semi-parametric",
+	    regenerate = FALSE)
 
-    plot_df = do.call(load.median, c(args, region = as.character(region)))
-    browser()
-
-      # %>% 
-                        # dplyr::select(year, mean)
+    plot_df = do.call(load.median, c(args, region = as.character(region)))%>% 
+        dplyr::select(year, mean, q5, q95)
 
     plot_df$adapt = as.character(adapt)
     plot_df$regions = as.character(region)
@@ -78,7 +83,17 @@ aggregated_regions = c("FUND-ANZ", "FUND-CAM", "FUND-CAN", "FUND-CHI", "FUND-EEU
 adapt = c("fulladapt","noadapt","incadapt")
 args = expand.grid(region = aggregated_regions, adapt = adapt)
 
-df = mapply(get_df, region = args$region, adapt = args$adapt, rcp = "rcp85", unit = "damage", price_scen = "price014", fuel = "OTHERIND_total_energy", dollar_convert = "yes", SIMPLIFY = FALSE)
+df = mcmapply(
+	FUN = get_df, 
+	region = aggregated_regions,
+	adapt = adapt, 
+	rcp = "rcp85", 
+	unit = "damage", 
+	price_scen = "price014", 
+	fuel = "OTHERIND_total_energy", 
+	dollar_convert = "yes", 
+	mc.cores = 16,
+	SIMPLIFY = FALSE)
 
 FUND_ours = do.call(rbind, c(df, make.row.names = TRUE))
 FUND_ours$regions = substr(FUND_ours$regions, 6,8)
@@ -159,14 +174,16 @@ FUND_all = merge(FUND_rebased, df_gdp_fund, by = c("year","regions")) %>%
 
 
 SSP3_all = merge(FUND_ours , df_gdp, by ="regions" ) %>%
-		mutate(percent_gdp_ssp3 = mean * 1000000000 / 0.0036 / region_gdp * 100)
+		mutate(percent_gdp_ssp3 = mean * 1000000000 / 0.0036 / region_gdp * 100,
+			percent_gdp_ssp3_q5 = q5 * 1000000000 / 0.0036 / region_gdp * 100,
+			percent_gdp_ssp3_q95 = q95 * 1000000000 / 0.0036 / region_gdp * 100)
 
 
 plot_df_gdp = merge(FUND_all, SSP3_all, by = c("regions"))
 
 
 
-df = plot_df_gdp %>% select(percent_gdp_fund, percent_gdp_ssp3, adapt, regions,regions_name) 
+df = plot_df_gdp %>% select(percent_gdp_fund, percent_gdp_ssp3, percent_gdp_ssp3_q5, percent_gdp_ssp3_q95, adapt, regions,regions_name) 
 
 
 df_long = df %>% gather(var, pct_gdp, -c(regions_name, adapt, regions))
