@@ -62,6 +62,7 @@ di "2010 Per Capita country level consumption saved"
 * 2. 2099 impacts
 **************************************
 
+
 foreach prod in "electricity" "other_energy" {
 
 	* Get the 2099 impact region level impacts data
@@ -71,8 +72,10 @@ foreach prod in "electricity" "other_energy" {
 	gen country = substr(region,1,3)
 	merge 1:1 region year using "`population'", assert(3) nogen
 	ren mean `prod'
-	collapse (mean) `prod' [aw=pop], by(country year)
-	keep country year `prod'
+	ren q5 `prod'_q5
+	ren q95 `prod'_q95
+	collapse (mean) `prod' `prod'_q5 `prod'_q95 [aw=pop], by(country year)
+	keep country year `prod' `prod'_q5 `prod'_q95
 	tempfile `prod'_impacts
 	save ``prod'_impacts', replace
 	di "saving `prod' 2099 impacts tempfile"
@@ -108,6 +111,9 @@ di "impacts saved"
 * Generate levels, by multiplying country level population with the PC impacts 
 foreach prod in "electricity" "other_energy" { 
 	gen levels_`prod' = `prod' * pop
+	gen levels_`prod'_q5 = `prod'_q5 * pop
+	gen levels_`prod'_q95 = `prod'_q95 * pop
+
 }
 * Save as a csv for plotting in R using ggplot
 export delimited using "`DB_data'/intermediate_data/figure_2B_bar_chart_data.csv", replace

@@ -14,13 +14,16 @@ source(glue("{REPO}/energy-code-release-2020/4_misc/",
 # # # testing function
 # out = ProcessImpacts(
 #   time_step="all",
-#   impact_type="impacts_gj",
-#   resolution="global", 
+#   impact_type="impacts_pct_gdp",
+#   resolution="states", 
 #   rcp="rcp85",
-#   stats="q83",
-#   fuel = "electricity",
+#   stats="q50",
+#   fuel = "total_energy",
 #   regenerate = FALSE,
 #   export = FALSE)
+
+
+
 
 
 # ###########################################################

@@ -6,6 +6,7 @@ rm(list = ls())
 
 # Load in the required packages, using the pacman package
 if(!require("pacman")){install.packages(("pacman"))}
+source("/home/liruixue/projection_repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 
 pacman::p_load(ggplot2, # plotting functions
                dplyr,   # data manipulation functions
@@ -32,7 +33,11 @@ df = readr::read_csv(paste0(data,'/figure_2B_bar_chart_data.csv')) %>%
   dplyr::filter(!is.na(electricity)) %>%
   dplyr::filter(electricity != 0) %>%
   dplyr::mutate(levels_electricity = levels_electricity / 1000000000, 
-                levels_other_energy = levels_other_energy  /1000000000 )
+                levels_other_energy = levels_other_energy  /1000000000,
+                levels_electricity_q5 = levels_electricity_q5 / 1000000000, 
+                levels_other_energy_q5 = levels_other_energy_q5  /1000000000,
+                levels_electricity_q95 = levels_electricity_q95 / 1000000000, 
+                levels_other_energy_q95 = levels_other_energy_q95  /1000000000)
 
 # Merge with the country names strings for plotting
 names = readr::read_csv(paste0(DB_data,"/miscellaneous/country_names.csv")) %>% 
@@ -46,7 +51,9 @@ eu = read_csv(paste0(DB_data,"/miscellaneous/eu_countries.csv")) %>%
 
 df2 = left_join(df,eu) %>%
 		dplyr::filter(tag==1) %>%
-		dplyr::select(c(year,levels_electricity, levels_other_energy)) %>%
+		dplyr::select(c(year,levels_electricity, levels_other_energy,
+      levels_electricity_q5, levels_other_energy_q5,
+      levels_electricity_q95, levels_other_energy_q95)) %>%
 		group_by(year) %>%
 		summarize_all(sum) %>%
 		data.frame() %>%
@@ -70,11 +77,13 @@ dfsellist = dfsel[dfsel$country %in%
 get_percent_change_df = function(fuel, df, list) {
   
   var_name = paste0("levels_", fuel)
-  
+  var_name_q5 = paste0(var_name, "_q5")
+  var_name_q95 = paste0(var_name, "_q95")
+
   pchange = df %>% 
               dplyr::left_join(list) %>% 
               dplyr::filter(!is.na(order)) %>% 
-    					dplyr::select(year,country_name,order,!!var_name) %>%
+    					dplyr::select(year,country_name,order,!!var_name,!!var_name_q5,!!var_name_q95) %>%
     					tidyr::spread(year,!!var_name,sep='_') %>%
               dplyr::mutate(pc=(year_2099/year_2010)*100, 
                                 yval =if_else(year_2099<year_2010,year_2010,year_2099)) %>%
@@ -95,12 +104,17 @@ plot_2B_bar_charts = function(fuel, df, list, output) {
     title = "Electricity"
     limits = c(0, 15)
     var_name = "levels_electricity"
+    var_name_q5 = paste0(var_name, "_q5")
+    var_name_q95 = paste0(var_name, "_q95")
   }
   if(fuel == "other_energy"){
     print('other energy plot!!')
     title = "Other Fuels"
     limits = c(-10, 50)
     var_name = "levels_other_energy"
+    var_name_q5 = paste0(var_name, "_q5")
+    var_name_q95 = paste0(var_name, "_q95")
+
   }
   
   #subset the dataframe
@@ -114,6 +128,12 @@ plot_2B_bar_charts = function(fuel, df, list, output) {
   		            y = get(var_name), fill=factor(year, levels=c(2099,2010) )),
   		         position="dodge", stat="identity", width=.6) +
   		geom_hline(yintercept=0, colour = 'lightgray', size=0.5, linetype='solid') +
+      geom_errorbar(aes(
+        x=reorder(country_name,-order), 
+        ymin = get(var_name_q5), 
+        ymax = get(var_name_q95)),
+        position = position_nudge(x = -0.15),
+        size = 0.3, width = 0.2) +
   		coord_flip() +
   		theme_minimal() +
   	  scale_y_continuous(limits = limits, expand = c(0,0)) +
@@ -142,6 +162,7 @@ plot_2B_bar_charts = function(fuel, df, list, output) {
 }
 # Run the functions!
 plt = plot_2B_bar_charts(fuel = "other_energy", df = dfsel, list = dfsellist, output  = output)
+# plt
 plt = plot_2B_bar_charts(fuel = "electricity", df = dfsel, list = dfsellist, output = output)
 
 
