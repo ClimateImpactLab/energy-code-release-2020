@@ -125,6 +125,7 @@ load.median <- function(yearlist = as.character(seq(1980,2100,1)),
   }
 
   if (!file.exists(paths$file)) {
+    print(paths$file)
     print('File does not already exist or we would like to regenerate, so we are extracting...')
     kwargs = rlist::list.append(kwargs, paths = paths)
     do.call(extract, kwargs)
