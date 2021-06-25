@@ -102,7 +102,7 @@ plot_2B_bar_charts = function(fuel, df, list, output) {
   if(fuel == "electricity"){
     print('electricity plot!!')
     title = "Electricity"
-    limits = c(0, 15)
+    limits = c(-1, 15)
     var_name = "levels_electricity"
     var_name_q5 = paste0(var_name, "_q5")
     var_name_q95 = paste0(var_name, "_q95")
@@ -110,7 +110,7 @@ plot_2B_bar_charts = function(fuel, df, list, output) {
   if(fuel == "other_energy"){
     print('other energy plot!!')
     title = "Other Fuels"
-    limits = c(-10, 50)
+    limits = c(-25, 50)
     var_name = "levels_other_energy"
     var_name_q5 = paste0(var_name, "_q5")
     var_name_q95 = paste0(var_name, "_q95")
@@ -133,7 +133,7 @@ plot_2B_bar_charts = function(fuel, df, list, output) {
         ymin = get(var_name_q5), 
         ymax = get(var_name_q95)),
         position = position_nudge(x = -0.15),
-        size = 0.3, width = 0.2) +
+        size =0.3, width = 0.15) +
   		coord_flip() +
   		theme_minimal() +
   	  scale_y_continuous(limits = limits, expand = c(0,0)) +
@@ -161,8 +161,8 @@ plot_2B_bar_charts = function(fuel, df, list, output) {
   return(plt)
 }
 # Run the functions!
-plt = plot_2B_bar_charts(fuel = "other_energy", df = dfsel, list = dfsellist, output  = output)
+plt1 = plot_2B_bar_charts(fuel = "other_energy", df = dfsel, list = dfsellist, output  = output)
 # plt
-plt = plot_2B_bar_charts(fuel = "electricity", df = dfsel, list = dfsellist, output = output)
+plt2 = plot_2B_bar_charts(fuel = "electricity", df = dfsel, list = dfsellist, output = output)
 
 

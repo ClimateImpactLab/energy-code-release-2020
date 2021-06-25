@@ -67,14 +67,22 @@ df_impacts = df_impacts %>%
 # Collapse to decile level
 df_plot = df_impacts %>% 
   group_by(decile) %>% 
-  summarize(total_damage_2099 = sum(damage), 
+  summarize(total_damage_2099 = sum(damage),
+            total_q5_2099 = sum(q5),
+            total_q95_2099 = sum(q95),
             total_pop_2099 = sum(pop99))%>%
-  mutate(damagepc = total_damage_2099 / total_pop_2099 )
+  mutate(damagepc = total_damage_2099 / total_pop_2099,
+         damagepc = total_q5_2099 / total_pop_2099,
+         damagepc = total_q95_2099 / total_pop_2099)
+
+
 
 
 # Plot and save 
 p = ggplot(data = df_plot) +
   geom_bar(aes( x=decile, y = damagepc ), 
+           position="dodge", stat="identity", width=.8) + 
+  geom_errorbar(aes( x=decile, y = damagepc ), 
            position="dodge", stat="identity", width=.8) + 
   theme_minimal() +
   ylab("Impact of Climate Change, 2019 USD") +
@@ -84,5 +92,60 @@ p = ggplot(data = df_plot) +
 ggsave(p, file = paste0(output, 
     "/fig_Extended_Data_fig_4-H1-new_SSP3-high_rcp85-total-energy-price014-damages_by_country_inc_decile.pdf"), 
     width = 8, height = 6)
+
+
+#######################################################################
+# mortality code
+p = ggplot() + 
+  geom_errorbar(
+    data = df_plot,  
+    aes(x=decile, ymin = pct_gdp_q5, ymax = pct_gdp_q95), 
+    color = "dodgerblue4",
+    lty = "solid",
+    width = 0,
+    alpha = 0.5,
+    size = 0.5) +
+  geom_boxplot(
+    data = df_plot, 
+    aes(group=decile, x=decile, ymin = pct_gdp_q10, ymax = pct_gdp_q90, 
+      lower = pct_gdp_q25, upper = pct_gdp_q75, middle = pct_gdp_q50), 
+    fill="dodgerblue4", 
+    color="white",
+    size = 0.2, 
+    stat = "identity") + #boxplot 
+  geom_point(
+    data = df_plot, 
+    aes(x=decile, y = pct_gdp_mean, group = 1), 
+    size=0.5, 
+    color="grey88", 
+    alpha = 0.9) + 
+  geom_abline(intercept=0, slope=0, size=0.1, alpha = 0.5) + 
+  scale_fill_gradientn(
+    colors = rev(brewer.pal(9, "RdGy"))) + 
+  scale_color_gradientn(
+    colors = rev(brewer.pal(9, "RdGy"))) + 
+  scale_x_discrete(limits=seq(1,10),breaks=seq(1,10)) +
+  theme_bw() +
+  theme() +
+  theme(
+    panel.grid.major = element_blank(), 
+    panel.grid.minor = element_blank(),
+    panel.background = element_blank(),
+    legend.position="none",
+    axis.line = element_line(colour = "black")) +
+  xlab("2015 Income Decile") +
+  ylab("percent gdp")+
+  # coord_cartesian(ylim = c(-350, 600)) +
+  ggtitle(paste0("Decile %GDP impact bar chart")) 
+
+
+
+ggsave(p, file = paste0(DIR_FIG, 
+    "/mc/SSP3-high_rcp85-pct-gdp_by_inc_decile_w_CI.pdf"), 
+    width = 8, height = 6)
+
+
+
+
 
 

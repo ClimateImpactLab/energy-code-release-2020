@@ -79,47 +79,6 @@ df = lapply(fuels, get_main_model_impacts_maps,
   price_scen = NULL, unit = "impactpc", year = 2090, output = output)
 
 
-get_main_model_impacts_maps_quantiles = function(fuel, price_scen, unit, year, output, quantile){
-  
-  spec = paste0("OTHERIND_", fuel)
-  df = load.median(conda_env = "risingverse-py27",
-                    proj_mode = '', # '' and _dm are the two options
-                    region = NULL, # needs to be specified for 
-                    rcp = "rcp85", 
-                    ssp = "SSP3", 
-                    price_scen = price_scen, # have this as NULL, "price014", "MERGEETL", ...
-                    unit =  unit, # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
-                    uncertainty = "full", # full, climate, values
-                    geo_level = "levels", # aggregated (ir agglomerations) or 'levels' (single irs)
-                    iam = "high", 
-                    model = "TINV_clim", 
-                    adapt_scen = "fulladapt", 
-                    clim_data = "GMFD", 
-                    yearlist = year,  
-                    spec = spec,
-                    grouping_test = "semi-parametric",
-                    regenerate = FALSE) %>%
-    dplyr::select(region, year, mean, !!quantile) %>%
-    dplyr::filter(year == !!year) %>% 
-
-  price_tag = ifelse(is.null(price_scen), "impact_pc", price)
-  write_csv(df, 
-    paste0(output, '/projection_system_outputs/mapping_data/', 
-      'main_model-', fuel, '-SSP3-rcp85-high-fulladapt-',price_tag, '-', quantile, '-',year,'-map.csv'))
-}
-
-fuels = c("electricity","other_energy")
-
-df = lapply(fuels, get_main_model_impacts_maps, 
-  price_scen = NULL, unit = "impactpc", year = 2099, output = output)
-
-get_main_model_impacts_maps_quantiles(fuel="electricity", 
-  price_scen=NULL, 
-  unit="impactpc", 
-  year=2099, 
-  output=output, 
-  quantile="q5")
-
 ###############################################
 # Get time series data for figure 2C
 ################### done############################
@@ -192,8 +151,11 @@ args = list(
       spec = "OTHERIND_total_energy",
       grouping_test = "semi-parametric")
 
-impacts = do.call(load.median, args) %>%
-	dplyr::select(region, mean) %>%
+impacts = do.call(load.median, args) 
+
+
+%>%
+	dplyr::select(region, mean, q5, q95) %>%
 	rename(damage = mean)
 
 write_csv(impacts, 
