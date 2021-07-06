@@ -98,11 +98,15 @@ if ( "`submodel_ov'" != "" ) {
 
 	local plot_title "main_model_`plot_title'_overlay_model_`submodel_ov'"
 
-	if "`submodel_ov'" == "lininter" {
-		local fig "fig_Appendix-I3B"
+	if ("`submodel_ov'" == "lininter" ) {
+		local fig "fig_Appendix-G3B"
 	}
+	
 	if "`submodel_ov'" == "EX" {
-		local fig "fig_Appendix-I2"
+		local fig "fig_Appendix-G2"
+	}
+	if ("`submodel_ov'" == "quadinter") {
+		exit, clear
 	}
 
 }
@@ -129,7 +133,8 @@ forval lg=3(-1)1 {	//Income tercile
 		use "$root/data/break_data_`model_main'.dta", clear
 		duplicates drop tpid tgpid, force
 		sort tpid tgpid 
-		local tr_index = `tr' * 3 // create index for grabbing the long run climate to plot in each cell
+		local tr_index = `tr' * 3 
+		// create index for grabbing the long run climate to plot in each cell
 		local subCDD = avgCDD_tpid[`tr_index']
 		local subHDD = avgHDD_tpid[`tr_index']
 		local subInc = avgInc_tgpid[`lg']
@@ -174,13 +179,18 @@ forval lg=3(-1)1 {	//Income tercile
 			foreach k of num 1/2 {
 				
 				local line = " `line' `add' _b[c.indp`pg'#c.indf1#c.FD_temp`k'_GMFD] * (temp`k' - 20^`k')"
-				local line = "`line' + above20*_b[c.indp`pg'#c.indf`fg'#c.FD_cdd20_TINVtemp`k'_GMFD]*`subCDD' * (temp`k' - 20^`k')"
-				local line = "`line' + below20*_b[c.indp`pg'#c.indf`fg'#c.FD_hdd20_TINVtemp`k'_GMFD]*`subHDD' * (20^`k' - temp`k')"
-				local line = "`line' + _b[c.indp`pg'#c.indf`fg'#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
+				local line = "`line' + above20*_b[c.indp`pg'#c.indf1#c.FD_cdd20_TINVtemp`k'_GMFD]*`subCDD' * (temp`k' - 20^`k')"
+				local line = "`line' + below20*_b[c.indp`pg'#c.indf1#c.FD_hdd20_TINVtemp`k'_GMFD]*`subHDD' * (20^`k' - temp`k')"
+				local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
 
-				if (strpos("`plot_model'", "lininter") > 0) {
-					local line = "`line' + _b[c.indp`pg'#c.indf`fg'#c.FD_yeartemp`k'_GMFD] * (temp`k' - 20^`k')*`year'"
-					local line = "`line' + _b[c.indp`pg'#c.indf`fg'#c.FD_dc1_lgdppc_MA15yearI`ig'temp`k']*`deltacut_subInc'*`year'*(temp`k' - 20^`k')"
+				if ((strpos("`plot_model'", "lininter") > 0) | (strpos("`plot_model'", "quadinter") > 0)) {
+					local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_yeartemp`k'_GMFD] * (temp`k' - 20^`k')*`year'"
+					local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15yearI`ig'temp`k']*`deltacut_subInc'*`year'*(temp`k' - 20^`k')"
+				}
+
+				if (strpos("`plot_model'", "quadinter") > 0) {
+					local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_year2temp`k'_GMFD] * (temp`k' - 20^`k')*`year'*`year'"
+					local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15year2I`ig'temp`k']*`deltacut_subInc'*`year'*`year'*(temp`k' - 20^`k')"
 				}
 
 				local add " + "
@@ -231,3 +241,4 @@ graph combine `graphicM', imargin(zero) ycomm rows(3) ///
 graph export "$root/figures/`fig'_`var'_interacted_`plot_title'.pdf", replace
 
 graph drop _all	
+

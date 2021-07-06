@@ -10,14 +10,13 @@ set scheme s1color
 
 local model = "$model" // What is the main model for this plot?
 local var = "$product" // What product's response function are we plotting?
-local fig = "fig_Appendix-I3A" // Whats the plots figure number in the paper?
+local fig = "fig_Appendix-G3A" // Whats the plots figure number in the paper?
 
 ********************************************************************************
 * Step 1: Load Data and Clean for Plotting
 ********************************************************************************
 		
 use "$root/data/GMFD_`model'_regsort.dta", clear
-
 //Set up locals for plotting
 local obs = 35 + abs(-5) + 1
 
@@ -48,6 +47,7 @@ local ibar = `r(max)'
 restore
 
 * load temporal trend ster file
+
 
 estimates use "$root/sters/FD_FGLS_inter_`model'_lininter.ster"
 
@@ -114,5 +114,6 @@ subtitle("Marginal Effect of Time `var'", size(small)) ///
 plotregion(color(white)) graphregion(color(white)) name(comb`i', replace)
 graph export "$root/figures/`fig'_ME_time_`model'_lininter_`var'.pdf", replace
 graph drop _all
+
 
 

@@ -1,6 +1,6 @@
 results-root:
-  FD_FGLS_inter_OTHERIND_other_energy_TINV_clim.*: /shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost/median_OTHERIND_other_energy_TINV_clim_
-  FD_FGLS_inter_OTHERIND_electricity_TINV_clim.*: /shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost/median_OTHERIND_electricity_TINV_clim_
+  FD_FGLS_inter_OTHERIND_other_energy_TINV_clim.*: /shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost/median_OTHERIND_other_energy_TINV_clim_GMFD
+  FD_FGLS_inter_OTHERIND_electricity_TINV_clim.*: /shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost/median_OTHERIND_electricity_TINV_clim_GMFD
 output-dir: /shares/gcp/social/parameters/energy_pixel_interaction/extraction/multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/TINV_clim_GMFD/total_energy/price014pc
 file-organize: [ssp, region]
 do-montecarlo: no

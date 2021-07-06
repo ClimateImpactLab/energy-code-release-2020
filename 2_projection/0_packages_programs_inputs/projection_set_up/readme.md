@@ -6,7 +6,7 @@ Files in this folder are used by codes that generate projection configuration an
   - The csvv writer is set up to write two kinds of csvvs:
     - `TINV_clim` which is the main model in the paper (See Methods, Appendix Section C.3). 
     - `TINV_clim_lininter` which is the model with a linear time interaction presented in the paper (See Appendix Section I.3). 
-    - Note - the `TINV_clim_lininter_double` model (Appendix Section I.3) uses the same csvv as the `TINV_clim_lininter` model. This is because they use the same regression specification and coefficients. We just specify that we deterministically double the time trend in the run configuration file. 
+    - Note - the `TINV_clim_lininter_double` and `TINV_clim_lininter_half` model (Appendix Section I.3) uses the same csvv as the `TINV_clim_lininter` model. This is because they use the same regression specification and coefficients. We just specify that we deterministically double the time trend in the run configuration file. 
     - The  `slow_adapt` scenario presented in Appendix Section I.1 uses the same csvv as main model (`TINV_clim`). Similarly, this is because this model uses the same coefficients as the main model - we just deterministically halve the adaptation in the configuration file when running the projection.
 
 - `projection_specifications.csv` is used to keep track of the coefficient names used by each model. 

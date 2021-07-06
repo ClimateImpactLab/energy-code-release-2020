@@ -151,24 +151,25 @@ def temperatures_anomaly(PULSE_YEAR,
 	    # copy the emissions object
 	    scen.Plus = copy.deepcopy(scen.Emissions)
 	    # add an additional impulse of fossil CO2
-	    scen.Plus.co2_fossil = (
-	        scen.Plus.co2_fossil + np.where(scen.Plus.year == PULSE_YEAR, PULSE_AMT, 0))
+	    scen.Plus.new_co2_fossil = (
+	        scen.Emissions.co2_fossil + np.where(scen.Plus.year == PULSE_YEAR, PULSE_AMT, 0))
 	    # update the emissions accounting throughout the data object to reflect the change
 	    # Second line sums over fossil and land use CO2.
-	    scen.Plus.emissions[:,1] = scen.Plus.co2_fossil
-	    scen.Plus.co2 = np.sum(scen.Plus.emissions[:,1:3],axis=1)
+	    scen.Plus.new_emissions = scen.Plus.emissions.copy()
+	    scen.Plus.new_emissions[:,1] = scen.Plus.new_co2_fossil
+	    scen.Plus.new_co2 = np.sum(scen.Plus.new_emissions[:,1:3],axis=1)
 
 	# Run FAIR for each of these new scenarios
-	C26p, F26p, T26p = fair.forward.fair_scm(emissions=rcp3pd.Plus.emissions,tcrecs=np.array([tcr,ecs]),
+	C26p, F26p, T26p = fair.forward.fair_scm(emissions=rcp3pd.Plus.new_emissions,tcrecs=np.array([tcr,ecs]),
 	            tau=np.array([1000000, 394.4, 36.54, tau4]),
 	            d=np.array([239.0, d2]))
-	C45p, F45p, T45p = fair.forward.fair_scm(emissions=rcp45.Plus.emissions,tcrecs=np.array([tcr,ecs]),
+	C45p, F45p, T45p = fair.forward.fair_scm(emissions=rcp45.Plus.new_emissions,tcrecs=np.array([tcr,ecs]),
 	            tau=np.array([1000000, 394.4, 36.54, tau4]),
 	            d=np.array([239.0, d2]))
-	C60p, F60p, T60p = fair.forward.fair_scm(emissions=rcp6.Plus.emissions,tcrecs=np.array([tcr,ecs]),
+	C60p, F60p, T60p = fair.forward.fair_scm(emissions=rcp6.Plus.new_emissions,tcrecs=np.array([tcr,ecs]),
 	            tau=np.array([1000000, 394.4, 36.54, tau4]),
 	            d=np.array([239.0, d2]))
-	C85p, F85p, T85p = fair.forward.fair_scm(emissions=rcp85.Plus.emissions,tcrecs=np.array([tcr,ecs]),
+	C85p, F85p, T85p = fair.forward.fair_scm(emissions=rcp85.Plus.new_emissions,tcrecs=np.array([tcr,ecs]),
 	            tau=np.array([1000000, 394.4, 36.54, tau4]),
 	            d=np.array([239.0, d2]))
 
@@ -187,12 +188,12 @@ def temperatures_anomaly(PULSE_YEAR,
 		ax3.set_ylabel('Total radiative forcing (W.m$^{-2}$)')
 		ax4.set_ylabel('Temperature anomaly (K)');
 
-		ax1.plot(rcp45.Plus.year, (rcp45.Plus.co2_fossil - rcp45.Emissions.co2_fossil), color='blue', label='RCP4.5')
+		ax1.plot(rcp45.Plus.year, (rcp45.Plus.new_co2_fossil - rcp45.Emissions.co2_fossil), color='blue', label='RCP4.5')
 		ax2.plot(rcp45.Plus.year, (C45p[:, 0] - C45[:, 0]), color='blue')
 		ax3.plot(rcp45.Plus.year, np.sum((F45p-F45), axis=1), color='blue')
 		ax4.plot(rcp45.Plus.year, (T45p-T45), color='blue')
 
-		ax1.plot(rcp85.Plus.year, (rcp85.Plus.co2_fossil - rcp85.Emissions.co2_fossil), color='black', label='RCP8.5')
+		ax1.plot(rcp85.Plus.year, (rcp85.Plus.new_co2_fossil - rcp85.Emissions.co2_fossil), color='black', label='RCP8.5')
 		ax2.plot(rcp85.Plus.year, (C85p[:, 0] - C85[:, 0]), color='black')
 		ax3.plot(rcp85.Plus.year, np.sum((F85p-F85), axis=1), color='black')
 		ax4.plot(rcp85.Plus.year, (T85p-T85), color='black')
@@ -202,12 +203,12 @@ def temperatures_anomaly(PULSE_YEAR,
 		fig.savefig('{}/fair_response_to_impulse_scenarios.pdf'.format(output))
 
 		if plot_all_scenarios:
-			ax1.plot(rcp3pd.Plus.year, (rcp3pd.Plus.co2_fossil - rcp3pd.Emissions.co2_fossil), color='green', label='RCP3PD')
+			ax1.plot(rcp3pd.Plus.year, (rcp3pd.Plus.new_co2_fossil - rcp3pd.Emissions.co2_fossil), color='green', label='RCP3PD')
 			ax2.plot(rcp3pd.Plus.year, (C26p[:, 0] - C26[:, 0]), color='green')
 			ax3.plot(rcp3pd.Plus.year, np.sum((F26p-F26), axis=1), color='green')
 			ax4.plot(rcp3pd.Plus.year, (T26p-T26), color='green')
 
-			ax1.plot(rcp6.Plus.year, (rcp6.Plus.co2_fossil - rcp6.Emissions.co2_fossil), color='red', label='RCP6')
+			ax1.plot(rcp6.Plus.year, (rcp6.Plus.new_co2_fossil - rcp6.Emissions.co2_fossil), color='red', label='RCP6')
 			ax2.plot(rcp6.Plus.year, (C60p[:, 0] - C60[:, 0]), color='red')
 			ax3.plot(rcp6.Plus.year, np.sum((F60p-F60), axis=1), color='red')
 			ax4.plot(rcp6.Plus.year, (T60p-T60), color='red')
@@ -250,7 +251,7 @@ def temperatures_anomaly(PULSE_YEAR,
 	# Calculate temperature anomalies
 	fair_temperatures_anomaly = (
 	    fair_temperatures
-	    - fair_temperatures.sel(year=slice(2001, 2011)).mean(dim='year'))
+	    - fair_temperatures.sel(year=slice(2001, 2010)).mean(dim='year'))
 
 	print('Finished loading FAIR')
 

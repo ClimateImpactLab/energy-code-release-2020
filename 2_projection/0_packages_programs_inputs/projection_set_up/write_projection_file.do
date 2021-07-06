@@ -172,9 +172,17 @@ syntax , unit(string) [ price_scen(string) ] product(string)
 	}
 	else if (strpos("`price_scen'", "price") != 0) {
 
-		local growth_rate = substr("`price_scen'",strpos("`price_scen'","0"),.)
+		local growth_rate = substr("`price_scen'",strpos("`price_scen'","0"),.)	
 		local pricing = substr("`price_scen'",1,strpos("`price_scen'","0") - 1)
+
+		// make exception for -0,27% growth
+		if strpos("`price_scen'", "0027") > 0{
+			local growth_rate = "m0027"
+			local pricing = "price"
+		}
+
 		local price_data = "`price_data'/IEA_Price_FIN_Clean_gr`growth_rate'_GLOBAL_COMPILE.dta"
+	
 
 	}
 
@@ -219,6 +227,8 @@ end
 program define write_2product_results_root 
 syntax , product_list(string) csvv(string) [ proj_mode(string) ] uncertainty(string) proj_output(string)
 	
+	* TO-DO: fixing a bug in clim_data, delete when done
+
 	di "parsing stem..."
 	local stem = substr("`csvv'", 1,strpos("`csvv'","OTHERIND") + length("OTHERIND"))
 	di "stem: `stem'"
@@ -226,7 +236,8 @@ syntax , product_list(string) csvv(string) [ proj_mode(string) ] uncertainty(str
 	local proj_model = substr("`csvv'", strpos("`csvv'","TINV"), .)
 	di "model: `proj_model'"
 	di "parsing climate data..."
-	local clim_data = substr("`csvv'", strpos("`csvv'","clim") + length("clim"), 4)
+	*local clim_data = substr("`csvv'", strpos("`csvv'","clim") + length("clim"), 4)
+	local clim_data "GMFD"
 	di "climate data: `clim_data'"
 	
 	di "writing results roots..."
@@ -253,7 +264,7 @@ syntax , uncertainty(string)
 		local evalqvals "['mean', 0.05, 0.95]"
 	} 
 	else if inlist("`uncertainty'", "full") {
-		local evalqvals "['mean', .5, 0.05, 0.95, 0.10, 0.90, 0.75, 0.25]"
+		local evalqvals "['mean', .5, 0.05, 0.17, 0.83, 0.95, 0.10, 0.90, 0.75, 0.25]"
 	} 
 	else {
 		local evalqvals ""
@@ -364,6 +375,9 @@ syntax , product(string) proj_type(string) [ proj_mode(string) ] break_data(stri
 	if("`proj_model'" == "TINV_clim_lininter_double"){
 		file write yml "yearcovarscale: 2" _n
 	}
+	if("`proj_model'" == "TINV_clim_lininter_half"){
+		file write yml "yearcovarscale: 0.5" _n
+	}
 
 	file close yml
 end
@@ -470,9 +484,11 @@ syntax ,  product(string) sys(string) proj_type(string) proj_model(string) unit(
 	} 
 	* add an option to aggregate only fulladapt and histclim
 	* for projections other than main model point estimate
-	if ! (("`proj_type'"=="median") & (strpos("`proj_mode'", "_dm") == 0)) {
+	if !(("`proj_type'"!="median") & (strpos("`proj_model'", "lininter") == 0)) {
 		file write yml "only-farmers: ['', 'histclim']" _n
 	}
+	* updated: we now want to aggregate all SSPs
+	* file write yml "ssp: SSP3"
 
 	file close yml
 end
@@ -724,7 +740,7 @@ syntax , product(string) proj_model(string) partition(string) config_output(stri
 		local cpus 12
 	}
 	else {
-		local cpus 24
+		local cpus 10
 	}
 
 	file open sh using "`partition'_`product'`proj_mode'.sh", write replace
@@ -744,9 +760,9 @@ syntax , product(string) proj_model(string) partition(string) config_output(stri
 	file write sh _n
 	file write sh "## Command(s) to run:" _n
 	file write sh _n
-	file write sh "export SINGULARITY_BINDPATH=/global/scratch/groups/co_laika/" _n
+	file write sh "export SINGULARITY_BINDPATH=/global/scratch2/groups/co_laika/" _n
 	file write sh _n
-	file write sh "/global/scratch/groups/co_laika/gcp-generate.img `config_server_path'/run/median/`run_config_name' `cpus'"
+	file write sh "/global/scratch2/groups/co_laika/gcp-generate.img `config_server_path'/laika/run/median/`run_config_name' `cpus'"
 
 	file close sh
 end
@@ -812,9 +828,9 @@ syntax , [ product(string) ] [ two_product(string) ] [ product_list(string) ] [ 
 	}
 
 	// get multiimpact vcv and setup two_product tag
-
+	* TO-DO: corrected bug here, removed -fixed, need to confirm it's correct
 	if ( "`two_product'" == "TRUE" ) {
-		local vcv "`csvv_path'/`stem'`proj_model'-fixed.csv"
+		local vcv "`csvv_path'/`stem'`proj_model'.csv"
 		local product "total_energy"
 	}
 

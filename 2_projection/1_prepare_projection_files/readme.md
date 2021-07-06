@@ -37,8 +37,8 @@ Please see documentation in the `impacts-calculation` projection system repo for
     - This `.csv` file contains information on which variables are in each model. 
 #### Code outputs
 - CSVV files for three models: 
-  - The three models are `TINV_clim`, `TINV_clim_lininter`, and `TINV_clim_lininter_double`. 
-  - Please note - the csvvs for the `TINV_clim_lininter` and `TINV_clim_lininter_double` models are identical, as both pull in the same regression coefficients, and have the same model specifications. They have different config files, however. 
+  - The four models are `TINV_clim`, `TINV_clim_lininter`,  `TINV_clim_lininter_double`, and , `TINV_clim_lininter_half`. 
+  - Please note - the csvvs for the `TINV_clim_lininter` and `TINV_clim_lininter_double` and `TINV_clim_lininter_half` models are identical, as both pull in the same regression coefficients, and have the same model specifications. They have different config files, however. 
   - Note also, the `slow_adapt` scenario projection presented in Appendix I.1 uses the same csvv as main model (`TINV_clim`). Similarly, this is because this model uses the same coefficients as the main model - we just limit the adaptation in the configuration file when running the projection.
 - For each model, we generate three `csvv` files. 
   1. A `csvv` for the `electricity` projection.

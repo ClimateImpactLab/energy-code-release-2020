@@ -13,11 +13,11 @@ library(ncdf4)
 library(tidyr)
 cilpath.r:::cilpath()
 
-
+REPO <- "/home/liruixue/repos"
 db = '/mnt/CIL_energy/'
-output = '/mnt/CIL_energy/pixel_interaction/'
+output = '/mnt/CIL_energy/code_release_data_pixel_interaction/'
 
-dir = paste0('/shares/gcp/social               nn  //eters/energy_pixel_interaction/extraction/',
+dir = paste0('/shares/gcp/social/parameters/energy_pixel_interaction/extraction/',
 				'multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/')
 
 # Make sure you are in the risingverse-py27 for this... 
@@ -26,7 +26,6 @@ setwd(paste0(REPO))
 
 # Source codes that help us load projection system outputs
 miceadds::source.all(paste0(projection.packages,"load_projection/"))
-
 
 # Note on naming convention: 
 # Time series naming convention:
@@ -38,8 +37,8 @@ miceadds::source.all(paste0(projection.packages,"load_projection/"))
 
 
 ###############################################
-# Impacts maps for figure 2A
-###############################################
+# Impacts maps for figure 2A 
+######################done#########################
 
 get_main_model_impacts_maps = function(fuel, price_scen, unit, year, output){
 	
@@ -59,41 +58,38 @@ get_main_model_impacts_maps = function(fuel, price_scen, unit, year, output){
                     clim_data = "GMFD", 
                     yearlist = year,  
                     spec = spec,
-                    grouping_test = "semi-parametric") %>%
-		dplyr::select(region, year, mean) %>%
-		dplyr::filter(year == !!year) %>% 
-		mutate(mean =mean * 0.0036)
+                    grouping_test = "semi-parametric",
+                    regenerate = TRUE) %>%
+		dplyr::select(region, year, mean,  q5, q10, q25, q50, q75, q90, q95) %>%
+		dplyr::filter(year == !!year)
 
 	price_tag = ifelse(is.null(price_scen), "impact_pc", price)
-
-	write_csv(df, 
+  write_csv(df, 
 		paste0(output, '/projection_system_outputs/mapping_data/', 
-			'main_model-', fuel, '-SSP3-rcp85-high-fulladapt-',price_tag ,'-2099-map.csv'))
+			'main_model-', fuel, '-SSP3-rcp85-high-fulladapt-',price_tag ,'-',year,'-map.csv'))
 }
 
-fuels = c("electricity", "other_energy")
+fuels = c("electricity","other_energy")
 
 df = lapply(fuels, get_main_model_impacts_maps, 
 	price_scen = NULL, unit = "impactpc", year = 2099, output = output)
 
-
-	
-
+# get data for some sanity checks
+df = lapply(fuels, get_main_model_impacts_maps, 
+  price_scen = NULL, unit = "impactpc", year = 2090, output = output)
 
 
 ###############################################
 # Get time series data for figure 2C
-###############################################
-
+################### done############################
 fuels = c("electricity", "other_energy")
 rcps = c("rcp85", "rcp45")
-adapt = c("fulladapt", "noadapt")
+adapt = c("fulladapt", "noadapt","incadapt")
 options = expand.grid(fuels = fuels, rcps = rcps, adapt= adapt)
 
 get_main_model_impacts_ts = function(fuel, rcp, adapt) {
 
 	spec = paste0("OTHERIND_", fuel)
-	scale = function(x) (x* 0.0036)
 	names = c("mean", "q50", "q5", "q95", "q10", "q90", "q75","q25")
 
 	df = load.median(  
@@ -113,8 +109,7 @@ get_main_model_impacts_ts = function(fuel, rcp, adapt) {
                     yearlist = as.character(seq(1980,2099,1)),  
                     spec = spec,
                     grouping_test = "semi-parametric")%>%
-		dplyr::filter(year > 2009)  %>%
-	    mutate_at(names, scale)
+		dplyr::filter(year > 2009) 
 	
 	write_csv(df, 
 		paste0(output, '/projection_system_outputs/time_series_data/', 
@@ -130,7 +125,7 @@ mcmapply(get_main_model_impacts_ts,
 
 ###############################################
 # Figure 3
-###############################################
+######################done#########################
 
 # 3A  
 # Need GDP data, at IR level, damages in 2099, and values csvs for each featured IR
@@ -154,10 +149,11 @@ args = list(
       dollar_convert = "yes",
       yearlist = 2099,  
       spec = "OTHERIND_total_energy",
-      grouping_test = "semi-parametric")
+      grouping_test = "semi-parametric",
+      regenerate = FALSE)
 
 impacts = do.call(load.median, args) %>%
-	dplyr::select(region, mean) %>%
+	dplyr::select(region, mean, q5, q10, q25, q50, q75, q90, q95) %>%
 	rename(damage = mean)
 
 write_csv(impacts, 
@@ -165,7 +161,7 @@ write_csv(impacts,
 			'main_model-total_energy-SSP3-rcp85-high-fulladapt-price014-2099-map.csv'))
 
 
-###########################################
+#####################done######################
 # Get values csvs for the kernel density plots
 
 IR_list = c("USA.14.608", "SWE.15", "CHN.2.18.78", "CHN.6.46.280", "IND.21.317.1249", "BRA.25.5235.9888")
@@ -242,7 +238,6 @@ get_IR_values_csv = function(IR) {
 	return(df_joined)
 }
 
-
 df = lapply(IR_list, get_IR_values_csv) %>% 
 	bind_rows() %>% as.data.frame()
 
@@ -250,12 +245,12 @@ write_csv(df, paste0(output, '/projection_system_outputs/IR_GCM_level_impacts/',
 	'gcm_damages-main_model-total_energy-SSP3-rcp85-high-fulladapt-price014-2099-select_IRs.csv'))
 
 
-###############################################
+######################done#########################
 # Get GCM list, and their respective weights, for use in the kernel density plots
 # NOte - this pulls a gcm_weights csv from the mortality dropbox
 get.normalized.weights <- function (rcp='rcp85') {
 
-  df = read_csv('/mnt/norgay_synology_drive/Global ACP/damage_function/GMST_anomaly/gcm_weights.csv') 
+  df = read_csv('/mnt/Global_ACP/damage_function/GMST_anomaly/gcm_weights.csv') 
 
   if (rcp == 'rcp45'){
   	df$weight[df$gcm == "surrogate_GFDL-ESM2G_06"] = 0
@@ -274,7 +269,7 @@ df = df[,c("gcm", "norm_weight_rcp45", "norm_weight_rcp85")]
 write_csv(df, paste0(output, '/miscellaneous/gcm_weights.csv'))
 
 
-###############################################
+######################done#########################
  # 2 Load the impacts data for figure 3 time series as percent GDP
 
 args = list(
@@ -309,10 +304,44 @@ rcps = c("rcp45", "rcp85")
 lapply(rcps, get_df_ts_main_model_total_energy, args = args) 
 
 
+# incadapt version for producing timeseries for referee comments
+args = list(
+    conda_env = "risingverse-py27",
+    # proj_mode = '', # '' and _dm are the two options
+    region = "global", # needs to be specified for 
+    # rcp = "rcp85", 
+    ssp = "SSP3", 
+    price_scen = "price014", # have this as NULL, "price014", "MERGEETL", ...
+    unit =  "damage", # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
+    uncertainty = "full", # full, climate, values
+    geo_level = "aggregated", # aggregated (ir agglomerations) or 'levels' (single irs)
+    iam = "high", 
+    model = "TINV_clim", 
+    adapt_scen = "incadapt", 
+    clim_data = "GMFD", 
+    yearlist = as.character(seq(2010,2100,1)),  
+    spec = "OTHERIND_total_energy",
+    dollar_convert = "yes",
+    grouping_test = "semi-parametric")
+
+get_df_ts_main_model_total_energy = function(rcp, args) {
+  plot_df = do.call(load.median, c(args, rcp = rcp, proj_mode = '')) %>% 
+                          dplyr::select(year, mean, q5, q95, rcp) %>%
+                          mutate(rcp = !!rcp)
+  write_csv(plot_df, 
+    paste0(output, '/projection_system_outputs/time_series_data/', 
+      'main_model-total_energy-SSP3-',rcp, '-high-incadapt-price014.csv'))
+}
+
+rcps = c("rcp85")
+lapply(rcps, get_df_ts_main_model_total_energy, args = args) 
+
+
+
 
 ##########################
 # Covariate data for blob plots: 
-##########################
+#############done#############
       
 # Note - this is the output from a single run, since that produces an allcalcs file
 
@@ -333,7 +362,7 @@ write_csv(covars,
 
 ####################################################
  # Get time series data for global by rcp plots in figure D1
-####################################################
+######################## done ############################
 
 get_df_by_price_rcp = function(rcp, price) {
 
@@ -388,7 +417,7 @@ mapply(get_df_by_price_rcp, price=options$price, rcp = options$rcp, SIMPLIFY = F
 
 ############################################################
 # Slow adapt time series - ccsm 4 - extract a time series of global impacts-pc
-############################################################
+########################## need rcp45? ##################################
       
 # Note - we pull these impacts straight from the ncdf projection system output
       
@@ -398,12 +427,12 @@ get_file_name = function(type, fuel=NULL, double = NULL, histclim= NULL, rcp, dm
 		histclim = "-histclim"
 	}
 
-	dir = "/mnt/battuta_shares/gcp/outputs/energy/impacts-blueghost/"
+	dir = "/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost/"
 
 	if(type == "SA_single") {
 		folder = paste0("single-OTHERIND_", fuel, "_FD_FGLS_1401_TINV_clim_GMFD_slow_adapt/", 
 			rcp, "/CCSM4/high/SSP3/")
-		name = paste0("FD_FGLS_inter_climGMFD_Exclude_all-issues_break2_semi-parametric_poly2_OTHERIND_", 
+		name = paste0("FD_FGLS_inter_OTHERIND_", 
 			fuel , "_TINV_clim")
 
 		file = paste0(dir, folder, name, histclim, ".nc4")	
@@ -411,7 +440,7 @@ get_file_name = function(type, fuel=NULL, double = NULL, histclim= NULL, rcp, dm
 	if(type == "main_model_single") {
 		folder_stem = paste0("median_OTHERIND_", fuel, "_TINV_clim")
 		extra_folder_stem = paste0("_GMFD/median/",rcp,"/CCSM4/high/SSP3/")
-		name = paste0("FD_FGLS_inter_climGMFD_Exclude_all-issues_break2_semi-parametric_poly2_OTHERIND_",  
+		name = paste0("FD_FGLS_inter_OTHERIND_",  
 			fuel, "_TINV_clim")
 
 		file = paste0(dir, folder_stem, extra_folder_stem, name, histclim, ".nc4")	
@@ -485,9 +514,9 @@ join_df = function(type, pop_df, fuel){
 save_csv_single = function(type, fuel, pop_df){
 	
 	df = join_df(type = type, pop_df = pop_df, fuel = fuel) %>%
-		mutate(type = type)  %>%
-    	mutate(mean = (value * 0.0036) ) %>%
-    	dplyr::select(-value)
+		mutate(type = type) %>%
+      mutate(mean = value ) %>%
+      dplyr::select(-value)
 
 	write_csv(df, paste0(output, "/projection_system_outputs/time_series_data/CCSM4_single/",
 		type,"-",fuel,"-SSP3-high-fulladapt-impact_pc.csv"))
@@ -508,10 +537,10 @@ save_csv_single(type = "main_model_single", pop_df = pop_df, fuel = "electricity
 
 
 
-
 ############################################################
 # lininter time series - for appendix figure I3
-############################################################
+#######################done#####################################
+
 
 get_plot_df = function(adapt="fulladapt", spec, rcp, model) {
 
@@ -536,8 +565,7 @@ get_plot_df = function(adapt="fulladapt", spec, rcp, model) {
       grouping_test = "semi-parametric")
 
       df = do.call(load.median, args) %>% 
-            select(year, mean) %>%
-            mutate(mean = mean * 0.0036)
+            select(year, mean)
       print('unit is going to be gigajoules per capita!')
       print(paste0('adaptation scenario is ', adapt))
       return(df)

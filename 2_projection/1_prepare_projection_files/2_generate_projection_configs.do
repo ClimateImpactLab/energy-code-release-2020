@@ -18,9 +18,10 @@ clear all
 set more off
 macro drop _all
 pause off
+set trace off
 cilpath
 // path to energy-code-release repo 
-* global root "C:/Users/TomBearpark/Documents/energy-code-release-2020"
+* global root "/home/liruixue/repos/energy-code-release-2020"
 global root "$REPO/energy-code-release-2020"
 
 * This is used to  
@@ -35,8 +36,9 @@ qui do $root/2_projection/0_packages_programs_inputs/projection_set_up/write_pro
 ******Set Script Toggles********************************************************
 
 // which ssps do you want to project results for?
-local ssp_list  "SSP3" //"[SSP2, SSP4] " //"'SSP3'"
-
+local ssp_list  "[SSP1, SSP2, SSP3, SSP4, SSP5]"
+*local ssp_list  "SSP3"
+*local ssp_list "[SSP2, SSP4]"
 
 ******** Set parameters for model specification *****************************
 
@@ -60,16 +62,18 @@ local IF "_all-issues" //second-reading-issues revised-first-reading-issues matc
 //Climate Data type
 local clim_data "GMFD"
 
-//Model type-- Options: TINV_clim, TINV_clim_lininter, TINV_clim_lininter_double
+//Model type-- Options: TINV_clim, TINV_clim_lininter, TINV_clim_lininter_double, TINV_clim_lininter_half
 
-foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double" {
+foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double" "TINV_clim_lininter_half"{
 
 
 	if("`model_tt'" == "TINV_clim"){
+		local ssp_list  "[SSP1,SSP2,SSP3,SSP4,SSP5]"
 		// which prices do you want to generate aggregation and extraction configs for? 
-		local price_list = " price014 price0 price03 WITCHGLOBIOM42_rcp45 WITCHGLOBIOM42_rcp85 REMINDMAgPIE1730_rcp85 REMINDMAgPIE1730_rcp45 REMIND17CEMICS_rcp85 REMIND17CEMICS_rcp45 REMIND17_rcp85 REMIND17_rcp45 MERGEETL60_rcp85 MERGEETL60_rcp45 "
+		local price_list = " pricem0027 price0082 price014 price0 price03 WITCHGLOBIOM42_rcp45 WITCHGLOBIOM42_rcp85 REMINDMAgPIE1730_rcp85 REMINDMAgPIE1730_rcp45 REMIND17CEMICS_rcp85 REMIND17CEMICS_rcp45 REMIND17_rcp85 REMIND17_rcp45 MERGEETL60_rcp85 MERGEETL60_rcp45 "
 	}
 	else{
+		local ssp_list   "SSP3"
 		local price_list = "price014"
 	}
 
@@ -81,7 +85,7 @@ foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double"
 	local CSVVpath_output_sacagawea "$root/projection_inputs/csvv/`model_tt'" 
 
 	* location of csvv files on BRC
-	local CSVVpath_output_laika "/global/scratch/`uname'/Energy/Projection/Median/`model_tt'/`clim_data'"
+	local CSVVpath_output_laika "/global/scratch/`uname'/repos/energy-code-release-2020/projection_inputs/csvv/`model_tt'"
 
 	* note - you can transfer from sac to BRC using a command like: 
 	* rsync -avz `uname'@sacagawea.gspp.berkeley.edu:${CSVVpath_output_sac}/FD* /global/scratch/`uname'/Energy/Projection/Median/`model_tt'/`clim_data'
@@ -113,7 +117,7 @@ foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double"
 	}
 
 	// path to dataset with information about income deciles and income spline knot location
-	* local DATA "`DROPBOX'/GCP_Reanalysis/ENERGY/IEA_Replication/Data/Analysis/`clim_data'/rationalized_code/`data_type'/"	
+	* local DATA "`DROPBOX'/CIL_energy/IEA_Replication/Data/Analysis/`clim_data'/rationalized_code/`data_type'/"	
 	* local break_data "`DATA'/data/break10_clim`clim_data'_`case'`IF'_`bknum'_`grouping_test'_TINV_clim_`data_type'.dta"
 
 	pause

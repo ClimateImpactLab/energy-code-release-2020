@@ -94,6 +94,6 @@ title("Global Energy-temperature Response" , size(vsmall)) ///
 subtitle("`colorGuide' " , size(vsmall)) ///
 ytitle("", size(small)) xtitle("", size(vsmall)) ///
 plotregion(color(white)) graphregion(color(white))
-graph export "$root/figures/fig_Appendix-C1_product_overlay_`model'_global.pdf", replace
+graph export "$root/figures/fig_Appendix-B1_product_overlay_`model'_global.pdf", replace
 
 graph drop _all	

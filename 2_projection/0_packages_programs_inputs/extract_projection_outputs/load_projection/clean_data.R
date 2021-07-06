@@ -55,7 +55,7 @@ convert.to.2019 <- function(df, proj_mode) {
 
   for(var in names(df)) {
       
-    if(var %in% c("mean", "q5", "q95",  "q10", "q90", "q75", "q25", "value")) {
+    if(var %in% c("mean", "q50", "q5", "q95", "q17", "q83", "q10", "q90", "q75", "q25", "value")) {
 
       print(paste0('converting variable ', var, ' to billions of 2019 dollars'))
 

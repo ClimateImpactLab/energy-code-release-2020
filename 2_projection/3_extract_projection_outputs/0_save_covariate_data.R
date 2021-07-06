@@ -10,13 +10,14 @@ library(dplyr)
 library(reticulate)
 library(haven)
 library(tidyr)
+library(imputeTS)
 cilpath.r:::cilpath()
 
 
 setwd(paste0(REPO,"/energy-code-release-2020/"))
 
 db = '/mnt/CIL_energy/'
-output = '/mnt/CIL_energy/pixel_interaction/'
+output = '/mnt/CIL_energy/code_release_data_pixel_interaction/'
 
 
 # Source a python code that lets us load SSP data directly from the SSPs
@@ -40,7 +41,6 @@ city_list = read_csv(paste0(db,
 		write_csv(paste0(output, '/miscellaneous/stockholm_guangzhou_region_names_key.csv'))
 
 # Covariates are from a single run allcalcs file
-# TO-DO: shorten the long path?
 cov_electricity_single= read_csv("/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost/single-OTHERIND_electricity_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_GMFD/rcp85/CCSM4/high/SSP3/hddcddspline_OTHERIND_electricity-allcalcs-FD_FGLS_inter_OTHERIND_electricity_TINV_clim.csv",
   skip = 114) %>% 
 	write_csv(paste0(output, '/miscellaneous/covariates_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim.csv'))
@@ -66,7 +66,6 @@ pop_df = pop %>%
 write_csv(pop_df, paste0(output,'/projection_system_outputs/covariates/' ,
 	'SSP3_IR_level_population.csv'))
 
-
 # Get population and gdp values: 
 inf = paste0("/mnt/Global_ACP/MORTALITY", 
 	"/Replication_2018/3_Output/7_valuation/1_values/adjustments/vsl_adjustments.dta")
@@ -76,12 +75,14 @@ conversion_value = con_df$inf_adj[1]
 ###########################################
 # 3 Data for figure 3A map
 
-gdppc = get_gdppc_all_regions('high', 'SSP3') %>%
+gdppc = get_gdppc_all_regions('high', 'SSP3')
+
+gdppc = gdppc %>%
 	mutate(gdppc = gdppc * conversion_value)
+
 
 # Population values are every 5 years. We use flat interpolation (a step function)
 # in between. So the 2099 population is assigned to the value we have in 2095. 
-
 
 pop99 = pop %>% 
 	dplyr::filter(ssp == "SSP3") %>%
@@ -98,14 +99,14 @@ covs = left_join(pop99, gdppc99, by = "region") %>%
 	mutate(gdp99 = gdppc99 *pop99)
 
 write_csv(covs, paste0(output, '/projection_system_outputs/covariates/', 
-	'SSP3-high-IR_level-gdppc_pop-2099.csv.csv'))
+	'SSP3-high-IR_level-gdppc_pop-2099.csv'))
 
 
 ###########################################
 # 4 Figure 3B Time series data 
 gdppc = get_gdppc_all_regions('high', 'SSP3')
 
-gdp = convert_global_gdp(gdppc) 
+gdp = convert_global_gdp(gdppc,'SSP3') 
 gdp$year = seq(2010,2100,1) 
 
 gdp = gdp %>% as.data.frame() %>% 
@@ -113,6 +114,39 @@ gdp = gdp %>% as.data.frame() %>%
 
 write_csv(gdp, paste0(output, 
 	'/projection_system_outputs/covariates/SSP3-global-gdp-time_series.csv'))
+
+
+# generate some data for labor
+write_csv(gdp, paste0(output, 
+	'/projection_system_outputs/covariates/SSP3-high-global-gdp-time_series.csv'))
+
+gdppc = get_gdppc_all_regions('low', 'SSP3')
+
+gdp = convert_global_gdp(gdppc,'SSP3') 
+gdp$year = seq(2010,2100,1) 
+
+gdp = gdp %>% as.data.frame() %>% 
+	mutate(gdp = gdp * conversion_value)
+
+write_csv(gdp, paste0(output, 
+	'/projection_system_outputs/covariates/SSP3-low-global-gdp-time_series.csv'))
+
+
+
+
+
+# also get SSP2 gdp time series for referee comments
+gdppc = get_gdppc_all_regions('high', 'SSP2')
+
+gdp = convert_global_gdp(gdppc,'SSP2') 
+gdp$year = seq(2010,2100,1) 
+
+gdp = gdp %>% as.data.frame() %>% 
+    mutate(gdp = gdp * conversion_value)
+
+write_csv(gdp, paste0(output, 
+    '/projection_system_outputs/covariates/SSP2-global-gdp-time_series.csv'))
+
 
 
 ############################################################
@@ -124,6 +158,9 @@ gdppc = get_gdppc_all_regions('high', 'SSP3') %>%
 df = gdppc %>% 
 	dplyr::filter(year == 2012)
 
+all_year_IR_comb = expand.grid(region = unique(pop$region), year = seq(2010, 2100))
+
+pop_allyears = left_join(all_year_IR_comb, pop, )
 # Get 2012 population projections
 pop12 = pop %>% 
 	dplyr::filter(ssp == "SSP3") %>%
@@ -135,3 +172,32 @@ df = left_join(df, pop12, by = "region") %>%
 
 write_csv(df, paste0(output, '/projection_system_outputs/covariates/',
 	'SSP3-high-IR_level-gdppc-pop-2012.csv'))
+
+
+
+
+############################################################
+# 6 Get data needed for generating press stats -
+ # all IR level gdp values for all years
+
+gdppc = get_gdppc_all_regions('low', 'SSP3') %>%
+	mutate(gdppc = gdppc * conversion_value) 
+
+df = gdppc
+
+pop = pop %>% 
+	dplyr::filter(ssp == "SSP3") %>%
+	dplyr::select(region, pop, year)
+
+df = left_join(df, pop, by = c("region", "year")) %>% 
+	dplyr::select(region, year, gdppc, pop)
+
+# linearly interpolate missing pop
+df$pop <- na.interpolation(ts(c(df$pop)), option = "linear") 
+
+df <- df %>% dplyr::mutate(gdp = pop * gdppc)
+
+write_csv(df, paste0(output, '/projection_system_outputs/covariates/',
+	'SSP3-low-IR_level-gdppc-pop-gdp-all-years.csv'))
+
+

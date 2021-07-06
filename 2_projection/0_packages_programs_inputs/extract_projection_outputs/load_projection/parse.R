@@ -169,10 +169,12 @@ parse.config.structure <- function(structure = '', region = NULL, ssp = '', rcp 
   st = gsub("\\[|\\]", "", structure)
   st.list = unlist(strsplit(st, split=", "))
   gg.prefix = ''
-  
-  if (grepl('region', structure) && region == "global") {
-    region = ''
-  }
+  # browser()
+  if (!is.null(region)) {
+    if (grepl('region', structure) && region == "global")  {
+      region = ''
+    }
+  } 
 
   for (ii in seq(st.list)) {
     gg = paste0('{', st.list[ii],'}')

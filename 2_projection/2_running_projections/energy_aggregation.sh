@@ -2,7 +2,7 @@
 
 #!/bin/bash
 
-uname="USER"
+uname="$USER"
 repo_root="/home/${uname}/repos"
 
 config_path="${repo_root}/energy-code-release-2020/projection_inputs/configs/GMFD"
@@ -14,34 +14,10 @@ cd ${repo_root}/impact-calculations
 
 # Main model - aggregates both point estimate and delta method projections for all price scenarios
 
-for config in ${aggregate_config_path}/energy-aggregate-median-*.yml; do
+for config in ${aggregate_config_path}/energy-aggregate-median-*electricity.yml; do
 	echo "aggregating ${config}..."
-	./aggregate.sh ${config} 
+	./aggregate.sh ${config} 65
+	sleep 30m
 done
-
-# For lininter and lininter_double models, only run point estimate aggregations, for price014 scenario
-# and non-price aggregations
-
-# TO-DO: run aggregation after the projections are run
-# Lininter model
-
-# model="TINV_clim_lininter"
-# aggregate_config_path="${config_path}/${model}/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/aggregate/median/"
-
-# for config in ${aggregate_config_path}/energy-aggregate-median-*y.yml; do
-# 	echo "aggregating ${config}..."
-# 	./aggregate.sh ${config} 
-# done
-
-
-# # Lininter double model 
-
-# model="TINV_clim_lininter_double"
-# aggregate_config_path="${config_path}/${model}/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/aggregate/median/"
-
-# for config in ${aggregate_config_path}/energy-aggregate-median-*y.yml; do
-# 	echo "aggregating ${config}..."
-# 	./aggregate.sh ${config} 
-# done
 
 

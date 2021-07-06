@@ -96,6 +96,7 @@ replace hdd20_TINV_GMFD = hdd20_other_TINV_GMFD if inlist(product,"other_energy"
 
 		// create income and climate quantiles 
 		qui egen gpid=xtile(lgdppc_MA15), nq(10)
+		pause
 		qui egen tpid=xtile(cdd20_TINV_GMFD), nq(3)
 		qui egen tgpid=xtile(lgdppc_MA15), nq(3)
 
@@ -114,8 +115,19 @@ replace hdd20_TINV_GMFD = hdd20_other_TINV_GMFD if inlist(product,"other_energy"
 		qui replace largegpid_other_energy = 2 if (gpid >= 3) & (gpid <= 6) 
 		qui replace largegpid_other_energy = 2 if (gpid >= 7) & (gpid <= 10)				
 
+		** center the year around 1971
+		gen cyear = year - 1971
+
+		** generate year variable for piecewise linear time effect interaction
+		gen pyear = year - 1991 if year >= 1991
+		replace pyear = 1991 - year if year < 1991
+
+		** generate year variable for post1980 linear time effect interaction
+		gen p80yr = year - 1980 if year >= 1980
+		replace p80yr = 1980 - year if year < 1980
+
 		//keep only necessary vars
-		keep cdd20_TINV_GMFD hdd20_TINV_GMFD country year lgdppc_MA15 gpid tpid tgpid large*
+		keep cdd20_TINV_GMFD hdd20_TINV_GMFD country *year p80yr lgdppc_MA15 gpid tpid tgpid large*
 
 		// generate average variables for climate and income quantiles for plotting
 		//average CDD in each cell
@@ -124,6 +136,8 @@ replace hdd20_TINV_GMFD = hdd20_other_TINV_GMFD if inlist(product,"other_energy"
 		qui egen avgHDD_tpid=mean(hdd20_TINV_GMFD), by(tpid) 
 		//average lgdppc in each cell
 		qui egen avgInc_tgpid=mean(lgdppc_MA15), by(tgpid) 
+		//average lgdppc in each climate decile
+		qui egen avgInc_tpid=mean(lgdppc_MA15), by(tpid) 
 
 		qui egen maxInc_gpid=max(lgdppc_MA15), by(gpid) //max lgdppc in each cell - this is needed for configs
 		
@@ -155,6 +169,27 @@ drop largegpid_electricity largegpid_other_energy
 tab gpid, gen(ind)
 tab largegpid, gen(largeind)
 
+*********************************************************
+// generate dummy variable with value = 1 indicating 
+// a country being in high income group for all years
+// for coldsidep80highinc regression
+
+// generate indicator for electricity observations with high income
+gen largeind_electricity = 1 if largeind2 == 1 & product == "electricity"
+replace largeind_electricity = 0 if largeind_electricity == .
+// generate the number of observations and high income nobs for each country 
+bysort country: egen nobs_electricity = total(product == "electricity")
+bysort country: egen nobs_largeind = total(largeind_electricity == 1)
+bysort country: egen first_year = min(year)
+bysort country: egen last_year = max(year)
+
+// generate indicator for a country having as many high inc observations
+// as electricity observations, while also spanning the whole period
+gen largeind_allyears = (nobs_electricity == nobs_largeind & first_year == 1971 & last_year == 2010 & product == "electricity")
+gen largeind_notallyears = 1 - largeind_allyears
+
+*********************************************************
+
 //Generate sector and fuel dummies
 
 * 1 = electricity, 2 = other_energy
@@ -164,6 +199,24 @@ egen product_i = group(product)
 * only 1 sector, so this step exists due to path dependency
 tab flow, gen(indf)
 egen flow_i = group(flow)
+
+
+* generate time period dummies for interaction
+** for piecewise linear interaction
+gen indt = 1 if year >= 1991
+replace indt = 0 if year < 1991
+
+** for post 1980 linear interaction
+gen indp80 = 1 if year >= 1980
+replace indp80 = 0 if year < 1980
+
+** for decades interaction
+gen indd = 0
+replace indd = 1 if year >= 1980
+replace indd = 2 if year >= 1990
+replace indd = 3 if year >= 2000
+
+
 
 // Classify world into 13 regions based on UN World Regions Classifications (for fixed effect... reference Temperature Response of Energy Consumption Section )
 
@@ -214,40 +267,4 @@ replace subregionname = "Southern Europe" if country=="XKO"
 ***********************************************************************************************************************
 do "$root/0_make_dataset/merged/2_construct_FD_interacted_variables.do"
 save "$root/data/GMFD_`model'_regsort.dta", replace
-
-/* 
-TO-DO: delete this part before releasing
-// see difference between old and new interactions
-//use "$root/data/GMFD_`model'_regsort.dta", replace
-use "${root}/data/climate_data.dta", clear
-gen old_interaction = cdd20_TINV_GMFD * polyAbove1_GMFD
-gen new_interaction = polyAbove1_x_cdd_GMFD
-gen diff = new_interaction - old_interaction
-gen pct_diff = diff / old_interaction
-sum *interaction *diff*
-corr old_interaction new_interaction
-//keep if inlist(country, "VAT") //one-pixel country
-keep if inlist(country, "MAF") 
-//two-pixel country
-list *interaction *diff* cdd20_TINV_GMFD polyAbove1_GMFD polyAbove1_x_cdd_GMFD country
-keep *interaction *diff* cdd20_TINV_GMFD polyAbove1_GMFD polyAbove1_x_cdd_GMFD country year
- */
-/* some checks For MAF
-segment weights
-     +-------------------------------------------------------------------------------------------------------+
-     | iso       area   pix_ce~x   pix_ce~y     pop   areato~l   poptotal     areawt     popwt         shpid |
-     |-------------------------------------------------------------------------------------------------------|
-  1. | MAF   .0046577    -63.125     18.125   27385   .0047939      27389   .9715909   .999854   gadm28_adm0 |
-  2. | MAF   .0001362    -62.875     18.125       4   .0047939      27389   .0284091   .000146   gadm28_adm0 |
-     +-------------------------------------------------------------------------------------------------------+
-
-long run climate in these two pixels at pixel level
-     +--------------------------------+
-     | pix_ce~x   pix_ce~y    lr_clim |
-     |--------------------------------|
-  1. |  -63.125     18.125   2138.848 |
-  2. |  -62.875     18.125   846.4422 |
-     +--------------------------------+
-which, if aggregated with popwt, equals 
- */
 

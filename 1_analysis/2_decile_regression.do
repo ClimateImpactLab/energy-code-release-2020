@@ -31,3 +31,9 @@ do $root/1_analysis/decile_regression/stacked.do
 ********************************************************************************
 
 do $root/1_analysis/decile_regression/plot_stacked.do
+
+********************************************************************************
+* Step 3: Plot Response separately for electricity and other energy
+********************************************************************************
+
+do $root/1_analysis/decile_regression/plot_stacked_1A_separate.do
