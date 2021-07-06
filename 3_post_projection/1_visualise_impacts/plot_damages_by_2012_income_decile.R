@@ -163,4 +163,47 @@ ggsave(p, file = paste0(output,
 
 
 
+# Plot with simple CI 5 95
+p = ggplot(data = df_plot) +
+  geom_bar(aes( x=decile, y = damagepc ), 
+           position="dodge", stat="identity", width=.8) +
+  geom_errorbar(aes(
+        x=decile, 
+        ymin = damagepc5, 
+        ymax = damagepc95),
+        size =0.3, width = 0.15) +
+  theme_minimal() +
+  ylab("Impact of Climate Change, 2019 USD") +
+  xlab("2012 Income Decile") +
+  scale_x_discrete(limits = seq(1,10))
+p
+
+ggsave(p, file = paste0(output, 
+    "/fig_Extended_Data_fig_4-H1-new_SSP3-high_rcp85-total-energy-price014-damages_by_country_inc_decile_simple_CI_5-95pctile.pdf"), 
+    width = 8, height = 6)
+
+
+
+
+# Plot with simple CI 10 90
+p = ggplot(data = df_plot) +
+  geom_bar(aes( x=decile, y = damagepc ), 
+           position="dodge", stat="identity", width=.8) +
+  geom_errorbar(aes(
+        x=decile, 
+        ymin = damagepc10, 
+        ymax = damagepc90),
+        size =0.3, width = 0.15) +
+  theme_minimal() +
+  ylab("Impact of Climate Change, 2019 USD") +
+  xlab("2012 Income Decile") +
+  scale_x_discrete(limits = seq(1,10))
+p
+
+ggsave(p, file = paste0(output, 
+    "/fig_Extended_Data_fig_4-H1-new_SSP3-high_rcp85-total-energy-price014-damages_by_country_inc_decile_simple_CI_10-90pctile.pdf"), 
+    width = 8, height = 6)
+
+
+
 

@@ -11,7 +11,7 @@ source(glue("{REPO}/energy-code-release-2020/4_misc/",
     "outreach/press/energy_outreach_data.R"))
 
 
-# # # testing function
+# # testing function
 # out = ProcessImpacts(
 #   time_step="all",
 #   impact_type="impacts_pct_gdp",
@@ -20,10 +20,7 @@ source(glue("{REPO}/energy-code-release-2020/4_misc/",
 #   stats="q50",
 #   fuel = "total_energy",
 #   regenerate = FALSE,
-#   export = FALSE)
-
-
-
+#   export = TRUE)
 
 
 # ###########################################################

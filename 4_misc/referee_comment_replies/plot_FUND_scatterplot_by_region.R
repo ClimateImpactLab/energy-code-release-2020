@@ -16,7 +16,7 @@ DB = "/mnt/CIL_energy"
 
 DB_data = paste0(DB, "/code_release_data_pixel_interaction")
 REPO <- "/home/liruixue/repos"
-
+source(glue("{REPO}/mortality/utils/wrap_mapply.R"))
 source("/home/liruixue/projection_repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 
 # source needed codes and set up paths
@@ -31,15 +31,6 @@ miceadds::source.all(paste0(projection.packages,"load_projection/"))
 get_df = function(region, rcp, fuel, price_scen = NULL, unit = "impactpc", dollar_convert = NULL, adapt = adapt) {
 
 	print(paste0('------------------------------', region, '------------------------------'))
-
-	# browser()
-	# adapt = "incadapt"
-	# rcp = "rcp85"
-	# unit = "damage" 
-	# price_scen = "price014" 
-	# fuel = "OTHERIND_total_energy" 
-	# dollar_convert = "yes"
-
 
 	args = list(
 	    conda_env = "risingverse-py27",
@@ -61,13 +52,14 @@ get_df = function(region, rcp, fuel, price_scen = NULL, unit = "impactpc", dolla
 	    grouping_test = "semi-parametric",
 	    regenerate = FALSE)
 
-    plot_df = do.call(load.median, c(args, region = as.character(region)))%>% 
-        dplyr::select(year, mean, q5, q95)
+    plot_df = do.call(load.median, args) 
+
+    plot_df = plot_df %>% 
+    	 filter(region == !!region) %>% dplyr::select(year,region, mean, q5, q95) 
 
     plot_df$adapt = as.character(adapt)
     plot_df$regions = as.character(region)
     
-    # names(plot_df) = c("year", region)
     return(plot_df)
 
 }
@@ -76,6 +68,7 @@ get_df = function(region, rcp, fuel, price_scen = NULL, unit = "impactpc", dolla
 # this value is not used for the %gdp calculation
 file_fed = read_csv('/shares/gcp/estimation/mortality/release_2020/data/3_valuation/inputs/adjustments/fed_income_inflation.csv')
 convert_1995_to_2019 = (file_fed %>% filter(year == 2019))$gdpdef / (file_fed %>% filter(year == 1995))$gdpdef 
+convert_2005_to_2019 = (file_fed %>% filter(year == 2019))$gdpdef / (file_fed %>% filter(year == 2005))$gdpdef 
 
 
 # SSP3
@@ -83,7 +76,7 @@ aggregated_regions = c("FUND-ANZ", "FUND-CAM", "FUND-CAN", "FUND-CHI", "FUND-EEU
 adapt = c("fulladapt","noadapt","incadapt")
 args = expand.grid(region = aggregated_regions, adapt = adapt)
 
-df = mcmapply(
+df = wrap_mapply(
 	FUN = get_df, 
 	region = aggregated_regions,
 	adapt = adapt, 
@@ -97,7 +90,7 @@ df = mcmapply(
 
 FUND_ours = do.call(rbind, c(df, make.row.names = TRUE))
 FUND_ours$regions = substr(FUND_ours$regions, 6,8)
-FUND_ours = FUND_ours %>% filter(year == 2099)
+FUND_ours = FUND_ours %>% filter(year == 2099) 
 
 
 # FUND
@@ -195,12 +188,30 @@ p_bar = ggplot(df, aes(x = regions_name)) +
 	geom_bar(aes(weight = percent_gdp_ssp3,fill = "fulladapt"), 
 		data = df %>% filter(adapt == "fulladapt"),
 		position = position_nudge(x = -0.1), width = 0.1) +
+    geom_errorbar(
+	    data = df %>% filter(adapt == "fulladapt"),  
+	    aes(x=regions_name, ymin = percent_gdp_ssp3_q5, 
+	    	ymax = percent_gdp_ssp3_q95), 
+	   	size =0.2, width = 0.08,
+	   	position = position_nudge(x = -0.1)) +
 	geom_bar(aes(weight = percent_gdp_ssp3,fill = "incadapt"), 
 		data = df %>% filter(adapt == "incadapt"),
 		position = position_nudge(x = 0), width = 0.1) +
+	geom_errorbar(
+	    data = df %>% filter(adapt == "incadapt"),  
+	    aes(x=regions_name, ymin = percent_gdp_ssp3_q5, 
+	    	ymax = percent_gdp_ssp3_q95), 
+	   	size =0.2, width = 0.08,
+	   	position = position_nudge(x = 0)) +
 	geom_bar(aes(weight = percent_gdp_ssp3,fill = "noadapt"), 
 		data = df %>% filter(adapt == "noadapt"),
 		position = position_nudge(x = 0.1), width = 0.1) +
+    geom_errorbar(
+	    data = df %>% filter(adapt == "noadapt"),  
+	    aes(x=regions_name, ymin = percent_gdp_ssp3_q5, 
+	    	ymax = percent_gdp_ssp3_q95), 
+	   	size =0.2, width = 0.08,
+	   	position = position_nudge(x = 0.1)) +
 	geom_bar(aes(weight = percent_gdp_fund,fill = "FUND"), 
 		data = df %>% filter(adapt == "incadapt"),
 		position = position_nudge(x = 0.2), width = 0.1) + 
