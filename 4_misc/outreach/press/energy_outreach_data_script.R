@@ -3,6 +3,25 @@ library(glue)
 library(parallel)
 library(vroom)
 
+
+# (1) 
+# would be nice to have this ready to be run as much as possible. 
+# Omitting the repo path problem, at least uncommenting stuff and have the script
+# be such that if it is run correctly, it produces all what's needed an in the outreach data, without
+# testing stuff around. 
+
+
+# (2) 
+# the global files look a little weird, not sure that was the case for mortality, but just wanted to flag. E.g. : 
+# Global  year_2020 year_2021
+#  0.022236756 0.022411465
+
+
+# (3)
+# I noticed a lot of empty rows in the country files. For example : 
+# " unit_total_energy_impacts_pct_gdp_geography_country_level_years_all_rcp85_SSP3_quantiles_q5.csv"
+# is this normal ?
+
 REPO <- "/home/liruixue/repos"
 
 source(glue("{REPO}/mortality/utils/wrap_mapply.R"))
@@ -11,7 +30,7 @@ source(glue("{REPO}/energy-code-release-2020/4_misc/",
     "outreach/press/energy_outreach_data.R"))
 
 
-# # testing function
+# # # testing function
 # out = ProcessImpacts(
 #   time_step="all",
 #   impact_type="impacts_pct_gdp",
@@ -20,7 +39,10 @@ source(glue("{REPO}/energy-code-release-2020/4_misc/",
 #   stats="q50",
 #   fuel = "total_energy",
 #   regenerate = FALSE,
-#   export = TRUE)
+#   export = FALSE)
+
+
+
 
 
 # ###########################################################
@@ -160,6 +182,11 @@ out = wrap_mapply(
 # )
 
 
+
+# Here you're iterating over all IR files to pick cities and save aside for the 'city' style output right?
+# Could wrap this in one single function, so that it looks as clean as the above ? Or other suggestion, keep only
+# the last call (wrap_mapply) and the above moved to energy_outreach_data.R.  Since this is suppoed to be only a script (calling stuff). 
+
 # filter 500k cities from all IR level files
 
 path = "/mnt/CIL_energy/impacts_outreach/"
@@ -170,8 +197,8 @@ all_IRs_files = list.files(path = path,
   recursive = TRUE,
   include.dirs = TRUE)
 
-cities_500k = read_csv("~/repos/energy-code-release-2020/data/500k_cities.csv")	%>% 
-	select(city, country, Region_ID)
+cities_500k = read_csv("~/repos/energy-code-release-2020/data/500k_cities.csv") %>% 
+  select(city, country, Region_ID)
 
 cities_500k_regions = unlist(cities_500k$Region_ID)
 

@@ -5,7 +5,8 @@ source(glue("{REPO}/energy-code-release-2020/4_misc/",
     "outreach/press/energy_outreach_data.R"))
 data_root <- "/mnt/CIL_energy/impacts_outreach/"
 
-
+# Are you checking anywhere that the total energy files, non converted to gdp, are the sum of the other ? 
+# If that is doable at all ?
 
 # Check completeless of data
 ## year: verify that files with the following filenames have the corresponding columns
@@ -49,6 +50,7 @@ d = do.call(rbind, mcmapply(
 	mc.cores = 60
 	))
 
+# using the 5 numbers below assume they are correct. Probably trivial, but who knows, have you checked? 
 # check that files have correct number of rows
 len_all_IRs = length(return_region_list("all_IRs"))
 len_states = length(return_region_list("states"))
@@ -140,6 +142,9 @@ check_invalid_values <- function(file) {
 	if (apply_function(func = function(x) is.na(x), dat)) {return(glue("{file} has NAs"))}
 	if (apply_function(func = function(x) is.nan(x), dat)) {return(glue("{file} has NaNs"))}
 	if (apply_function(func = function(x) is.infinite(x), dat)) {return(glue("{file} has Infs"))}
+	
+	#10e30 is quite arbitrary. have you done something looking at various summary statistics across all files? 
+	# like the kind of stuff we do after projections now. 
 	if (apply_function(func = function(x) abs(x) > 10e30, dat)) {return(glue("{file} has large values"))}
 }
 
@@ -175,6 +180,7 @@ check_pct_gdp <- function(file) {
 		if (!is.na(y)) return(y)
 		else return(FALSE)
 	}
+	# have you checked zero or negative values? 
 	if (apply_function(func = function(x) abs(x)>=100, dat)) {return(glue("{file} has >100 values"))}
 }
 
@@ -212,6 +218,8 @@ check_unit_conversion <- function(file) {
 		if (!is.na(y)) return(y)
 		else return(FALSE)
 	}
+
+	# why floor ? isn't conversion 277.778?
 	if (!apply_function(func = function(x) floor(x)==277, r)) {return(glue("{file} has conversion problem"))}
 }
 

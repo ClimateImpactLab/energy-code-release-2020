@@ -9,6 +9,9 @@ library(haven)
 library(ncdf4)
 library(tidyr)
 
+
+# I think you also want to have the README (that's in the repo, describing the data) in the root of the data folder itself, no ? Remember doing that for Hannah. 
+
 # cilpath.r:::cilpath()
 db = '/mnt/CIL_energy/'
 output = '/mnt/CIL_energy/'
@@ -25,6 +28,9 @@ setwd(paste0(REPO))
 # Source codes that help us load projection system outputs
 miceadds::source.all(paste0(projection.packages,"load_projection/"))
 
+# since the function below seems to be the 'top' main code to run, it would be nice to have more details about data sources,
+# for example, what the gdp data is, how the statistics are computed, what time steps mean exactly etc...
+# of course only if that is not documented somewhere else, it might be in the README.. in which case it's fine. 
 #' Wrapper that calls get_energy_impacts, transform, reshape and save results
 #' @param time_step what years to output ("averaged","all")
 #' @param impact_type unit of output ("impacts_gj", "impacts_kwh", "impacts_pct_gdp")
@@ -108,6 +114,10 @@ select_and_transform = function(df, impact_type, resolution, stats, ...) {
 }
 
 
+# would be nice to document that function the same way as the functions above with the same format. I,e what each parameter
+# means and what the values can be. So that people checkign/using it don't have to look at the details of the code. 
+
+# Same for the functions below, perhaps not all of them, but at elast the important ones, for example get_energy_impacts. 
 # reshape output and save to file
 reshape_and_save = function(df, stats, resolution, impact_type, time_step, rcp, fuel, export,...) {
 
@@ -339,6 +349,7 @@ return_region_list = function(regions) {
     return(regions)
 }
 
+# what kind of GDP data is that ? where does it come from 
 # get regional GDP time series at the spatial resolution specified
 return_region_gdp = function(resolution) {
 
