@@ -30,7 +30,6 @@ macro drop _all
 pause on
 cap ssc install rangestat
 
-cilpath
 /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////
 
 // path to energy-code-release repo 
@@ -45,7 +44,7 @@ local root "$REPO/energy-code-release-2020"
 global dataset_construction "`root'/0_make_dataset/"
 
 // output data path
-local DATA "`root'/data"
+local DATA 
 
 ********************************************************************************************************************************************
 *Step 1: Construct Population/Income, Load, and Climate Datasets
