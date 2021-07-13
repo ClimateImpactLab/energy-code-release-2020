@@ -44,11 +44,11 @@ syntax , clim(string) programs_path(string) //note functionality only set up for
 
 	foreach shp in `shpfile_list' {
 
-		local `shp'_path = "/shares/gcp/climate/_spatial_data/`shp'/weather_data/"
+		local `shp'_path = "${DATA}/climate/_spatial_data/`shp'/weather_data/"
 
 	}
 
-	local WORLDpre_path = "/shares/gcp/climate/_spatial_data/WORLD/pre1991/weather_data/"
+	local WORLDpre_path = "${DATA}/climate/_spatial_data/WORLD/pre1991/weather_data/"
 
 
 	foreach shp in `shpfile_list' {

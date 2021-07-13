@@ -20,10 +20,10 @@ else local model_name = "`model'"
 ********************************************************************************
 
 if (strpos("`model_name'", "EX") == 0) {
-	use "$root/data/GMFD_`model'_regsort.dta", clear
+	use "$DATA/regression/GMFD_`model'_regsort.dta", clear
 }
 else {
-	use "$root/data/GMFD_`model_name'_regsort.dta", clear
+	use "$DATA/regression/GMFD_`model_name'_regsort.dta", clear
 }
 
 ********************************************************************************
@@ -149,7 +149,7 @@ if ("`submodel'" == "quadinter") {
 reghdfe FD_load_pc `temp_r' `precip_r' `climate_r' ///
 `lgdppc_MA15_r' `income_spline_r' `year_temp_r' `year_income_spline_r' ///
 DumInc*, absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i) residuals(resid)
-estimates save "$root/sters/FD_inter_`model_name'", replace	
+estimates save "$OUTPUT/sters/FD_inter_`model_name'", replace	
 
 //calculating weigts for FGLS
 drop if resid==.
@@ -161,7 +161,7 @@ drop resid //included
 reghdfe FD_load_pc `temp_r' `precip_r' `climate_r' ///
 `lgdppc_MA15_r' `income_spline_r' `year_temp_r' `year_income_spline_r' ///
 DumInc* [pw = weight], absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i)
-estimates save "$root/sters/FD_FGLS_inter_`model_name'", replace
+estimates save "$OUTPUT/sters/FD_FGLS_inter_`model_name'", replace
 
 
 

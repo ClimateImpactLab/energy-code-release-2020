@@ -20,12 +20,12 @@ else local model_name = "`model'"
 ********************************************************************************
 
 if (strpos("`model_name'", "EX") == 0) {
-	use "$root/data/GMFD_`model'_regsort.dta", clear
-	di "$root/data/GMFD_`model'_regsort.dta"
+	use "$DATA/regression/GMFD_`model'_regsort.dta", clear
+	di "$DATA/regression/GMFD_`model'_regsort.dta"
 }
 else {
-	use "$root/data/GMFD_`model_name'_regsort.dta", clear
-	di "$root/data/GMFD_`model_name'_regsort.dta"
+	use "$DATA/regression/GMFD_`model_name'_regsort.dta", clear
+	di "$DATA/regression/GMFD_`model_name'_regsort.dta"
 }
 
 ********************************************************************************
@@ -151,7 +151,7 @@ if ("`submodel'" == "quadinter") {
 reghdfe FD_load_pc `temp_r' `precip_r' `climate_r' ///
 `lgdppc_MA15_r' `income_spline_r' `cyear_temp_r' `cyear_income_spline_r' ///
 DumInc*, absorb(i.flow_i#i.product_i#i.cyear#i.subregionid) cluster(region_i) residuals(resid)
-estimates save "$root/sters/FD_inter_`model_name'_cyear", replace	
+estimates save "$OUTPUT/sters/FD_inter_`model_name'_cyear", replace	
 
 
 
@@ -165,75 +165,7 @@ drop resid //included
 reghdfe FD_load_pc `temp_r' `precip_r' `climate_r' ///
 `lgdppc_MA15_r' `income_spline_r' `cyear_temp_r' `cyear_income_spline_r' ///
 DumInc* [pw = weight], absorb(i.flow_i#i.product_i#i.cyear#i.subregionid) cluster(region_i)
-estimates save "$root/sters/FD_FGLS_inter_`model_name'_cyear", replace
+estimates save "$OUTPUT/sters/FD_FGLS_inter_`model_name'_cyear", replace
 
 
-
-/* 
-// if reghdfe doesn't give standard error, run a reg version
-gen included = e(sample)
-tempfile reg_data
-save `reg_data', replace
-use `reg_data', clear
-
-* automatically run reg if reghdfe produces standard errors of zero
-
-* creating a matrix of standard errors
-mat A = e(V)
-local coefs =colsof(A)
-matrix std_errors = vecdiag(e(V))
-
-forvalues i = 1/`coefs' {
-	matrix std_errors[1, `i'] = sqrt(std_errors[1, `i'])
-}
-* summing all standard errors
-mata : st_matrix("sum", rowsum(st_matrix("std_errors")))
-* checking if sum of all standard errors are zero; if so, we run a normal reg.
-* if sum[1,1] == 0 {
-	di "Your standard errors are all zero. Now running a normal reg."
-	local fixed_effects = e(extended_absvars)
-	reg FD_load_pc `temp_r' `precip_r' `climate_r' ///
-	`lgdppc_MA15_r' `income_spline_r' `year_temp_r' `year_income_spline_r' ///
-	DumInc* `fixed_effects' if included == 1, cluster(region_i) 
-	estimates save "$root/sters/FD_inter_`model_name'_reg", replace	
-* }
-
-
-
- */
-
-
-/* 
-
-// if reghdfe doesn't give standard error, run a reg version
-gen included = e(sample)
-tempfile reg_data
-save `reg_data', replace
-use `reg_data', clear
-
-* automatically run reg if reghdfe produces standard errors of zero
-
-* creating a matrix of standard errors
-mat A = e(V)
-local coefs =colsof(A)
-matrix std_errors = vecdiag(e(V))
-
-forvalues i = 1/`coefs' {
-	matrix std_errors[1, `i'] = sqrt(std_errors[1, `i'])
-}
-* summing all standard errors
-mata : st_matrix("sum", rowsum(st_matrix("std_errors")))
-* checking if sum of all standard errors are zero; if so, we run a normal reg.
-* if sum[1,1] == 0 {
-	di "Your standard errors are all zero. Now running a normal reg."
-	local fixed_effects = e(extended_absvars)
-	reg FD_load_pc `temp_r' `precip_r' `climate_r' ///
-	`lgdppc_MA15_r' `income_spline_r' `year_temp_r' `year_income_spline_r' ///
-	DumInc* `fixed_effects' [pw = weight] if included == 1, cluster(region_i)
-	estimates save "$root/sters/FD_FGLS_inter_`model_name'_reg", replace
-
-*}
-
-
- */
 

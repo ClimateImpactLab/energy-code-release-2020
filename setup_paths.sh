@@ -1,4 +1,7 @@
 #!/bin/bash
 
-export REPO=/Users/ruixueli/repos/energy-code-release-2020
-export DATA=/Users/ruixueli/Downloads/DATA
+export REPO=/home/liruixue/repos/
+export DATA=/home/liruixue/energy_data_release/DATA
+export OUTPUT=/home/liruixue/energy_data_release/OUTPUT
+
+conda activate risingverse

@@ -16,7 +16,7 @@ cilpath
 global root "$REPO/energy-code-release-2020"
 
 global DATA "$root/data"
-global OUT "$root/figures/referee_comments"
+global OUT "$OUTPUT/figures/referee_comments"
 
 
 ** TESTING EXISTENCE OF UNIT ROOTS **

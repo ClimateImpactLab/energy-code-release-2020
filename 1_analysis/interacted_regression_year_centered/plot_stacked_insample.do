@@ -34,7 +34,7 @@ local col_ov2010 "`col_`var'_ov2010'"
 * Step 1: Load Data and Clean for Plotting
 ********************************************************************************
 		
-use "$root/data/GMFD_`model_main'_regsort.dta", clear
+use "$DATA/regression/GMFD_`model_main'_regsort.dta", clear
 
 //Set up locals for plotting
 local obs = 35 + abs(-5) + 1
@@ -62,7 +62,7 @@ gen below20 = (temp1 < 20) //below 20 indicator
 * Get Income Spline Knot Location 
 	
 preserve
-use "$root/data/break_data_`model_main'.dta", clear
+use "$DATA/regression/GMFD/break_data_`model_main'.dta", clear
 summ maxInc_largegpid_`var' if largegpid_`var' == 1
 local ibar_main = `r(max)'
 restore
@@ -110,7 +110,7 @@ forval lg=3(-1)1 {	//Income tercile
 		
 		// grab income and climate covariates to trace out response for this cell
 		preserve
-		use "$root/data/break_data_`model_main'.dta", clear
+		use "$DATA/regression/GMFD/break_data_`model_main'.dta", clear
 		duplicates drop tpid tgpid, force
 		sort tpid tgpid 
 		local tr_index = `tr' * 3 
@@ -184,8 +184,8 @@ forval lg=3(-1)1 {	//Income tercile
 			}
 
 			// trace out does response equation and add to local for plotting 
-			estimates use "$root/sters/FD_FGLS_inter_`plot_model'_cyear"
-			di "$root/sters/FD_FGLS_inter_`plot_model'_cyear"
+			estimates use "$OUTPUT/sters/FD_FGLS_inter_`plot_model'_cyear"
+			di "$OUTPUT/sters/FD_FGLS_inter_`plot_model'_cyear"
 
 			predictnl yhat`cellid'`type' = `line', se(se`cellid'`type') ci(lower`cellid'`type' upper`cellid'`type')
 
@@ -213,6 +213,6 @@ graph combine `graphicM', imargin(zero) ycomm rows(3) ///
 	title("Split Degree Days Poly 2 Interaction Model `var'", size(small)) ///
 	subtitle("`colorGuide'", size(vsmall)) ///
 	plotregion(color(white)) graphregion(color(white)) name(comb_nose, replace)
-graph export "$root/figures/`fig'_`var'_interacted_`plot_title'_cyear_insample.pdf", replace
+graph export "$OUTPUT/figures/`fig'_`var'_interacted_`plot_title'_cyear_insample.pdf", replace
 
 graph drop _all	

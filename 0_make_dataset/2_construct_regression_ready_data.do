@@ -24,7 +24,9 @@ cilpath
 
 // path to energy-code-release repo 
 
+global REPO: env REPO
 global root "$REPO/energy-code-release-2020"
+global DATA: env DATA 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -147,7 +149,7 @@ replace hdd20_TINV_GMFD = hdd20_other_TINV_GMFD if inlist(product,"other_energy"
 		}
 
 
-		local break_data "$root/data/break_data_`model'.dta"
+		local break_data "$DATA/regression/GMFD/break_data_`model'.dta"
 		save "`break_data'", replace
 
 	restore
@@ -222,7 +224,7 @@ replace indd = 3 if year >= 2000
 
 **Clean the region data**
 preserve
-insheet using "$root/data/UNSD — Methodology.csv", comma names clear
+insheet using "$DATA/reference/UNSD — Methodology.csv", comma names clear
 generate subregionid=.
 replace subregionid=1 if regionname=="Oceania" 
 replace subregionid=2 if subregionname=="Northern America" 
@@ -266,5 +268,5 @@ replace subregionname = "Southern Europe" if country=="XKO"
 * Step 5) Construct First Differenced Interacted Variables
 ***********************************************************************************************************************
 do "$root/0_make_dataset/merged/2_construct_FD_interacted_variables.do"
-save "$root/data/GMFD_`model'_regsort.dta", replace
+save "$DATA/regression/GMFD_`model'_regsort.dta", replace
 

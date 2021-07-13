@@ -6,7 +6,6 @@ rm(list = ls())
 
 # Load in the required packages, using the pacman package
 if(!require("pacman")){install.packages(("pacman"))}
-source("/home/liruixue/projection_repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 
 pacman::p_load(ggplot2, # plotting functions
                dplyr,   # data manipulation functions

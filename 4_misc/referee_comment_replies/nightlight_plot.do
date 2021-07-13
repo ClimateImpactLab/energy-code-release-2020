@@ -22,7 +22,7 @@ foreach temp in 35 0 {
 		restore
 
 		* read data, replace temperature with 35 or 0, generate above/below 20 indicators
-		use "$root/data/GMFD_TINV_clim_regsort_nightlight_1992.dta", clear
+		use "$DATA/regression/GMFD_TINV_clim_regsort_nightlight_1992.dta", clear
 		if "$plot_only_1992" == "true" {
 			drop if year != 1992
 		}
@@ -51,7 +51,7 @@ foreach temp in 35 0 {
 		gen deltacut_subInc = lgdppc_MA15 - `ibar_main'
 
 		* nightlight model predictions
-		estimates use "$root/sters/FD_FGLS_inter_nightlight"
+		estimates use "$OUTPUT/sters/FD_FGLS_inter_nightlight"
 
 		local line ""
 		local add ""
@@ -81,7 +81,7 @@ foreach temp in 35 0 {
 
 		* main model predictions, everything the same except for removing the nightlight line
 
-		estimates use "$root/sters/FD_FGLS_inter_TINV_clim"
+		estimates use "$OUTPUT/sters/FD_FGLS_inter_TINV_clim"
 		
 		local line ""
 		local add ""
@@ -100,7 +100,7 @@ foreach temp in 35 0 {
 
 		* plot
 		graph tw scatter yhat_nl yhat_main if largeind1==1, msize(vtiny) || scatter yhat_nl yhat_main if largeind1==0, msize(vtiny)  || line yhat_nl yhat_nl, sort legend(lab(1 "small income") lab(2 "large income") lab(3 "45 degree line")) ytitle("nightlight") xtitle("main model") title("`fuel' `temp'C") aspectratio(1) 
-		graph export "$root/figures/referee_comments/nightlight/main_vs_nightlight_`fuel'_at_`temp'_pred_w_nl_term_${estimate_with_nightlight_term}_only_1992_${plot_only_1992}.pdf", replace
+		graph export "$OUTPUT/figures/referee_comments/nightlight/main_vs_nightlight_`fuel'_at_`temp'_pred_w_nl_term_${estimate_with_nightlight_term}_only_1992_${plot_only_1992}.pdf", replace
 		graph drop _all
 	}
 }

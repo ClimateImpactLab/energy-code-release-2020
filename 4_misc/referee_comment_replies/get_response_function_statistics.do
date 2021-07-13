@@ -47,7 +47,7 @@ foreach temp in 35 0 {
 		keep if tpid == 3
 
 		* get main model predictions
-		estimates use "$root/sters/FD_FGLS_inter_TINV_clim"
+		estimates use "$OUTPUT/sters/FD_FGLS_inter_TINV_clim"
 		
 		local line ""
 		local add ""

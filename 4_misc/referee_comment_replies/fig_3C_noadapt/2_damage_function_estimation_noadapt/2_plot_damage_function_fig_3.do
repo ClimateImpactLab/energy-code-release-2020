@@ -14,7 +14,7 @@ glob DB_data "$DB/CIL_energy/code_release_data_pixel_interaction"
 glob dir "$DB_data/projection_system_outputs/damage_function_estimation/resampled_data"
 
 glob root "/home/liruixue/repos/energy-code-release-2020"
-glob output "$root/figures/"
+glob output "$OUTPUT/figures/"
 
 
 //Load in GMTanom data file, save as a tempfile 

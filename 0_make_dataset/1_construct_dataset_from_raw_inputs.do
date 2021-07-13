@@ -33,18 +33,19 @@ cap ssc install rangestat
 /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////
 
 // path to energy-code-release repo 
-local root "$REPO/energy-code-release-2020"
 
+global REPO: env REPO
+//local root "$REPO/energy-code-release-2020"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 * Step 0: Define code and dataset paths
 
 // code path referenced by multiple files
-global dataset_construction "`root'/0_make_dataset/"
+global dataset_construction "$REPO/energy-code-release-2020/0_make_dataset/"
 
 // output data path
-local DATA 
+global DATA: env DATA 
 
 ********************************************************************************************************************************************
 *Step 1: Construct Population/Income, Load, and Climate Datasets
@@ -111,9 +112,9 @@ foreach v in polyBelow1_x_hdd polyBelow2_x_hdd polyAbove1_x_cdd polyAbove2_x_cdd
 
 tempfile climate_data
 save `climate_data', replace
-save "`DATA'/climate_data", replace
+save "${DATA}/climate/climate_data", replace
 //Part B: Population and Income Data Construction
-use "`DATA'/climate_data", clear
+//use "${DATA}/climate/climate_data", clear
 
 do "$dataset_construction/pop_and_income/1_extract_and_clean.do"
 
@@ -158,5 +159,5 @@ foreach var of varlist coal* oil* natural_gas* electricity* heat_other* biofuels
 do "$dataset_construction/merged/0_break2_clean.do"  
 
 di "mission complete :)"
-save "`DATA'/IEA_Merged_long_GMFD.dta", replace
+save "${DATA}/regression/IEA_Merged_long_GMFD.dta", replace
 

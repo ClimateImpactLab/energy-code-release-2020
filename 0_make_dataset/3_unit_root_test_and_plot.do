@@ -12,11 +12,15 @@ clear all
 set more off
 
 * Set up the paths:
-cilpath
+
+
+
+global REPO: env REPO
+global DATA: env DATA 
+global OUTPUT: env OUTPUT 
 global root "$REPO/energy-code-release-2020"
 
-global DATA "$root/data"
-global OUT "$root/figures"
+global OUT "$OUTPUT/figures"
 
 
 ** TESTING EXISTENCE OF UNIT ROOTS **

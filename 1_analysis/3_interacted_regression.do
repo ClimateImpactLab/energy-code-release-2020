@@ -7,8 +7,10 @@ Purpose:
 clear all
 set more off
 macro drop _all
-cilpath
 /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////
+
+global REPO: env REPO
+global DATA: env DATA 
 
 * path to energy-code-release repo:
 

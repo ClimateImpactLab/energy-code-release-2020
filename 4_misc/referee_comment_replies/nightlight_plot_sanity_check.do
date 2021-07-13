@@ -49,7 +49,7 @@ foreach temp in 35 0 {
 
 		* main model predictions, everything the same except for removing the nightlight line
 
-		estimates use "$root/sters/FD_FGLS_inter_TINV_clim"
+		estimates use "$OUTPUT/sters/FD_FGLS_inter_TINV_clim"
 		
 		local line ""
 		local add ""
@@ -68,7 +68,7 @@ foreach temp in 35 0 {
 
 		* plot
 		graph tw scatter yhat_main temp1, ytitle("main model") xtitle("temp") title("`fuel' `temp'C") 
-		graph export "$root/figures/referee_comments/main_vs_nightlight_`fuel'_at_`temp'_test.pdf", replace
+		graph export "$OUTPUT/figures/referee_comments/main_vs_nightlight_`fuel'_at_`temp'_test.pdf", replace
 		graph drop _all
 	}
 }

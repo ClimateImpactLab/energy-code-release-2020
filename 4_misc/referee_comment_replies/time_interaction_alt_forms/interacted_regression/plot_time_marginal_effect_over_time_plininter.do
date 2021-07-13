@@ -21,7 +21,7 @@ local MEgraphic
 * Step 1: Load Data and Clean for Plotting
 ********************************************************************************
 		
-use "$root/data/GMFD_`model'_regsort.dta", clear
+use "$DATA/regression/GMFD_`model'_regsort.dta", clear
 
 //Set up locals for plotting
 local obs = 2100 - 1971 + 1
@@ -55,7 +55,7 @@ restore
 * load temporal trend ster file
 
 // plot lininter in the same manner as sanity check
-estimates use "$root/sters/FD_FGLS_inter_`model'_plininter.ster"
+estimates use "$OUTPUT/sters/FD_FGLS_inter_`model'_plininter.ster"
 
 
 * set product specific index for coefficients
@@ -142,7 +142,7 @@ foreach temp in 0 35 {
 	graph combine `MEgraphic', imargin(zero) ycomm rows(1) xsize(9) ysize(3) ///
 	subtitle("Marginal Effect of Time `var'", size(small)) ///
 	plotregion(color(white)) graphregion(color(white)) name(comb`i', replace)
-	graph export "$root/figures/`fig'_ME_time_`model'_plininter_`var'_`temp'C_over_time.pdf", replace
+	graph export "$OUTPUT/figures/`fig'_ME_time_`model'_plininter_`var'_`temp'C_over_time.pdf", replace
 	graph drop _all
 
 }

@@ -13,7 +13,7 @@ loc DB_data "$DB/CIL_energy/code_release_data_pixel_interaction"
 
 glob root "/home/liruixue/repos/energy-code-release-2020"
 loc data "$root/data"
-loc output "$root/figures"
+loc output "$OUTPUT/figures"
 
 **************************************
 * 1. Population data

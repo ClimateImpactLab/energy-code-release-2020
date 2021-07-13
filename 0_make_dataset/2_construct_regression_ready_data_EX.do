@@ -24,6 +24,9 @@ cilpath
 
 // path to energy-code-release repo 
 
+
+global REPO: env REPO
+global DATA: env DATA 
 global root "$REPO/energy-code-release-2020"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
@@ -175,7 +178,7 @@ egen flow_i = group(flow)
 
 **Clean the region data**
 preserve
-insheet using "$root/data/UNSD — Methodology.csv", comma names clear
+insheet using "$DATA/reference/UNSD — Methodology.csv", comma names clear
 generate subregionid=.
 replace subregionid=1 if regionname=="Oceania" 
 replace subregionid=2 if subregionname=="Northern America" 
@@ -219,5 +222,5 @@ replace subregionname = "Southern Europe" if country=="XKO"
 * Step 5) Construct First Differenced Interacted Variables
 ***********************************************************************************************************************
 do "$root/0_make_dataset/merged/2_construct_FD_interacted_variables.do"
-save "$root/data/GMFD_`model'_regsort.dta", replace
+save "$DATA/regression/GMFD_`model'_regsort.dta", replace
 

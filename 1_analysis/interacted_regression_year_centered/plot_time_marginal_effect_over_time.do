@@ -22,7 +22,7 @@ local MEgraphic
 * Step 1: Load Data and Clean for Plotting
 ********************************************************************************
 		
-use "$root/data/GMFD_`model'_regsort.dta", clear
+use "$DATA/regression/GMFD_`model'_regsort.dta", clear
 
 //Set up locals for plotting
 local obs = 2100 - 1971 + 1
@@ -45,14 +45,14 @@ replace year = cyear + 1970
 * Get Income Spline Knot Location 
 	
 preserve
-use "$root/data/break_data_`model'.dta", clear
+use "$DATA/regression/GMFD/break_data_`model'.dta", clear
 summ maxInc_largegpid_`var' if largegpid_`var' == 1
 local ibar = `r(max)'
 restore
 
 * load temporal trend ster file
 
-estimates use "$root/sters/FD_FGLS_inter_`model'_quadinter_cyear.ster"
+estimates use "$OUTPUT/sters/FD_FGLS_inter_`model'_quadinter_cyear.ster"
 
 * set product specific index for coefficients
 
@@ -75,7 +75,7 @@ foreach temp in 0 35 {
 		
 		preserve
 		
-			use "$root/data/break_data_`model'.dta", clear
+			use "$DATA/regression/GMFD/break_data_`model'.dta", clear
 			duplicates drop tpid tgpid, force
 			sort tpid tgpid 
 			local subInc = avgInc_tgpid[`lg']
@@ -118,7 +118,7 @@ foreach temp in 0 35 {
 	graph combine `MEgraphic', imargin(zero) ycomm rows(1) xsize(9) ysize(3) ///
 	subtitle("Marginal Effect of Time `var'", size(small)) ///
 	plotregion(color(white)) graphregion(color(white)) name(comb`i', replace)
-	graph export "$root/figures/`fig'_ME_time_`model'_quadinter_`var'_`temp'C_cyear.pdf", replace
+	graph export "$OUTPUT/figures/`fig'_ME_time_`model'_quadinter_`var'_`temp'C_cyear.pdf", replace
 	graph drop _all
 
 }
@@ -127,7 +127,7 @@ foreach temp in 0 35 {
 
 
 // plot lininter in the same manner as sanity check
-estimates use "$root/sters/FD_FGLS_inter_`model'_lininter_cyear.ster"
+estimates use "$OUTPUT/sters/FD_FGLS_inter_`model'_lininter_cyear.ster"
 // loop over temperature
 foreach temp in 0 35 {
 	* loop over income terciles
@@ -140,7 +140,7 @@ foreach temp in 0 35 {
 		
 		preserve
 		
-			use "$root/data/break_data_`model'.dta", clear
+			use "$DATA/regression/GMFD/break_data_`model'.dta", clear
 			duplicates drop tpid tgpid, force
 			sort tpid tgpid 
 			local subInc = avgInc_tgpid[`lg']
@@ -179,7 +179,7 @@ foreach temp in 0 35 {
 	graph combine `MEgraphic', imargin(zero) ycomm rows(1) xsize(9) ysize(3) ///
 	subtitle("Marginal Effect of Time `var'", size(small)) ///
 	plotregion(color(white)) graphregion(color(white)) name(comb`i', replace)
-	graph export "$root/figures/`fig'_ME_time_`model'_lininter_`var'_`temp'C_cyear.pdf", replace
+	graph export "$OUTPUT/figures/`fig'_ME_time_`model'_lininter_`var'_`temp'C_cyear.pdf", replace
 	graph drop _all
 
 }

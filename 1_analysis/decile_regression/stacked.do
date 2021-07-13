@@ -12,7 +12,7 @@ local model = "$model"
 *Step 1: Load Data
 ********************************************************************************
 		
-use "$root/data/GMFD_`model'_regsort.dta", `clear'
+use "$DATA/regression/GMFD_`model'_regsort.dta", `clear'
 
 ********************************************************************************
 * Step 2: Prepare Regressors and Run Regression
@@ -56,7 +56,7 @@ forval pg=1/2 {
 	
 * run first stage regression
 reghdfe FD_load_pc `income_decile_temp_r' `precip_r' DumInc*, absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i) residuals(resid)
-estimates save "$root/sters/FD_income_decile_`model'", replace	
+estimates save "$OUTPUT/sters/FD_income_decile_`model'", replace	
 			
 * calculating weigts for FGLS
 drop if resid==.
@@ -65,5 +65,5 @@ qui gen weight = 1/omega
 				
 * run second stage FGLS regression
 reghdfe FD_load_pc `income_decile_temp_r' `precip_r' DumInc* [pw=weight], absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i)
-estimates save "$root/sters/FD_FGLS_income_decile_`model'", replace	
+estimates save "$OUTPUT/sters/FD_FGLS_income_decile_`model'", replace	
 

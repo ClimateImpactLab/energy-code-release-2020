@@ -16,7 +16,7 @@ local fig = "fig_Appendix-G3A" // Whats the plots figure number in the paper?
 * Step 1: Load Data and Clean for Plotting
 ********************************************************************************
 		
-use "$root/data/GMFD_`model'_regsort.dta", clear
+use "$DATA/regression/GMFD_`model'_regsort.dta", clear
 //Set up locals for plotting
 local obs = 35 + abs(-5) + 1
 
@@ -49,7 +49,7 @@ restore
 * load temporal trend ster file
 
 
-estimates use "$root/sters/FD_FGLS_inter_`model'_plininter.ster"
+estimates use "$OUTPUT/sters/FD_FGLS_inter_`model'_plininter.ster"
 
 * set product specific index for coefficients
 
@@ -125,7 +125,7 @@ foreach pt in 0 1  {
 	graph combine `MEgraphic', imargin(zero) ycomm rows(1) xsize(9) ysize(3) ///
 	subtitle("Marginal Effect of Time `var'", size(small)) ///
 	plotregion(color(white)) graphregion(color(white)) name(comb`i', replace)
-	graph export "$root/figures/`fig'_ME_time_`model'_plininter_`var'_`period'.pdf", replace
+	graph export "$OUTPUT/figures/`fig'_ME_time_`model'_plininter_`var'_`period'.pdf", replace
 	graph drop _all
 	drop yhat* se* lower* upper*
 

@@ -6,12 +6,14 @@ rm(list = ls())
 if (!require(tidyverse)) { install.packages("tidyverse"); library(tidyverse) } 
 if (!require(haven)) { install.packages("haven"); library(haven) } 
 
-cilpath.r:::cilpath()
+REPO <- Sys.getenv(c("REPO"))
+DATA <- Sys.getenv(c("DATA"))
+OUTPUT <- Sys.getenv(c("OUTPUT"))
 
 root = paste0(REPO, "/energy-code-release-2020")
 
 # load data and select only relevant variables==
-df <- read_dta(paste0(root, "/data/GMFD_TINV_clim_regsort.dta")) %>%
+df <- read_dta(paste0(DATA, "/regression/GMFD_TINV_clim_regsort.dta")) %>%
 	dplyr::select(country, year, product, load_pc, region_i, FEtag)
 
 # Gigajoule plot for the final paper, for italy-other eenergy
@@ -31,4 +33,4 @@ ggplot() +
                      panel.grid.minor = element_blank(),
                      legend.position = "none") +
   ggtitle(paste0(name)) 
-ggsave(file = paste0(root,"/figures/fig_Appendix-A1_ITA_other_fuels_time_series_regimes.pdf"), width = 6, height = 6)
+ggsave(file = paste0(OUTPUT,"/figures/fig_Appendix-A1_ITA_other_fuels_time_series_regimes.pdf"), width = 6, height = 6)

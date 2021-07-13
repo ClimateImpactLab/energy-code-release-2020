@@ -14,14 +14,14 @@ drop year
 rename sumpop nightlight
 replace nightlight = log(nightlight)
 * merge with our existing data
-merge 1:n country using "$root/data/GMFD_TINV_clim_regsort.dta"
+merge 1:n country using "$DATA/regression/GMFD_TINV_clim_regsort.dta"
 drop if _merge != 3
 * 194 observations dropped
-save "$root/data/GMFD_TINV_clim_regsort_nightlight_1992.dta", replace
+save "$DATA/regression/GMFD_TINV_clim_regsort_nightlight_1992.dta", replace
 
 
 
-use "$root/data/GMFD_TINV_clim_regsort_nightlight_1992.dta", clear
+use "$DATA/regression/GMFD_TINV_clim_regsort_nightlight_1992.dta", clear
 
 ********************************************************************************
 * Prepare Regressors and Run Regression 
@@ -95,7 +95,7 @@ forval pg = 1/2 {
 
 * CHECK: added the nightlight_r term
 reghdfe FD_load_pc `temp_r' `precip_r' `climate_r' `nightlight_r' `lgdppc_MA15_r' `income_spline_r' `year_temp_r' `year_income_spline_r' DumInc*, absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i) residuals(resid)
-estimates save "$root/sters/FD_inter_nightlight", replace	
+estimates save "$OUTPUT/sters/FD_inter_nightlight", replace	
 
 
 drop if resid==.
@@ -105,6 +105,6 @@ drop resid
 
 * CHECK: added the nightlight_r term
 reghdfe FD_load_pc `temp_r' `precip_r' `climate_r' `nightlight_r' `lgdppc_MA15_r' `income_spline_r' `year_temp_r' `year_income_spline_r' DumInc* [pw = weight], absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i)
-estimates save "$root/sters/FD_FGLS_inter_nightlight", replace
+estimates save "$OUTPUT/sters/FD_FGLS_inter_nightlight", replace
 
 

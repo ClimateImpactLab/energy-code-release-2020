@@ -39,7 +39,7 @@ local year = 2099
 * Step 1: Load Data and Clean for Plotting
 ********************************************************************************
 		
-use "$root/data/GMFD_`model_main'_regsort.dta", clear
+use "$DATA/regression/GMFD_`model_main'_regsort.dta", clear
 
 local obs = 35 + abs(-5) + 1
 
@@ -174,7 +174,7 @@ forval lg=3(-1)1 {
 				local add " + "
 			}
 			
-			estimates use "$root/sters/FD_FGLS_inter_`plot_model'"
+			estimates use "$OUTPUT/sters/FD_FGLS_inter_`plot_model'"
 			predictnl yhat`cellid'`type' = `line', se(se`cellid'`type') ci(lower`cellid'`type' upper`cellid'`type')
 			
 

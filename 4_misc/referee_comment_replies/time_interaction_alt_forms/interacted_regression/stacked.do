@@ -20,10 +20,10 @@ else local model_name = "`model'"
 ********************************************************************************
 
 if (strpos("`model_name'", "EX") == 0) {
-	use "$root/data/GMFD_`model'_regsort.dta", clear
+	use "$DATA/regression/GMFD_`model'_regsort.dta", clear
 }
 else {
-	use "$root/data/GMFD_`model_name'_regsort.dta", clear
+	use "$DATA/regression/GMFD_`model_name'_regsort.dta", clear
 }
 
 ********************************************************************************
@@ -353,11 +353,11 @@ else if ("`submodel'" == "coldsidepwl") {
 reghdfe FD_load_pc `temp_r' `precip_r' `climate_r' ///
 `lgdppc_MA15_r' `income_spline_r' `year_temp_r' `year_income_spline_r' ///
 DumInc*, absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i) residuals(resid)
-estimates save "$root/sters/FD_inter_`model_name'", replace	
+estimates save "$OUTPUT/sters/FD_inter_`model_name'", replace	
 
 // copy the ster file for plotting separately for always rich and sometimes rich groups 
 if  (strpos("`model_name'", "sep") > 0) | (strpos("`model_name'", "highinc") > 0) {
-	estimates save "$root/sters/FD_inter_`model_name'_alwaysrich", replace	
+	estimates save "$OUTPUT/sters/FD_inter_`model_name'_alwaysrich", replace	
 }
 
 //calculating weigts for FGLS
@@ -370,11 +370,11 @@ drop resid //included
 reghdfe FD_load_pc `temp_r' `precip_r' `climate_r' ///
 `lgdppc_MA15_r' `income_spline_r' `year_temp_r' `year_income_spline_r' ///
 DumInc* [pw = weight], absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i) residuals(resid)
-estimates save "$root/sters/FD_FGLS_inter_`model_name'", replace
+estimates save "$OUTPUT/sters/FD_FGLS_inter_`model_name'", replace
 
 // copy the ster file for plotting separately for always rich and sometimes rich groups 
 if  (strpos("`model_name'", "sep") > 0) | (strpos("`model_name'", "highinc") > 0) {
-	estimates save "$root/sters/FD_FGLS_inter_`model_name'_alwaysrich", replace	
+	estimates save "$OUTPUT/sters/FD_FGLS_inter_`model_name'_alwaysrich", replace	
 }
 
 
@@ -389,14 +389,14 @@ if (strpos("`model_name'", "decinter") > 0) {
 	replace category = "poor" if largeind1 == 1 
 
 	sepscatter resid year, separate(category)
-	graph export "$root/figures/scatterplot_decinter_residuals_by_income_group.pdf", replace
+	graph export "$OUTPUT/figures/scatterplot_decinter_residuals_by_income_group.pdf", replace
 	
 	scatter resid year if category == "always rich"
-	graph export "$root/figures/scatterplot_decinter_residuals_always_rich.pdf", replace
+	graph export "$OUTPUT/figures/scatterplot_decinter_residuals_always_rich.pdf", replace
 	scatter resid year if category == "rich"
-	graph export "$root/figures/scatterplot_decinter_residuals_rich.pdf", replace
+	graph export "$OUTPUT/figures/scatterplot_decinter_residuals_rich.pdf", replace
 	scatter resid year if category == "poor"
-	graph export "$root/figures/scatterplot_decinter_residuals_poor.pdf", replace
+	graph export "$OUTPUT/figures/scatterplot_decinter_residuals_poor.pdf", replace
 
 }
 

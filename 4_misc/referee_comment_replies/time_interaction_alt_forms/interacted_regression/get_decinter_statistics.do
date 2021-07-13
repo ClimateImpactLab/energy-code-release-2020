@@ -30,7 +30,7 @@ local col_ov3 "`col_`var'_ov3'"
 
 global root "/home/liruixue/repos/energy-code-release-2020"
 
-use "$root/data/GMFD_`model_main'_regsort.dta", clear
+use "$DATA/regression/GMFD_`model_main'_regsort.dta", clear
 
 local obs = 35 + abs(-5) + 1
 
@@ -169,8 +169,8 @@ forval lg=3(-1)1 {
 			}
 
 			*di "`type'"
-			estimates use "$root/sters/FD_FGLS_inter_`plot_model'"
-			*di "$root/sters/FD_FGLS_inter_`plot_model'"
+			estimates use "$OUTPUT/sters/FD_FGLS_inter_`plot_model'"
+			*di "$OUTPUT/sters/FD_FGLS_inter_`plot_model'"
 
 			qui predictnl yhat`cellid'`type' = `line', se(se`cellid'`type') ci(lower`cellid'`type' upper`cellid'`type')
 			*list yhat`cellid'`type' if temp1 == 35
@@ -192,7 +192,7 @@ forval lg=3(-1)1 {
 
 
 * statistical tests:
-estimates use "$root/sters/FD_FGLS_inter_TINV_clim_decinter"
+estimates use "$OUTPUT/sters/FD_FGLS_inter_TINV_clim_decinter"
 testnl `line103_ov0' = `line103_ov1' = `line103_ov2' = `line103_ov3'
 
 

@@ -16,7 +16,7 @@ loc DB_data "$DB/CIL_energy/code_release_data_pixel_interaction"
 
 glob root "/home/liruixue/repos/energy-code-release-2020"
 loc data "$root/data"
-loc output "$root/figures"
+loc output "$OUTPUT/figures"
 
 
 ***********************************************************************************
@@ -181,7 +181,7 @@ foreach var in "electricity" "other_energy" {
 				local add " + "
 			}
 			* Load in ster file, to get response function coefficients
-			estimates use "$root/sters/FD_FGLS_inter_TINV_clim.ster"
+			estimates use "$OUTPUT/sters/FD_FGLS_inter_TINV_clim.ster"
 
 			* Get predicted values, and SEs
 			predictnl yhat_`var'`scen' = `line', se(se_`var'`scen') ci(lower_`var'`scen' upper_`var'`scen')
@@ -230,5 +230,5 @@ foreach var in "electricity" "other_energy" {
 
 * Combine plots, and save
 graph combine electricity other_energy, rows(2)
-graph export "$root/figures/fig_2A_city_response_functions_2015_and_2099.pdf", replace
+graph export "$OUTPUT/figures/fig_2A_city_response_functions_2015_and_2099.pdf", replace
 graph drop _all	

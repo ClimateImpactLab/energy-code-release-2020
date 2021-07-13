@@ -27,7 +27,7 @@ local other_energy_colTT "Orange"
 *Step 1: Load Data and Clean for Plotting
 ********************************************************************************
 		
-use "$root/data/GMFD_`model'_regsort.dta", clear
+use "$DATA/regression/GMFD_`model'_regsort.dta", clear
 
 //Set up locals for plotting
 local obs = 35 + abs(-5) + 1
@@ -79,7 +79,7 @@ forval lg=1/10 {
 
 		* use ster to estimate dose response
 
-		estimates use "$root/sters/FD_FGLS_income_decile_`model'"
+		estimates use "$OUTPUT/sters/FD_FGLS_income_decile_`model'"
 		predictnl yhat`lg'_`var' = `line', se(se`lg'_`var') ci(lower`lg'_`var' upper`lg'_`var')
 
 		*describe, fullname
@@ -114,7 +114,7 @@ graph combine `graphic', imargin(zero) ycomm rows(1) xsize(20) ysize(3) ///
 title("Poly 2 Income Decile Energy Temperature Response (`model')", size(small)) ///
 subtitle("`colorGuide'", size(small)) ///
 plotregion(color(white)) graphregion(color(white)) name(comb, replace)
-graph export "$root/figures/fig_1A_product_overlay_income_decile_`model'.pdf", replace
+graph export "$OUTPUT/figures/fig_1A_product_overlay_income_decile_`model'.pdf", replace
 
 			
 graph drop _all	

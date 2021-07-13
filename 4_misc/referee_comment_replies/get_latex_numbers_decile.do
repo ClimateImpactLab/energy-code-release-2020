@@ -21,7 +21,7 @@ local electricity_colTT "Blue"
 local other_energy_col "dkorange"
 local other_energy_colTT "Orange"
 			
-use "$root/data/GMFD_`model'_regsort.dta", clear
+use "$DATA/regression/GMFD_`model'_regsort.dta", clear
 
 local obs = 35 + abs(-5) + 1
 
@@ -68,7 +68,7 @@ forval lg=1/10 {
 
 		* use ster to estimate dose response
 
-		estimates use "$root/sters/FD_FGLS_income_decile_`model'"
+		estimates use "$OUTPUT/sters/FD_FGLS_income_decile_`model'"
 		predictnl yhat`lg'_`var' = `line', se(se`lg'_`var') ci(lower`lg'_`var' upper`lg'_`var')
 		
 		loc SE = "`SE' rarea upper`lg'_`var' lower`lg'_`var' temp1, col(``var'_col'%30) || line yhat`lg'_`var' temp1, lc (``var'_col') ||"

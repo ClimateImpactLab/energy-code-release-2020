@@ -18,7 +18,7 @@ glob dir_output "$DB_data/referee_comments/damage_function_estimation"
 glob dir "$DB_data/projection_system_outputs/damage_function_estimation"
 
 glob root "/home/liruixue/repos/energy-code-release-2020"
-glob output "$root/figures/referee_comments"
+glob output "$OUTPUT/figures/referee_comments"
 
 foreach subset in 2085 2050 2010 {
 

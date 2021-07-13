@@ -8,19 +8,22 @@ set more off
 
 //SET UP RELEVANT PATHS
 
-glob DB "/mnt"
-loc DB_data "$DB/CIL_energy/code_release_data_pixel_interaction"
 
-glob root "/home/liruixue/repos/energy-code-release-2020"
-loc data "$root/data"
-loc output "$root/figures"
+global REPO: env REPO
+global DATA: env DATA 
+global OUTPUT: env OUTPUT 
+
+
+glob root "${REPO}/energy-code-release-2020"
+loc data "$DATA/projection_system_outputs"
+loc output "$OUTPUT/figures"
 
 **************************************
 * 1. Population data
 **************************************
 
 * Get population data for converting Per capita impacts into levels 
-import delim "`DB_data'/projection_system_outputs/covariates/SSP3_IR_level_population.csv", clear 
+import delim "`data'/covariates/SSP3_IR_level_population.csv", clear 
 
 * Our population estimates are done using a step function. We only have data for each 5th year
 * Therefore, we assign 2099 population the values of population from 2095
@@ -45,7 +48,7 @@ save `iso_pop', replace
 * 2. 2010 current consumption - from the analysis data  
 **************************************
 
-use "`data'/IEA_Merged_long_GMFD.dta", clear
+use "${DATA}/regression/IEA_Merged_long_GMFD.dta", clear
 keep if year == 2010
 
 keep country product load_pc year
@@ -66,7 +69,7 @@ di "2010 Per Capita country level consumption saved"
 foreach prod in "electricity" "other_energy" {
 
 	* Get the 2099 impact region level impacts data
-	insheet using "`DB_data'/projection_system_outputs/mapping_data/main_model-`prod'-SSP3-rcp85-high-fulladapt-impact_pc-2099-map.csv", clear
+	insheet using "`data'/projection_system_outputs/mapping_data/main_model-`prod'-SSP3-rcp85-high-fulladapt-impact_pc-2099-map.csv", clear
 	
 	* Collapse to the country level, weighting impacts according to IR level population
 	gen country = substr(region,1,3)
@@ -125,4 +128,4 @@ foreach prod in "electricity" "other_energy" {
 
 }
 * Save as a csv for plotting in R using ggplot
-export delimited using "`DB_data'/intermediate_data/figure_2B_bar_chart_data.csv", replace
+export delimited using "`data'/intermediate_data/figure_2B_bar_chart_data.csv", replace
