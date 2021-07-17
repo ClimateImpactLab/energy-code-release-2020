@@ -4,13 +4,13 @@ Prepared by: Ruixue Li, liruixue@uchicago.edu
 Version:     2021-Jun-18
 
 
-The files in this folder contain projected energy-related outputs, for various combination of the following parameters : quantiles of the output, units of output, geographical level, temporal level, emission scenario, economic scenario.
+The files in this folder contain projected energy-related outputs, for various combinations of the following parameters : quantiles of the output, units of output, geographical level, temporal level, emission scenario, economic scenario.
 
 Units:
  
 1. impacts_gj: per capita change in energy consumption in Gigajoules.
-2. impacts_kwh: per capita change in energy consumption in kwh.
-3. impacts_pct_gdp : change in energy costs in 2019$ as percentage of GDP (this is fractions already multiplied by 100)
+2. impacts_kwh: per capita change in energy consumption in kilowatt-hour (kWh).
+3. impacts_pct_gdp : change in energy expenditures as percentage of projected future GDP (measured in percent)
 
  
 Geographical levels :
@@ -43,8 +43,8 @@ File title : unit_{fuel}_{unit}_geography_{geographic level}_years_{temporal  le
 
 Details about the units : 
 
-1. Change in energy consumption (units: Gigajoules/kwh): Projected per capita change in electricity or other energy consumed under climate change vs no climate change. These values are based upon emissions scenario RCP 4.5 or RCP 8.5, socioeconomic scenario SSP3 (from the IIASA Shared Socioeconomic Pathways database), and are climate model-weighted means over 33 climate models. Quantiles are calculated using delta-method projection output. Impacts aggregated at a higher geographical level than impact region are population-weighted averages of the corresponding impact region-level estimates (there are 24,378 impact regions across the globe).
+1. Change in energy consumption (units: Gigajoules or kWh): Projected per capita change in electricity or other fuels consumed due to climate change. These values are based upon emissions scenario RCP 4.5 or RCP 8.5, socioeconomic scenario SSP3 (from the IIASA Shared Socioeconomic Pathways database), and are climate model-weighted means over 33 climate models. Quantiles are calculated using the delta method along with Newton's method. Impacts aggregated at a higher geographical level than impact region are population-weighted averages of the corresponding impact region-level estimates (there are 24,378 impact regions across the globe).
 
-2. Change in energy costs as % GDP (units: percent): Projected change in energy cost (both electricity and other energy) due to climate change as a percentage of projected global GDP. Future prices are assumed to grow at 1.4% per year. These values are based upon emissions scenario RCP 4.5 or RCP 8.5, socioeconomic scenario SSP3 (from the IIASA Shared Socioeconomic Pathways database), and are climate model-weighted means over 33 climate models. Quantiles are calculated using delta-method projection output. Damages and GDP used to construct percentages are aggregated to higher geographical levels as totals of the corresponding impact region-level estimates (there are 24,378 impact regions across the globe). 
+2. Change in energy expenditures as % GDP (units: percent): Projected change in energy expenditures (both electricity and other fuels) due to climate change as a percentage of projected global GDP. Future prices are assumed to grow at 1.4% per year. These values are based upon emissions scenario RCP 4.5 or RCP 8.5, socioeconomic scenario SSP3 (from the IIASA Shared Socioeconomic Pathways database), and are climate model-weighted mean estimates over 33 climate models. Quantiles are calculated using the delta method along with Newton's method. Expenditure changes and GDP used to construct percentages are aggregated to higher geographical levels as totals of the corresponding impact region-level estimates (there are 24,378 impact regions across the globe). 
 
 
