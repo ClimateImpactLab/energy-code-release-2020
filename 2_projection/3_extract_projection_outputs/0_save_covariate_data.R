@@ -101,6 +101,8 @@ covs = left_join(pop99, gdppc99, by = "region") %>%
 write_csv(covs, paste0(output, '/projection_system_outputs/covariates/', 
 	'SSP3-high-IR_level-gdppc_pop-2099.csv'))
 
+d = read_csv(paste0(output, '/projection_system_outputs/covariates/', 
+	'SSP3-high-IR_level-gdppc_pop-2099.csv')) %>% summarize(total = sum(pop99))
 
 ###########################################
 # 4 Figure 3B Time series data 
