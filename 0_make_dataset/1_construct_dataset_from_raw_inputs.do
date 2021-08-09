@@ -30,6 +30,9 @@ set more off
 macro drop _all
 pause off
 cap ssc install rangestat
+global LOG: env LOG
+log using $LOG/1_construct_dataset_from_raw_inputs.log
+
 
 /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////
 
