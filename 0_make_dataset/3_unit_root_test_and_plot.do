@@ -11,7 +11,7 @@ Outputs two figures - one for each product
 clear all
 set more off
 global LOG: env LOG
-log using $LOG/3_unit_root_test_and_plot.log
+log using $LOG/3_unit_root_test_and_plot.log, replace
 
 * Set up the paths:
 

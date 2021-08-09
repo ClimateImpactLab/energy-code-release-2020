@@ -19,7 +19,7 @@ qui ssc inst egenmore
 macro drop _all
 pause off
 global LOG: env LOG
-log using $LOG/2_construct_regression_ready_data.log
+log using $LOG/2_construct_regression_ready_data.log, replace
 
 /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////
 
