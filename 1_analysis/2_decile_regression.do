@@ -7,7 +7,7 @@ clear all
 set more off
 macro drop _all
 global LOG: env LOG
-log using $LOG/1_construct_dataset_from_raw_inputs.log
+log using $LOG/1_construct_dataset_from_raw_inputs.log, replace
 
 
 /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////

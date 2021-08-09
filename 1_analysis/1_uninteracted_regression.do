@@ -6,7 +6,7 @@ clear all
 set more off
 macro drop _all
 global LOG: env LOG
-log using $LOG/1_uninteracted_regression.log
+log using $LOG/1_uninteracted_regression.log, replace
 
 
 /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////
