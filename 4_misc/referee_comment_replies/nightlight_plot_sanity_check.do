@@ -13,7 +13,7 @@ foreach temp in 35 0 {
 		* to get the ibar_main value
 		loc fuel "electricity"
 		loc temp 35
-		use "$root/data/break_data_TINV_clim.dta", clear
+		use "$DATA/regression/break_data_TINV_clim.dta", clear
 		summ maxInc_largegpid_`fuel' if largegpid_`fuel' == 1
 		local ibar_main = `r(max)'
 

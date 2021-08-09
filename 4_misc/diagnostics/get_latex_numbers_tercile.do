@@ -65,14 +65,14 @@ gen below20 = (temp1 < 20)
 * Get Income Spline Knot Location 
 	
 preserve
-use "$root/data/break_data_`model_main'.dta", clear
+use "$DATA/regression/break_data_`model_main'.dta", clear
 summ maxInc_largegpid_`var' if largegpid_`var' == 1
 local ibar_main = `r(max)'
 restore
 
 if ( "`submodel_ov'" == "EX"  ) {
 	preserve
-	use "$root/data/break_data_`model_main'_`submodel_ov'.dta", clear
+	use "$DATA/regression/break_data_`model_main'_`submodel_ov'.dta", clear
 	summ maxInc_largegpid_`var' if largegpid_`var' == 1
 	local ibar_ov = `r(max)'
 	restore
@@ -124,7 +124,7 @@ forval lg=3(-1)1 {
 		local cellid=`lg'+`tr'*100
 		
 		preserve
-		use "$root/data/break_data_`model_main'.dta", clear
+		use "$DATA/regression/break_data_`model_main'.dta", clear
 		duplicates drop tpid tgpid, force
 		sort tpid tgpid 
 		local tr_index = `tr' * 3

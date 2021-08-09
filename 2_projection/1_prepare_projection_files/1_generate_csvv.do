@@ -35,7 +35,7 @@ local output_csvv "$root/projection_inputs/csvv"
 cap mkdir "`output_csvv'"
 
 // path to dataset with information about income deciles and income spline knot location
-local break_data "$root/data/break_data_TINV_clim.dta"
+local break_data "$DATA/regression/break_data_TINV_clim.dta"
 
 * Loop over model type - creating csvvs for each type. 
 * Note TINV_clim_lininter_double and TINV_clim_lininter_half are exactly the same csvv as TINV_clim_lininter

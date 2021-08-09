@@ -2,7 +2,7 @@
 /* find the income decile of Nigeria */
 cilpath
 global root "$REPO/energy-code-release-2020"
-use "$root/data/break_data_TINV_clim.dta", clear
+use "$DATA/regression/break_data_TINV_clim.dta", clear
 
 keep country *gdp* *year* *Inc* 
 tab maxInc_gpid

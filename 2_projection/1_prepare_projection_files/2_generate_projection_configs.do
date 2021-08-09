@@ -123,7 +123,7 @@ foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double"
 	pause
 
 	// path to dataset with information about income deciles and income spline knot location
-	local break_data "$root/data/break_data_TINV_clim.dta"
+	local break_data "$DATA/regression/break_data_TINV_clim.dta"
 
 	// paths to where to store two different types of configs
 	local projection_config_output "$OUTPUT_configs/Projection_Configs"

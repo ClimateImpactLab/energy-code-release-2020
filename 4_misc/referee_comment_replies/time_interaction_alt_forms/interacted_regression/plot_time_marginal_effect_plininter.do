@@ -41,7 +41,7 @@ foreach k of num 1/2 {
 * Get Income Spline Knot Location 
 	
 preserve
-use "$root/data/break_data_`model'.dta", clear
+use "$DATA/regression/break_data_`model'.dta", clear
 summ maxInc_largegpid_`var' if largegpid_`var' == 1
 local ibar = `r(max)'
 restore
@@ -75,7 +75,7 @@ foreach pt in 0 1  {
 		
 		preserve
 		
-			use "$root/data/break_data_`model'.dta", clear
+			use "$DATA/regression/break_data_`model'.dta", clear
 			duplicates drop tpid tgpid, force
 			sort tpid tgpid 
 			local subInc = avgInc_tgpid[`lg']

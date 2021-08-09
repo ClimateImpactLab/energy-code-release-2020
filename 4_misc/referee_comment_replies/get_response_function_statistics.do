@@ -12,7 +12,7 @@ foreach temp in 35 0 {
 	foreach fuel in "electricity" "other_energy" {
 
 		* to get the cutoff for each fuel
-		use "$root/data/break_data_TINV_clim.dta", clear
+		use "$DATA/regression/break_data_TINV_clim.dta", clear
 		summ maxInc_largegpid_`fuel' if largegpid_`fuel' == 1
 		local ibar_main = `r(max)'
 
