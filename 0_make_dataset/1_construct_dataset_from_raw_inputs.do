@@ -89,6 +89,7 @@ use `energy_load_data', clear
 merge m:1 country year using `population_and_income_data'
 keep if _merge!=2
 drop _merge
+
 **climate**
 merge m:1 year country using `climate_data'
 keep if _merge!=2
