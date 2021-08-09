@@ -11,6 +11,9 @@ macro drop _all
 
 global REPO: env REPO
 global DATA: env DATA 
+global OUTPUT: env OUTPUT 
+global LOG: env LOG
+log using $LOG/3_interacted_regression.log
 
 * path to energy-code-release repo:
 
@@ -30,8 +33,8 @@ global model "TINV_clim"
 foreach submodel in "" "EX" "lininter" "quadinter"  {
 
 	global submodel "`submodel'"
-	//do $root/1_analysis/interacted_regression/stacked.do
-	//do $root/1_analysis/interacted_regression_year_centered/stacked.do
+	do $root/1_analysis/interacted_regression/stacked.do
+	do $root/1_analysis/interacted_regression_year_centered/stacked.do
 
 } 
 
@@ -47,8 +50,6 @@ foreach product in "other_energy" "electricity" {
 		global product "`product'"
 		
 		do $root/1_analysis/interacted_regression/plot_stacked.do
-		//do $root/1_analysis/interacted_regression_year_centered/plot_stacked.do
-
 	}
 }
  
@@ -59,24 +60,6 @@ foreach product in "other_energy" "electricity" {
 
 foreach product in "other_energy" "electricity" {
 	global product "`product'"
-	//do $root/1_analysis/interacted_regression/plot_time_marginal_effect.do
-	//do $root/1_analysis/interacted_regression_year_centered/plot_time_marginal_effect.do
-	//do $root/1_analysis/interacted_regression_year_centered/plot_time_marginal_effect_over_time.do
-
+	do $root/1_analysis/interacted_regression/plot_time_marginal_effect.do
 }
-
-********************************************************************************
-* Step 4: Extra Plots Energy Temperature Response (insample)
-********************************************************************************
- 
-foreach product in "other_energy" "electricity" {
-	foreach submodel in "lininter" "quadinter" {
-		
-		global submodel_ov "`submodel'"
-		global product "`product'"
-		//do $root/1_analysis/interacted_regression_year_centered/plot_stacked_insample.do
-
-	}
-}
-
 

@@ -6,11 +6,18 @@ Purpose: Estimate and Plot stacked income decile energy-temperature response
 clear all
 set more off
 macro drop _all
+global LOG: env LOG
+log using $LOG/1_construct_dataset_from_raw_inputs.log
+
 
 /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////
 
 global REPO: env REPO
 global DATA: env DATA 
+global OUTPUT: env OUTPUT
+global LOG: env LOG
+log using $LOG/2_decile_regression.log
+
 
 * path to energy-code-release repo:
 
