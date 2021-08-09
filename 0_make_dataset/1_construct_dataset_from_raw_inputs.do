@@ -110,3 +110,4 @@ do "$dataset_construction/merged/0_break2_clean.do"
 di "mission complete :)"
 save "${DATA}/regression/IEA_Merged_long_GMFD.dta", replace
 
+exit, clear

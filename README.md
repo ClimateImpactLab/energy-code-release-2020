@@ -12,13 +12,18 @@ git clone https://github.com/ClimateImpactLab/energy-code-release-2020.git
 
 ```
 
-
-
 2. Install the `conda` environment needed to run this repo by running the following commands under the root of this repo: `conda env create energy_env_py3.yaml`
 
-3. Download data from (URL), and edit the `setup_paths.sh` file in this repo to point the environment variables to the respective paths. Point the variable `DATA` in `setup_paths.sh` to the path of the `DATA` dierctory in the downloaded data, and do the same for `OUTPUT`. Point the `REPO` variable to a directory containing this repo and other repos. 
+3. Install the R packages needed using the following command: 
+```language
 
-4. Activate 
+```
+
+4. Download data from (URL), and edit the `setup_paths.sh` file in this repo to point the environment variables to the respective paths. Point the variable `DATA` in `setup_paths.sh` to the path of the `DATA` dierctory in the downloaded data, and do the same for `OUTPUT`. Point the `REPO` variable to a directory containing this repo and other repos. 
+
+5. Set up paths and activate the conda environment by running the following command from the root directory of this repo:
+`./setup_paths.sh`
+
 
 # The Social Cost of Global Energy Consumption Due to Climate Change
 

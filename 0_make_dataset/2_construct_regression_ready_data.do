@@ -270,3 +270,4 @@ replace subregionname = "Southern Europe" if country=="XKO"
 do "$root/0_make_dataset/merged/2_construct_FD_interacted_variables.do"
 save "$DATA/regression/GMFD_`model'_regsort.dta", replace
 
+exit, clear

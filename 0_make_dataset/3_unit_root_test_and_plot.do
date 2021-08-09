@@ -172,3 +172,5 @@ foreach prod in "other_energy" "electricity" {
 	graph export "$OUT/fig_Appendix-A2_Unit_Root_Tests_p_val_hists_`prod'.pdf", replace
 }
 graph drop _all	
+
+exit, clear
