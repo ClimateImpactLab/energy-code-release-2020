@@ -5,6 +5,9 @@ Purpose: Estimate and Plot stacked global energy-temperature response
 clear all
 set more off
 macro drop _all
+global LOG: env LOG
+log using $LOG/1_uninteracted_regression.log
+
 
 /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////
 
