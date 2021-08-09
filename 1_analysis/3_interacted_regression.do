@@ -60,3 +60,4 @@ foreach product in "other_energy" "electricity" {
 	do $root/1_analysis/interacted_regression/plot_time_marginal_effect.do
 }
 
+log close _all

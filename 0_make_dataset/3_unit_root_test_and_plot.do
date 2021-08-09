@@ -175,4 +175,4 @@ foreach prod in "other_energy" "electricity" {
 }
 graph drop _all	
 
-exit, clear
+log close _all
