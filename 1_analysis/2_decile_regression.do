@@ -47,3 +47,6 @@ do $root/1_analysis/decile_regression/plot_stacked.do
 ********************************************************************************
 
 do $root/1_analysis/decile_regression/plot_stacked_1A_separate.do
+
+log close _all
+

@@ -37,3 +37,5 @@ do $root/1_analysis/uninteracted_regression/stacked.do
 ********************************************************************************
 
 do $root/1_analysis/uninteracted_regression/plot_stacked.do
+
+log close _all
