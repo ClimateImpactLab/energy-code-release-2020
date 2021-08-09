@@ -33,7 +33,7 @@ foreach test in "DF" "PR" {
 
 		//load dataset, subset to relevant product
 
-		use "$DATA/$data_name", clear
+		use "$DATA/regression/$data_name", clear
 		keep if product=="`prod'"
 
 		//Time set the data 
