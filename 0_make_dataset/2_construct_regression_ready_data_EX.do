@@ -142,7 +142,7 @@ replace hdd20_TINV_GMFD = hdd20_other_TINV_GMFD if inlist(product,"other_energy"
 		}
 
 
-		local break_data "$root/data/break_data_`model'.dta"
+		local break_data "$DATA/regression/break_data_`model'.dta"
 		save "`break_data'", replace
 
 	restore
