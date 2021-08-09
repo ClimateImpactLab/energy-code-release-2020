@@ -121,8 +121,16 @@ replace hdd20_TINV_GMFD = hdd20_other_TINV_GMFD if inlist(product,"other_energy"
 		** center the year around 1971
 		gen cyear = year - 1971
 
+		** generate year variable for piecewise linear time effect interaction
+		gen pyear = year - 1991 if year >= 1991
+		replace pyear = 1991 - year if year < 1991
+
+		** generate year variable for post1980 linear time effect interaction
+		gen p80yr = year - 1980 if year >= 1980
+		replace p80yr = 1980 - year if year < 1980
+
 		//keep only necessary vars
-		keep cdd20_TINV_GMFD hdd20_TINV_GMFD country year cyear lgdppc_MA15 gpid tpid tgpid large*
+		keep cdd20_TINV_GMFD hdd20_TINV_GMFD country *year p80yr lgdppc_MA15 gpid tpid tgpid large*
 
 		// generate average variables for climate and income quantiles for plotting
 		//average CDD in each cell
