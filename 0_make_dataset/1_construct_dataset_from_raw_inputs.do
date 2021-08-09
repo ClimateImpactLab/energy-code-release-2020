@@ -24,10 +24,11 @@ Step 2) Merge Population, Income, Load and Climate Datasets
 
 */
 
+
 clear all
 set more off
 macro drop _all
-pause on
+pause off
 cap ssc install rangestat
 
 /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////
@@ -35,7 +36,6 @@ cap ssc install rangestat
 // path to energy-code-release repo 
 
 global REPO: env REPO
-//local root "$REPO/energy-code-release-2020"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -56,63 +56,11 @@ global DATA: env DATA
 do "$dataset_construction/climate/1_clean_climate_data.do"
 clean_climate_data, clim("GMFD") programs_path("$dataset_construction/climate/programs")
 
-// *****************************
-// code to check the difference between pixel-level vs normal interacted terms
-gen old_polyBelow1_x_hdd = polyBelow1_GMFD * hdd20_GMFD
-gen old_polyBelow2_x_hdd = polyBelow2_GMFD * hdd20_GMFD
-
-gen old_polyAbove1_x_cdd = polyAbove1_GMFD * cdd20_GMFD
-gen old_polyAbove2_x_cdd = polyAbove2_GMFD * cdd20_GMFD
-
-gen new_polyBelow1_x_hdd = polyBelow1_x_hdd_GMFD
-gen new_polyBelow2_x_hdd = polyBelow2_x_hdd_GMFD
-
-gen new_polyAbove1_x_cdd = polyAbove1_x_cdd_GMFD
-gen new_polyAbove2_x_cdd = polyAbove2_x_cdd_GMFD
-
-
-
-foreach v in polyBelow1_x_hdd polyBelow2_x_hdd polyAbove1_x_cdd polyAbove2_x_cdd {
-	di "variable: `v'"
-	qui corr old_`v' new_`v'
-	di "all: `r(rho)'"
-	qui corr old_`v' new_`v' if country == "USA"
-	di "USA: `r(rho)'"
-	qui corr old_`v' new_`v' if country == "CHN"
-	di "CHN: `r(rho)'"
-	qui corr old_`v' new_`v' if country == "FRA"
-	di "FRA: `r(rho)'"
-	qui corr old_`v' new_`v' if country == "RUS"
-	di "RUS: `r(rho)'"
-	qui corr old_`v' new_`v' if country == "JPN"
-	di "JPN: `r(rho)'"
-	qui corr old_`v' new_`v' if country == "IND"
-	di "IND: `r(rho)'"
-	qui corr old_`v' new_`v' if country == "MEX"
-	di "MEX: `r(rho)'"
-	qui corr old_`v' new_`v' if country == "BRA"
-	di "BRA: `r(rho)'"
-	qui corr old_`v' new_`v' if country == "CAN"
-	di "CAN: `r(rho)'"
-	qui corr old_`v' new_`v' if country == "FIN"
-	di "FIN: `r(rho)'"
-	qui corr old_`v' new_`v' if country == "GRL"
-	di "GRL: `r(rho)'"
-	qui corr old_`v' new_`v' if country == "DNK"
-	di "DNK: `r(rho)'"
-	
-	di ""
-
-}
-
-//gen diff = new_interaction - old_interaction
-//gen diff_pct = diff / old_interaction
-//sum old_interaction new_interaction diff*
-// *****************************
-
 tempfile climate_data
 save `climate_data', replace
 save "${DATA}/climate/climate_data", replace
+
+
 //Part B: Population and Income Data Construction
 //use "${DATA}/climate/climate_data", clear
 

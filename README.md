@@ -1,3 +1,25 @@
+# Requirements For Using Code In This Repo
+
+1. You need to have `python`, `Stata`, and `R` programming capabilities, or at least environments to run code in these languages, on your computer. 
+
+2. We use `conda` to manage `python` enrivonments, so please install `conda` if you haven't already done so following [these instructions](https://docs.conda.io/projects/conda/en/latest/user-guide/install/macos.html). 
+
+# Setup 
+
+1. Clone the following repos to a chosen directory with the following commands: 
+```
+git clone https://github.com/ClimateImpactLab/energy-code-release-2020.git
+
+```
+
+
+
+2. Install the `conda` environment needed to run this repo by running the following commands under the root of this repo: `conda env create energy_env_py3.yaml`
+
+3. Download data from (URL), and edit the `setup_paths.sh` file in this repo to point the environment variables to the respective paths. Point the variable `DATA` in `setup_paths.sh` to the path of the `DATA` dierctory in the downloaded data, and do the same for `OUTPUT`. Point the `REPO` variable to a directory containing this repo and other repos. 
+
+4. Activate 
+
 # The Social Cost of Global Energy Consumption Due to Climate Change
 
 The analysis in the paper proceeds in **five steps**. 
