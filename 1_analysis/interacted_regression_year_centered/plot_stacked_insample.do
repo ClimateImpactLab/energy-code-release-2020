@@ -62,7 +62,7 @@ gen below20 = (temp1 < 20) //below 20 indicator
 * Get Income Spline Knot Location 
 	
 preserve
-use "$DATA/regression/GMFD/break_data_`model_main'.dta", clear
+use "$DATA/regression/break_data_`model_main'.dta", clear
 summ maxInc_largegpid_`var' if largegpid_`var' == 1
 local ibar_main = `r(max)'
 restore
@@ -110,7 +110,7 @@ forval lg=3(-1)1 {	//Income tercile
 		
 		// grab income and climate covariates to trace out response for this cell
 		preserve
-		use "$DATA/regression/GMFD/break_data_`model_main'.dta", clear
+		use "$DATA/regression/break_data_`model_main'.dta", clear
 		duplicates drop tpid tgpid, force
 		sort tpid tgpid 
 		local tr_index = `tr' * 3 

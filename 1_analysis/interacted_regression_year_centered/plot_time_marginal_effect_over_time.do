@@ -45,7 +45,7 @@ replace year = cyear + 1970
 * Get Income Spline Knot Location 
 	
 preserve
-use "$DATA/regression/GMFD/break_data_`model'.dta", clear
+use "$DATA/regression/break_data_`model'.dta", clear
 summ maxInc_largegpid_`var' if largegpid_`var' == 1
 local ibar = `r(max)'
 restore
@@ -75,7 +75,7 @@ foreach temp in 0 35 {
 		
 		preserve
 		
-			use "$DATA/regression/GMFD/break_data_`model'.dta", clear
+			use "$DATA/regression/break_data_`model'.dta", clear
 			duplicates drop tpid tgpid, force
 			sort tpid tgpid 
 			local subInc = avgInc_tgpid[`lg']
@@ -140,7 +140,7 @@ foreach temp in 0 35 {
 		
 		preserve
 		
-			use "$DATA/regression/GMFD/break_data_`model'.dta", clear
+			use "$DATA/regression/break_data_`model'.dta", clear
 			duplicates drop tpid tgpid, force
 			sort tpid tgpid 
 			local subInc = avgInc_tgpid[`lg']
