@@ -32,7 +32,7 @@ local year = 2099
 * Step 1: Load Data and Clean for Plotting
 ********************************************************************************
 		
-use "$DATA/reference/GMFD_`model_main'_regsort.dta", clear
+use "$DATA/regression/GMFD_`model_main'_regsort.dta", clear
 
 //Set up locals for plotting
 local obs = 35 + abs(-5) + 1
