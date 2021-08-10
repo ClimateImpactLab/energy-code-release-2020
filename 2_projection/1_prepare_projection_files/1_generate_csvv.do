@@ -7,11 +7,14 @@ clear all
 set more off
 macro drop _all
 pause off
-cilpath
 * Download a command for dealing with matrices 
 qui net install http://www.stata.com/stb/stb56/dm79.pkg
 
 //SET UP RELEVANT PATHS
+global REPO: env REPO
+global DATA: env DATA 
+global OUTPUT: env OUTPUT 
+
 // path to energy-code-release repo 
 global root "${REPO}/energy-code-release-2020"
 
@@ -101,8 +104,6 @@ foreach model_tt in /*"TINV_clim" "TINV_clim_lininter"*/ "TINV_clim_lininter_dou
 		}
 		copy "`output_csvv'/TINV_clim_lininter/FD_FGLS_inter_OTHERIND_TINV_clim_lininter.csv" ///
 			"`output_csvv'/TINV_clim_lininter_half/FD_FGLS_inter_OTHERIND_TINV_clim_lininter_half.csv", replace 
-
-
 	}
-
 }
+
