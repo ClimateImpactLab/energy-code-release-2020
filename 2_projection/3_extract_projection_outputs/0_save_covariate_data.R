@@ -11,13 +11,13 @@ library(reticulate)
 library(haven)
 library(tidyr)
 library(imputeTS)
-cilpath.r:::cilpath()
 
+
+REPO <- Sys.getenv(c("REPO"))
+DATA <- Sys.getenv(c("DATA"))
+OUTPUT <- Sys.getenv(c("OUTPUT"))
 
 setwd(paste0(REPO,"/energy-code-release-2020/"))
-
-db = '/mnt/CIL_energy/'
-output = '/mnt/CIL_energy/code_release_data_pixel_interaction/'
 
 
 # Source a python code that lets us load SSP data directly from the SSPs
@@ -29,27 +29,30 @@ source_python(paste0(projection.packages, "future_gdp_pop_data.py"))
 # 1 Data for plotting city response functions for figure 2A
 
 # Min and max temperature for each city - this is just for plotting aesthetics 
-min_max_temp = read_csv(paste0(db, 
-	'IEA_Replication/Data/Miscellaneous/Cities_12_MinMax.csv'), skip = 4) %>%
+min_max_temp = read_csv(paste0(DATA, 
+	'/miscellaneous/Cities_12_MinMax.csv'), skip = 4) %>%
 		dplyr::filter(city %in% c("Guangzhou", "Stockholm")) %>%
-	write_csv(paste0(output, '/miscellaneous/stockholm_guangzhou_2015_min_max.csv'))
+	write_csv(paste0(DATA, '/miscellaneous/stockholm_guangzhou_2015_min_max.csv'))
 
-city_list = read_csv(paste0(db, 
-	'IEA_Replication/Data/Miscellaneous/City_List.csv')) %>%
+city_list = read_csv(paste0(DATA, 
+	'/miscellaneous/City_List.csv')) %>%
 		dplyr::filter(city %in% c("Guangzhou", "Stockholm")) %>%
 		dplyr::rename(region = hierid) %>%
-		write_csv(paste0(output, '/miscellaneous/stockholm_guangzhou_region_names_key.csv'))
+		write_csv(paste0(DATA, '/miscellaneous/stockholm_guangzhou_region_names_key.csv'))
 
+# TO-DO
 # Covariates are from a single run allcalcs file
-cov_electricity_single= read_csv("/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost/single-OTHERIND_electricity_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_GMFD/rcp85/CCSM4/high/SSP3/hddcddspline_OTHERIND_electricity-allcalcs-FD_FGLS_inter_OTHERIND_electricity_TINV_clim.csv",
+cov_electricity_single= read_csv(paste0(OUTPUT,
+	"/projection_system_outputs/single_projection",
+	"/single-OTHERIND_electricity_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_GMFD/rcp85/CCSM4/high/SSP3/hddcddspline_OTHERIND_electricity-allcalcs-FD_FGLS_inter_OTHERIND_electricity_TINV_clim.csv"),
   skip = 114) %>% 
-	write_csv(paste0(output, '/miscellaneous/covariates_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim.csv'))
+	write_csv(paste0(DATA, '/miscellaneous/covariates_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim.csv'))
 
 covariates = cov_electricity_single %>%
 		dplyr::select(year, region, "climtas-cdd-20", "climtas-hdd-20", loggdppc) %>%
 		dplyr::filter(year %in% c(2015, 2099))%>%
 		dplyr::right_join(city_list, by = "region") %>%
-		write_csv(paste0(output, '/miscellaneous/stockholm_guangzhou_covariates_2015_2099.csv'))
+		write_csv(paste0(DATA, '/miscellaneous/stockholm_guangzhou_covariates_2015_2099.csv'))
 
 
 ###########################################
@@ -63,12 +66,12 @@ pop_df = pop %>%
 	dplyr::filter(ssp == "SSP3") %>%
 	dplyr::select(region, pop, year) 
 
-write_csv(pop_df, paste0(output,'/projection_system_outputs/covariates/' ,
+write_csv(pop_df, paste0(OUTPUT,'/projection_system_outputs/covariates/' ,
 	'SSP3_IR_level_population.csv'))
 
 # Get population and gdp values: 
-inf = paste0("/mnt/Global_ACP/MORTALITY", 
-	"/Replication_2018/3_Output/7_valuation/1_values/adjustments/vsl_adjustments.dta")
+inf = paste0(DATA, 
+	"/miscellaneous/vsl_adjustments.dta")
 con_df = read_dta(inf) 
 conversion_value = con_df$inf_adj[1]
 
@@ -98,10 +101,10 @@ covs = left_join(pop99, gdppc99, by = "region") %>%
 	dplyr::select(region, pop99, gdppc99) %>%
 	mutate(gdp99 = gdppc99 *pop99)
 
-write_csv(covs, paste0(output, '/projection_system_outputs/covariates/', 
+write_csv(covs, paste0(OUTPUT, '/projection_system_outputs/covariates/', 
 	'SSP3-high-IR_level-gdppc_pop-2099.csv'))
 
-d = read_csv(paste0(output, '/projection_system_outputs/covariates/', 
+d = read_csv(paste0(OUTPUT, '/projection_system_outputs/covariates/', 
 	'SSP3-high-IR_level-gdppc_pop-2099.csv')) %>% summarize(total = sum(pop99))
 
 ###########################################
@@ -114,12 +117,12 @@ gdp$year = seq(2010,2100,1)
 gdp = gdp %>% as.data.frame() %>% 
 	mutate(gdp = gdp * conversion_value)
 
-write_csv(gdp, paste0(output, 
+write_csv(gdp, paste0(OUTPUT, 
 	'/projection_system_outputs/covariates/SSP3-global-gdp-time_series.csv'))
 
 
 # generate some data for labor
-write_csv(gdp, paste0(output, 
+write_csv(gdp, paste0(OUTPUT, 
 	'/projection_system_outputs/covariates/SSP3-high-global-gdp-time_series.csv'))
 
 gdppc = get_gdppc_all_regions('low', 'SSP3')
@@ -130,7 +133,7 @@ gdp$year = seq(2010,2100,1)
 gdp = gdp %>% as.data.frame() %>% 
 	mutate(gdp = gdp * conversion_value)
 
-write_csv(gdp, paste0(output, 
+write_csv(gdp, paste0(OUTPUT, 
 	'/projection_system_outputs/covariates/SSP3-low-global-gdp-time_series.csv'))
 
 
@@ -146,7 +149,7 @@ gdp$year = seq(2010,2100,1)
 gdp = gdp %>% as.data.frame() %>% 
     mutate(gdp = gdp * conversion_value)
 
-write_csv(gdp, paste0(output, 
+write_csv(gdp, paste0(OUTPUT, 
     '/projection_system_outputs/covariates/SSP2-global-gdp-time_series.csv'))
 
 
@@ -172,7 +175,7 @@ pop12 = pop %>%
 df = left_join(df, pop12, by = "region") %>% 
 	dplyr::select(region, year, gdppc, pop)
 
-write_csv(df, paste0(output, '/projection_system_outputs/covariates/',
+write_csv(df, paste0(OUTPUT, '/projection_system_outputs/covariates/',
 	'SSP3-high-IR_level-gdppc-pop-2012.csv'))
 
 
@@ -199,7 +202,7 @@ df$pop <- na.interpolation(ts(c(df$pop)), option = "linear")
 
 df <- df %>% dplyr::mutate(gdp = pop * gdppc)
 
-write_csv(df, paste0(output, '/projection_system_outputs/covariates/',
+write_csv(df, paste0(OUTPUT, '/projection_system_outputs/covariates/',
 	'SSP3-low-IR_level-gdppc-pop-gdp-all-years.csv'))
 
 
