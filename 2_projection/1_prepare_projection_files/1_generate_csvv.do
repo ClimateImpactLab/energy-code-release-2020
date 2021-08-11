@@ -11,13 +11,13 @@ pause off
 qui net install http://www.stata.com/stb/stb56/dm79.pkg
 
 //SET UP RELEVANT PATHS
+
 global REPO: env REPO
 global DATA: env DATA 
 global OUTPUT: env OUTPUT 
 
 // path to energy-code-release repo 
 global root "${REPO}/energy-code-release-2020"
-
 
 //install global programs
 do $root/2_projection/0_packages_programs_inputs/projection_set_up/csvv_generation_stacked.do
@@ -31,7 +31,7 @@ do $root/2_projection/0_packages_programs_inputs/projection_set_up/csvv_generati
 local ster_stem = "FD_FGLS_inter"
 
 // path to analysis data 
-local DATA "$root/data"	
+local DATA "$DATA"
 
 // path to csvv output
 local output_csvv "$root/projection_inputs/csvv"
@@ -44,7 +44,7 @@ local break_data "$DATA/regression/break_data_TINV_clim.dta"
 * Note TINV_clim_lininter_double and TINV_clim_lininter_half are exactly the same csvv as TINV_clim_lininter
 * Hence we copy the csvv made for TINV_clim_lininter
 * 
-foreach model_tt in /*"TINV_clim" "TINV_clim_lininter"*/ "TINV_clim_lininter_double" "TINV_clim_lininter_half" {
+foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double" "TINV_clim_lininter_half" {
 	
 	di "`model_tt'"
 	if(inlist("`model_tt'", "TINV_clim", "TINV_clim_lininter")){
@@ -57,7 +57,7 @@ foreach model_tt in /*"TINV_clim" "TINV_clim_lininter"*/ "TINV_clim_lininter_dou
 
 		foreach product in "other_energy" "electricity" {
 
-			write_csvv , datapath("`DATA'")	outpath("`output_csvv'") root("$root") ///
+			write_csvv , datapath("`DATA'/regression/")	outpath("`output_csvv'") root("$root") ///
 				model("`model_tt'") clim_data("GMFD") spec_stem("`ster_stem'") ///
 				grouping_test("semi-parametric") product("`product'") bknum("break2") ///
 				zero_case("Exclude") issue_case("_all-issues") data_type("replicated_data")	
