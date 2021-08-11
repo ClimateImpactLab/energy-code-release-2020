@@ -161,6 +161,37 @@ write_csv(impacts,
 		paste0(output, '/projection_system_outputs/mapping_data/', 
 			'main_model-total_energy-SSP3-rcp85-high-fulladapt-price014-2099-map.csv'))
 
+# DELETE
+# # Get impacts data
+# args = list(
+#       conda_env = "risingverse-py27",
+#       proj_mode = '', # '' and _dm are the two options
+#       region = NULL, # needs to be specified for 
+#       rcp = "rcp85", 
+#       ssp = "SSP3", 
+#       price_scen = "price014", # have this as NULL, "price014", "MERGEETL", ...
+#       unit =  "damage", # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
+#       uncertainty = "climate", # full, climate, values
+#       geo_level = "levels", # aggregated (ir agglomerations) or 'levels' (single irs)
+#       iam = "low", 
+#       model = "TINV_clim", 
+#       adapt_scen = "fulladapt", 
+#       clim_data = "GMFD", 
+#       dollar_convert = "yes",
+#       yearlist = 2099,  
+#       spec = "OTHERIND_total_energy",
+#       grouping_test = "semi-parametric",
+#       regenerate = FALSE)
+
+# impacts = do.call(load.median, args) %>%
+#   dplyr::select(region, mean, q5, q10, q25, q50, q75, q90, q95) %>%
+#   rename(damage = mean)
+
+
+# write_csv(impacts, 
+#     paste0("/mnt/CIL_energy/code_release_data_pixel_interaction/", '/projection_system_outputs/mapping_data/', 
+#       'main_model-total_energy-SSP3-rcp85-low-fulladapt-price014-2099-map.csv'))
+
 
 #####################done######################
 # Get values csvs for the kernel density plots

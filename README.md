@@ -13,7 +13,7 @@ git clone https://github.com/ClimateImpactLab/energy-code-release-2020.git
 ```
 
 
-2. Install the `conda` environment needed to run this repo by running the following commands under the root of this repo: `conda env create energy_env_py3.yaml`
+2. Install the `conda` environment needed to run this repo by running the following commands under the root of this repo: `conda env create -f energy_env_py3.yaml`
 
 3. Install the R packages needed using the following command: 
 ```language

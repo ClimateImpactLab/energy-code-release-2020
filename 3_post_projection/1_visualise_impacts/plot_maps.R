@@ -111,12 +111,65 @@ plot_3A = function(DB_data, map){
   )
   ggsave(paste0(output, "/fig_3/fig_3A_2099_damages_proportion_gdp_map.png"), p,  bg = "transparent")
 }
+
 plot_3A(DB_data= DB_data, map = mymap)
 
 
+# # DELETE
+# plot_3A_low = function(DB_data, map){
+  
+#   # Load in the projected impacts data, which is in billions of 2019 dollars
+#   # Calculate each IRs damage as a proportion of it's SSP3 projected 2099 GDP
+#   df_damages = read_csv(
+#     paste0(DB_data, '/projection_system_outputs/mapping_data/', 
+#             'main_model-total_energy-SSP3-rcp85-low-fulladapt-price014-2099-map.csv')) 
+  
+#   # Load in GDP data
+#   covariates_old = read_csv(
+#     paste0(DB_data, '/projection_system_outputs/covariates/', 
+#            'SSP3-low-IR_level-gdppc_pop-2099.csv')) 
+
+#   # browser()
+#   covariates = read_csv(
+#     paste0(DB_data, '/projection_system_outputs/covariates/', 
+#            'SSP3-low-IR_level-gdppc-pop-gdp-all-years.csv'))  %>% 
+#   filter(year == 2099) %>%
+#   rename(pop99=pop, gdppc99=gdppc, gdp99=gdp)
+
+#   # Join data, and calculate damages as percent of GDP for each region
+#   df = left_join(df_damages, covariates, by = "region")%>%
+#     mutate(damage_per_gdp99 = damage * 1000000000 / gdp99 / 0.0036)
+
+#   # Set plotting parameters, and save!
+#   bound= 0.03
+#   rescale_value <- c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1) *bound
+  
+#   p = join.plot.map(map.df = map, 
+#                     df = df, 
+#                     df.key = "region",
+#                     plot.var = "damage_per_gdp99", 
+#                     breaks_labels_val = seq(-bound, bound, bound/3),
+#                     topcode = T, 
+#                     topcode.ub = max(rescale_value), 
+#                     color.scheme = "div", 
+#                     rescale_val = rescale_value,
+#                     colorbar.title = "2099 Damages, Proportion of 2099 GDP", 
+#                     map.title = "Per-GDP-price014-ssp3-rcp85-low")
+#   p = p + theme(
+#     panel.background = element_rect(fill = "transparent"), # bg of the panel
+#     plot.background = element_rect(fill = "transparent", color = NA), # bg of the plot
+#     panel.grid.major = element_blank(), # get rid of major grid
+#     panel.grid.minor = element_blank(), # get rid of minor grid
+#     legend.background = element_rect(fill = "transparent"), # get rid of legend bg
+#     legend.box.background = element_rect(fill = "transparent") # get rid of legend panel bg
+#   )
+#   ggsave(paste0("/home/liruixue/", "/fig_3A_low_2099_damages_proportion_gdp_map.png"), p,  bg = "transparent")
+# }
+
+# plot_3A_low(DB_data= DB_data, map = mymap)
 
 
-
+# DELETE
 
 #############################################
 # a comparison map between the pixel interaction version and the old version

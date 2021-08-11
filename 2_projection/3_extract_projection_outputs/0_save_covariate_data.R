@@ -104,8 +104,39 @@ covs = left_join(pop99, gdppc99, by = "region") %>%
 write_csv(covs, paste0(OUTPUT, '/projection_system_outputs/covariates/', 
 	'SSP3-high-IR_level-gdppc_pop-2099.csv'))
 
-d = read_csv(paste0(OUTPUT, '/projection_system_outputs/covariates/', 
-	'SSP3-high-IR_level-gdppc_pop-2099.csv')) %>% summarize(total = sum(pop99))
+
+# DELETE
+
+
+# gdppc = get_gdppc_all_regions('low', 'SSP3')
+
+# gdppc = gdppc %>%
+# 	mutate(gdppc = gdppc * conversion_value)
+
+
+# # Population values are every 5 years. We use flat interpolation (a step function)
+# # in between. So the 2099 population is assigned to the value we have in 2095. 
+
+# pop99 = pop %>% 
+# 	dplyr::filter(ssp == "SSP3") %>%
+# 	dplyr::filter(year == 2095) %>% 
+# 	dplyr::select(region, pop) %>%
+# 	rename(pop99 = pop)
+
+# gdppc99 = gdppc %>% 
+# 	dplyr::filter(year == 2099) %>%
+# 	rename(gdppc99 = gdppc)
+
+# covs = left_join(pop99, gdppc99, by = "region") %>%
+# 	dplyr::select(region, pop99, gdppc99) %>%
+# 	mutate(gdp99 = gdppc99 *pop99)
+
+# write_csv(covs, paste0("/mnt/CIL_energy/code_release_data_pixel_interaction/", '/projection_system_outputs/covariates/', 
+# 	'SSP3-low-IR_level-gdppc_pop-2099.csv'))
+
+# DELETE
+
+
 
 ###########################################
 # 4 Figure 3B Time series data 
