@@ -1,0 +1,7 @@
+outputdir: outputs/energy_pixel_interaction/impacts-blueghost
+levels-weighting: population * social/baselines/energy/REMINDMAgPIE1730_rcp45_Prices_COMPILE.dta:country:year:electricitycompile_price
+targetdir: impacts-blueghost/single-OTHERIND_electricity_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_GMFD/rcp45/CCSM4/high/SSP3
+aggregate-weighting-numerator: population * social/baselines/energy/REMINDMAgPIE1730_rcp45_Prices_COMPILE.dta:country:year:electricitycompile_price
+aggregate-weighting-denominator: sum-to-1
+infix: REMINDMAgPIE1730_rcp45
+rcp: rcp45

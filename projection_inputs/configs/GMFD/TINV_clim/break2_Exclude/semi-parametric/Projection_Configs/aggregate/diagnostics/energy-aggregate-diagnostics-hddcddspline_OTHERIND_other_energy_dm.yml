@@ -1,0 +1,3 @@
+outputdir: outputs/energy_pixel_interaction/impacts-blueghost
+weighting: population
+targetdir: impacts-blueghost/single-OTHERIND_other_energy_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_GMFD_dm/rcp85/CCSM4/high/SSP3
