@@ -1,0 +1,3 @@
+outputdir: outputs/energy_pixel_interaction/impacts-blueghost/median_OTHERIND_other_energy_TINV_clim_lininter_GMFD_dm
+weighting: population
+only-farmers: ['', 'histclim']

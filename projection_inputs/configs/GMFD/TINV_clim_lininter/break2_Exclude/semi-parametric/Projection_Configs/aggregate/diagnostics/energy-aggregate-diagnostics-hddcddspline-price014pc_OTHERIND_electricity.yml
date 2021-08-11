@@ -1,0 +1,7 @@
+outputdir: outputs/energy_pixel_interaction/impacts-blueghost
+levels-weighting: population * social/baselines/energy/IEA_Price_FIN_Clean_gr014_GLOBAL_COMPILE.dta:country:year:electricitycompile_price
+targetdir: impacts-blueghost/single-OTHERIND_electricity_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_lininter_GMFD/rcp85/CCSM4/high/SSP3
+aggregate-weighting-numerator: population * social/baselines/energy/IEA_Price_FIN_Clean_gr014_GLOBAL_COMPILE.dta:country:year:electricitycompile_price
+aggregate-weighting-denominator: population
+infix: price014pc
+only-farmers: ['', 'histclim']
