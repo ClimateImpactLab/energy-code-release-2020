@@ -35,7 +35,7 @@ regions = c("GBR.1.10")
 
 #set directories
 output = "/mnt/CIL_energy/code_release_data_pixel_interaction/projection_system_outputs/plot_single/"
-git <- "/home/liruixue/repos"
+git <- "/home/liruixue/repos_release/energy-code-release-2020/"
 
 
 # check necessary packages are installed
@@ -45,13 +45,13 @@ if(length(new.packages)) install.packages(new.packages)
 
 
 #load functions
-source(paste0(git,'/post-projection-tools/response_function/yellow_purple_package.R'))
-source(paste0(git,'/gcp-energy/rationalized/2_projection/2_processing/packages/response_function.R'))
+source(paste0(git,'3_post_projection/0_utils/yellow_purple_package.R'))
+source(paste0(git,'3_post_projection/0_utils/response_function.R'))
 
 
 # Set location of files needed for the code to run (covs, csvv climate output)
 csvv.dir = '/home/liruixue/repos/energy-code-release-2020/projection_inputs/csvv/TINV_clim/'
-config.path <- paste0(git,"/energy-code-release-2020/projection_inputs/configs/",clim_data,"/",model,"/break2_Exclude/", grouping_test,"/Projection_Configs/sacagawea/run/diagnostics/")
+config.path <- paste0(git,"/projection_inputs/configs/",clim_data,"/",model,"/break2_Exclude/", grouping_test,"/Projection_Configs/run/diagnostics/")
 cov.dir <- paste0("/mnt/CIL_energy/IEA_Replication/Data/Projection/covariates/FD_FGLS_719_Exclude_all-issues_break2_",grouping_test,"_",model,"_income_spline.csv")
 tas.path <- paste0("/shares/gcp/climate/BCSD/hierid/popwt/daily/") #location of input impact files
 output.dir <- output
