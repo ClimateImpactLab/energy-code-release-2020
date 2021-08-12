@@ -17,10 +17,10 @@ product.list <- c("other_energy","electricity")
 flow <- "OTHERIND"
 grouping_test <- "semi-parametric"
 price_growth_rate <- "014" # "03" "0"
-product <- "other_energy"
-years = c(2099)
+product <- "electricity"
+years = c(2015)
 all_years = c(years, 2010)
-regions = c("GBR.1.10")
+regions = c("USA.44.2628")
 
 
 
@@ -35,7 +35,7 @@ regions = c("GBR.1.10")
 
 #set directories
 output = "/mnt/CIL_energy/code_release_data_pixel_interaction/projection_system_outputs/plot_single/"
-git <- "/home/liruixue/repos_release/energy-code-release-2020/"
+git <- "/home/liruixue/repos/energy-code-release-2020/"
 
 
 # check necessary packages are installed
@@ -51,10 +51,20 @@ source(paste0(git,'3_post_projection/0_utils/response_function.R'))
 
 # Set location of files needed for the code to run (covs, csvv climate output)
 csvv.dir = '/home/liruixue/repos/energy-code-release-2020/projection_inputs/csvv/TINV_clim/'
-config.path <- paste0(git,"/projection_inputs/configs/",clim_data,"/",model,"/break2_Exclude/", grouping_test,"/Projection_Configs/run/diagnostics/")
-cov.dir <- paste0("/mnt/CIL_energy/IEA_Replication/Data/Projection/covariates/FD_FGLS_719_Exclude_all-issues_break2_",grouping_test,"_",model,"_income_spline.csv")
+config.path <- paste0(git,"/projection_inputs/configs/",clim_data,"/",model,"/break2_Exclude/", grouping_test,"/Projection_Configs/sacagawea/run/diagnostics/")
+cov.dir <- paste0("/mnt/CIL_energy/code_release_data_pixel_interaction/",
+  "/miscellaneous/covariates_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim.csv")
 tas.path <- paste0("/shares/gcp/climate/BCSD/hierid/popwt/daily/") #location of input impact files
 output.dir <- output
+
+
+
+# cov_electricity_single= read_csv("/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost/single-OTHERIND_electricity_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_GMFD/rcp85/CCSM4/high/SSP3/hddcddspline_OTHERIND_electricity-allcalcs-FD_FGLS_inter_OTHERIND_electricity_TINV_clim.csv",
+#   skip = 114) %>% 
+#   write_csv(paste0(output, '/miscellaneous/covariates_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim.csv'))
+# output = '/mnt/CIL_energy/code_release_data_pixel_interaction/'
+
+
 
 
 # Define the arguments that get passed into the delta beta functions...
@@ -64,7 +74,7 @@ args = list(
   grouping_test=grouping_test,
   clim_data = clim_data,
   model= model_long,
-  y.lim=c(15,-5),
+  # y.lim=c(15,-5),
   mat.file = paste('damages',model,grouping_test,"break2_Exclude", clim_data, sep = "_"),
   bound_to_hist = F,
   csvv.dir = csvv.dir,
@@ -91,7 +101,7 @@ args = list(
   # suffix=paste("_",model,grouping_test,"break2_Exclude",clim_data,sep = "_"),
   delta.beta=T,
   add.cov.table = T,
-  db.suffix = paste0('delta_covs_', product, '_other_energy_test')
+  db.suffix = paste0('delta_covs_', product, '_electricity')
 )
 
 # Run it...
