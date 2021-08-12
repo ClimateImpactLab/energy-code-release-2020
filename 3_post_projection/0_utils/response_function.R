@@ -4,7 +4,7 @@
 # Last Modified: 11/15/19
 #############################################################################
 
-# currently only setup to run on TINV_clim_income_spline... increase functionality for other models in the future!
+# currently only setup to run on TINV_clim... increase functionality for other models in the future!
 
 library(DescTools)
 library(stringr)
@@ -33,8 +33,8 @@ squish_function <- stringr::str_squish
 #' @export
 #' 
 
-get.config.name <- function(product = 'electricity', model = 'TINV_clim_income_spline', ...) {
-  if(grepl("spline", model)) {
+get.config.name <- function(product = 'electricity', model = 'TINV_clim', ...) {
+  if(grepl("TINV_clim", model)) {
     return(paste0("energy-diagnostics-hddcddspline_OTHERIND_",product,".yml"))
   } else {
     stop(paste0("Cannot read in config file for this ",model))
@@ -127,11 +127,11 @@ load.population <- function(covars = NULL, region = 'ARE.3', year = 2010, ...) {
 #' Get the energy response curve in kWh pc
 #' list as the sector.response.function parameter if you want impacts per capita
 
-get.curve.energy <- function(product = 'electricity', model = "TINV_clim_income_spline", csvv.name.glue = NULL, cdd = NULL, hdd = NULL, loggdppc = NULL, TT = seq(-23, 45,.5), ...) {
+get.curve.energy <- function(product = 'electricity', model = "TINV_clim", csvv.name.glue = NULL, cdd = NULL, hdd = NULL, loggdppc = NULL, TT = seq(-23, 45,.5), ...) {
 
   kwargs = list(...)
 
-  testit::assert(all(grepl("spline", model)))
+  testit::assert(all(grepl("TINV_clim", model)))
 
   #create above and below 20 indicator
   above20 <-ifelse(TT>=20, 1, 0)
@@ -165,7 +165,7 @@ get.curve.energy <- function(product = 'electricity', model = "TINV_clim_income_
     eta2 <- get.gamma(csvv, prednames='tas2', covarnames=paste0("loggdppc*",incgroup)) * loggdppc 
     eta <- eta1 * (TT-20) + eta2 * (TT^2 - 400)
     response <- response + eta
-  } else if (model == "TINV_clim_income_spline") {
+  } else if (model == "TINV_clim") {
     eta1 <- get.gamma(csvv, prednames='tas', covarnames=paste0("loggdppc-shifted*",incgroup)) * loggdppc.shifted
     eta2 <- get.gamma(csvv, prednames='tas2', covarnames=paste0("loggdppc-shifted*",incgroup)) * loggdppc.shifted 
     eta <- eta1 * (TT-20) + eta2 * (TT^2 - 400)

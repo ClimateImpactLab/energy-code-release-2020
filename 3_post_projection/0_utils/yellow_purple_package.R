@@ -1174,7 +1174,7 @@ filter_col_val <- function(df, fld, sval) {
 covar.table <- function(covars, region, covarkey, ...) {
 	covarkey = sym(covarkey)
 	c = covars %>% dplyr::filter( !!covarkey == !!region ) 
-	c = c %>% select(-(!!covarkey))
+	c = c %>% dplyr::select(-(!!covarkey))
 	ct = data.frame(t(c))
 	names(ct) = as.character(unlist(ct[1,]))
 	ct = ct[-1,]
