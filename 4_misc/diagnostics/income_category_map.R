@@ -12,7 +12,7 @@ library(reticulate)
 library(haven)
 library(tidyr)
 cilpath.r:::cilpath()
-
+REPO <- "/home/liruixue/repos"
 root =paste0(REPO,"/energy-code-release-2020/") 
 setwd(root)
 
@@ -32,7 +32,7 @@ projection.packages <- paste0(REPO,"/energy-code-release-2020/2_projection/0_pac
 ########### load the data needed ############ 
 # Covariates are from a single run allcalcs file
 # get country-level income
-cov_pixel_interaction= read_csv(paste0(output, '/miscellaneous/covariates_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim.csv'))
+cov_pixel_interaction= read_csv(paste0("/mnt/CIL_energy/code_release_data_pixel_interaction/", '/miscellaneous/covariates_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim.csv'))
 
 country_inc = cov_pixel_interaction %>%
 		dplyr::select(year, region, loggdppc) %>%

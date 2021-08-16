@@ -239,7 +239,13 @@ plot_prices = function(rcp, pricelist, output) {
   
   colourCount = length(pricelist)
   print('plotting')
-  
+
+# code to get the range of end-of-century values for press
+  # browser()
+  # do.call (rbind , df) %>% filter(year == 2100) %>% 
+  # summarize(max = max(percent_gdp), min = min(percent_gdp))
+
+
   p <- ggtimeseries(df.list = df, 
                     df.x = "year",
                     x.limits = c(2010, 2100),                               

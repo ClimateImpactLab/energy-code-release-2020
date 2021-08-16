@@ -195,6 +195,8 @@ afr_high_impact = Reduce(function(x,y) merge(x = x, y = y, by = c("region"), all
                   iso_pop99 = sum(pop99)) %>%
         rename(region = iso)
 
+
+
 afr_mean_high_impact = afr_high_impact %>% 
     summarize(african_mean_high_impact = weighted.mean(iso_mean_impact_high, iso_pop99)) 
 
@@ -237,6 +239,89 @@ afr_mean_frac_gdp = afr_frac_gdp %>%
 output_file =  Reduce(function(x,y) merge(x = x, y = y, by = c("iso","year")), 
        list(afr_low_impact, afr_high_impact, afr_frac_gdp))
 write_csv(output_file, paste0(labor_ipcc_output,"/african_countries_labor_impactpc_pctgdp.csv"))
+
+print(afr_mean_low_impact)
+print(afr_mean_high_impact)
+print(afr_mean_frac_gdp)
+
+
+
+
+
+# do the same thing for rcp45
+
+# process the labor results
+extracted_data_dir = "/shares/gcp/estimation/labor/code_release_int_data/projection_outputs/extracted_data"
+
+# high risk impacts
+high_min = read_csv(paste0(extracted_data_dir,
+          "/SSP3-rcp45_high_highrisk_fulladapt-pop-aggregated_ipcc.csv")) %>%
+          filter(year == 2099) %>%
+          mutate(iso = substr(region, 1,3))
+
+gdp_pop = read_csv(paste0(output, '/covariates/', 
+  'SSP3-high-IR_level-gdppc_pop-2099.csv'))
+
+
+afr_high_impact = Reduce(function(x,y) merge(x = x, y = y, by = c("region"), all = FALSE), 
+       list(high_min, gdp_pop, african_IRs)) %>%
+        dplyr::select(-iso.y) %>%
+        rename(iso = iso.x) %>%
+        group_by(iso) %>% 
+        summarize(iso_mean_impact_high = weighted.mean(mean, pop99), 
+                  iso_pop99 = sum(pop99)) %>%
+        rename(region = iso)
+
+
+
+# find max possible damage
+# afr_high_impact = Reduce(function(x,y) merge(x = x, y = y, by = c("region"), all = FALSE), 
+#        list(high_min, gdp_pop, african_IRs)) 
+# min(afr_high_impact$mean)
+
+
+afr_mean_high_impact = afr_high_impact %>% 
+    summarize(african_mean_high_impact = weighted.mean(iso_mean_impact_high, iso_pop99)) 
+
+# low risk impacts
+low_min = read_csv(paste0(extracted_data_dir,
+          "/SSP3-rcp45_high_lowrisk_fulladapt-pop-aggregated_ipcc.csv")) %>%
+          filter(year == 2099)%>%
+          mutate(iso = substr(region, 1,3))
+
+afr_low_impact = Reduce(function(x,y) merge(x = x, y = y, by = c("region"), all = FALSE), 
+       list(low_min, gdp_pop, african_IRs)) %>%
+        dplyr::select(-iso.y) %>%
+        rename(iso = iso.x) %>%
+        group_by(iso) %>% 
+        summarize(iso_mean_impact_low = weighted.mean(mean, pop99), 
+                  iso_pop99 = sum(pop99)) %>%
+        rename(region = iso)
+afr_mean_low_impact = afr_low_impact %>% 
+    summarize(african_mean_low_impact = weighted.mean(iso_mean_impact_low, iso_pop99)) 
+
+
+# pct gdp
+frac_gdp = read_csv(paste0(extracted_data_dir,
+          "/SSP3-rcp45_high_allrisk_fulladapt-gdp-levels_ipcc.csv")) %>%
+          filter(year == 2099)%>%
+          mutate(iso = substr(region, 1,3))
+
+afr_frac_gdp = Reduce(function(x,y) merge(x = x, y = y, by = c("region"), all = FALSE), 
+       list(frac_gdp, gdp_pop, african_IRs)) %>%
+        dplyr::select(-iso.y) %>%
+        rename(iso = iso.x) %>%
+        group_by(iso) %>% 
+        summarize(iso_mean_frac_gdp = weighted.mean(mean, gdp99), 
+                  iso_gdp99 = sum(gdp99)) %>%
+        rename(region = iso)
+
+afr_mean_frac_gdp = afr_frac_gdp %>% 
+    summarize(african_mean_frac_gdp= weighted.mean(iso_mean_frac_gdp, iso_gdp99)) 
+
+output_file =  Reduce(function(x,y) merge(x = x, y = y, by = c("iso","year")), 
+       list(afr_low_impact, afr_high_impact, afr_frac_gdp))
+write_csv(output_file, paste0(labor_ipcc_output,"/african_countries_labor_impactpc_pctgdp_rcp45.csv"))
 
 print(afr_mean_low_impact)
 print(afr_mean_high_impact)

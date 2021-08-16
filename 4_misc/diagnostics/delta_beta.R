@@ -20,15 +20,7 @@ price_growth_rate <- "014" # "03" "0"
 product <- "electricity"
 years = c(2015)
 all_years = c(years, 2010)
-regions = c("USA.44.2628")
-
-
-
-# TO-DO
-# to get the covariate file
-# import delimited "`allcalcs'/hddcddmodel_COMPILE_total_energy-allcalcs-FD_FGLS_FE_ITFIN_inter_BEST_poly2_COMPILE_total_energy_Model1_TINV_clim.csv", clear varn(61) rowrange(61)
-# keep region year climtascdd20 climtashdd20 loggdppc 
-
+regions = c("USA.48.2971")
 
 
 
@@ -87,11 +79,15 @@ args = list(
   func = get.energy.response,
   y.lab = 'Impacts pc', 
   unit = 'impactpc', 
+  # TT_upper_bound = 40,
+  # TT_lower_bound = -10,
   get.covariates=T, 
+  drop_zero_bins = F,
   inc.adapt=F,
+  rnd.digits = 5,
   covar.names = c("climtas-cdd-20","climtas-hdd-20","loggdppc"),
   list.names = c("climtascdd20","climtashdd20","loggdppc"),
-  c.margin = c(.25,.25,0,.25), # (t,r,b,l)
+  c.margin = c(.25,.25,0.25,.25), # (t,r,b,l)
   h.margin = c(.05,.25,.25,.25),
   legend.pos = c(.63,.95),
   export.singles=F,

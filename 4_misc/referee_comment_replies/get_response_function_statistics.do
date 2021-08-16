@@ -15,7 +15,7 @@ foreach temp in 35 0 {
 		use "$root/data/break_data_TINV_clim.dta", clear
 		summ maxInc_largegpid_`fuel' if largegpid_`fuel' == 1
 		local ibar_main = `r(max)'
-
+		
 		duplicates drop tpid tgpid, force
 		sort tpid tgpid 
 		keep *gdp* avgCDD* avgHDD* avgInc* tpid tgpid large*
@@ -70,4 +70,5 @@ foreach temp in 35 0 {
 		list yhat_main if _n == 1
 	}
 }
+
 

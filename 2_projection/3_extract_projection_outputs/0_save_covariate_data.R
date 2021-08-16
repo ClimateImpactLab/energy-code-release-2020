@@ -12,7 +12,7 @@ library(haven)
 library(tidyr)
 library(imputeTS)
 cilpath.r:::cilpath()
-
+REPO = "/home/liruixue/repos"
 
 setwd(paste0(REPO,"/energy-code-release-2020/"))
 
@@ -76,6 +76,9 @@ conversion_value = con_df$inf_adj[1]
 # 3 Data for figure 3A map
 
 gdppc = get_gdppc_all_regions('high', 'SSP3')
+
+write_csv(gdppc, paste0(output,'/projection_system_outputs/covariates/' ,
+    'SSP3_IR_level_gdppc.csv'))
 
 gdppc = gdppc %>%
 	mutate(gdppc = gdppc * conversion_value)
