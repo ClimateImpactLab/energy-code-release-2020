@@ -1,0 +1,6 @@
+outputdir: outputs/energy_pixel_interaction/impacts-blueghost/median_OTHERIND_other_energy_TINV_clim_GMFD_dm
+levels-weighting: population * social/baselines/energy:country:year:other_energycompile_
+aggregate-weighting-numerator: population * social/baselines/energy:country:year:other_energycompile_
+aggregate-weighting-denominator: population
+infix: integrationpc
+only-farmers: ['', 'histclim']
