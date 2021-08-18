@@ -41,7 +41,7 @@ eval "$1" # fetch parameters from the command line
 ## / parameter:rcp / options:rcp85, rcp45 / required:no /
 ## / parameter:proj_mode / options:_dm / required:no /
 ### options really are '' and _dm but i'm not sure yet how to pass that into R through my funciton
-## / parameter:price_scen / options:price014, price0, price03, WITCHGLOBIOM42_rcp45, WITCHGLOBIOM42_rcp85, REMINDMAgPIE1730_rcp85, REMINDMAgPIE1730_rcp45, REMIND17CEMICS_rcp85, REMIND17CEMICS_rcp45, REMIND17_rcp85, REMIND17_rcp45, MERGEETL60_rcp85, MERGEETL60_rcp45 / required:no /
+## / parameter:price_scen / options:price014, price0, price03, WITCHGLOBIOM42_rcp45, WITCHGLOBIOM42_rcp85, REMINDMAgPIE1730_rcp85, REMINDMAgPIE1730_rcp45, REMIND17CEMICS_rcp85, REMIND17CEMICS_rcp45, REMIND17_rcp85, REMIND17_rcp45, MERGEETL60_rcp85, MERGEETL60_rcp45, integration / required:no /
 ## / parameter:extract / options:true, false / required:no /
 ### only sort of required... for R script calling required though
 ### default is TRUE... if you want to get names but not extract extract should equal FALSE
