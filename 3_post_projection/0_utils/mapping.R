@@ -204,9 +204,16 @@ join.plot.map <- function(map.df = NULL, df = NULL, df.key = "hierid", map.key =
     if (plot.lakes){
       
       #load lakes
+      browser()
       lakes10 <- ne_download(scale = 110, type = 'lakes', category = 'physical') %>%
         spTransform(CRS(map.crs)) %>% #set crs
         fortify(lakes10, region = "name") #set spatial data as df
+      lakes10 <- ne_load(
+        destdir = "/shares/gcp/climate/_spatial_data/",
+        file_name = "ne_110m_lakes",
+        scale = 110,
+        type = lakes,
+        category = "physical")       
 
       lakes <- dplyr::filter(lakes10, lakes10$lat <= max(map.df$lat) & lakes10$lat >= min(map.df$lat) & lakes10$long <= max(map.df$long) & lakes10$long >= min(map.df$long)) #newly subsetted lakes based on limits of map.df
       
