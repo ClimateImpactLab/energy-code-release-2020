@@ -96,6 +96,7 @@ join.plot.map <- function(map.df = NULL, df = NULL, df.key = "hierid", map.key =
                             bar.width = unit(100, units = "mm"),
                             colorbar.title = NULL, map.title = NULL, na.color = "grey85", lakes.color = "white",
                             color.values = NULL, minval = NULL, maxval = NULL, plot.lakes = T, 
+                            lake.path = "/shares/gcp/climate/_spatial_data/ne_110m_lakes",
                             map.crs = "+proj=robin +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"){
     
     print(paste0("joining data to world shapefile by: ",map.key, " and ", df.key))
@@ -203,18 +204,27 @@ join.plot.map <- function(map.df = NULL, df = NULL, df.key = "hierid", map.key =
     
     if (plot.lakes){
       
-      #load lakes
-      browser()
-      lakes10 <- ne_download(scale = 110, type = 'lakes', category = 'physical') %>%
+      # load lakes
+      # load local shapefile if ne_download is not available 
+      lakes10 <- tryCatch(
+          expr = {
+            lakes10 <- ne_download(scale = 110, type = 'lakes', category = 'physical')
+        },
+          error = function(e) {
+            print("ne_download not working, loading local shapefiles for lakes")
+            lakes10 <- ne_load(
+              destdir = lake.path,
+              scale = 110,
+              type = "lakes",
+              category = "physical")
+            return(lakes10)
+        }
+      )
+      
+      lakes10 <- lakes10 %>%
         spTransform(CRS(map.crs)) %>% #set crs
         fortify(lakes10, region = "name") #set spatial data as df
-      lakes10 <- ne_load(
-        destdir = "/shares/gcp/climate/_spatial_data/",
-        file_name = "ne_110m_lakes",
-        scale = 110,
-        type = lakes,
-        category = "physical")       
-
+ 
       lakes <- dplyr::filter(lakes10, lakes10$lat <= max(map.df$lat) & lakes10$lat >= min(map.df$lat) & lakes10$long <= max(map.df$long) & lakes10$long >= min(map.df$long)) #newly subsetted lakes based on limits of map.df
       
       p.map <- p.map + geom_polygon(data = lakes, aes(x=long, y=lat, group=group), fill=lakes.color) # lakes overlay
