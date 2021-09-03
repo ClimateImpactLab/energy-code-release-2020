@@ -84,7 +84,7 @@ gen_plot_save_kd <-
   
   message('Converting the damage draws into percent of GDP')
   df_gdp = read_csv(paste0(DB_data,"/projection_system_outputs/covariates/",
-                           "/SSP3-high-IR_level-gdppc_pop-2099.csv"))
+                           "/SSP3-high-IR_level-gdppc_pop-2099_correction_iso-income.csv"))
   val = df_gdp$gdp99[df_gdp$region == IR] %>% as.numeric()
   # Convert to dollars, since that 
   # was the units of the impacts was  billions of dollars
@@ -105,7 +105,7 @@ gen_plot_save_kd <-
   if(!is.null(ymax)){
     kd_plot = kd_plot + ylim(0, ymax)
   } 
-  ggsave(paste0(output, "/fig_3/fig_3A_kd_plot_",IR, ".pdf"), kd_plot)
+  ggsave(paste0(output, "/fig_3/fig_3A_kd_plot_",IR, "_income_correction.pdf"), kd_plot)
   return(kd_plot)
 }
 
