@@ -1,7 +1,7 @@
 # Prepare code release data, and save it on Dropbox...
 # Note - all maps in the paper are for 2099, SSP3, rcp85, high, so these are hard coded 
 # This code should be run from inside the risingverse-py27 conda environment 
-# Extract not for price014, but integration scenario
+# Extract not for integration, but integration scenario
 
 rm(list = ls())
 library(readr)
@@ -49,7 +49,7 @@ args = list(
       region = NULL, # needs to be specified for 
       rcp = "rcp85", 
       ssp = "SSP3", 
-      price_scen = "integration", # have this as NULL, "price014", "MERGEETL", ...
+      price_scen = "integration", # have this as NULL, "integration", "MERGEETL", ...
       unit =  "damage", # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
       uncertainty = "climate", # full, climate, values
       geo_level = "levels", # aggregated (ir agglomerations) or 'levels' (single irs)
@@ -61,10 +61,10 @@ args = list(
       yearlist = 2099,  
       spec = "OTHERIND_total_energy",
       grouping_test = "semi-parametric",
-      regenerate = FALSE)
+      regenerate = TRUE)
 
 impacts = do.call(load.median, args) %>%
-	dplyr::select(region, mean, q5, q10, q25, q50, q75, q90, q95) %>%
+	dplyr::select(region, mean, q5, q95) %>%
 	rename(damage = mean)
 
 write_csv(impacts, 
@@ -92,7 +92,7 @@ get.dfs <- function(env, IR, ssp, iam, rcp, price = NULL, unit, year, fuel) {
     region = IR, # needs to be specified for 
     rcp = NULL, 
     ssp = ssp, 
-    price_scen = price, # have this as NULL, "price014", "MERGEETL", ...
+    price_scen = price, # have this as NULL, "integration", "MERGEETL", ...
     unit =  unit, # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
     uncertainty = "values", # full, climate, values
     geo_level = geo_level, # aggregated (ir agglomerations) or 'levels' (single irs)
@@ -102,6 +102,7 @@ get.dfs <- function(env, IR, ssp, iam, rcp, price = NULL, unit, year, fuel) {
     clim_data = "GMFD", 
     yearlist = year,  
     spec = fuel,
+    regenerate = TRUE,
     dollar_convert = dollar_convert, 
     grouping_test = "semi-parametric" ) %>%
     dplyr::filter(!! iam==`iam`, !! rcp==`rcp`) %>%
@@ -114,7 +115,7 @@ get.dfs <- function(env, IR, ssp, iam, rcp, price = NULL, unit, year, fuel) {
     region = IR, # needs to be specified for 
     rcp = NULL, 
     ssp = ssp, 
-    price_scen = price, # have this as NULL, "price014", "MERGEETL", ...
+    price_scen = price, # have this as NULL, "integration", "MERGEETL", ...
     unit =  unit, # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
     uncertainty = "values", # full, climate, values
     geo_level = geo_level, # aggregated (ir agglomerations) or 'levels' (single irs)
@@ -124,6 +125,7 @@ get.dfs <- function(env, IR, ssp, iam, rcp, price = NULL, unit, year, fuel) {
     clim_data = "GMFD", 
     yearlist = year,  
     spec = fuel,
+    regenerate = FALSE,
     dollar_convert = dollar_convert, 
     grouping_test = "semi-parametric")  %>%
     dplyr::filter(!! iam==`iam`, !!rcp==`rcp`) %>%
@@ -157,30 +159,6 @@ write_csv(df, paste0(output, '/projection_system_outputs/IR_GCM_level_impacts/',
 
 
 ######################done#########################
-# Get GCM list, and their respective weights, for use in the kernel density plots
-# NOte - this pulls a gcm_weights csv from the mortality dropbox
-get.normalized.weights <- function (rcp='rcp85') {
-
-  df = read_csv('/mnt/Global_ACP/damage_function/GMST_anomaly/gcm_weights.csv') 
-
-  if (rcp == 'rcp45'){
-  	df$weight[df$gcm == "surrogate_GFDL-ESM2G_06"] = 0
-  }
-  norm = sum(df$weight)
-  df = df %>% mutate(norm_weight = weight  /!! norm) %>%
-  		dplyr::select(gcm, norm_weight)
-  return(df)
-}
-
-gcms85 = get.normalized.weights(rcp = "rcp85") %>% rename(norm_weight_rcp85 = norm_weight)
-gcms45 = get.normalized.weights(rcp = "rcp45") %>% rename(norm_weight_rcp45 = norm_weight)
-
-df = left_join(gcms85, gcms45, by = "gcm") 
-df = df[,c("gcm", "norm_weight_rcp45", "norm_weight_rcp85")]
-write_csv(df, paste0(output, '/miscellaneous/gcm_weights.csv'))
-
-
-######################done#########################
  # 2 Load the impacts data for figure 3 time series as percent GDP
 
 args = list(
@@ -189,7 +167,7 @@ args = list(
     region = "global", # needs to be specified for 
     # rcp = "rcp85", 
     ssp = "SSP3", 
-    price_scen = "price014", # have this as NULL, "price014", "MERGEETL", ...
+    price_scen = "integration", # have this as NULL, "integration", "MERGEETL", ...
     unit =  "damage", # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
     uncertainty = "full", # full, climate, values
     geo_level = "aggregated", # aggregated (ir agglomerations) or 'levels' (single irs)
@@ -208,7 +186,7 @@ get_df_ts_main_model_total_energy = function(rcp, args) {
 	                        mutate(rcp = !!rcp)
 	write_csv(plot_df, 
 		paste0(output, '/projection_system_outputs/time_series_data/', 
-			'main_model-total_energy-SSP3-',rcp, '-high-fulladapt-price014.csv'))
+			'main_model-total_energy-SSP3-',rcp, '-high-fulladapt-integration.csv'))
 }
 
 rcps = c("rcp45", "rcp85")
@@ -222,7 +200,7 @@ args = list(
     region = "global", # needs to be specified for 
     # rcp = "rcp85", 
     ssp = "SSP3", 
-    price_scen = "price014", # have this as NULL, "price014", "MERGEETL", ...
+    price_scen = "integration", # have this as NULL, "integration", "MERGEETL", ...
     unit =  "damage", # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
     uncertainty = "full", # full, climate, values
     geo_level = "aggregated", # aggregated (ir agglomerations) or 'levels' (single irs)
@@ -241,32 +219,12 @@ get_df_ts_main_model_total_energy = function(rcp, args) {
                           mutate(rcp = !!rcp)
   write_csv(plot_df, 
     paste0(output, '/projection_system_outputs/time_series_data/', 
-      'main_model-total_energy-SSP3-',rcp, '-high-incadapt-price014.csv'))
+      'main_model-total_energy-SSP3-',rcp, '-high-incadapt-integration.csv'))
 }
 
 rcps = c("rcp85")
 lapply(rcps, get_df_ts_main_model_total_energy, args = args) 
 
-
-##########################
-# Covariate data for blob plots: 
-#############done#############
-      
-# Note - this is the output from a single run, since that produces an allcalcs file
-
-# set path variables
-covariates <- paste0(output, 
-  '/miscellaneous/covariates_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim.csv')
-
-# load and clean data
-covars = as.data.frame(readr::read_csv(covariates)) %>% 
-  rename( 'HDD20' = 'climtas-hdd-20', 'CDD20' = 'climtas-cdd-20') %>% 
-  select(year, region, HDD20, CDD20, loggdppc, population) %>%
-  subset(year %in% c(2090,2010))
-
-write_csv(covars, 
-	paste0(output,'/projection_system_outputs/covariates/', 
-	 'covariates-SSP3-rcp85-high-2010_2090-CCSM4.csv'))
 
 
 

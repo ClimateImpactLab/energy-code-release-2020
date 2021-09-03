@@ -18,7 +18,7 @@ root =  "/home/liruixue/repos/energy-code-release-2020"
 output = paste0(root, "/figures")
 
 
-# Take deciles of 2012 income/ clim data distribution of IRs, by getting equal populations in each population
+# Take deciles of 2012 income/ clim data distribution of IRs
 get_deciles = function(df){
   
   deciles = df %>% 

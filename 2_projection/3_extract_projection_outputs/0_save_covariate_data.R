@@ -10,6 +10,7 @@ library(dplyr)
 library(reticulate)
 library(haven)
 library(tidyr)
+library(glue)
 library(imputeTS)
 cilpath.r:::cilpath()
 REPO = "/home/liruixue/repos"
@@ -202,5 +203,32 @@ df <- df %>% dplyr::mutate(gdp = pop * gdppc)
 
 write_csv(df, paste0(output, '/projection_system_outputs/covariates/',
 	'SSP3-low-IR_level-gdppc-pop-gdp-all-years.csv'))
+
+
+# get data for some sanity checks
+# end-of-century gdppc and pop for all ssps and iams
+
+for (ssp in c("SSP2","SSP3","SSP4")) {
+	for (iam in c("low", "high")) {
+
+		gdppc = get_gdppc_all_regions(iam, ssp)%>%
+			mutate(gdppc = gdppc * conversion_value)
+		pop99 = pop %>% 
+			dplyr::filter(ssp == !!ssp) %>%
+			dplyr::filter(year == 2095) %>% 
+			dplyr::select(region, pop) %>%
+			rename(pop99 = pop)
+		gdppc99 = gdppc %>% 
+			dplyr::filter(year == 2099) %>%
+			rename(gdppc99 = gdppc)
+		covs = left_join(pop99, gdppc99, by = "region") %>%
+			dplyr::select(region, pop99, gdppc99) %>%
+			mutate(gdp99 = gdppc99 *pop99)
+
+		write_csv(covs, paste0(output, '/projection_system_outputs/covariates/', 
+			glue('{ssp}-{iam}-IR_level-gdppc_pop-2099.csv')))
+
+	}
+}
 
 
