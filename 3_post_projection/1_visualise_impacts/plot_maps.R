@@ -34,7 +34,7 @@ plot_2A = function(fuel, bound, DB_data, map=mymap) {
   df= read_csv(
     paste0(DB_data, '/projection_system_outputs/mapping_data/', 
            'main_model-', fuel, '-SSP3-rcp85-high-fulladapt-impact_pc-2099-map.csv')) 
-  browser()
+  # browser()
   # Set scaling factor for map color bar
   scale_v = c(-1, -0.2, -0.05, -0.005, 0, 0.005, 0.05, 0.2, 1)
   rescale_value <- scale_v*bound
@@ -80,7 +80,7 @@ plot_3A = function(DB_data, map){
   # Load in GDP data
   covariates = read_csv(
     paste0(DB_data, '/projection_system_outputs/covariates/', 
-           'SSP3-high-IR_level-gdppc_pop-2099.csv')) 
+           'SSP3-high-IR_level-gdppc_pop-2099_correction_iso-income.csv')) 
 
   # Join data, and calculate damages as percent of GDP for each region
   df = left_join(df_damages, covariates, by = "region")%>%
@@ -99,6 +99,7 @@ plot_3A = function(DB_data, map){
                     topcode.ub = max(rescale_value), 
                     color.scheme = "div", 
                     rescale_val = rescale_value,
+                    # plot.lakes = F,
                     colorbar.title = "2099 Damages, Proportion of 2099 GDP", 
                     map.title = "Per-GDP-price014-ssp3-rcp85-high")
   p = p + theme(
@@ -109,10 +110,9 @@ plot_3A = function(DB_data, map){
     legend.background = element_rect(fill = "transparent"), # get rid of legend bg
     legend.box.background = element_rect(fill = "transparent") # get rid of legend panel bg
   )
-  ggsave(paste0(output, "/fig_3/fig_3A_2099_damages_proportion_gdp_map.png"), p,  bg = "transparent")
+  ggsave(paste0(output, "/fig_3/fig_3A_2099_damages_proportion_gdp_map_income_correction.png"), p,  bg = "transparent")
 }
 plot_3A(DB_data= DB_data, map = mymap)
-
 
 
 
