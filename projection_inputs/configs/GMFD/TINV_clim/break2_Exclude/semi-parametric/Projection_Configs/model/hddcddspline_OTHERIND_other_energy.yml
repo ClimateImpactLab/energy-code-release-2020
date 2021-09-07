@@ -1,7 +1,7 @@
 timerate: year
 climate: [ tas, tas-poly-2, tas-cdd-20, tas-cdd-20-poly-2, tas-hdd-20, tas-hdd-20-poly-2 ]
 models:
-  - csvvs: "/home/liruixue/repos_release//energy-code-release-2020/projection_inputs/csvv/TINV_clim/FD_FGLS_inter_OTHERIND_other_energy_TINV_clim.csvv"
+  - csvvs: "/Users/ruixueli/Downloads/repos//energy-code-release-2020/projection_inputs/csvv/TINV_clim/FD_FGLS_inter_OTHERIND_other_energy_TINV_clim.csvv"
     covariates:
       - incbin.country: [ -inf, 7.246, 7.713, 8.136, 8.475, 8.776, 9.087, 9.385, 9.783, 10.198, inf ]
       - climtas-cdd-20

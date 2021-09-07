@@ -13,7 +13,7 @@ global REPO: env REPO
 global DATA: env DATA 
 global OUTPUT: env OUTPUT
 global LOG: env LOG
-log using $LOG/2_decile_regression.log, replace
+log using $LOG/1_analysis/2_decile_regression.log, replace
 
 
 * path to energy-code-release repo:

@@ -31,7 +31,7 @@ macro drop _all
 pause off
 cap ssc install rangestat
 global LOG: env LOG
-log using $LOG/1_construct_dataset_from_raw_inputs.log, replace
+log using $LOG/0_make_dataset/1_construct_dataset_from_raw_inputs.log, replace
 
 
 /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////

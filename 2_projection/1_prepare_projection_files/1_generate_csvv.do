@@ -7,6 +7,9 @@ clear all
 set more off
 macro drop _all
 pause off
+global LOG: env LOG
+log using $LOG/2_projection/1_prepare_projection_files/1_generate_csvv.log, replace
+
 * Download a command for dealing with matrices 
 qui net install http://www.stata.com/stb/stb56/dm79.pkg
 
@@ -27,7 +30,7 @@ do $root/2_projection/0_packages_programs_inputs/projection_set_up/csvv_generati
 *Step 1: Set up common resources across models
 ************************************************
 
-// ster stem for desired projection 
+// ster stem for desired projection  
 local ster_stem = "FD_FGLS_inter"
 
 // path to analysis data 
@@ -106,4 +109,6 @@ foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double"
 			"`output_csvv'/TINV_clim_lininter_half/FD_FGLS_inter_OTHERIND_TINV_clim_lininter_half.csv", replace 
 	}
 }
+
+log close _all
 

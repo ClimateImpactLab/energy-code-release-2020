@@ -15,6 +15,8 @@ set more off
 macro drop _all
 pause off
 set trace off
+global LOG: env LOG
+log using $LOG/2_projection/1_prepare_projection_files/2_generate_projection_configs.log, replace
 
 global REPO: env REPO
 global DATA: env DATA 
@@ -253,4 +255,6 @@ foreach model_tt in "TINV_clim" "TINV_clim_lininter" "TINV_clim_lininter_double"
 	}
 
 }
+log close _all
+
 

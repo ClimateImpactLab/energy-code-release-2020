@@ -13,7 +13,12 @@ git clone https://github.com/ClimateImpactLab/energy-code-release-2020.git
 ```
 
 
-2. Install the `conda` environment needed to run this repo by running the following commands under the root of this repo: `conda env create -f energy_env_py3.yaml`
+2. Install the `conda` environment needed to run this repo by running the following commands under the root of this repo:
+
+```
+conda env create -f energy_env_py3.yaml
+```
+
 
 3. Install the R packages needed using the following command: 
 ```language
@@ -22,8 +27,21 @@ git clone https://github.com/ClimateImpactLab/energy-code-release-2020.git
 
 4. Download data from `https://doi.org/10.5281/zenodo.5099834`, and edit the `setup_paths.sh` file in this repo to point the environment variables to the respective paths. Point the variable `DATA` in `setup_paths.sh` to the path of the `DATA` dierctory in the downloaded data, and do the same for `OUTPUT`. Point the `REPO` variable to a directory containing this repo and other repos. 
 
-5. Set up paths and activate the conda environment by running the following command from the root directory of this repo:
-`./setup_paths.sh`
+5. Set up a few environmental variables:
+
+On Mac, append the following lines to your `~/.bash_profile`:
+```
+export REPO=/Users/ruixueli/Downloads/repos/
+export DATA=/Users/ruixueli/Downloads/energy_data_release/DATA
+export OUTPUT=//Users/ruixueli/Downloads/energy_data_release/OUTPUT
+export LOG=/Users/ruixueli/Downloads/energy_data_release/LOG
+
+```
+Then run a `source ~/.bash_profile` to load the changes.
+
+
+6. Replace occurences of `stata -b` in this repo with `stata-mp -b` or `stata-se -b` according to the version of your stata. If you're prompted `command not found`, install `stata(console)` for your machine according to stata official documentation that is available online. 
+
 
 
 # The Social Cost of Global Energy Consumption Due to Climate Change

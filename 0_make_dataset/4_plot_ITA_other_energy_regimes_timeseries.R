@@ -3,12 +3,16 @@
 
 # Clean environment, and load up the required packages
 rm(list = ls())
-if (!require(tidyverse)) { install.packages("tidyverse"); library(tidyverse) } 
-if (!require(haven)) { install.packages("haven"); library(haven) } 
-
+library(logr)
 REPO <- Sys.getenv(c("REPO"))
 DATA <- Sys.getenv(c("DATA"))
 OUTPUT <- Sys.getenv(c("OUTPUT"))
+LOG <- Sys.getenv(c("LOG"))
+
+log_open(file.path(LOG, "0_make_dataset/4_plot_ITA_other_energy_regimes_timeseries.log"), logdir = FALSE)
+
+if (!require(tidyverse)) { install.packages("tidyverse"); library(tidyverse) } 
+if (!require(haven)) { install.packages("haven"); library(haven) } 
 
 root = paste0(REPO, "/energy-code-release-2020")
 
@@ -34,3 +38,10 @@ ggplot() +
                      legend.position = "none") +
   ggtitle(paste0(name)) 
 ggsave(file = paste0(OUTPUT,"/figures/fig_Appendix-A1_ITA_other_fuels_time_series_regimes.pdf"), width = 6, height = 6)
+
+log_print("Output:")
+log_print(paste0(OUTPUT,"/figures/fig_Appendix-A1_ITA_other_fuels_time_series_regimes.pdf"))
+
+log_close()
+
+

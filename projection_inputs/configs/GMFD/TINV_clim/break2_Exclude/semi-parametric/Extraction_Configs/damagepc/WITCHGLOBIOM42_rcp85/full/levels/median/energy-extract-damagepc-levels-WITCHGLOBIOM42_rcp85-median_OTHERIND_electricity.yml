@@ -1,6 +1,6 @@
 results-root: impacts-blueghost/median_OTHERIND_electricity_TINV_clim_GMFD
 deltamethod: impacts-blueghost/median_OTHERIND_electricity_TINV_clim_GMFD_dm
-output-dir: /home/liruixue/energy_data_release/OUTPUT/extracted_projection_data/TINV_clim_GMFD/median_OTHERIND_electricity_TINV_clim_GMFD
+output-dir: //Users/ruixueli/Downloads/energy_data_release/OUTPUT/extracted_projection_data/TINV_clim_GMFD/median_OTHERIND_electricity_TINV_clim_GMFD
 file-organize: [ssp, rcp]
 do-montecarlo: no
 only-rcp: rcp85

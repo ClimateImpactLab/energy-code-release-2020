@@ -6,6 +6,12 @@ We have included the outputs of this projection step as csv files in the data re
 - If attempting to run a projection - you will need to follow some extensive set up instructions, and have access to all projection system data (this isn't currently saved in the
 code release data repository). You will also need to modify the codes in this folder to reflect the paths and set up on your server.
 
+- Clone the following 3 repos under your `REPO` directory, parallel to this repo
+```
+
+
+```
+
 ## Overview
 
 Codes in this repo show users how we complete three types of projection related tasks. See notes inside each subfolder for more details on each part of the process, and some run instructions. 

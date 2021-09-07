@@ -2,23 +2,22 @@
   ___  ____  ____  ____  ____ (R)
  /__    /   ____/   /   ____/
 ___/   /   /___/   /   /___/   16.1   Copyright 1985-2019 StataCorp LLC
-  Statistics/Data Analysis            StataCorp
+  Statistics/Data analysis            StataCorp
                                       4905 Lakeway Drive
-     MP - Parallel Edition            College Station, Texas 77845 USA
-                                      800-STATA-PC        http://www.stata.com
+     Special Edition                  College Station, Texas 77845 USA
+                                      800-STATA-PC        https://www.stata.com
                                       979-696-4600        stata@stata.com
                                       979-696-4601 (fax)
 
-Single-user 24-core Stata perpetual license:
-       Serial number:  501606209668
-         Licensed to:  Goldman School of Public Policy
-                       University of California, Berkeley
+Stata license: 745-user network, expiring 30 Jun 2022
+Serial number: 501709313533
+  Licensed to: Ruixue Li
+               UChicago BFI
 
 Notes:
-      1.  Stata is running in batch mode.
-      2.  Unicode is supported; see help unicode_advice.
-      3.  More than 2 billion observations are allowed; see help obs_advice.
-      4.  Maximum number of variables is set to 5000; see help set_maxvar.
+      1. Stata is running in batch mode.
+      2. Unicode is supported; see help unicode_advice.
+      3. Maximum number of variables is set to 5,000; see help set_maxvar.
 
 . do 1_uninteracted_regression.do 
 
@@ -34,12 +33,15 @@ Notes:
 
 . global LOG: env LOG
 
-. log using $LOG/1_uninteracted_regression.log
+. log using $LOG/1_analysis/1_uninteracted_regression.log, replace
+(note: file /Users/ruixueli/Downloads/energy_data_release/LOG/1_analysis/1_unin
+> teracted_regression.log not found)
 -------------------------------------------------------------------------------
       name:  <unnamed>
-       log:  /home/liruixue/repos_release/LOG/1_uninteracted_regression.log
+       log:  /Users/ruixueli/Downloads/energy_data_release/LOG/1_analysis/1_uni
+> nteracted_regression.log
   log type:  text
- opened on:   9 Aug 2021, 09:41:55
+ opened on:   7 Sep 2021, 05:08:07
 
 . 
 . 
@@ -247,8 +249,8 @@ Absorbed degrees of freedom:
 > --+
 
 . estimates save "$OUTPUT/sters/FD_global_`model'", replace
-file /home/liruixue/energy_data_release/OUTPUT/sters/FD_global_TINV_clim.ster s
-> aved
+file //Users/ruixueli/Downloads/energy_data_release/OUTPUT/sters/FD_global_TINV
+> _clim.ster saved
 
 .                                         
 . 
@@ -393,8 +395,8 @@ Absorbed degrees of freedom:
 > --+
 
 . estimates save "$OUTPUT/sters/FD_FGLS_global_`model'", replace
-file /home/liruixue/energy_data_release/OUTPUT/sters/FD_FGLS_global_TINV_clim.s
-> ter saved
+file //Users/ruixueli/Downloads/energy_data_release/OUTPUT/sters/FD_FGLS_global
+> _TINV_clim.ster saved
 
 . 
 . 
@@ -533,3 +535,33 @@ note: confidence intervals calculated using Z critical values
 
 . 
 . //plot with SE
+. tw `SE' , ///
+> yline(0, lwidth(vthin)) xlabel(-5(10)35, labsize(vsmall)) ///
+> ylabel(, labsize(vsmall) nogrid) legend(off) ///
+> title("Global Energy-temperature Response" , size(vsmall)) ///
+> subtitle("`colorGuide' " , size(vsmall)) ///
+> ytitle("", size(small)) xtitle("", size(vsmall)) ///
+> plotregion(color(white)) graphregion(color(white))
+
+. graph export "$OUTPUT/figures/fig_Appendix-B1_product_overlay_`model'_global.
+> pdf", replace
+(file //Users/ruixueli/Downloads/energy_data_release/OUTPUT/figures/fig_Appendi
+> x-B1_product_overlay_TINV_clim_global.pdf written in PDF format)
+
+. 
+. graph drop _all 
+
+. 
+end of do-file
+
+. 
+. log close _all
+      name:  <unnamed>
+       log:  /Users/ruixueli/Downloads/energy_data_release/LOG/1_analysis/1_uni
+> nteracted_regression.log
+  log type:  text
+ closed on:   7 Sep 2021, 05:08:08
+-------------------------------------------------------------------------------
+
+. 
+end of do-file
