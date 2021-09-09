@@ -46,6 +46,13 @@ cov_electricity_single= read_csv("/shares/gcp/outputs/energy_pixel_interaction/i
   skip = 114) %>% 
 	write_csv(paste0(output, '/miscellaneous/covariates_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim.csv'))
 
+# do the same for SSP3 low for press data 
+cov_electricity_single_low= read_csv("/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost/single-OTHERIND_electricity_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_GMFD/rcp85/CCSM4/low/SSP3/hddcddspline_OTHERIND_electricity-allcalcs-FD_FGLS_inter_OTHERIND_electricity_TINV_clim.csv",
+  skip = 114) %>% 
+	write_csv(paste0(output, '/miscellaneous/covariates_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_low.csv'))
+
+
+
 covariates = cov_electricity_single %>%
 		dplyr::select(year, region, "climtas-cdd-20", "climtas-hdd-20", loggdppc) %>%
 		dplyr::filter(year %in% c(2015, 2099))%>%
