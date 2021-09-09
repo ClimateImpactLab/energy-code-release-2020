@@ -81,7 +81,7 @@ correct_gdp = covars_from_projection %>% select(c("year", "region", "loggdppc"))
 
 wrong_gdp = read_csv(
     paste0(DB_data, '/projection_system_outputs/covariates/', 
-           'SSP3-low-IR_level-gdppc-pop-all-years.csv'))  
+           'SSP3-low-IR_level-gdppc-pop-gdp-all-years.csv'))  
 
 # replace gdppc99 with the gdppc we just grabbed from projection
 # and multiply with pop to compute gdp99 again 
@@ -95,7 +95,7 @@ correction = merge(wrong_gdp, correct_gdp, on = c("region", "year")) %>%
 
 write_csv(correction,
     paste0(DB_data, '/projection_system_outputs/covariates/', 
-           'SSP3-low-IR_level-gdppc_pop-2099_correction_iso-income.csv'))  
+           'SSP3-low-IR_level-gdppc-pop-gdp-all-years_iso-income.csv'))  
 
 
 

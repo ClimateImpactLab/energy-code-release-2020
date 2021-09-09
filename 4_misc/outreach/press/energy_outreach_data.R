@@ -345,8 +345,7 @@ return_region_gdp = function(resolution) {
     DB_data = "/mnt/CIL_energy/code_release_data_pixel_interaction"
     gdp = read_csv(
         paste0(DB_data, '/projection_system_outputs/covariates/', 
-         'SSP3-low-IR_level-gdppc_pop-2099_correction_iso-income.csv')) 
-
+         'SSP3-low-IR_level-gdppc-pop-gdp-all-years_iso-income.csv')) 
     if (resolution == 'all_IRs') {
             return(gdp[c("region","year","gdp")])
         } else if (resolution == 'iso' | resolution == "states") {
