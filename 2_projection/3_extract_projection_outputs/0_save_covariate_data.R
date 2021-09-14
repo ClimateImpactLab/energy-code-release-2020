@@ -52,7 +52,7 @@ cov_electricity_single_low= read_csv("/shares/gcp/outputs/energy_pixel_interacti
 	write_csv(paste0(output, '/miscellaneous/covariates_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_low.csv'))
 
 
-
+# TO-DO: check if this is used at all?
 covariates = cov_electricity_single %>%
 		dplyr::select(year, region, "climtas-cdd-20", "climtas-hdd-20", loggdppc) %>%
 		dplyr::filter(year %in% c(2015, 2099))%>%

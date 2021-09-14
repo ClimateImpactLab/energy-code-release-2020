@@ -12,21 +12,21 @@ source(glue("{REPO}/energy-code-release-2020/4_misc/",
 
 
 # testing function
-out = ProcessImpacts(
-  time_step="all",
-  impact_type="impacts_pct_gdp",
-  resolution="states", 
-  rcp="rcp85",
-  stats="q50",
-  fuel = "total_energy",
-  regenerate = FALSE,
-  export = TRUE)
+# out = ProcessImpacts(
+#   time_step="all",
+#   impact_type="impacts_pct_gdp",
+#   resolution="states", 
+#   rcp="rcp85",
+#   stats="q50",
+#   fuel = "total_energy",
+#   regenerate = FALSE,
+#   export = TRUE)
 
 
 # ###########################################################
 # ###########################################################
 # # extract files - aggregated quantity - electricity all done
-# # ***** done! 
+# # # ***** done! 
 # out = wrap_mapply(  
 #   time_step="all",
 #   impact_type="impacts_gj",
@@ -41,7 +41,7 @@ out = ProcessImpacts(
 #   mc.silent=FALSE
 # )
 
-# # extract files - aggregated dollar - done
+# # # extract files - aggregated dollar - done
 # out = wrap_mapply(  
 #   time_step="all",
 #   impact_type="impacts_pct_gdp",
@@ -58,7 +58,7 @@ out = ProcessImpacts(
 
 
 
-# # # extract files - levels quantity
+# # # # extract files - levels quantity
 # out = wrap_mapply(  
 #   time_step="all",
 #   impact_type="impacts_gj",
@@ -74,7 +74,7 @@ out = ProcessImpacts(
 # )
 
 
-# # # extract files - levels dollar
+# # # # extract files - levels dollar
 
 # out = wrap_mapply(  
 #   time_step="all",
@@ -113,19 +113,19 @@ out = wrap_mapply(
 
 
 # # aggregated files impacts in pct gdp
-# out = wrap_mapply(  
-#   time_step=c("all", "averaged"),
-#   impact_type="impacts_pct_gdp",
-#   resolution=c("states","global","iso"), 
-#   rcp=c("rcp45", "rcp85"),
-#   stats=c("mean", "q5", "q17", "q50", "q83", "q95"),
-#   fuel = "total_energy",
-#   regenerate = FALSE,
-#   export = TRUE,
-#   FUN=ProcessImpacts,
-#   mc.cores=60,
-#   mc.silent=FALSE
-# )
+out = wrap_mapply(  
+  time_step=c("all", "averaged"),
+  impact_type="impacts_pct_gdp",
+  resolution=c("states","global","iso"), 
+  rcp=c("rcp45", "rcp85"),
+  stats=c("mean", "q5", "q17", "q50", "q83", "q95"),
+  fuel = "total_energy",
+  regenerate = FALSE,
+  export = TRUE,
+  FUN=ProcessImpacts,
+  mc.cores=40,
+  mc.silent=FALSE
+)
 
 
 # IR level quantity 
@@ -144,20 +144,20 @@ out = wrap_mapply(
 )
 
 
-# # IR level impacts in pct gdp
-# out = wrap_mapply(  
-#   time_step=c("all", "averaged"),
-#   impact_type="impacts_pct_gdp",
-#   resolution=c("all_IRs"), 
-#   rcp=c("rcp45","rcp85"),
-#   stats=c("mean", "q5", "q17", "q50", "q83", "q95"),
-#   fuel = "total_energy",
-#   regenerate = FALSE,
-#   export = TRUE,
-#   FUN=ProcessImpacts,
-#   mc.cores=60,
-#   mc.silent=FALSE
-# )
+# IR level impacts in pct gdp
+out = wrap_mapply(  
+  time_step=c("all", "averaged"),
+  impact_type="impacts_pct_gdp",
+  resolution=c("all_IRs"), 
+  rcp=c("rcp45","rcp85"),
+  stats=c("mean", "q5", "q17", "q50", "q83", "q95"),
+  fuel = "total_energy",
+  regenerate = FALSE,
+  export = TRUE,
+  FUN=ProcessImpacts,
+  mc.cores=40,
+  mc.silent=FALSE
+)
 
 
 # filter 500k cities from all IR level files
