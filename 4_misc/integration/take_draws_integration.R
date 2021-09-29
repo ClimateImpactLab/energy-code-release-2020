@@ -43,10 +43,10 @@ take_draws = function(df) {
 }   
 
 # reads extracted mean and sd of each ssp/rcp/iam/gcp combination, and take draws
-process_results <- function(input_dir, output_dir, gcm, ssp, rcp, iam, num_iterations=15) {
+process_results <- function(input_dir, output_dir, gcm, ssp, rcp, iam, num_iterations=15, var) {
   
-  mean_path = glue("{input_dir}/{ssp}-{rcp}_{iam}_{gcm}_damage-integration_median_fulladapt-levels_integration.csv")
-  sd_path = glue("{input_dir}/{ssp}-{rcp}_{iam}_{gcm}_damage-integration_median_fulladapt-levels_dm_integration.csv")
+  mean_path = glue("{input_dir}/{ssp}-{rcp}_{iam}_{gcm}_damage-integration_median_{var}-levels_integration.csv")
+  sd_path = glue("{input_dir}/{ssp}-{rcp}_{iam}_{gcm}_damage-integration_median_{var}-levels_dm_integration.csv")
   # if (file.exists(mean_path) & file.exists(sd_path)) {
     mean = vroom(mean_path)
     sd = vroom(sd_path)
@@ -70,21 +70,14 @@ process_results <- function(input_dir, output_dir, gcm, ssp, rcp, iam, num_itera
       output_folder = glue("{output_dir}/batch{i}/{rcp}/{gcm}/{iam}/{ssp}/")
       dir.create(output_folder, recursive = TRUE)
       write_csv(df, paste0(output_folder,
-                           "/TINV_clim_integration_total_energy_fulladapt-histclim.csv"))  
-      # return(df)
+                           "/TINV_clim_integration_total_energy_{var}.csv"))  
     }
-    # } else {
-    #   print(glue("{mean_path} doesn't exist, or"))
-    #   print(glue("{sd_path} doesn't exist"))
-
-    # }
-
 }
 
 ####################
 # test function
 df = process_results(input_dir=input_dir, output_dir=output_dir, 
-  gcm="CCSM4", ssp="SSP3", rcp="rcp85", iam="high")
+  gcm="CCSM4", ssp="SSP3", rcp="rcp85", iam="high", var = "fulladapt")
 
 
 # run all combinations
@@ -95,6 +88,7 @@ out = wrap_mapply(
   gcm = gcms$rcp45,
   rcp="rcp45",
   iam = c("high","low"),
+  var = c("fulladapt", "histclim"),
   ssp = c("SSP1","SSP2","SSP3","SSP4"),
   FUN=process_results,
   mc.cores=34,
@@ -108,6 +102,7 @@ out = wrap_mapply(
   gcm = gcms$rcp85,
   rcp="rcp85",
   iam = c("high","low"),
+  var = c("fulladapt", "histclim"),
   ssp = c("SSP2","SSP3","SSP4","SSP5"),
   FUN=process_results,
   mc.cores=34,
