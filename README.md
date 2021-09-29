@@ -12,6 +12,18 @@ git clone https://github.com/ClimateImpactLab/energy-code-release-2020.git
 
 ```
 
+2. Clone `open-estimate` and `impact-common` repo and install using the following commands
+
+```
+git clone 
+cd open-estimate
+pip install -e .
+cd ..
+
+git clone 
+cd impact-common
+pip install -e .
+```
 
 2. Install the `conda` environment needed to run this repo by running the following commands under the root of this repo:
 

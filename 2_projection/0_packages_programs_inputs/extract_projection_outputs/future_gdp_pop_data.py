@@ -1,12 +1,12 @@
 # adapted from mortality valuation code
 # check to make sure population interpolation is happening how you want it to be
-
-from impactcommon.exogenous_economy import gdppc, provider
+import sys ; sys.path.append(".")
 import numpy as np
 import pandas as pd
 import metacsv
 from impactlab_tools.utils import files
 import os
+from impactcommon.exogenous_economy import gdppc, provider
 
 ## Takes landscan2011 and fills in where no pop (held constant at 2011)
 

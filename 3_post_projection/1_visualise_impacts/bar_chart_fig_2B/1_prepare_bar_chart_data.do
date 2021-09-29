@@ -15,7 +15,7 @@ global OUTPUT: env OUTPUT
 
 
 glob root "${REPO}/energy-code-release-2020"
-loc data "$DATA/projection_system_outputs"
+loc data "$OUTPUT/projection_system_outputs"
 loc output "$OUTPUT/figures"
 
 **************************************

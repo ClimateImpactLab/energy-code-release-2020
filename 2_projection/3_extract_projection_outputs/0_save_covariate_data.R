@@ -12,18 +12,19 @@ library(haven)
 library(tidyr)
 library(imputeTS)
 
+Sys.setenv(LANG = "en")
 
 REPO <- Sys.getenv(c("REPO"))
 DATA <- Sys.getenv(c("DATA"))
 OUTPUT <- Sys.getenv(c("OUTPUT"))
-
+# REPO <- "/home/liruixue/repos"
 setwd(paste0(REPO,"/energy-code-release-2020/"))
 
 
 # Source a python code that lets us load SSP data directly from the SSPs
 # Make sure you are in the risingverse conda environment for this... 
 projection.packages <- paste0(REPO,"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
-source_python(paste0(projection.packages, "future_gdp_pop_data.py"))
+reticulate::source_python(paste0(projection.packages, "future_gdp_pop_data.py"))
 
 ###########################################
 # 1 Data for plotting city response functions for figure 2A

@@ -1,1 +1,0 @@
-some code used to generate data and plots for ashwin's energy presentation on 21 Jul 2020
