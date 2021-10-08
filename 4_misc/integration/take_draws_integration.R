@@ -65,19 +65,20 @@ process_results <- function(input_dir, output_dir, gcm, ssp, rcp, iam, num_itera
     # set seed for replicability:
     set.seed(123)
 
+
     for(i in 0:14) {
       df = take_draws(joined)
       output_folder = glue("{output_dir}/batch{i}/{rcp}/{gcm}/{iam}/{ssp}/")
       dir.create(output_folder, recursive = TRUE)
       write_csv(df, paste0(output_folder,
-                           "/TINV_clim_integration_total_energy_{var}.csv"))  
+                           glue("/TINV_clim_integration_total_energy_{var}.csv")))  
     }
 }
 
 ####################
 # test function
 df = process_results(input_dir=input_dir, output_dir=output_dir, 
-  gcm="CCSM4", ssp="SSP3", rcp="rcp85", iam="high", var = "fulladapt")
+  gcm="CCSM4", ssp="SSP3", rcp="rcp85", iam="high", var = "delta")
 
 
 # run all combinations
@@ -88,10 +89,10 @@ out = wrap_mapply(
   gcm = gcms$rcp45,
   rcp="rcp45",
   iam = c("high","low"),
-  var = c("fulladapt", "histclim"),
+  var = c("delta", "histclim"),
   ssp = c("SSP1","SSP2","SSP3","SSP4"),
   FUN=process_results,
-  mc.cores=34,
+  mc.cores=60,
   mc.silent=FALSE
 )
 
@@ -102,10 +103,10 @@ out = wrap_mapply(
   gcm = gcms$rcp85,
   rcp="rcp85",
   iam = c("high","low"),
-  var = c("fulladapt", "histclim"),
+  var = c("delta", "histclim"),
   ssp = c("SSP2","SSP3","SSP4","SSP5"),
   FUN=process_results,
-  mc.cores=34,
+  mc.cores=60,
   mc.silent=FALSE
 )
 

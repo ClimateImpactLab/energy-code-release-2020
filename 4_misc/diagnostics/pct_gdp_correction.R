@@ -37,7 +37,7 @@ conversion_value = con_df$inf_adj[1]
 covars_from_projection = read_csv(paste0(output, '/miscellaneous/covariates_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim.csv'))
 
 # extract 2099 IR level loggdppc, and compute gdppc
-correct_gdp = covars_from_projection %>% select(c("year", "region", "loggdppc")) %>% filter(year == 2099) %>%
+correct_gdp = covars_from_projection %>% select(c("year", "region", "loggdppc"))  %>%
 			mutate(gdppc = exp(loggdppc) * conversion_value) %>%
 			select(region, gdppc)
 
@@ -50,14 +50,14 @@ wrong_gdp = read_csv(
 
 # replace gdppc99 with the gdppc we just grabbed from projection
 # and multiply with pop to compute gdp99 again 
-correction = merge(wrong_gdp, correct_gdp, on = "region") %>%
+correction = merge(wrong_gdp, correct_gdp, on = c("region", "year")) %>%
 		mutate(gdppc99 = gdppc) %>% 
 		mutate(gdp99 = pop99 * gdppc99) %>%
 		select(region, pop99, gdppc99, gdp99)
 
-write_csv(correction,
-    paste0(DB_data, '/projection_system_outputs/covariates/', 
-           'SSP3-high-IR_level-gdppc_pop-2099_correction_iso-income.csv'))  
+# write_csv(correction,
+#     paste0(DB_data, '/projection_system_outputs/covariates/', 
+#            'SSP3-high-IR_level-gdppc_pop-2099_correction_iso-income.csv'))  
 
 
 # correction = read_csv(paste0(DB_data, '/projection_system_outputs/covariates/', 
@@ -77,8 +77,8 @@ write_csv(correction,
 # length(unique(diag$iso))
 # length(unique(diag$gdppc99))
 
-# correction = read_csv(paste0(DB_data, '/projection_system_outputs/covariates/', 
-#            'SSP3-high-IR_level-gdppc_pop-2099_correction_iso-income.csv'))  
+correction = read_csv(paste0(DB_data, '/projection_system_outputs/covariates/', 
+           'SSP3-high-IR_level-gdppc_pop-2099_correction_iso-income.csv'))  
 
 # correction_old = read_csv(paste0(DB_data, '/projection_system_outputs/covariates_backup_gdp_correction/', 
 #            'SSP3-high-IR_level-gdppc_pop-2099_correction_iso-income.csv'))  
@@ -108,7 +108,7 @@ write_csv(correction,
 
 ###########################################
 # load covariates from the projection that was actually run
-covars_from_projection = read_csv(paste0(output, '/miscellaneous/covariates_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_low.csv'))
+covars_from_projection = read_csv(paste0(output, '/miscellaneous/covariates_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim.csv'))
 # covars_from_projection = cov_electricity_single_low
 
 # extract 2099 IR level loggdppc, and compute gdppc
@@ -135,6 +135,13 @@ write_csv(correction,
     paste0(DB_data, '/projection_system_outputs/covariates/', 
            'SSP3-low-IR_level-gdppc-pop-gdp-all-years_iso-income.csv'))  
 
+
+
+# d = read_csv(
+#     paste0(DB_data, '/projection_system_outputs/covariates/', 
+#            'SSP3-low-IR_level-gdppc-pop-gdp-all-years_iso-income.csv'))  
+
+# d %>% filter(year == 2050 & gdppc <= 8839.627) %>% summarize(p = sum(pop))
 
 # diag = correction %>% mutate(iso = substr(region, 1, 3)) %>% filter(year == 2099)%>%
 # 		group_by(iso) %>% arrange(gdppc) %>%

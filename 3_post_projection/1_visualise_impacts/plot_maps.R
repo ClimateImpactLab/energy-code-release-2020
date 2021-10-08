@@ -60,11 +60,15 @@ plot_2A = function(fuel, bound, DB_data, map=mymap) {
     legend.box.background = element_rect(fill = "transparent") # get rid of legend panel bg
   )
   # browser()
-  ggsave(paste0(output, "/fig_2A_", fuel, "_impacts_map.png"), p,  bg = "transparent")
+  ggsave(paste0(output, "/fig_2A_", fuel, "_impacts_map_", bound, "scale.pdf"), p,  bg = "transparent")
+  ggsave(paste0(output, "/fig_2A_", fuel, "_impacts_map_", bound, "scale.png"), p,  bg = "transparent")
+
 }
 plot_2A(fuel = "electricity", bound = 3, DB_data = DB_data)
 plot_2A(fuel = "other_energy", bound = 18, DB_data = DB_data)
 
+plot_2A(fuel = "electricity", bound = 18, DB_data = DB_data)
+plot_2A(fuel = "other_energy", bound = 3, DB_data = DB_data)
 
 #############################################
 # 3. Figure 3 A
@@ -110,6 +114,7 @@ plot_3A = function(DB_data, map){
     legend.background = element_rect(fill = "transparent"), # get rid of legend bg
     legend.box.background = element_rect(fill = "transparent") # get rid of legend panel bg
   )
+  ggsave(paste0(output, "/fig_3/fig_3A_2099_damages_proportion_gdp_map_income_correction.pdf"), p,  bg = "transparent")
   ggsave(paste0(output, "/fig_3/fig_3A_2099_damages_proportion_gdp_map_income_correction.png"), p,  bg = "transparent")
 }
 plot_3A(DB_data= DB_data, map = mymap)

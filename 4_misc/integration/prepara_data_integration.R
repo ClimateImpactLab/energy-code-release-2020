@@ -46,7 +46,7 @@ gcms$"rcp85" = c(list.dirs(path = paste0(projection_path, "rcp85/"),
 
 setwd("~/repos/prospectus-tools/gcp/extract")
 
-extract_file_fulladapt <- function(gcm, ssp, rcp, dm, iam) {
+extract_file_delta <- function(gcm, ssp, rcp, dm, iam) {
 	# browser()
 
 	command = paste0("nohup python -u quantiles.py ",
@@ -57,9 +57,11 @@ extract_file_fulladapt <- function(gcm, ssp, rcp, dm, iam) {
 		"median/energy-extract-damage-levels-integration-median_OTHERIND_total_energy", dm, ".yml  ",
 		"--only-ssp=", ssp, "  --only-rcp=", rcp, "  --only-models=", gcm, 
 		"  --only-iam=",iam, "  --do-gcmweights=no  ",
-		"--suffix=_",iam, "_", gcm, "_damage-integration_median_fulladapt-levels", dm, "_integration ",
+		"--suffix=_",iam, "_", gcm, "_damage-integration_median_delta-levels", dm, "_integration ",
 		"FD_FGLS_inter_OTHERIND_electricity_TINV_clim-integration-levels ",
-		"FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-integration-levels "
+    "-FD_FGLS_inter_OTHERIND_electricity_TINV_clim-histclim-integration-levels ",
+		"FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-integration-levels ",
+    "-FD_FGLS_inter_OTHERIND_other_energy_TINV_clim-histclim-integration-levels "
     )
 
 	print(command)
@@ -85,31 +87,107 @@ extract_file_histclim <- function(gcm, ssp, rcp, dm, iam) {
   system(command)
 }
 
-
-# both rcps, median
+# rcp45 mean
 out = wrap_mapply(  
   gcm = gcms$rcp45,
-  rcp = c("rcp45", "rcp85"),
+  rcp = c("rcp45"),
   iam = c("high","low"),
-  ssp = c("SSP1","SSP2","SSP3","SSP4","SSP5"),
-  FUN=extract_file_fulladapt,
-  dm = c("", "_dm"),
-  mc.cores=5,
+  ssp = c("SSP1","SSP2","SSP3","SSP4"),
+  FUN=extract_file_delta,
+  dm = c(""),
+  mc.cores=60,
   mc.silent=FALSE
 )
 
 
-# both rcps, median
 out = wrap_mapply(  
   gcm = gcms$rcp45,
-  rcp = c("rcp45", "rcp85"),
+  rcp = c("rcp45"),
   iam = c("high","low"),
-  ssp = c("SSP1","SSP2","SSP3","SSP4","SSP5"),
+  ssp = c("SSP1","SSP2","SSP3","SSP4"),
   FUN=extract_file_histclim,
-  dm = c("", "_dm")
-  mc.cores=5,
+  dm = c(""),
+  mc.cores=60,
   mc.silent=FALSE
 )
 
+
+
+# rcp45 variance
+out = wrap_mapply(  
+  gcm = gcms$rcp45,
+  rcp = c("rcp45"),
+  iam = c("high","low"),
+  ssp = c("SSP1","SSP2","SSP3","SSP4"),
+  FUN=extract_file_delta,
+  dm = c("_dm"),
+  mc.cores=10,
+  mc.silent=FALSE
+)
+
+
+# both rcps, median
+out = wrap_mapply(  
+  gcm = gcms$rcp45,
+  rcp = c("rcp45"),
+  iam = c("high","low"),
+  ssp = c("SSP1","SSP2","SSP3","SSP4"),
+  FUN=extract_file_histclim,
+  dm = c("_dm"),
+  mc.cores=10,
+  mc.silent=FALSE
+)
+
+
+# rcp85 mean
+out = wrap_mapply(  
+  gcm = gcms$rcp85,
+  rcp = c("rcp85"),
+  iam = c("high","low"),
+  ssp = c("SSP5","SSP2","SSP3","SSP4"),
+  FUN=extract_file_delta,
+  dm = c(""),
+  mc.cores=60,
+  mc.silent=FALSE
+)
+
+
+out = wrap_mapply(  
+  gcm = gcms$rcp85,
+  rcp = c("rcp85"),
+  iam = c("high","low"),
+  ssp = c("SSP5","SSP2","SSP3","SSP4"),
+  FUN=extract_file_histclim,
+  dm = c(""),
+  mc.cores=60,
+  mc.silent=FALSE
+)
+
+
+
+# rcp85 variance
+out = wrap_mapply(  
+  gcm = gcms$rcp85,
+  rcp = c("rcp85"),
+  iam = c("high","low"),
+  ssp = c("SSP5","SSP2","SSP3","SSP4"),
+  FUN=extract_file_delta,
+  dm = c("_dm"),
+  mc.cores=10,
+  mc.silent=FALSE
+)
+
+
+# both rcps, median
+out = wrap_mapply(  
+  gcm = gcms$rcp85,
+  rcp = c("rcp85"),
+  iam = c("high","low"),
+  ssp = c("SSP5","SSP2","SSP3", "SSP4"),
+  FUN=extract_file_histclim,
+  dm = c("_dm"),
+  mc.cores=10,
+  mc.silent=FALSE
+)
 
 
