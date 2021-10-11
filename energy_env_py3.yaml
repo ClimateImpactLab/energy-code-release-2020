@@ -19,7 +19,7 @@ dependencies:
   - bottleneck
   - xarray
   - pip:
-    - impactlab-tools
-    - git+https://github.com/ClimateImpactLab/metacsv
+    - git+https://github.com/ClimateImpactLab/impactlab-tools@master
+    - git+https://github.com/ClimateImpactLab/metacsv.git@master
     - git+https://github.com/ClimateImpactLab/open-estimate@master
     - git+https://github.com/ClimateImpactLab/impact-common@master

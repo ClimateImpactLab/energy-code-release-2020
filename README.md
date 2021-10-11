@@ -2,17 +2,19 @@
 
 1. You need to have `python`, `Stata`, and `R` programming capabilities, or at least environments to run code in these languages, on your computer. 
 
-2. We use `conda` to manage `python` enrivonments, so please install `conda` if you haven't already done so following [these instructions](https://docs.conda.io/projects/conda/en/latest/user-guide/install/macos.html). 
+2. We use `conda` to manage `python` enrivonments, so we recommend installing `conda` if you haven't already done so following [these instructions](https://docs.conda.io/projects/conda/en/latest/user-guide/install/macos.html). 
 
 # Setup 
 
-1. Clone the following repos to a chosen directory with the following commands: 
+1. Clone the following repos to a chosen directory, which we'll call `REPO`, with the following commands: 
 ```
 git clone https://github.com/ClimateImpactLab/energy-code-release-2020.git
+git clone https://gitlab.com/ClimateImpactLab/Impacts/impact-calculations.git
+
 
 ```
 
-2. Clone `open-estimate` and `impact-common` repo and install using the following commands
+2. (SKIP) Clone `open-estimate` and `impact-common` repo and install using the following commands
 
 ```
 git clone 
@@ -32,27 +34,41 @@ conda env create -f energy_env_py3.yaml
 ```
 
 
-3. Install the R packages needed using the following command: 
-```language
-
+3. Install the R packages needed using the following command from the root of this repo: 
+```
+Rscript install_R_packages.R
 ```
 
-4. Download data from `https://doi.org/10.5281/zenodo.5099834`, and edit the `setup_paths.sh` file in this repo to point the environment variables to the respective paths. Point the variable `DATA` in `setup_paths.sh` to the path of the `DATA` dierctory in the downloaded data, and do the same for `OUTPUT`. Point the `REPO` variable to a directory containing this repo and other repos. 
+4. Download data from `https://doi.org/10.5281/zenodo.5099834`.
 
-5. Set up a few environmental variables:
+
+5. Set up a few environmental variables.
 
 On Mac, append the following lines to your `~/.bash_profile`:
-```
-export REPO=/Users/ruixueli/Downloads/repos/
-export DATA=/Users/ruixueli/Downloads/energy_data_release/DATA
-export OUTPUT=//Users/ruixueli/Downloads/energy_data_release/OUTPUT
-export LOG=/Users/ruixueli/Downloads/energy_data_release/LOG
 
 ```
+nano ~/.bash_profile
+
+```
+Append the following lines to the end of the `.bash_profile` file:
+
+Point the variable `DATA` in the `DATA` dierctory in the downloaded data, and do the same for `OUTPUT`. Point the `REPO` variable to the `REPO` path used above containing this repo and other repos. 
+
+```
+export REPO=path_to_your_repos
+export DATA=path_to_"energy_code_release_data/DATA"
+export OUTPUT=path_to_"energy_code_release_data/OUTPUT"
+export LOG=path_to_"energy_code_release_data/LOG"
+
+```
+
 Then run a `source ~/.bash_profile` to load the changes.
 
+On Windows: TO-DO
 
-6. Replace occurences of `stata -b` in this repo with `stata-mp -b` or `stata-se -b` according to the version of your stata. If you're prompted `command not found`, install `stata(console)` for your machine according to stata official documentation that is available online. 
+6. Mass replace all occurences of `stata -b` in this repo with `stata-mp -b` or `stata-se -b` according to the version of your stata. If you're prompted `command not found` when trying to run `stata` commands from the console, install `stata(console)` for your machine according to stata official documentation that is available online. 
+
+7. Setup for the whole repo is done! Now please follow the `README`s in each subdirectory to run each part of the analysis. 
 
 
 

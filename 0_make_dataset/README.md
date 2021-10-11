@@ -1,14 +1,5 @@
 # Run instructions
 
-In order to run codes, please change the macro `$root` at the top of the codes to the location of this repo on your computer. 
-
-Please note, the raw data used here is not publicly available. 
-* Therefore, only [2_construct_regression_ready_data.do](https://github.com/ClimateImpactLab/energy-code-release-2020/blob/master/0_make_dataset/2_construct_regression_ready_data.do), 
-[3_unit_root_test_and_plot.do](https://github.com/ClimateImpactLab/energy-code-release-2020/blob/master/0_make_dataset/3_unit_root_test_and_plot.do), and
-[4_plot_ITA_other_energy_regimes_timeseries.R](https://github.com/ClimateImpactLab/energy-code-release-2020/blob/master/0_make_dataset/4_plot_ITA_other_energy_regimes_timeseries.R)
-in this folder (the codes that use intermediate data as an input) can be run by a user outside of the Climate Impact Lab. 
-* The intermediate dataset, `IEA_merged_long.dta`, is outputed by  [1_construct_dataset_from_raw_inputs.do](https://github.com/ClimateImpactLab/energy-code-release-2020/blob/master/0_make_dataset/1_construct_dataset_from_raw_inputs.do), and cannot be run.
-
 # Folder structure
 
 `climate` - code and shapefiles for constructing, cleaning and assembling climate data 
