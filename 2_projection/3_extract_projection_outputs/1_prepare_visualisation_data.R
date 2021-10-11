@@ -18,7 +18,7 @@ DATA <- Sys.getenv(c("DATA"))
 OUTPUT <- Sys.getenv(c("OUTPUT"))
 
 
-dir = paste0('/shares/gcp/social/parameters/energy_pixel_interaction/extraction/',
+dir = paste0(OUTPUT, '/projection_system_outputs/extracted_projection_data/',
 				'multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/')
 
 # Make sure you are in the risingverse-py27 for this... 
@@ -66,18 +66,18 @@ get_main_model_impacts_maps = function(fuel, price_scen, unit, year, output){
 
 	price_tag = ifelse(is.null(price_scen), "impact_pc", price)
   write_csv(df, 
-		paste0(output, '/projection_system_outputs/mapping_data/', 
+		paste0(OUTPUT, '/projection_system_outputs/mapping_data/', 
 			'main_model-', fuel, '-SSP3-rcp85-high-fulladapt-',price_tag ,'-',year,'-map.csv'))
 }
 
 fuels = c("electricity","other_energy")
 
 df = lapply(fuels, get_main_model_impacts_maps, 
-	price_scen = NULL, unit = "impactpc", year = 2099, output = output)
+	price_scen = NULL, unit = "impactpc", year = 2099, output = OUTPUT)
 
 # get data for some sanity checks
 df = lapply(fuels, get_main_model_impacts_maps, 
-  price_scen = NULL, unit = "impactpc", year = 2090, output = output)
+  price_scen = NULL, unit = "impactpc", year = 2090, output = OUTPUT)
 
 
 ###############################################
@@ -113,7 +113,7 @@ get_main_model_impacts_ts = function(fuel, rcp, adapt) {
 		dplyr::filter(year > 2009) 
 	
 	write_csv(df, 
-		paste0(output, '/projection_system_outputs/time_series_data/', 
+		paste0(OUTPUT, '/projection_system_outputs/time_series_data/', 
 			'main_model-', fuel, '-SSP3-',rcp, '-high-',adapt,'-impact_pc.csv'))
 }
 
@@ -158,39 +158,8 @@ impacts = do.call(load.median, args) %>%
 	rename(damage = mean)
 
 write_csv(impacts, 
-		paste0(output, '/projection_system_outputs/mapping_data/', 
+		paste0(OUTPUT, '/projection_system_outputs/mapping_data/', 
 			'main_model-total_energy-SSP3-rcp85-high-fulladapt-price014-2099-map.csv'))
-
-# DELETE
-# # Get impacts data
-# args = list(
-#       conda_env = "risingverse-py27",
-#       proj_mode = '', # '' and _dm are the two options
-#       region = NULL, # needs to be specified for 
-#       rcp = "rcp85", 
-#       ssp = "SSP3", 
-#       price_scen = "price014", # have this as NULL, "price014", "MERGEETL", ...
-#       unit =  "damage", # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
-#       uncertainty = "climate", # full, climate, values
-#       geo_level = "levels", # aggregated (ir agglomerations) or 'levels' (single irs)
-#       iam = "low", 
-#       model = "TINV_clim", 
-#       adapt_scen = "fulladapt", 
-#       clim_data = "GMFD", 
-#       dollar_convert = "yes",
-#       yearlist = 2099,  
-#       spec = "OTHERIND_total_energy",
-#       grouping_test = "semi-parametric",
-#       regenerate = FALSE)
-
-# impacts = do.call(load.median, args) %>%
-#   dplyr::select(region, mean, q5, q10, q25, q50, q75, q90, q95) %>%
-#   rename(damage = mean)
-
-
-# write_csv(impacts, 
-#     paste0("/mnt/CIL_energy/code_release_data_pixel_interaction/", '/projection_system_outputs/mapping_data/', 
-#       'main_model-total_energy-SSP3-rcp85-low-fulladapt-price014-2099-map.csv'))
 
 
 #####################done######################
@@ -273,7 +242,7 @@ get_IR_values_csv = function(IR) {
 df = lapply(IR_list, get_IR_values_csv) %>% 
 	bind_rows() %>% as.data.frame()
 
-write_csv(df, paste0(output, '/projection_system_outputs/IR_GCM_level_impacts/',
+write_csv(df, paste0(OUTPUT, '/projection_system_outputs/IR_GCM_level_impacts/',
 	'gcm_damages-main_model-total_energy-SSP3-rcp85-high-fulladapt-price014-2099-select_IRs.csv'))
 
 
@@ -298,7 +267,7 @@ gcms45 = get.normalized.weights(rcp = "rcp45") %>% rename(norm_weight_rcp45 = no
 
 df = left_join(gcms85, gcms45, by = "gcm") 
 df = df[,c("gcm", "norm_weight_rcp45", "norm_weight_rcp85")]
-write_csv(df, paste0(output, '/miscellaneous/gcm_weights.csv'))
+write_csv(df, paste0(OUTPUT, '/miscellaneous/gcm_weights.csv'))
 
 
 ######################done#########################
@@ -328,7 +297,7 @@ get_df_ts_main_model_total_energy = function(rcp, args) {
 	                        dplyr::select(year, mean, q5, q95, rcp) %>%
 	                        mutate(rcp = !!rcp)
 	write_csv(plot_df, 
-		paste0(output, '/projection_system_outputs/time_series_data/', 
+		paste0(OUTPUT, '/projection_system_outputs/time_series_data/', 
 			'main_model-total_energy-SSP3-',rcp, '-high-fulladapt-price014.csv'))
 }
 
@@ -361,7 +330,7 @@ get_df_ts_main_model_total_energy = function(rcp, args) {
                           dplyr::select(year, mean, q5, q95, rcp) %>%
                           mutate(rcp = !!rcp)
   write_csv(plot_df, 
-    paste0(output, '/projection_system_outputs/time_series_data/', 
+    paste0(OUTPUT, '/projection_system_outputs/time_series_data/', 
       'main_model-total_energy-SSP3-',rcp, '-high-incadapt-price014.csv'))
 }
 
@@ -378,7 +347,7 @@ lapply(rcps, get_df_ts_main_model_total_energy, args = args)
 # Note - this is the output from a single run, since that produces an allcalcs file
 
 # set path variables
-covariates <- paste0(output, 
+covariates <- paste0(OUTPUT, 
   '/miscellaneous/covariates_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim.csv')
 
 # load and clean data
@@ -388,7 +357,7 @@ covars = as.data.frame(readr::read_csv(covariates)) %>%
   subset(year %in% c(2090,2010))
 
 write_csv(covars, 
-	paste0(output,'/projection_system_outputs/covariates/', 
+	paste0(OUTPUT,'/projection_system_outputs/covariates/', 
 	 'covariates-SSP3-rcp85-high-2010_2090-CCSM4.csv'))
 
 
@@ -432,7 +401,7 @@ get_df_by_price_rcp = function(rcp, price) {
                         select(year, mean) %>% 
                         filter(year > 2009) 
 
-    write_csv(plot_df, paste0(output, '/projection_system_outputs/time_series_data/', 
+    write_csv(plot_df, paste0(OUTPUT, '/projection_system_outputs/time_series_data/', 
     	'main_model-total_energy-SSP3-',rcp ,'-high-fulladapt-', price, '.csv'))   
 }
 
@@ -459,7 +428,8 @@ get_file_name = function(type, fuel=NULL, double = NULL, histclim= NULL, rcp, dm
 		histclim = "-histclim"
 	}
 
-	dir = "/shares/gcp/outputs/energy_pixel_interaction/impacts-blueghost/"
+	dir = paste0(OUTPUT,
+  "/projection_system_outputs/single_projection/")
 
 	if(type == "SA_single") {
 		folder = paste0("single-OTHERIND_", fuel, "_FD_FGLS_1401_TINV_clim_GMFD_slow_adapt/", 
@@ -550,12 +520,12 @@ save_csv_single = function(type, fuel, pop_df){
       mutate(mean = value ) %>%
       dplyr::select(-value)
 
-	write_csv(df, paste0(output, "/projection_system_outputs/time_series_data/CCSM4_single/",
+	write_csv(df, paste0(OUTPUT, "/projection_system_outputs/time_series_data/CCSM4_single/",
 		type,"-",fuel,"-SSP3-high-fulladapt-impact_pc.csv"))
 }
 
 
-pop_df = read_csv(paste0(output,'/projection_system_outputs/covariates/' ,
+pop_df = read_csv(paste0(OUTPUT,'/projection_system_outputs/covariates/' ,
 	'SSP3_IR_level_population.csv'))%>%
 	group_by(region) %>%
 	tidyr::complete(year = seq(2010,2100,1)) %>%
@@ -606,11 +576,11 @@ get_plot_df = function(adapt="fulladapt", spec, rcp, model) {
 df_full85_elec = get_plot_df(adapt = "fulladapt", 
 	spec = "OTHERIND_electricity", rcp = "rcp85", model = "TINV_clim_lininter")
 write_csv(df_full85_elec, 
-	paste0(output, '/projection_system_outputs/time_series_data/',
+	paste0(OUTPUT, '/projection_system_outputs/time_series_data/',
 		'lininter_model-electricity-SSP3-rcp85-high-fulladapt-impact_pc.csv'))
 
 df_full85_oe_elec = get_plot_df(adapt = "fulladapt", 
 	spec = "OTHERIND_other_energy", rcp = "rcp85", model = "TINV_clim_lininter")
 write_csv(df_full85_oe_elec, 
-	paste0(output, '/projection_system_outputs/time_series_data/',
+	paste0(OUTPUT, '/projection_system_outputs/time_series_data/',
 		'lininter_model-other_energy-SSP3-rcp85-high-fulladapt-impact_pc.csv'))

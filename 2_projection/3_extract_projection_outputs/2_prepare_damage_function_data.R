@@ -9,7 +9,11 @@ library(parallel)
 library(miceadds)
 library(haven)
 library(tidyr)
-cilpath.r:::cilpath()
+
+
+REPO <- Sys.getenv(c("REPO"))
+DATA <- Sys.getenv(c("DATA"))
+OUTPUT <- Sys.getenv(c("OUTPUT"))
 
 
 db = '/mnt/CIL_energy/'
@@ -17,10 +21,9 @@ output = '/mnt/CIL_energy/code_release_data_pixel_interaction/'
 
 data_dir = paste0(db,'/code_release_data_pixel_interaction/')
 
-output = paste0(db, 
-	'/code_release_data_pixel_interaction/projection_system_outputs/damage_function_estimation')
-dir = paste0('/shares/gcp/social/parameters/energy_pixel_interaction/extraction/',
-				'multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/')
+output = paste0(OUTPUT, 
+	'/projection_system_outputs/damage_function_estimation')
+
 
 # Source codes that help us load projection system outputs
 # Make sure you are in the risingverse-py27 for this... 
@@ -34,9 +37,7 @@ miceadds::source.all(paste0(projection.packages,"load_projection/"))
 # 2. Values csvs for each SSP/Price scenario we want to calculate a damage function for.
 
 # 1. GMST anomolies: moving from our server into a shared directory
-gmst_dir = "/mnt/Global_ACP/damage_function/GMST_anomaly"
-gmst_df = read_csv(paste0(gmst_dir, "/GMTanom_all_temp_2001_2010_smooth.csv"))
-write_csv(gmst_df, paste0(output, "/GMTanom_all_temp_2001_2010_smooth.csv"))
+gmst_df = read_csv(paste0(output, "/GMTanom_all_temp_2001_2010_smooth.csv"))
 
 # 2. Values csvs to allow for draws from uncertainty 
 

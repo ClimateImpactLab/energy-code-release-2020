@@ -3,8 +3,11 @@ list.of.packages <- c("readr", "haven","Rcpp", "reticulate", "imputeTS", "ggplot
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages)
 
+# to fix reticulate
+install.packages("devtools")
+library("devtools")
+devtools::install_github("rstudio/reticulate")
 
-install.packages("haven")
 
 # on windows: 
 if(!require(installr)) {
@@ -15,5 +18,3 @@ updateR()
 
 # on Mac: download latest installer from https://www.r-project.org/
 # the code has been tested on R 4.1.1
-
-

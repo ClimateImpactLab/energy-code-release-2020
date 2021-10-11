@@ -11,11 +11,12 @@ local clim_data "GMFD"
 
 //SET UP RELEVANT PATHS
 
-glob DB "/mnt"
-loc DB_data "$DB/CIL_energy/code_release_data_pixel_interaction"
+global REPO: env REPO
+global DATA: env DATA 
+global OUTPUT: env OUTPUT 
 
-glob root "/home/liruixue/repos/energy-code-release-2020"
-loc data "$root/data"
+
+glob root "${REPO}/energy-code-release-2020"
 loc output "$OUTPUT/figures"
 
 
@@ -25,12 +26,12 @@ loc output "$OUTPUT/figures"
 
 //Part A: save income and climate covariate data as tempfile
 
-import delim using "`DB_data'/miscellaneous/stockholm_guangzhou_covariates_2015_2099.csv"
+import delim using "${DATA}/miscellaneous/stockholm_guangzhou_covariates_2015_2099.csv"
 tempfile covar_data
 save `covar_data', replace
 
 //Part B: Load in daily tavg distribution min and max for 2015
-import delim using "`DB_data'//miscellaneous/stockholm_guangzhou_2015_min_max.csv", clear 
+import delim using "${DATA}//miscellaneous/stockholm_guangzhou_2015_min_max.csv", clear 
 rename mint minT
 rename maxt maxT
 keep city maxT minT
@@ -41,7 +42,7 @@ qui save `minmax', replace
 //Part B: Sort city-years into climate and income groups using insample climate and income group cutoffs
 
 // i) load in insample climate and income group cutoffs
-use "`data'/break_data_TINV_clim.dta", clear
+use "${DATA}/regression/break_data_TINV_clim.dta", clear
 
 // Get income group knot locations
 foreach var in "electricity" "other_energy" {
@@ -51,7 +52,7 @@ foreach var in "electricity" "other_energy" {
 }
 
 // ii) extract covariates 
-import delim using "`DB_data'/miscellaneous/stockholm_guangzhou_region_names_key.csv", clear varnames(1)
+import delim using "${DATA}/miscellaneous/stockholm_guangzhou_region_names_key.csv", clear varnames(1)
 
 //load in covariates
 foreach yr of num 2099 2015 {
@@ -84,7 +85,7 @@ save `cities', replace
 **************************************************************************************
 
 //load analysis data 
-use "`data'/GMFD_TINV_clim_regsort.dta", clear
+use "${DATA}/regression/GMFD_TINV_clim_regsort.dta", clear
 
 //set local values for plotting
 *temp bounds

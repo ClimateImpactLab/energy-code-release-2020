@@ -54,7 +54,7 @@ def get_pop():
 def get_gdppc_all_regions(model, ssp):
     
     print(model+" "+ssp)
-    os.chdir(os.getenv("HOME") + '/repos/impact-calculations')
+    os.chdir(os.getenv("REPO") + '/impact-calculations')
     moddict = {'high' : 'OECD Env-Growth', 'low' : 'IIASA GDP'}
     df = metacsv.read_csv(files.sharedpath("regions/hierarchy_metacsv.csv"))
     tmplist = []

@@ -6,6 +6,13 @@
 
 rm(list = ls())
 
+
+REPO <- Sys.getenv(c("REPO"))
+DATA <- Sys.getenv(c("DATA"))
+OUTPUT <- Sys.getenv(c("OUTPUT"))
+
+
+
 # Load in the required packages, installing them if necessary 
 if(!require("pacman")){install.packages(("pacman"))}
 pacman::p_load(ggplot2, 
@@ -16,15 +23,15 @@ pacman::p_load(ggplot2,
                grid)
 
 library(ggnewscale)
-DB = "/mnt"
 
-DB_data = paste0(DB, "/CIL_energy/code_release_data_pixel_interaction")
-root =  "/home/liruixue/repos/energy-code-release-2020"
-output = paste0(root, "/figures/fig_Extended_Data_fig_3_sample_overlap_present_future")
+
+root =  paste0(REPO, "/energy-code-release-2020")
+output = paste0(OUTPUT, "/figures/fig_Extended_Data_fig_3_sample_overlap_present_future")
 dir.create(output, showWarnings = FALSE)
-source("/home/liruixue/projection_repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 
-covariates <- paste0(DB_data, "/projection_system_outputs/covariates/",
+# source(paste0(REPO, "/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
+
+covariates <- paste0(OUTPUT, "/projection_system_outputs/covariates/",
                      "/covariates-SSP3-rcp85-high-2010_2090-CCSM4.csv")
 
 # load and clean data
