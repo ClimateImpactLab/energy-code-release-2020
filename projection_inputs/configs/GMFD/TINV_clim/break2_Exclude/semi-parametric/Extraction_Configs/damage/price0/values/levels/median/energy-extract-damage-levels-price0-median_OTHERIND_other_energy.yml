@@ -1,0 +1,9 @@
+results-root: impacts-blueghost/median_OTHERIND_other_energy_TINV_clim_GMFD
+output-dir: //Users/ruixueli/Downloads/energy_data_release/OUTPUT/extracted_projection_data/TINV_clim_GMFD/median_OTHERIND_other_energy_TINV_clim_GMFD/price0
+file-organize: [ssp, region]
+do-montecarlo: no
+only-rcp: null
+only-models: all
+only-iam: null
+column: rebased
+output-format: valuescsv

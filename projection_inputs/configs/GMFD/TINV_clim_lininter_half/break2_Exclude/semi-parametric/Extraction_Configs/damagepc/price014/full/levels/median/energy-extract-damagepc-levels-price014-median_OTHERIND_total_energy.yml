@@ -1,0 +1,15 @@
+results-root:
+  FD_FGLS_inter_OTHERIND_other_energy_TINV_clim_lininter_half.*: impacts-blueghost/median_OTHERIND_other_energy_TINV_clim_lininter_half_GMFD
+  FD_FGLS_inter_OTHERIND_electricity_TINV_clim_lininter_half.*: impacts-blueghost/median_OTHERIND_electricity_TINV_clim_lininter_half_GMFD
+deltamethod:
+  FD_FGLS_inter_OTHERIND_other_energy_TINV_clim_lininter_half.*: impacts-blueghost/median_OTHERIND_other_energy_TINV_clim_lininter_half_GMFD_dm
+  FD_FGLS_inter_OTHERIND_electricity_TINV_clim_lininter_half.*: impacts-blueghost/median_OTHERIND_electricity_TINV_clim_lininter_half_GMFD_dm
+multiimpact_vcv: /Users/ruixueli/Downloads/repos//energy-code-release-2020/projection_inputs/csvv/TINV_clim_lininter_half/FD_FGLS_inter_OTHERIND_TINV_clim_lininter_half.csv
+output-dir: //Users/ruixueli/Downloads/energy_data_release/OUTPUT/extracted_projection_data/TINV_clim_lininter_half_GMFD/total_energy
+file-organize: [ssp, rcp]
+do-montecarlo: no
+only-models: all
+only-iam: null
+column: rebased
+evalqvals: ['mean', .5, 0.05, 0.17, 0.83, 0.95, 0.10, 0.90, 0.75, 0.25]
+output-format: edfcsv

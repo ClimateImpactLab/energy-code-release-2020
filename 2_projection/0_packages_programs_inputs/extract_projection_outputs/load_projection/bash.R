@@ -1,4 +1,3 @@
-
 #' ---
 #' Purpose:  ${1: Functions for interfacing with shell scripts from R script}
 #' authors: ${2: Maya Norman and Tom Bearpark}
@@ -36,6 +35,7 @@ extract <- function(paths = list(), ...) {
     kwargs = list(...)
     kwargs = rlist::list.append(kwargs, shell.file = paths$shell_path, extract = 'true')
     parameters = do.call(get.bash.parameters, kwargs)
+    
     kwargs = rlist::list.append(kwargs, parameters = parameters)
     output.text = do.call(call.shell.script, kwargs)
     
@@ -86,10 +86,10 @@ check.file.complete <- function(file = '', ...) {
 
     diff = get.diff(file = file)
     
-    while(diff < 2) {
+    while(diff < 10) {
       print('Still not done. The file is writing away...')
       print(glue::glue('{file} was last worked on {diff} seconds ago.'))
-      Sys.sleep(2)
+      Sys.sleep(10)
       diff = get.diff(file = file)
     }  
 }
@@ -113,6 +113,7 @@ call.shell.script <- function(shell.file = '', parameters = '', ...) {
     print(glue::glue('parameters feeding script: {parameters}'))
     
     command = paste0("bash ",shell.file, " ", '"', parameters,'"')
+    print("#########################################################")
     print(command)
 
     output.text = system(command, intern = TRUE)
@@ -157,7 +158,7 @@ get.available.memory <- function(...) {
   
   print("Fetching available memory (GB)...")
   mem.avail.string = system("free -h | awk '{print $7}'", intern=TRUE)[2]
-  mem.avail = as.numeric(gsub('G', '', mem.avail.string)) # always want some buffer
+  mem.avail = as.numeric(gsub('Gi', '', mem.avail.string)) # always want some buffer
   print(mem.avail)
   return(mem.avail)
 

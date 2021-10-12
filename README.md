@@ -1,3 +1,77 @@
+# Requirements For Using Code In This Repo
+
+1. You need to have `python`, `Stata`, and `R` programming capabilities, or at least environments to run code in these languages, on your computer. 
+
+2. We use `conda` to manage `python` enrivonments, so we recommend installing `conda` if you haven't already done so following [these instructions](https://docs.conda.io/projects/conda/en/latest/user-guide/install/macos.html). 
+
+# Setup 
+
+1. Clone the following repos to a chosen directory, which we'll call `REPO`, with the following commands: 
+```
+git clone https://github.com/ClimateImpactLab/energy-code-release-2020.git
+git clone https://gitlab.com/ClimateImpactLab/Impacts/impact-calculations.git
+
+
+```
+
+2. (SKIP) Clone `open-estimate` and `impact-common` repo and install using the following commands
+
+```
+git clone 
+cd open-estimate
+pip install -e .
+cd ..
+
+git clone 
+cd impact-common
+pip install -e .
+```
+
+2. Install the `conda` environment needed to run this repo by running the following commands under the root of this repo:
+
+```
+conda env create -f energy_env_py3.yaml
+```
+
+
+3. Install the R packages needed using the following command from the root of this repo: 
+```
+Rscript install_R_packages.R
+```
+
+4. Download data from `https://doi.org/10.5281/zenodo.5099834`.
+
+
+5. Set up a few environmental variables.
+
+On Mac, append the following lines to your `~/.bash_profile`:
+
+```
+nano ~/.bash_profile
+
+```
+Append the following lines to the end of the `.bash_profile` file:
+
+Point the variable `DATA` in the `DATA` dierctory in the downloaded data, and do the same for `OUTPUT`. Point the `REPO` variable to the `REPO` path used above containing this repo and other repos. 
+
+```
+export REPO=path_to_your_repos
+export DATA=path_to_"energy_code_release_data/DATA"
+export OUTPUT=path_to_"energy_code_release_data/OUTPUT"
+export LOG=path_to_"energy_code_release_data/LOG"
+
+```
+
+Then run a `source ~/.bash_profile` to load the changes.
+
+On Windows: TO-DO
+
+6. Mass replace all occurences of `stata -b` in this repo with `stata-mp -b` or `stata-se -b` according to the version of your stata. If you're prompted `command not found` when trying to run `stata` commands from the console, install `stata(console)` for your machine according to stata official documentation that is available online. 
+
+7. Setup for the whole repo is done! Now please follow the `README`s in each subdirectory to run each part of the analysis. 
+
+
+
 # The Social Cost of Global Energy Consumption Due to Climate Change
 
 The analysis in the paper proceeds in **five steps**. 
@@ -25,7 +99,7 @@ This master readme outlines the process for each step, and each analysis step ha
 
 `sters` - Contains regression output, saved as .ster files 
 
-Codes in step 3 onwards also use data held in an external data repository (currently `/{synology}/GCP_Reanalysis/ENERGY/code_release_data/`). 
+Codes in step 3 onwards also use data held in an external data repository (currently `/{synology}/CIL_energy/code_release_data_pixel_interaction/`). 
 
 ## Step 1 - Historical Energy Consumption and Climate Dataset Construction
 
@@ -104,7 +178,7 @@ We run three kinds of regressions in this section:
     * Code for these regressions can be found in [1_analysis/uninteracted_regression](https://github.com/ClimateImpactLab/energy-code-release-2020/tree/master/1_analysis/uninteracted_regression)
     * This code outputs: 
         * ster files for both the first stage and the FGLS regression: `FD_global_TINV_clim.ster` and `FD_FGLS_global_TINV_clim.ster`, respectively  
-        * ***Appendix Figure C1***: `fig_Appendix-C1_product_overlay_TINV_clim_global.pdf`
+        * ***Appendix Figure C1***: `fig_Appendix-B1_product_overlay_TINV_clim_global.pdf`
 2. Decile regressions (*Appendix* Equation C.3)
     * These regressions are run in order to understand how the sensitivity of energy consumption to climate change modulates with incomoe levels. 
     * Code for these regressions can be found in [1_analysis/decile_regression](https://github.com/ClimateImpactLab/energy-code-release-2020/tree/master/1_analysis/decile_regression)
@@ -119,9 +193,9 @@ We run three kinds of regressions in this section:
             * `FD_inter_*.ster` and `FD_FGLS_inter_*.ster`
         * The following paper and appendix figures:
             * ***Figures 1C***: `fig_1C_*_interacted_TINV_clim*.pdf`
-            * ***Appendix Figures I2***: `fig_Appendix-I2_*_interacted_main_model_TINV_clim_overlay_model_EX*.pdf`
-            * ***Appendix Figures I3A***: `fig_Appendix-I3A_ME_time_TINV_clim_lininter_*.pdf`
-            * ***Appendix Figures I3B***: `fig_Appendix-I3B_*_interacted_main_model_TINV_clim_overlay_model_lininter.pdf`
+            * ***Appendix Figures I2***: `fig_Appendix-G2_*_interacted_main_model_TINV_clim_overlay_model_EX*.pdf`
+            * ***Appendix Figures I3A***: `fig_Appendix-G3A_ME_time_TINV_clim_lininter_*.pdf`
+            * ***Appendix Figures I3B***: `fig_Appendix-G3B_*_interacted_main_model_TINV_clim_overlay_model_lininter.pdf`
 
 ## Step 3 - Project Future Impacts of Climate Change 
 
@@ -151,10 +225,10 @@ In this stage, we take the projected future impacts found in step 3, and use the
          * ***Figure 3*** `/fig_3/.`: Figures in this folder present visualisations of monetized damages, combined across fuel types. We present a map of the damages, to highlight the spatial distribution, with visualisations of uncertainty for selected impact regions (Figure 3A). We also show an aggregated time series showing total projected damages by year as percent of global gdp (Figure 3B). The damage functions in Figure 3C are produced by code in damage function estimation.  
          * Appendix figures including 
             * ***Appendix Figure C3***: `/fig_Appendix-C3_sample_overlap_present_future/.`
-            * ***Appendix Figure D1***: `fig_Appendix-D1_global_total_energy_timeseries_all-prices-rcp*.pdf`
+            * ***Appendix Figure D1***: `fig_Extended_Data_fig_5_global_total_energy_timeseries_all-prices-rcp*.pdf`
             * ***Appendix Figure H1***: `fig_Appendix-H1_SSP3-high_rcp85-total-energy-price014-damages_by_inc_decile.pdf`
-            * ***Appendix Figure I1***: `fig_Appendix-I1_Slow_adapt-global_*_timeseries_impact-pc_CCSM4-SSP3-high.pdf`
-            * ***Appendix Figure I3.C***: `fig_Appendix-I3_lininter-global_*_timeseries_impact-pc_SSP3-high-rcp85.pdf`
+            * ***Appendix Figure I1***: `fig_Appendix-G1_Slow_adapt-global_*_timeseries_impact-pc_CCSM4-SSP3-high.pdf`
+            * ***Appendix Figure I3.C***: `fig_Appendix-G3_lininter-global_*_timeseries_impact-pc_SSP3-high-rcp85.pdf`
                                                 
 
 2. We then use the global damages implied by our projections to construct damage functions. Code for estimating these damage functions is contained in [3_post_projection/2_damage_function_estimation](https://github.com/ClimateImpactLab/energy-code-release-2020/tree/master/3_post_projection/2_damage_function_estimation). 

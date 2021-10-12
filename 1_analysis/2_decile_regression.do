@@ -9,9 +9,16 @@ macro drop _all
 
 /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////
 
+global REPO: env REPO
+global DATA: env DATA 
+global OUTPUT: env OUTPUT
+global LOG: env LOG
+log using $LOG/1_analysis/2_decile_regression.log, replace
+
+
 * path to energy-code-release repo:
 
-global root "/Users/`c(username)'/Documents/repos/energy-code-release"
+global root "${REPO}/energy-code-release-2020"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -31,3 +38,12 @@ do $root/1_analysis/decile_regression/stacked.do
 ********************************************************************************
 
 do $root/1_analysis/decile_regression/plot_stacked.do
+
+********************************************************************************
+* Step 3: Plot Response separately for electricity and other energy
+********************************************************************************
+
+do $root/1_analysis/decile_regression/plot_stacked_1A_separate.do
+
+log close _all
+

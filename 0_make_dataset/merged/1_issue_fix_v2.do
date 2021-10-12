@@ -15,7 +15,7 @@ local model $model
 
 // Part A: Make Energy Dataset Tempfile and retrieve Country List for looping
 
-use "$root/data/IEA_Merged_long_GMFD.dta", clear
+use "$DATA/regression/IEA_Merged_long_GMFD.dta", clear
 drop countryid
 keep if year>=1971 & year<=2012
 generate FEtag="G"

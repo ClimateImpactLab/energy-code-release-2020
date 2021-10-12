@@ -10,14 +10,13 @@ set scheme s1color
 
 local model = "$model" // What is the main model for this plot?
 local var = "$product" // What product's response function are we plotting?
-local fig = "fig_Appendix-I3A" // Whats the plots figure number in the paper?
+local fig = "fig_Appendix-G3A" // Whats the plots figure number in the paper?
 
 ********************************************************************************
 * Step 1: Load Data and Clean for Plotting
 ********************************************************************************
 		
-use "$root/data/GMFD_`model'_regsort.dta", clear
-
+use "$DATA/regression/GMFD_`model'_regsort.dta", clear
 //Set up locals for plotting
 local obs = 35 + abs(-5) + 1
 
@@ -42,14 +41,15 @@ foreach k of num 1/2 {
 * Get Income Spline Knot Location 
 	
 preserve
-use "$root/data/break_data_`model'.dta", clear
+use "$DATA/regression/break_data_`model'.dta", clear
 summ maxInc_largegpid_`var' if largegpid_`var' == 1
 local ibar = `r(max)'
 restore
 
 * load temporal trend ster file
 
-estimates use "$root/sters/FD_FGLS_inter_`model'_lininter.ster"
+
+estimates use "$OUTPUT/sters/FD_FGLS_inter_`model'_lininter.ster"
 
 * set product specific index for coefficients
 
@@ -72,7 +72,7 @@ forval lg = 1/3 {
 	
 	preserve
 	
-		use "$root/data/break_data_`model'.dta", clear
+		use "$DATA/regression/break_data_`model'.dta", clear
 		duplicates drop tpid tgpid, force
 		sort tpid tgpid 
 		local subInc = avgInc_tgpid[`lg']
@@ -112,7 +112,8 @@ forval lg = 1/3 {
 graph combine `MEgraphic', imargin(zero) ycomm rows(1) xsize(9) ysize(3) ///
 subtitle("Marginal Effect of Time `var'", size(small)) ///
 plotregion(color(white)) graphregion(color(white)) name(comb`i', replace)
-graph export "$root/figures/`fig'_ME_time_`model'_lininter_`var'.pdf", replace
+graph export "$OUTPUT/figures/`fig'_ME_time_`model'_lininter_`var'.pdf", replace
 graph drop _all
+
 
 

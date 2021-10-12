@@ -1,0 +1,24 @@
+name: energy_env_py2
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - click
+  - emcee
+  - gspread=3.1.0
+  - numpy>=1.14
+  - netCDF4
+  - oauth2client
+  - pandas
+  - pip
+  - python=2.7
+  - pyyaml
+  - pytest
+  - scipy
+  - statsmodels
+  - xarray=0.9
+  - pip:
+    - impactlab-tools
+    - metacsv
+    - netCDF4==1.3.1
+    - xarray==0.10.9

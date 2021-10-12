@@ -5,12 +5,19 @@ Purpose: Estimate and Plot stacked global energy-temperature response
 clear all
 set more off
 macro drop _all
+global LOG: env LOG
+log using $LOG/1_analysis/1_uninteracted_regression.log, replace
+
 
 /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////
 
+global REPO: env REPO
+global DATA: env DATA 
+global OUTPUT: env OUTPUT 
+
 // path to energy-code-release repo 
 
-global root "/Users/`c(username)'/Documents/repos/energy-code-release-2020"
+global root "${REPO}/energy-code-release-2020"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -30,3 +37,5 @@ do $root/1_analysis/uninteracted_regression/stacked.do
 ********************************************************************************
 
 do $root/1_analysis/uninteracted_regression/plot_stacked.do
+
+log close _all

@@ -1,0 +1,45 @@
+
+  ___  ____  ____  ____  ____ (R)
+ /__    /   ____/   /   ____/
+___/   /   /___/   /   /___/   16.1   Copyright 1985-2019 StataCorp LLC
+  Statistics/Data analysis            StataCorp
+                                      4905 Lakeway Drive
+     Special Edition                  College Station, Texas 77845 USA
+                                      800-STATA-PC        https://www.stata.com
+                                      979-696-4600        stata@stata.com
+                                      979-696-4601 (fax)
+
+Stata license: 745-user network, expiring 30 Jun 2022
+Serial number: 501709313533
+  Licensed to: Ruixue Li
+               UChicago BFI
+
+Notes:
+      1. Stata is running in batch mode.
+      2. Unicode is supported; see help unicode_advice.
+      3. Maximum number of variables is set to 5,000; see help set_maxvar.
+
+. do 2_construct_regression_ready_data.do 
+
+. /*
+> 
+> Purpose: Master Do File for Analysis Dataset Construction
+> (Takes dataset from cleaned from IEA_merged_long*.dta to GMFD_*_regsort.dta)
+> 
+> Step 1) Construct reporting regimes and drop data according to selected coded
+>  issues
+> Step 2) Match product specific climate data with product
+> Step 3) Identify income spline knot location by constructing two income group
+> s for each product
+> Step 4) Perform Final Cleaning Steps before first differenced interacted vari
+> able construction
+>         * Classify countries within 1 of 13 UN regions
+>         * Classify countries in income deciles and groups
+> Step 5) Construct First Differenced Interacted Variables
+>  
+> */
+. 
+. clear all
+
+. set more off
+

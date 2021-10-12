@@ -107,13 +107,11 @@ program define clean_WORLD
 
 	//electricity fixes
 	foreach var of varlist tmax*_N tavg*_N prcp*_N {
-		
-		*dropping final year
-		qui replace `var' = . if inlist(country, "JPN","BGD","EGY","ETH", "IND", "IRN", "NPL", "KEN") & year == 2010
-
-
+		*dropping final year, but keep the long run measures to be consistent with the non-pixel-interaction data
+		if !inlist("`var'", "tavg_polyAbove20_1_x_cdd_N", "tavg_polyAbove20_2_x_cdd_N",  "tavg_polyBelow20_1_x_hdd_N", "tavg_polyBelow20_2_x_hdd_N"){
+			qui replace `var' = . if inlist(country, "JPN","BGD","EGY","ETH", "IND", "IRN", "NPL", "KEN") & year == 2010 
+		}
 	}
-
 	rename *_N *
 
 	**Step 4: generating MA and TINV**

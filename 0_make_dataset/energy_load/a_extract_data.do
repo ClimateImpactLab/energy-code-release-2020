@@ -22,7 +22,7 @@ Purpose: Clean Load Data
 *--Load Data Cleaning--*
 
 //This part of the code is to be run under Sacagawea, where raw datafile saved
-local RAWDATA "/shares/gcp/estimation/energy/IEA"
+local RAWDATA "${DATA}/energy/IEA"
 
 // merge raw data files
 import delimited using "`RAWDATA'/WBAL_13022019212114578.csv", clear

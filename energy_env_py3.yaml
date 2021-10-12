@@ -1,0 +1,25 @@
+name: energy_env_py3
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - click
+  - emcee
+  - numpy>=1.18
+  - netCDF4>=1.3.1
+  - pandas
+  - pip
+  - python=3.7
+  - pyyaml
+  - pytest
+  - pytest-mock
+  - scipy
+  - setuptools_scm
+  - statsmodels
+  - bottleneck
+  - xarray
+  - pip:
+    - git+https://github.com/ClimateImpactLab/impactlab-tools@master
+    - git+https://github.com/ClimateImpactLab/metacsv.git@master
+    - git+https://github.com/ClimateImpactLab/open-estimate@master
+    - git+https://github.com/ClimateImpactLab/impact-common@master

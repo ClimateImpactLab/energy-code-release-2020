@@ -1,7 +1,0 @@
-outputdir: outputs/energy/impacts-blueghost
-levels-weighting: population * social/baselines/energy/MERGEETL60_rcp45_Prices_COMPILE.dta:country:year:electricitycompile_price
-targetdir: /global/scratch/tbearpark/outputs/energy/impacts-blueghost/single-OTHERIND_electricity_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_income_spline_GMFD_dm/rcp45/CCSM4/high/SSP3
-aggregate-weighting-numerator: population * social/baselines/energy/MERGEETL60_rcp45_Prices_COMPILE.dta:country:year:electricitycompile_price
-aggregate-weighting-denominator: population
-infix: MERGEETL60_rcp45pc
-rcp: rcp45

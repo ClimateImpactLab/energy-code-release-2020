@@ -26,7 +26,7 @@ local other_energy_colTT "Orange"
 * Step 1: Load Data and Clean for Plotting
 ********************************************************************************
 		
-use "$root/data/GMFD_`model'_regsort.dta", clear
+use "$DATA/regression/GMFD_`model'_regsort.dta", clear
 
 //Set up locals for plotting
 local obs = 35 + abs(-5) + 1
@@ -76,7 +76,7 @@ foreach var in "electricity" "other_energy" {
 
 	* use ster to estimate dose response
 
-	estimates use "$root/sters/FD_FGLS_global_`model'"
+	estimates use "$OUTPUT/sters/FD_FGLS_global_`model'"
 	predictnl yhat_`var' = `line', se(se_`var') ci(lower_`var' upper_`var')
 	
 	// add predicted dose reponse to plotting locals
@@ -94,6 +94,6 @@ title("Global Energy-temperature Response" , size(vsmall)) ///
 subtitle("`colorGuide' " , size(vsmall)) ///
 ytitle("", size(small)) xtitle("", size(vsmall)) ///
 plotregion(color(white)) graphregion(color(white))
-graph export "$root/figures/fig_Appendix-C1_product_overlay_`model'_global.pdf", replace
+graph export "$OUTPUT/figures/fig_Appendix-B1_product_overlay_`model'_global.pdf", replace
 
 graph drop _all	

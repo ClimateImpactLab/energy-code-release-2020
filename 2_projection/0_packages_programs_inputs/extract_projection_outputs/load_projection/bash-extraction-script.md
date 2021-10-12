@@ -18,7 +18,7 @@ why you might ask: currently the code uses the bash script in two ways
 
 For example, this line defines the model parameter. The slashes (`/`) indicate the start and stop of a definition. The colons (`:`) seperate the definition type from the definition value. 
 ```
-## / parameter:model / options:TINV_clim_income_spline, TINV_clim_income_spline_lininter / required:yes /
+## / parameter:model / options:TINV_clim, TINV_clim_lininter / required:yes /
 ```
 Each parameter the bash extraction script has functionality for should be documented in the file in this way.
 why you might ask (...inquisitive bunch): 

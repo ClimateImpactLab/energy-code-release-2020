@@ -1,7 +1,7 @@
 /*
 
 Purpose: Plot response functions for 2015 and 2099 overlaid, for Stockholm and Guangxzhou
-
+done sep 2020
 */
 
 clear all
@@ -11,12 +11,13 @@ local clim_data "GMFD"
 
 //SET UP RELEVANT PATHS
 
-glob DB "C:/Users/TomBearpark/synologyDrive"
-loc DB_data "$DB/GCP_Reanalysis/ENERGY/code_release_data"
+global REPO: env REPO
+global DATA: env DATA 
+global OUTPUT: env OUTPUT 
 
-glob root "C:/Users/TomBearpark/Documents/energy-code-release-2020"
-loc data "$root/data"
-loc output "$root/figures"
+
+glob root "${REPO}/energy-code-release-2020"
+loc output "$OUTPUT/figures"
 
 
 ***********************************************************************************
@@ -25,12 +26,12 @@ loc output "$root/figures"
 
 //Part A: save income and climate covariate data as tempfile
 
-import delim using "`DB_data'/miscellaneous/stockholm_guangzhou_covariates_2015_2099.csv"
+import delim using "${DATA}/miscellaneous/stockholm_guangzhou_covariates_2015_2099.csv"
 tempfile covar_data
 save `covar_data', replace
 
 //Part B: Load in daily tavg distribution min and max for 2015
-import delim using "`DB_data'//miscellaneous/stockholm_guangzhou_2015_min_max.csv", clear 
+import delim using "${DATA}//miscellaneous/stockholm_guangzhou_2015_min_max.csv", clear 
 rename mint minT
 rename maxt maxT
 keep city maxT minT
@@ -41,7 +42,7 @@ qui save `minmax', replace
 //Part B: Sort city-years into climate and income groups using insample climate and income group cutoffs
 
 // i) load in insample climate and income group cutoffs
-use "`data'/break_data_TINV_clim.dta", clear
+use "${DATA}/regression/break_data_TINV_clim.dta", clear
 
 // Get income group knot locations
 foreach var in "electricity" "other_energy" {
@@ -51,7 +52,7 @@ foreach var in "electricity" "other_energy" {
 }
 
 // ii) extract covariates 
-import delim using "`DB_data'/miscellaneous/stockholm_guangzhou_region_names_key.csv", clear varnames(1)
+import delim using "${DATA}/miscellaneous/stockholm_guangzhou_region_names_key.csv", clear varnames(1)
 
 //load in covariates
 foreach yr of num 2099 2015 {
@@ -84,7 +85,7 @@ save `cities', replace
 **************************************************************************************
 
 //load analysis data 
-use "`data'/GMFD_TINV_clim_regsort.dta", clear
+use "${DATA}/regression/GMFD_TINV_clim_regsort.dta", clear
 
 //set local values for plotting
 *temp bounds
@@ -103,9 +104,11 @@ local Coldcol "midblue"
 qui drop if _n > 0
 qui set obs `obs'
 qui replace temp1_`clim_data' = _n + `min' -1
-qui gen above`midcut'=(temp1_`clim_data'>=`midcut') //above 20 indicator
-qui gen below`midcut'=(temp1_`clim_data'<`midcut') //below 20 indicator
 
+//above 20 indicator
+qui gen above`midcut'=(temp1_`clim_data'>=`midcut')
+//below 20 indicator 
+qui gen below`midcut'=(temp1_`clim_data'<`midcut') 
 foreach k of num 1/2 {
 	rename temp`k'_`clim_data' temp`k'
 	replace temp`k' = temp1 ^ `k'
@@ -179,7 +182,7 @@ foreach var in "electricity" "other_energy" {
 				local add " + "
 			}
 			* Load in ster file, to get response function coefficients
-			estimates use "$root/sters/FD_FGLS_inter_TINV_clim.ster"
+			estimates use "$OUTPUT/sters/FD_FGLS_inter_TINV_clim.ster"
 
 			* Get predicted values, and SEs
 			predictnl yhat_`var'`scen' = `line', se(se_`var'`scen') ci(lower_`var'`scen' upper_`var'`scen')
@@ -228,5 +231,5 @@ foreach var in "electricity" "other_energy" {
 
 * Combine plots, and save
 graph combine electricity other_energy, rows(2)
-graph export "$root/figures/fig_2A_city_response_functions_2015_and_2099.pdf", replace
+graph export "$OUTPUT/figures/fig_2A_city_response_functions_2015_and_2099.pdf", replace
 graph drop _all	

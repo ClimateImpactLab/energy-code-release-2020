@@ -7,10 +7,12 @@
 # 4. Code for figure Appendix I.1 - Comparison to slow adaptation scenario single run
 # 5. Code for figure Appendix I3 - Modelling tech trends 
 
+# two singles not done
 #########################################
 # 0. Set up
 
 rm(list = ls())
+source("/home/liruixue/projection_repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 
 # Load in the required packages, installing them if necessary 
 if(!require("pacman")){install.packages(("pacman"))}
@@ -22,14 +24,14 @@ pacman::p_load(ggplot2,
 
 
 # Set paths
-DB = "C:/Users/TomBearpark/synologyDrive"
+DB = "/mnt/CIL_energy"
 
-DB_data = paste0(DB, "/GCP_Reanalysis/ENERGY/code_release_data")
-root =  "C:/Users/TomBearpark/Documents/energy-code-release-2020"
+DB_data = paste0(DB, "/code_release_data_pixel_interaction")
+root =  "/home/liruixue/repos/energy-code-release-2020"
 output = paste0(root, "/figures")
 
 # Source time series plotting codes
-source(paste0(root, "/3_post_projection/0_utils/time_series.R"))
+source(paste0("/home/liruixue/repos/post-projection-tools/", "/timeseries/ggtimeseries.R"))
 
 
 #########################################
@@ -113,6 +115,7 @@ get_df_list_fig_2C = function(DB_data, fuel){
 # Plotting function, for replicating Figure 2C. Note - coloring in the paper requires 
 
 # post processing in illustrator 
+
 plot_ts_fig_2C = function(fuel, output, DB_data){
   
   plot_df = get_df_list_fig_2C(DB_data = DB_data,fuel = fuel)
@@ -163,7 +166,6 @@ plot_ts_fig_3B = function(DB_data, output){
   # Load in gdp global projected SSP3 time series
   df_gdp = read_csv(paste0(DB_data, '/projection_system_outputs/covariates/', 
                            "/SSP3-global-gdp-time_series.csv"))
-  
   # Get separate dataframes for rcp45 and rcp85, for plotting
   format_df = function(rcp, df_impacts, df_gdp){
 
@@ -171,9 +173,9 @@ plot_ts_fig_3B = function(DB_data, output){
       dplyr::filter(rcp == !!rcp) %>% 
       left_join(df_gdp, by = "year")%>% 
       mutate(mean = mean * 1000000000, q95 = q95 *1000000000 , q5 = q5* 1000000000) %>% #convert from billions of dollars 
-      mutate(percent_gdp = (mean/gdp) *100, 
-             ub = (q95/gdp) *100, 
-             lb = (q5/gdp) *100)
+      mutate(percent_gdp = (mean/gdp) *100 / 0.0036, 
+             ub = (q95/gdp) *100 / 0.0036, 
+             lb = (q5/gdp) *100 / 0.0036)
     
     df_mean = df %>% 
       dplyr::select(year, percent_gdp)
@@ -222,7 +224,7 @@ load_timeseries = function(rcp, price, df_gdp){
                 'main_model-total_energy-SSP3-',rcp,'-high-fulladapt-',price,'.csv'))  %>% 
     left_join(df_gdp, by="year") %>% 
     mutate(mean = mean * 1000000000)%>% 
-    mutate(percent_gdp = (mean/gdp) *100) %>%
+    mutate(percent_gdp = (mean/gdp) *100 / 0.0036) %>%
     dplyr::select(year, percent_gdp) %>% 
     as.data.frame()
   
@@ -249,7 +251,7 @@ plot_prices = function(rcp, pricelist, output) {
                     rcp.value = rcp, ssp.value = "SSP3", iam.value = "high") 
   
   ggsave(p, file = paste0(output, 
-                          "/fig_Appendix-D1_global_total_energy_timeseries_all-prices-", 
+                          "/fig_Extended_Data_fig_5_global_total_energy_timeseries_all-prices-", 
                           rcp, ".pdf"), width = 8, height = 6)
 }
 
@@ -297,14 +299,15 @@ plot_and_save_appendix_I1 = function(fuel, DB_data, output){
     ylab("Impacts (GJ PC)") + xlab("")
   
   ggsave(p, file = paste0(output, 
-                          "/fig_Appendix-I1_Slow_adapt-global_", fuel, "_timeseries_impact-pc_CCSM4-SSP3-high.pdf"), 
+                          "/fig_Appendix-G1_Slow_adapt-global_", fuel, "_timeseries_impact-pc_CCSM4-SSP3-high.pdf"), 
                           width = 8, height = 6)
   return(p)
 }
 
+####### not done #######
 plot_and_save_appendix_I1(fuel = "electricity", DB_data = DB_data, output = output)
 plot_and_save_appendix_I1(fuel = "other_energy", DB_data = DB_data, output = output)
-
+###### not done #######
 
 #########################################
 # 4. Figure Appendix I.3 - modelling tech trends 
@@ -339,19 +342,13 @@ plot_ts_appendix_I3 = function(fuel, output){
                    y.limits=c(-4,8)) + scale_y_continuous(breaks=seq(-3,7,3))
 
   ggsave(p, file = paste0(output, 
-                          "/fig_Appendix-I3_lininter-global_", fuel, "_timeseries_impact-pc_SSP3-high-rcp85.pdf"), 
+                          "/fig_Appendix-G3_lininter-global_", fuel, "_timeseries_impact-pc_SSP3-high-rcp85.pdf"), 
          width = 8, height = 6)
 }
 
 
 plot_ts_appendix_I3(fuel = "electricity", output = output)
 plot_ts_appendix_I3(fuel = "other_energy", output = output)
-
-
-
-
-
-
 
 
 

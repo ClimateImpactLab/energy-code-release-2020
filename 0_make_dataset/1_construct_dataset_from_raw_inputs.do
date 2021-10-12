@@ -24,41 +24,48 @@ Step 2) Merge Population, Income, Load and Climate Datasets
 
 */
 
+
 clear all
 set more off
 macro drop _all
-pause on
+pause off
 cap ssc install rangestat
+global LOG: env LOG
+log using $LOG/0_make_dataset/1_construct_dataset_from_raw_inputs.log, replace
+
 
 /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////
 
 // path to energy-code-release repo 
-local root "/Users/`c(username)'/Documets/repos/energy-code-release-2020"
 
+global REPO: env REPO
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 * Step 0: Define code and dataset paths
 
 // code path referenced by multiple files
-global dataset_construction "`root'/0_make_dataset/"
-
+global dataset_construction "$REPO/energy-code-release-2020/0_make_dataset/"
 
 // output data path
-local DATA "`root'/data"
+global DATA: env DATA 
 
 ********************************************************************************************************************************************
 *Step 1: Construct Population/Income, Load, and Climate Datasets
 ********************************************************************************************************************************************
 
 //Part A: Climate Data Construction
-do "$dataset_construction/climate/1_clean_climate_data.do"
 
+do "$dataset_construction/climate/1_clean_climate_data.do"
 clean_climate_data, clim("GMFD") programs_path("$dataset_construction/climate/programs")
+
 tempfile climate_data
 save `climate_data', replace
+save "${DATA}/climate/climate_data", replace
+
 
 //Part B: Population and Income Data Construction
+//use "${DATA}/climate/climate_data", clear
 
 do "$dataset_construction/pop_and_income/1_extract_and_clean.do"
 
@@ -84,13 +91,12 @@ use `energy_load_data', clear
 
 merge m:1 country year using `population_and_income_data'
 keep if _merge!=2
-pause
 drop _merge
+
 **climate**
 merge m:1 year country using `climate_data'
 keep if _merge!=2
 drop _merge
-
 
 //Part B: Construct Per Capita and log_pc
 
@@ -105,5 +111,6 @@ foreach var of varlist coal* oil* natural_gas* electricity* heat_other* biofuels
 do "$dataset_construction/merged/0_break2_clean.do"  
 
 di "mission complete :)"
-save "`DATA'/IEA_Merged_long_GMFD.dta", replace
+save "${DATA}/regression/IEA_Merged_long_GMFD.dta", replace
 
+log close _all

@@ -1,5 +1,7 @@
 # Purpose: Plot get the kernel density plots for Figure 3A
+
 rm(list = ls())
+source("/home/liruixue/projection_repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
 
   # Load in the required packages, using the pacman package
 if(!require("pacman")){install.packages(("pacman"))}
@@ -9,14 +11,14 @@ pacman::p_load(ggplot2, # plotting functions
                tidyr,   # spread()
                readr)   # read_csv()
 
-DB = "C:/Users/TomBearpark/synologyDrive"
-DB_data = paste0(DB, "/GCP_Reanalysis/ENERGY/code_release_data")
+DB = "/mnt"
+DB_data = paste0(DB, "/CIL_energy/code_release_data_pixel_interaction")
 data = paste0(DB_data, "/outputs")
 
-root =  "C:/Users/TomBearpark/Documents/energy-code-release-2020"
+root =  "/home/liruixue/repos/energy-code-release-2020"
 output = paste0(root, "/figures")
 
-
+dir.create(file.path(output, "fig_3"), showWarnings = FALSE)
 # Source the Kernel Density plotting code
 source(paste0(root, "/3_post_projection/0_utils/kernel_densities.R"))
 
@@ -86,8 +88,8 @@ gen_plot_save_kd <-
   val = df_gdp$gdp99[df_gdp$region == IR] %>% as.numeric()
   # Convert to dollars, since that 
   # was the units of the impacts was  billions of dollars
-  val = val / 1000000000 
-  df_mc$value = df_mc$value / val
+  val = val / 1000000000
+  df_mc$value = df_mc$value / val / 0.0036
 
   print(paste0("plotting for ", IR))
 
@@ -104,7 +106,7 @@ gen_plot_save_kd <-
     kd_plot = kd_plot + ylim(0, ymax)
   } 
   ggsave(paste0(output, "/fig_3/fig_3A_kd_plot_",IR, ".pdf"), kd_plot)
-  # return(kd_plot)
+  return(kd_plot)
 }
 
 
@@ -117,5 +119,4 @@ args = list(iterations = 1000, seed = 123, xmax =0.03, xmin = -0.03, ymax = 800,
             DB_data = DB_data, output = output)
 
 mapply(gen_plot_save_kd, IR = IR_list, title =IR_list_names, MoreArgs = args)
-
 

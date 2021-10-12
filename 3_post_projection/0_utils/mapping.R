@@ -66,7 +66,11 @@ pacman::p_load(ggplot2,         # ggplot
 #---------------------------------------------------------------------------------------------
 
 # function to load map and put into dataframe
-load.map <- function(shploc = "/shares/gcp/climate/_spatial_data/world-combo-new-nytimes", 
+REPO <- Sys.getenv(c("REPO"))
+DATA <- Sys.getenv(c("DATA"))
+OUTPUT <- Sys.getenv(c("OUTPUT"))
+
+load.map <- function(shploc = paste0(DATA, "/climate/_spatial_data/world-combo-new-nytimes"), 
                      shpname = "new_shapefile", map.crs = "+proj=robin +lon_0=0 +x_0=0 +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs"){
 print("loading world shapefile, this might take a few minutes, since it's a large file...")
 

@@ -7,12 +7,17 @@ Purpose:
 clear all
 set more off
 macro drop _all
-
 /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////
+
+global REPO: env REPO
+global DATA: env DATA 
+global OUTPUT: env OUTPUT 
+global LOG: env LOG
+log using $LOG/1_analysis/3_interacted_regression.log, replace
 
 * path to energy-code-release repo:
 
-global root "/Users/`c(username)'/Documents/repos/energy-code-release"
+global root "${REPO}/energy-code-release-2020"
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -24,28 +29,27 @@ global model "TINV_clim"
 ********************************************************************************
 * Step 1: Estimate Energy Temperature Response
 ********************************************************************************
-
-foreach submodel in "" "EX" "lininter"  {
+ 
+foreach submodel in "" "EX" "lininter" "quadinter"  {
 
 	global submodel "`submodel'"
 	do $root/1_analysis/interacted_regression/stacked.do
+} 
 
-}
 
 ********************************************************************************
 * Step 2: Plot Energy Temperature Response
 ********************************************************************************
-
+ 
 foreach product in "other_energy" "electricity" {
-	foreach submodel in "" "EX" "lininter"  {
+	foreach submodel in "" "EX" "lininter" "quadinter" {
 		
 		global submodel_ov "`submodel'"
-		global product "`product'"
-		
+		global product "`product'"		
 		do $root/1_analysis/interacted_regression/plot_stacked.do
 	}
 }
-
+ 
 ********************************************************************************
 * Step 3: Plot Marginal Effect of Time on Energy Temperature Response 
 * for Temporal Trend Model
@@ -56,3 +60,4 @@ foreach product in "other_energy" "electricity" {
 	do $root/1_analysis/interacted_regression/plot_time_marginal_effect.do
 }
 
+log close _all

@@ -11,7 +11,7 @@ local model "$model"
 * Step 1: Load Data
 ********************************************************************************
 
-use "$root/data/GMFD_`model'_regsort.dta", clear
+use "$DATA/regression/GMFD_`model'_regsort.dta", clear
 
 ********************************************************************************
 * Step 2: Generate Population Weights for FD and FD_FGLS Regressions
@@ -52,7 +52,7 @@ forval pg=1/2 {
 				
 // run first stage regression
 reghdfe FD_load_pc `temp_r' `precip_r' [pw=pop_weight], absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i) residuals(resid)
-estimates save "$root/sters/FD_global_`model'", replace
+estimates save "$OUTPUT/sters/FD_global_`model'", replace
 					
 
 
@@ -83,5 +83,5 @@ drop if count == 1
 
 //run second stage FGLS regression
 reghdfe FD_load_pc `temp_r' `precip_r' [pw=FGLS_weight], absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i)
-estimates save "$root/sters/FD_FGLS_global_`model'", replace
+estimates save "$OUTPUT/sters/FD_FGLS_global_`model'", replace
 

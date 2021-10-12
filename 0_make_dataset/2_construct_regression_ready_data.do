@@ -15,15 +15,19 @@ Step 5) Construct First Differenced Interacted Variables
 
 clear all
 set more off
+qui ssc inst egenmore
 macro drop _all
 pause off
-
+global LOG: env LOG
+log using $LOG/0_make_dataset/2_construct_regression_ready_data.log, replace
 
 /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////
 
 // path to energy-code-release repo 
 
-global root "/Users/`c(username)'/Documents/repos/energy-code-release-2020"
+global REPO: env REPO
+global root "$REPO/energy-code-release-2020"
+global DATA: env DATA 
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -95,6 +99,7 @@ replace hdd20_TINV_GMFD = hdd20_other_TINV_GMFD if inlist(product,"other_energy"
 
 		// create income and climate quantiles 
 		qui egen gpid=xtile(lgdppc_MA15), nq(10)
+		pause
 		qui egen tpid=xtile(cdd20_TINV_GMFD), nq(3)
 		qui egen tgpid=xtile(lgdppc_MA15), nq(3)
 
@@ -113,23 +118,39 @@ replace hdd20_TINV_GMFD = hdd20_other_TINV_GMFD if inlist(product,"other_energy"
 		qui replace largegpid_other_energy = 2 if (gpid >= 3) & (gpid <= 6) 
 		qui replace largegpid_other_energy = 2 if (gpid >= 7) & (gpid <= 10)				
 
+		** center the year around 1971
+		gen cyear = year - 1971
+
+		** generate year variable for piecewise linear time effect interaction
+		gen pyear = year - 1991 if year >= 1991
+		replace pyear = 1991 - year if year < 1991
+
+		** generate year variable for post1980 linear time effect interaction
+		gen p80yr = year - 1980 if year >= 1980
+		replace p80yr = 1980 - year if year < 1980
+
 		//keep only necessary vars
-		keep cdd20_TINV_GMFD hdd20_TINV_GMFD country year lgdppc_MA15 gpid tpid tgpid large*
+		keep cdd20_TINV_GMFD hdd20_TINV_GMFD country *year p80yr lgdppc_MA15 gpid tpid tgpid large*
 
 		// generate average variables for climate and income quantiles for plotting
-		qui egen avgCDD_tpid=mean(cdd20_TINV_GMFD), by(tpid) //average CDD in each cell
-		qui egen avgHDD_tpid=mean(hdd20_TINV_GMFD), by(tpid) //average HDD in each cell
-		qui egen avgInc_tgpid=mean(lgdppc_MA15), by(tgpid) //average lgdppc in each cell
+		//average CDD in each cell
+		qui egen avgCDD_tpid=mean(cdd20_TINV_GMFD), by(tpid) 
+		//average HDD in each cell
+		qui egen avgHDD_tpid=mean(hdd20_TINV_GMFD), by(tpid) 
+		//average lgdppc in each cell
+		qui egen avgInc_tgpid=mean(lgdppc_MA15), by(tgpid) 
+		//average lgdppc in each climate decile
+		qui egen avgInc_tpid=mean(lgdppc_MA15), by(tpid) 
 
-		qui egen maxInc_gpid=max(lgdppc_MA15), by(gpid) //max lgdppc in each cell - this is needed for configs 
-
+		qui egen maxInc_gpid=max(lgdppc_MA15), by(gpid) //max lgdppc in each cell - this is needed for configs
+		
 		//max lggdppc for each large income group for each cell
 		foreach var in "other_energy" "electricity" {
 			qui egen maxInc_largegpid_`var'=max(lgdppc_MA15), by(largegpid_`var') 
 		}
 
 
-		local break_data "$root/data/break_data_`model'.dta"
+		local break_data "$DATA/regression/break_data_`model'.dta"
 		save "`break_data'", replace
 
 	restore
@@ -151,6 +172,27 @@ drop largegpid_electricity largegpid_other_energy
 tab gpid, gen(ind)
 tab largegpid, gen(largeind)
 
+*********************************************************
+// generate dummy variable with value = 1 indicating 
+// a country being in high income group for all years
+// for coldsidep80highinc regression
+
+// generate indicator for electricity observations with high income
+gen largeind_electricity = 1 if largeind2 == 1 & product == "electricity"
+replace largeind_electricity = 0 if largeind_electricity == .
+// generate the number of observations and high income nobs for each country 
+bysort country: egen nobs_electricity = total(product == "electricity")
+bysort country: egen nobs_largeind = total(largeind_electricity == 1)
+bysort country: egen first_year = min(year)
+bysort country: egen last_year = max(year)
+
+// generate indicator for a country having as many high inc observations
+// as electricity observations, while also spanning the whole period
+gen largeind_allyears = (nobs_electricity == nobs_largeind & first_year == 1971 & last_year == 2010 & product == "electricity")
+gen largeind_notallyears = 1 - largeind_allyears
+
+*********************************************************
+
 //Generate sector and fuel dummies
 
 * 1 = electricity, 2 = other_energy
@@ -161,11 +203,29 @@ egen product_i = group(product)
 tab flow, gen(indf)
 egen flow_i = group(flow)
 
+
+* generate time period dummies for interaction
+** for piecewise linear interaction
+gen indt = 1 if year >= 1991
+replace indt = 0 if year < 1991
+
+** for post 1980 linear interaction
+gen indp80 = 1 if year >= 1980
+replace indp80 = 0 if year < 1980
+
+** for decades interaction
+gen indd = 0
+replace indd = 1 if year >= 1980
+replace indd = 2 if year >= 1990
+replace indd = 3 if year >= 2000
+
+
+
 // Classify world into 13 regions based on UN World Regions Classifications (for fixed effect... reference Temperature Response of Energy Consumption Section )
 
 **Clean the region data**
 preserve
-insheet using "$root/data/UNSD — Methodology.csv", comma names clear
+insheet using "$DATA/reference/UNSD — Methodology.csv", comma names clear
 generate subregionid=.
 replace subregionid=1 if regionname=="Oceania" 
 replace subregionid=2 if subregionname=="Northern America" 
@@ -208,6 +268,7 @@ replace subregionname = "Southern Europe" if country=="XKO"
 ***********************************************************************************************************************
 * Step 5) Construct First Differenced Interacted Variables
 ***********************************************************************************************************************
-
 do "$root/0_make_dataset/merged/2_construct_FD_interacted_variables.do"
-save "$root/data/GMFD_`model'_regsort.dta", replace
+save "$DATA/regression/GMFD_`model'_regsort.dta", replace
+
+log close _all

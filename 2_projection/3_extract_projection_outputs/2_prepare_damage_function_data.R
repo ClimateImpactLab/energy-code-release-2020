@@ -11,20 +11,23 @@ library(haven)
 library(tidyr)
 
 
-db = '/mnt/norgay_synology_drive/'
-data_dir = paste0(db,'GCP_Reanalysis/ENERGY/code_release_data/')
+REPO <- Sys.getenv(c("REPO"))
+DATA <- Sys.getenv(c("DATA"))
+OUTPUT <- Sys.getenv(c("OUTPUT"))
 
-output = paste0(db, 
-	'GCP_Reanalysis/ENERGY/code_release_data/projection_system_outputs/damage_function_estimation')
-dir = paste0('/shares/gcp/social/parameters/energy/extraction/',
-				'multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/')
 
-user= 'tbearpark'
-git = paste0("/home/", user,"/repos")
+db = '/mnt/CIL_energy/'
+output = '/mnt/CIL_energy/code_release_data_pixel_interaction/'
+
+data_dir = paste0(db,'/code_release_data_pixel_interaction/')
+
+output = paste0(OUTPUT, 
+	'/projection_system_outputs/damage_function_estimation')
+
 
 # Source codes that help us load projection system outputs
 # Make sure you are in the risingverse-py27 for this... 
-projection.packages <- paste0(git,
+projection.packages <- paste0(REPO,
 	"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
 miceadds::source.all(paste0(projection.packages,"load_projection/"))
 
@@ -34,9 +37,7 @@ miceadds::source.all(paste0(projection.packages,"load_projection/"))
 # 2. Values csvs for each SSP/Price scenario we want to calculate a damage function for.
 
 # 1. GMST anomolies: moving from our server into a shared directory
-gmst_dir = "/mnt/norgay_synology_drive/Global ACP/damage_function/GMST_anomaly"
-gmst_df = read_csv(paste0(gmst_dir, "/GMTanom_all_temp_2001_2010.csv"))
-write_csv(gmst_df, paste0(output, "/GMTanom_all_temp_2001_2010.csv"))
+gmst_df = read_csv(paste0(output, "/GMTanom_all_temp_2001_2010_smooth.csv"))
 
 # 2. Values csvs to allow for draws from uncertainty 
 
@@ -50,7 +51,7 @@ pop_df = read_csv(paste0(data_dir,'/projection_system_outputs/covariates/' ,
 
 # 2.2 Extract and load values csvs
 get_values_csv = function(price, fuel, years = NULL, pop_df= NULL, ssp = "SSP3", save = TRUE, 
-	include_variance = TRUE, model = "TINV_clim_income_spline") {
+	include_variance = TRUE, model = "TINV_clim") {
 	
 	# Function loads in mean and variances for a given price scenario
 	# Deals with three cases: 
@@ -66,12 +67,16 @@ get_values_csv = function(price, fuel, years = NULL, pop_df= NULL, ssp = "SSP3",
 		type = "damages"
 		price_tag = paste0("_", price)
 	}
-	if(model == "TINV_clim_income_spline"){
+	if(model == "TINV_clim"){
 		model_tag = ""
-	}else if (model == "TINV_clim_income_spline_lininter") {
+	}else if (model == "TINV_clim_lininter") {
 		model_tag = "_lininter"
-	}else if (model == "TINV_clim_income_spline_lininter_double"){
+	}else if (model == "TINV_clim_lininter_double"){
 		model_tag = "_lininter_double"
+	}else if (model == "TINV_clim_lininter_half"){
+		model_tag = "_lininter_half"
+	}else if (model == "TINV_clim_mixed"){
+		model_tag = "_mixed"
 	}
 
 	args = list(
@@ -103,8 +108,9 @@ get_values_csv = function(price, fuel, years = NULL, pop_df= NULL, ssp = "SSP3",
 			dplyr::select(rcp, year, gcm, iam, mean) %>% 
 	      	left_join(pop_df, by=c("year")) %>%
 			mutate(mean = mean * pop) %>%
-			dplyr::select(-pop) %>% 
-			mutate(mean = mean * 0.0036)
+			dplyr::select(-pop) 
+			# %>% 
+			# mutate(mean = mean * 0.0036)
 
 		if(include_variance == TRUE){
 			var = do.call(load.median, c(args, proj_mode = '_dm')) %>% 
@@ -112,8 +118,7 @@ get_values_csv = function(price, fuel, years = NULL, pop_df= NULL, ssp = "SSP3",
 				dplyr::select(rcp, year, gcm, iam, sd) %>% 
 				left_join(pop_df, by=c("year")) %>%
 				mutate(sd = sd * pop) %>%
-				dplyr::select(-pop) %>% 
-				mutate(sd = sd * 0.0036)
+				dplyr::select(-pop) 
 		}
 
     } else{
@@ -122,12 +127,14 @@ get_values_csv = function(price, fuel, years = NULL, pop_df= NULL, ssp = "SSP3",
 
 		    mean = do.call(load.median, c(args, proj_mode = '')) %>%
 				rename(mean=value) %>% 
-				dplyr::select(rcp, year, gcm, iam, mean)
+				dplyr::select(rcp, year, gcm, iam, mean) %>% 
+				mutate(mean = mean / 0.0036)
 
 			if(include_variance == TRUE){	
 				var = do.call(load.median, c(args, proj_mode = '_dm')) %>% 
 					mutate(sd=sqrt(value))%>% 
-					dplyr::select(rcp, year, gcm, iam, sd)
+					dplyr::select(rcp, year, gcm, iam, sd) %>% 
+					mutate(sd = sd / 0.0036)
 			}
    		} else{
 
@@ -136,24 +143,28 @@ get_values_csv = function(price, fuel, years = NULL, pop_df= NULL, ssp = "SSP3",
 
 		    mean45 = do.call(load.median, c(args, proj_mode = '')) %>%
 				rename(mean=value) %>% 
-				dplyr::select(rcp, year, gcm, iam, mean)
+				dplyr::select(rcp, year, gcm, iam, mean) %>% 
+				mutate(mean = mean / 0.0036)
 			
 			if(include_variance == TRUE){
 		    	var45 = do.call(load.median, c(args, proj_mode = '_dm')) %>% 
 					mutate(sd=sqrt(value))%>% 
-					dplyr::select(rcp, year, gcm, iam, sd) 
+					dplyr::select(rcp, year, gcm, iam, sd) %>% 
+					mutate(sd = sd / 0.0036) 
 		  	}
 
 		    args$price_scen = paste0(price, '_rcp85')
 
 		    mean85 = do.call(load.median, c(args, proj_mode = '')) %>%
 				rename(mean=value) %>% 
-				dplyr::select(rcp, year, gcm, iam, mean)
+				dplyr::select(rcp, year, gcm, iam, mean) %>% 
+				mutate(mean = mean / 0.0036)
 			
 			if(include_variance == TRUE){
 		   		var85 = do.call(load.median, c(args, proj_mode = '_dm')) %>% 
 					mutate(sd=sqrt(value))%>% 
-					dplyr::select(rcp, year, gcm, iam, sd) 
+					dplyr::select(rcp, year, gcm, iam, sd)  %>% 
+					mutate(sd = sd / 0.0036)
 			}
 
 		    mean = rbind(mean45, mean85)
@@ -176,12 +187,12 @@ get_values_csv = function(price, fuel, years = NULL, pop_df= NULL, ssp = "SSP3",
     }
 
     print('adding price information to dataframe')
-    # browser()
     df_joined$price = price
 
     
     if(save == TRUE){
     	write_csv(df_joined, paste0(output, '/impact_values/gcm_', type, '_', fuel,price_tag, '_', ssp,model_tag,'.csv'))
+    	print(paste0(output, '/impact_values/gcm_', type, '_', fuel,price_tag, '_', ssp,model_tag,'.csv',"  saved"))
 	}else{
 		return(df_joined)
 	}
@@ -196,11 +207,11 @@ df_oe = get_values_csv(price = NULL, fuel = "OTHERIND_other_energy", pop_df = po
 
 # Save values csvs needed for damage functions generally (starting with the price014 needed for )
 df = get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", save = FALSE) 
-write_csv(df, paste0(output, '/gcm_damages_OTHERIND_total_energy_price014_SSP3.csv'))
+write_csv(df, paste0(output, '/impact_values/gcm_damages_OTHERIND_total_energy_price014_SSP3.csv'))
 
 
 
-
+# done
 # Loop over each price scenario, for getting the values csvs needed for all damage functions in the paper for SSP3: 
 pricelist = c("price014", "price0", "price03", "WITCHGLOBIOM42", 
 	"MERGEETL60", "REMINDMAgPIE1730", "REMIND17CEMICS", "REMIND17") 
@@ -208,8 +219,11 @@ pricelist = c("price014", "price0", "price03", "WITCHGLOBIOM42",
 df = lapply(pricelist, get_values_csv, fuel = "OTHERIND_total_energy")
 
 
-####################################################
+#######################not aggregated yet#############################
 # Get values csvs for SSP2 and SSP4, which are used to calculate SCCs after estimating damage functions
+
+get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP1", 
+	save = TRUE, include_variance = FALSE)
 
 get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP2", 
 	save = TRUE, include_variance = FALSE)
@@ -217,16 +231,23 @@ get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP2",
 get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP4", 
 	save = TRUE, include_variance = FALSE)
 
+get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP5", 
+	save = TRUE, include_variance = FALSE)
 
-####################################################
+
+##########################not aggregated yet##########################
 # Get values csvs for SSP2 and SSP4, which are used to calculate SCCs after estimating damage functions
 get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP3", 
-	save = TRUE, include_variance = FALSE, model = "TINV_clim_income_spline_lininter")
+	save = TRUE, include_variance = FALSE, model = "TINV_clim_lininter")
 
 get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP3", 
-	save = TRUE, include_variance = FALSE, model = "TINV_clim_income_spline_lininter_double")
+	save = TRUE, include_variance = FALSE, model = "TINV_clim_lininter_double")
 
+get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP3", 
+	save = TRUE, include_variance = FALSE, model = "TINV_clim_lininter_half")
 
+get_values_csv(price = "price014", fuel = "OTHERIND_total_energy", ssp = "SSP3", 
+	save = TRUE, include_variance = FALSE, model = "TINV_clim_mixed")
 
 
 

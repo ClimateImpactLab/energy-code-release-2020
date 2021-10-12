@@ -8,18 +8,19 @@ clear all
 set more off
 set scheme s1color
 
-glob DB "C:/Users/TomBearpark/SynologyDrive"
+glob DB "/mnt"
 
-glob DB_data "$DB/GCP_Reanalysis/ENERGY/code_release_data"
+glob DB_data "$DB/CIL_energy/code_release_data_pixel_interaction"
 glob dir "$DB_data/projection_system_outputs/damage_function_estimation/resampled_data"
 
-glob root "C:/Users/TomBearpark/Documents/energy-code-release-2020"
-glob output "$root/figures/"
+glob root "/home/liruixue/repos/energy-code-release-2020"
+glob output "$OUTPUT/figures/"
 
 
 //Load in GMTanom data file, save as a tempfile 
-insheet using "$DB_data/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010.csv", comma names clear
+insheet using "$DB_data/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010_smooth.csv", comma names clear
 drop if year < 2015 | year > 2099
+drop if temp == .
 tempfile GMST_anom
 save `GMST_anom', replace
 
@@ -123,12 +124,18 @@ foreach fuel in "total_energy_price014" "other_energy" "electricity" {
 	foreach yr of numlist 2099/2099 {
 	        qui reg `fuel' c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2 
 	        cap qui predict yhat_`fuel'_`yr' if year>=`yr'-2 & year <= `yr'+2 
+	        qreg `fuel'  c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(0.05)
+			predict y05_`fuel'_`yr' if year>=`yr'-2 & year <= `yr'+2
+			qreg `fuel'  c.anomaly##c.anomaly if year>=`yr'-2 & year <= `yr'+2, quantile(0.95)
+			predict y95_`fuel'_`yr' if year>=`yr'-2 & year <= `yr'+2
+    
 	}
 
 	loc gr
 	loc gr `gr' sc `fuel' anomaly if rcp=="rcp85" & year>=2095, mlcolor(red%30) msymbol(O) mlw(vthin) mfcolor(red%30) msize(vsmall) ||       
 	loc gr `gr' sc `fuel' anomaly if rcp=="rcp45"& year>=2095, mlcolor(ebblue%30) msymbol(O) mlw(vthin) mfcolor(ebblue%30) msize(vsmall)   ||
 	loc gr `gr' line yhat_`fuel'_2099 anomaly if year == 2099 , yaxis(1) color(black) lwidth(medthick) ||
+	loc gr `gr' rarea y95_`fuel'_2099 y05_`fuel'_2099 anomaly if year == 2099 , col(grey%5) lwidth(none) ||
 	
 	di "Graphing time..."
 	sort anomaly
@@ -168,3 +175,7 @@ tw kdensity anomaly if rcp=="rcp45" & year>=2080, color(edkblue) bw(`bw') || ///
 
 graph export "$output/fig_3/fig_3C_anomaly_densities_GMST_end_of_century.pdf", replace 
 graph drop _all
+
+
+
+

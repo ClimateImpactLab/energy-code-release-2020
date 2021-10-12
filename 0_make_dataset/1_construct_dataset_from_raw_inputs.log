@@ -1,0 +1,1048 @@
+
+  ___  ____  ____  ____  ____ (R)
+ /__    /   ____/   /   ____/
+___/   /   /___/   /   /___/   16.1   Copyright 1985-2019 StataCorp LLC
+  Statistics/Data analysis            StataCorp
+                                      4905 Lakeway Drive
+     Special Edition                  College Station, Texas 77845 USA
+                                      800-STATA-PC        https://www.stata.com
+                                      979-696-4600        stata@stata.com
+                                      979-696-4601 (fax)
+
+Stata license: 745-user network, expiring 30 Jun 2022
+Serial number: 501709313533
+  Licensed to: Ruixue Li
+               UChicago BFI
+
+Notes:
+      1. Stata is running in batch mode.
+      2. Unicode is supported; see help unicode_advice.
+      3. Maximum number of variables is set to 5,000; see help set_maxvar.
+
+. do 1_construct_dataset_from_raw_inputs.do 
+
+. /*
+> 
+> Purpose: Master Do File for Dataset Construction
+> 
+> This script takes in raw data input files either downloaded from the internet
+>  or constructed using merge_transform_average.py
+> (https://bitbucket.org/ClimateImpactLab/climate_data_aggregation/src/master/)
+> . Please use 0_Clim_Config_Gen.do to write configs
+> that are passed into the Climate Data Aggregation code.
+> 
+> Before this do file is run the following steps need to be completed:
+> 
+> 1) Load, population, and income data must be extracted.
+>         -Please refer to https://paper.dropbox.com/doc/Energy-Replication-Dat
+> a-Extraction-and-Clean--AcW~Qw9B5VVB29k4PJCYL1I3Ag-VAYyKKRjKXNub5MzctYgB
+>         for data extraction instructions.
+> 
+> 2) Climate Data Must be Generated
+>         - Climate Data is generated to reflect geographical regions used in t
+> he load data. 
+>         See the dropbox paper referenced above as well as the aggregated clim
+> ate data cleaning code to understand how the 
+>         climate data is generated to reflect load data specific geographic re
+> gions.
+> 
+> What happens in the do files called in this script:
+> 
+> Step 1) Construct Population, Income, Load, and Climate Datasets
+> Step 2) Merge Population, Income, Load and Climate Datasets
+> 
+> */
+. 
+. 
+. clear all
+
+. set more off
+
+. macro drop _all
+
+. pause off
+
+. cap ssc install rangestat
+
+. global LOG: env LOG
+
+. log using $LOG/0_make_dataset/1_construct_dataset_from_raw_inputs.log, replac
+> e
+(note: file /Users/ruixueli/Downloads/energy_data_release/LOG/0_make_dataset/1_
+> construct_dataset_from_raw_inputs.log not found)
+-------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/ruixueli/Downloads/energy_data_release/LOG/0_make_dataset/1
+> _construct_dataset_from_raw_inputs.log
+  log type:  text
+ opened on:   7 Sep 2021, 05:07:15
+
+. 
+. 
+. /////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////
+> ////////////////////
+> 
+. // path to energy-code-release repo 
+. 
+. global REPO: env REPO
+
+. 
+. /////////////////////////////////////////////////////////////////////////////
+> ////////////////////
+> 
+. * Step 0: Define code and dataset paths
+. 
+. // code path referenced by multiple files
+. global dataset_construction "$REPO/energy-code-release-2020/0_make_dataset/"
+
+. 
+. // output data path
+. global DATA: env DATA 
+
+. 
+. *****************************************************************************
+> ***************************************************************
+. *Step 1: Construct Population/Income, Load, and Climate Datasets
+. *****************************************************************************
+> ***************************************************************
+. 
+. //Part A: Climate Data Construction
+. 
+. do "$dataset_construction/climate/1_clean_climate_data.do"
+
+. /*
+> 
+> Purpose: Clean/Aggregate Climate data for Energy
+> 
+> *****************************************************************************
+> ***
+> * Data Source: GMFD                                                          
+>                                                       *
+> * Generations: Using the data generation codes of https://bitbucket.org/     
+>   *
+> * ClimateImpactLab/climate_data_aggregation                                  
+>                                       *
+> *****************************************************************************
+> ***
+> 
+> */
+. 
+. *--Climate Data Cleaning--*
+. 
+. program define clean_climate_data
+  1. 
+. syntax , clim(string) programs_path(string) //note functionality only set up 
+> for GMFD currently
+  2. 
+. 
+.         //Define loop lists
+.         local climvar_list "tmax_cdd_20C tmax_hdd_20C tavg_poly_1 tavg_poly_2
+>  tavg_poly_3 tavg_poly_4 tavg_polyBelow20_1 tavg_polyBelow20_2 tavg_polyBelow
+> 20_3 tavg_polyBelow20_4 tavg_polyAbove20_1 tavg_polyAbove20_2 tavg_polyAbove2
+> 0_3 tavg_polyAbove20_4 prcp_poly_1 prcp_poly_2"
+  3.         local climvar_list_polyAbove "tavg_polyAbove20_1_x_cdd_20C tavg_po
+> lyAbove20_2_x_cdd_20C tavg_polyAbove20_3_x_cdd_20C tavg_polyAbove20_4_x_cdd_2
+> 0C"
+  4.         local climvar_list_polyBelow "tavg_polyBelow20_1_x_hdd_20C tavg_po
+> lyBelow20_2_x_hdd_20C tavg_polyBelow20_3_x_hdd_20C tavg_polyBelow20_4_x_hdd_2
+> 0C"
+  5.         
+.         local shpfile_list "WORLD WORLDpre SRB_MNE_XKO SRB_MNE MDA_other ITA_
+> SMR_VAT ISR_PSE CUW_BES_ABW FRA_MCO"
+  6.         //Note: when generate the climate datas, one must follow the exact
+>  folder in this code in order for the cleaning code to be running 
+. 
+.         *********************************************************************
+> ******************
+.         *Step 0: Source Programs -- Cleaning and Processing of Aggregated Cli
+> mate Data Issues
+.         *********************************************************************
+> ******************
+. 
+.         do "`programs_path'/helper_functions.do"
+  7. 
+.         foreach shp in `shpfile_list' {
+  8.                 di "cleaning shapefile `shp'"
+  9.                 do "`programs_path'/clean_`shp'.do"
+ 10.         }
+ 11. 
+.         ****************************************************************
+.         *Step 1: Generate tempfile with climate data for each shapefile*
+.         ****************************************************************
+. 
+.         //Define shape file paths based on shape file
+. 
+.         foreach shp in `shpfile_list' {
+ 12. 
+.                 local `shp'_path = "${DATA}/climate/_spatial_data/`shp'/weath
+> er_data/"
+ 13. 
+.         }
+ 14. 
+.         local WORLDpre_path = "${DATA}/climate/_spatial_data/WORLD/pre1991/we
+> ather_data/"
+ 15. 
+. 
+.         foreach shp in `shpfile_list' {
+ 16. 
+.                 local climvar_counter = 0
+ 17. 
+.                 foreach climvar in `climvar_list' `climvar_list_polyAbove' `c
+> limvar_list_polyBelow' {
+ 18.                         
+.                         local climvar_counter = `climvar_counter' + 1
+ 19.                         //Define year chunks given shp file and climate va
+> riable
+. 
+.                         if inlist("`climvar'", "tavg_polyAbove20_1_x_cdd_20C"
+> , "tavg_polyAbove20_2_x_cdd_20C", "tavg_polyAbove20_3_x_cdd_20C", "tavg_polyA
+> bove20_4_x_cdd_20C",  "tavg_polyBelow20_1_x_hdd_20C", "tavg_polyBelow20_2_x_h
+> dd_20C", "tavg_polyBelow20_3_x_hdd_20C", "tavg_polyBelow20_4_x_hdd_20C") {
+ 20.                                 local yearspan_list " 1971_1971 1972_1974 
+> 1975_1977 1978_1980 1981_1983 1984_1986 1987_1989 1990_1992 1993_1995 1996_19
+> 98 1999_2001 2002_2004 2005_2007 2008_2010 "
+ 21.                         }
+ 22.                         else if ("`shp'" == "WORLD" & inlist("`climvar'", 
+> "tmax_cdd_20C", "tmax_hdd_20C", "tavg_poly_1", "tavg_poly_2", "tavg_poly_3", 
+> "tavg_poly_4")) | ///
+>                         ("`shp'" == "WORLDpre" & inlist("`climvar'", "tmax_cd
+> d_20C", "tavg_poly_1", "tavg_poly_2", "tavg_poly_3", "tavg_poly_4")) {
+ 23. 
+.                                 local yearspan_list " 1950_1952 1953_1962 196
+> 3_1972 1973_1982 1983_1992 1993_2002 2003_2010 "
+ 24. 
+.                         }
+ 25.                         else if (("`shp'" == "WORLDpre" & inlist("`climvar
+> '", "tmax_hdd_20C")) | ///
+>                         (inlist("`shp'", "SRB_MNE_XKO", "SRB_MNE", "MDA_other
+> ") & ///
+>                          inlist("`climvar'", "tmax_cdd_20C", "tmax_hdd_20C", 
+> "tavg_poly_1", "tavg_poly_2", "tavg_poly_3", "tavg_poly_4"))) {
+ 26. 
+.                                 local yearspan_list " 1950_1950 1951_1955 195
+> 6_1960 1961_1965 1966_1970 1971_1975 1976_1980 1981_1985 1986_1990 1991_1995 
+> 1996_2000 2001_2005 2006_2010 "
+ 27. 
+.                         } 
+ 28.                         else if ("`shp'" == "WORLD" & inlist("`climvar'", 
+> "prcp_poly_1", "prcp_poly_2")) {
+ 29. 
+.                                 local yearspan_list " 1970_1972 1973_1982 198
+> 3_1992 1993_2002 2003_2010 "
+ 30. 
+.                         }
+ 31.                         else if ("`shp'" == "WORLD" & inlist("`climvar'", 
+> "tavg_polyAbove20_1", "tavg_polyAbove20_2", "tavg_polyAbove20_3", "tavg_polyA
+> bove20_4")) {
+ 32. 
+.                                 local yearspan_list " 1970_1970 1971_1975 197
+> 6_1980 1981_1985 1986_1990 1991_1995 1996_2000 2001_2005 2006_2010"
+ 33. 
+.                         }
+ 34.                         else if ( inlist("`shp'", "ITA_SMR_VAT", "ISR_PSE"
+> , "CUW_BES_ABW", "FRA_MCO") & !inlist("`climvar'","tmax_cdd_20C","tmax_hdd_20
+> C") ) {
+ 35. 
+.                                 local yearspan_list " 1968_1972 1973_1977 197
+> 8_1982 1983_1987 1988_1992 1993_1997 1998_2002 2003_2007 2008_2010 "
+ 36. 
+.                         }
+ 37.                         else if ( inlist("`shp'", "ITA_SMR_VAT", "ISR_PSE"
+> , "CUW_BES_ABW", "FRA_MCO") & inlist("`climvar'","tmax_cdd_20C","tmax_hdd_20C
+> ") ) {
+ 38. 
+.                                 local yearspan_list " 1950_1952 1953_1957 195
+> 8_1962 1963_1967 1968_1972 1973_1977 1978_1982 1983_1987 1988_1992 1993_1997 
+> 1998_2002 2003_2007 2008_2010 "
+ 39. 
+.                         }
+ 40.                         else {
+ 41. 
+.                                 local yearspan_list " 1966_1970 1971_1975 197
+> 6_1980 1981_1985 1986_1990 1991_1995 1996_2000 2001_2005 2006_2010 "
+ 42. 
+.                         }
+ 43. 
+.                         //Define temporal unit of climate data
+. 
+.                         if (inlist("`shp'", "WORLD", "WORLDpre")) {
+ 44. 
+.                                 local temp_unit "monthly"
+ 45. 
+.                         }
+ 46.                         else {
+ 47. 
+.                                 local temp_unit "yearly"
+ 48. 
+.                         }
+ 49. 
+.                         local yearspan_counter = 0
+ 50. 
+.                         foreach yearspan in `yearspan_list' {
+ 51. 
+.                                 local yearspan_counter = `yearspan_counter' +
+>  1
+ 52. 
+. 
+.                                 qui insheet using "``shp'_path'/csv_`temp_uni
+> t'/`clim'/`clim'_`climvar'_v2_`yearspan'_`temp_unit'_popwt.csv", comma names 
+> clear
+ 53. 
+.                                 process_`temp_unit'
+ 54.                                 
+.                                 // the full name will be too long after renam
+> ing and adding _other, so we remove the last few characters
+.                                 if inlist("`climvar'", "tavg_polyAbove20_1_x_
+> cdd_20C", "tavg_polyAbove20_2_x_cdd_20C", "tavg_polyAbove20_3_x_cdd_20C", "ta
+> vg_polyAbove20_4_x_cdd_20C",  "tavg_polyBelow20_1_x_hdd_20C", "tavg_polyBelow
+> 20_2_x_hdd_20C", "tavg_polyBelow20_3_x_hdd_20C", "tavg_polyBelow20_4_x_hdd_20
+> C") {
+ 55.                                         local climvar_short = substr("`cli
+> mvar'",1,24)
+ 56.                                         rename y `climvar_short'
+ 57.                                 }
+ 58.                                 else rename y `climvar'
+ 59. 
+.                                 if (`yearspan_counter' == 1 & `climvar_counte
+> r' == 1) {
+ 60.                                         qui tempfile `shp'
+ 61.                                         qui save ``shp'', replace
+ 62.                                 } 
+ 63.                                 else if (`climvar_counter' == 1 & `yearspa
+> n_counter' > 1) {
+ 64.                                         qui append using ``shp''
+ 65.                                         qui save ``shp'', replace
+ 66.                                 }
+ 67.                                 else if (`climvar_counter' > 1 & "`temp_un
+> it'" == "monthly") {
+ 68.                                         qui merge 1:1 country year month u
+> sing ``shp''
+ 69.                                         assert _merge != 1
+ 70.                                         drop _merge
+ 71.                                         qui save ``shp'', replace
+ 72.                                 }
+ 73.                                 else if (`climvar_counter' > 1 & "`temp_un
+> it'" == "yearly") {
+ 74.                                         qui merge 1:1 country year using `
+> `shp''
+ 75.                                         assert _merge != 1
+ 76.                                         drop _merge
+ 77.                                         qui save ``shp'', replace
+ 78.                                 }
+ 79. 
+.                                 di "`climvar' `yearspan' `shp'"
+ 80. 
+.                         }
+ 81.                 }
+ 82.         }
+ 83. 
+. 
+.         *********************************************************************
+> *************************
+.         *Step 2: Clean shapefile level climate dataset based on Issues and Sa
+> ve into Aggregate Dataset
+.         *********************************************************************
+> *************************
+. 
+.         local shp_counter = 0
+ 84. 
+.         foreach shp in `shpfile_list' {
+ 85. 
+.                 local shp_counter = `shp_counter' + 1
+ 86. 
+.                 use ``shp'', clear
+ 87.                 clean_`shp'
+ 88.                 save ``shp'', replace
+ 89.                 di "`shp'"
+ 90.                 
+.                 //pause
+.                 
+.                 if (`shp_counter' == 1) {
+ 91.                         tempfile `clim'
+ 92.                         save ``clim'', replace
+ 93.                 }
+ 94.                 else if (`shp_counter' > 1) {
+ 95.                         use ``clim'', clear
+ 96.                         merge 1:1 country year using ``shp'', update
+ 97.                         di "Merged `shp' in!"
+ 98.                         //pause
+.                         drop _merge
+ 99.                         save ``clim'', replace
+100.                 }
+101. 
+.         }
+102. 
+. 
+.         **drop unwanted years**
+.         drop if year<1971
+103.         drop if year>2010
+104. 
+.         rename tavg_poly_* temp*_`clim'
+105.         rename prcp_poly_* precip*_`clim'
+106.         rename tmax_cdd_20C cdd20_`clim'
+107.         rename tmax_hdd_20C hdd20_`clim'
+108.         rename tmax_cdd_20C_* cdd20_*_`clim'
+109.         rename tmax_hdd_20C_* hdd20_*_`clim'
+110.         rename tavg_polyAbove20_* polyAbove*_`clim'
+111.         rename tavg_polyBelow20_* polyBelow*_`clim'
+112. 
+.         
+.         sort country year temp* cdd* hdd* polyAbove* polyBelow* precip*
+113. end
+
+. di "program complete"
+program complete
+
+. 
+end of do-file
+
+. clean_climate_data, clim("GMFD") programs_path("$dataset_construction/climate
+> /programs")
+
+. /*
+> Purpose: Helper Functions To Simplify Climate Data Cleaning Loop
+> 
+> Included Functions:
+> 1) process monthly: transforms monthly aggregated climate data from wide to l
+> ong
+> 2) process yearly: transforms yearly aggregated climate data from wide to lon
+> g
+> 3) collapse_monthly_to_yearly: transform monthly data into yearly data -- 
+>         - this program gets called after fiscal year fixing specific to a reg
+> ion occured in a clean*.do program
+> 4) calculates long run time invariant climate measures
+> 5) Generate climate variable specific to other energy 
+>         - in practice this just means generating all the variables with an "_
+> other" tag
+>         - in a couple instances this variable with the other tag is treated d
+> ifferently
+>         (which is why it exists at all)
+> 
+> */
+. 
+. program define process_monthly 
+  1.         
+.         qui reshape long y, i(iso) j(date) string
+  2.         qui generate year=substr(date,1,4)
+  3.         qui generate month=substr(date,7,2)
+  4.         qui destring year, force replace
+  5.         qui destring month, force replace
+  6.         drop date
+  7.         rename iso country
+  8. 
+. end
+
+. 
+. program define process_yearly
+  1. 
+.         rename iso iso
+  2.         qui reshape long y, i(iso) j(year)
+  3.         rename iso country
+  4. 
+. end
+
+. 
+. program define collapse_monthly_to_yearly
+  1. 
+.         **collapse**
+.         foreach var of varlist tmax* tavg* prcp* {
+  2.                 qui generate tagmis=(`var'==.)
+  3.                 qui bysort country year: egen testmis=sum(tagmis)
+  4.                 qui replace `var'=. if testmis>0
+  5.                 drop tagmis testmis
+  6.         }
+  7.         qui collapse (sum) tmax* tavg* prcp*, by(country year)
+  8. 
+. end
+
+. 
+. program define longrun_climate_measures
+  1. 
+.         foreach var of varlist tmax* {
+  2.                 qui bysort country: egen double `var'_TINV = mean(`var') i
+> f year >= 1971 & year <= 2010
+  3.         }
+  4. 
+. end
+
+. 
+. program define generate_other
+  1. * removed tmax*
+.         di "generate_other"
+  2.         foreach var of varlist tmax* tavg* prcp* {
+  3.                 qui generate double `var'_other=`var'
+  4.         }
+  5.         di "end generate_other"
+  6. 
+. end
+
+. 
+end of do-file
+cleaning shapefile WORLD
+
+. /*
+> Purpose: WORLD Shape File Climate Data Clean Function
+> Note: this file relies on programs in the helper_functions.do script
+> 
+> Function Properties:
+> 1) Construct Fiscal Years based on the following issues:
+> 
+> JPN: From 1990, data are reported on a fiscal year basis (e.g. April 2015 to 
+> March 2016 for 2015).
+> AUS: All data refer to the fiscal year (e.g. July 2014 to June 2015 for 2015)
+> BGD: Data are reported on a fiscal year basis, beginning on 1 July and ending
+>  on 30 June of the subsequent year.
+> EGY: Data are reported on a fiscal year basis. Data for 2015 correspond to 1 
+> July 2015-30 June 2016
+> ETH: Data are reported according to the Ethiopian financial year, which runs 
+> from 1 July to 30 June of the next year
+> IND: Data are reported on a fiscal year basis. Data for 2015 correspond to 1 
+> April 2015 – 30 March 2016
+> IRN: Data for 2015 correspond to 20 March 2015 19 March 2016, which is Irania
+> n year 1394
+> NPL: Data are reported on a fiscal year basis, beginning on 1 July and ending
+>  on 30 June of the subsequent year 2015/16 is treated as 2015
+> NZL: Prior to 1994, data refer to fiscal year (April 1993 to March 1994 for 1
+> 993). From 1994, data refer to calendar year.
+> KEN: As of 2001, electricity data are reported on a fiscal year basis, beginn
+> ing on 1 July and ending on 30 June of the subsequent year
+> 
+> 2) Using collapse_monthly_to_yearly collapse monthly time units to yearly
+> 
+> 3) Drop final year for countries we don't have climate data for due to fiscal
+>  years
+> 
+> 4) Construct long run climate measures using longrun_climate_measures
+> 
+> 5) Construct gaps in climate data, so holes can be filled by different shapef
+> ile climate data to reflect the following issues:
+> 
+> //Both Electricity and Other Energy
+> ETH: Prior to 1992, ERI included in Ethiopia
+> ERI: Prior to 1992, ERI included in Ethiopia
+> SRB: XKO included in Serbia until 1999, MNE included in Serbia between 1990 a
+> nd 2004
+> SDN: Data for South Sudan are available from 2012. Prior to 2012, they are in
+> cluded in Sudan
+> SSD: Data for South Sudan are available from 2012. Prior to 2012, they are in
+> cluded in Sudan
+> CUW: From 2012 onwards, data now account for the energy statistics of Curaçao
+>  Island only. 
+> Prior to 2012, data remain unchanged and still cover the entire territory of 
+> the former Netherland Antilles
+> FRA: Includes Monaco
+> ISR: The statistical data for Israel are supplied by and under the responsibi
+> lity of the relevant 
+> Israeli authorities. The use of such data by the OECD is without prejudice to
+>  the status of the Golan Heights, 
+> East Jerusalem and Israeli settlements in the West Bank under the terms of in
+> ternational law.
+> ITA: Includes San Marino and the Holy See
+> MMR: Some data are reported on a fiscal year basis, beginning on 1 April and 
+> ending on 31 March of the subsequent year
+> XKO: XKO included in Serbia until 1999
+> MNE: MNE included in Serbia between 1990 and 2004
+> 
+> //Just other energy
+> MDA: Official figures on natural gas imports, natural gas inputs to power pla
+> nts, electricity production and consumption 
+> are modified by the IEA Secretariat to include estimates for supply and deman
+> d for the autonomous region of Stînga Nistrului 
+> (also known as the Pridnestrovian Moldavian Republic or Transnistria). Other 
+> energy production or consumption from this region is not included in the Mold
+> ovan data.
+> TZA: Some of oil data (EWURA) are reported on a fiscal year basis. Data for 2
+> 015 correspond to 1 July 2015 30 June 2016
+> GRL: “Excludes Greenland and the Faroe Islands, except prior to 1990, where d
+> ata on oil for Greenland were included with the Danish statistics. The Admini
+> stration is planning to revise the series back to 1974 to exclude these amoun
+> ts.” 
+> DNK: “Excludes Greenland and the Faroe Islands, except prior to 1990, where d
+> ata on oil for Greenland were included with the Danish statistics. The Admini
+> stration is planning to revise the series back to 1974 to exclude these amoun
+> ts.” 
+> CHE: Includes Liechtenstein for the oil data. Data for other fuels do not inc
+> lude Liechtenstein
+> LIE: Includes Liechtenstein for the oil data. Data for other fuels do not inc
+> lude Liechtenstein
+> 
+> 
+> */
+. 
+. program define clean_WORLD
+  1. 
+.         *Step 1: fix fiscal years according to Azhar's code**
+.         sort country year month
+  2.         egen id = group(year month)
+  3.         encode country, gen(cnt)
+  4.         tset cnt id
+  5.         
+.         foreach var of varlist tmax* tavg* prcp* {
+  6.                 
+.                 **creating fiscal years
+.                 qui generate double `var'_N=`var'
+  7.                 qui replace `var'_N = F3.`var' if country == "JPN" & year>
+> =1990
+  8.                 qui replace `var'_N = L6.`var' if country == "AUS"
+  9.                 qui replace `var'_N = F6.`var' if country == "BGD"
+ 10.                 qui replace `var'_N = F6.`var' if country == "EGY"
+ 11.                 qui replace `var'_N = F6.`var' if country == "ETH"
+ 12.                 qui replace `var'_N = F3.`var' if country == "IND"
+ 13.                 qui replace `var'_N = F3.`var' if country == "IRN"
+ 14.                 qui replace `var'_N = F6.`var' if country == "NPL"
+ 15.                 qui replace `var'_N = F3.`var' if country == "NZL" & year<
+> =1993
+ 16.         
+.         }
+ 17. 
+.         keep *_N country year month cnt id
+ 18.         rename *_N *
+ 19. 
+.         **fix kenya fiscal years for electricity only**
+.         foreach var of varlist tmax* tavg* prcp* {
+ 20.                 
+.                 qui generate double `var'_other=`var'
+ 21.                 qui generate double `var'_N=`var'
+ 22.                 qui replace `var'_N = F6.`var' if country == "KEN" & year 
+> >= 2001
+ 23. 
+.         }
+ 24. 
+.         keep *_N *_other country year month
+ 25.         
+.         **Step 2: Go from monthly to yearly data
+.         collapse_monthly_to_yearly
+ 26. 
+.         **Step 3: Drop final year because do not have climate data for fiscal
+>  year
+. 
+.         //other energy fixes
+.         foreach var of varlist tmax*_other tavg*_other prcp*_other {
+ 27.                 
+.                 *dropping final year
+.                 qui replace `var' = . if inlist(country, "JPN","BGD","EGY","E
+> TH", "IND", "IRN", "NPL") & year == 2010
+ 28. 
+.         }
+ 29. 
+.         //electricity fixes
+.         foreach var of varlist tmax*_N tavg*_N prcp*_N {
+ 30.                 *dropping final year, but keep the long run measures to be
+>  consistent with the non-pixel-interaction data
+.                 if !inlist("`var'", "tavg_polyAbove20_1_x_cdd_N", "tavg_polyA
+> bove20_2_x_cdd_N",  "tavg_polyBelow20_1_x_hdd_N", "tavg_polyBelow20_2_x_hdd_N
+> "){
+ 31.                         qui replace `var' = . if inlist(country, "JPN","BG
+> D","EGY","ETH", "IND", "IRN", "NPL", "KEN") & year == 2010 
+ 32.                 }
+ 33.         }
+ 34.         rename *_N *
+ 35. 
+.         **Step 4: generating MA and TINV**
+. 
+.         longrun_climate_measures
+ 36. 
+.         **Step 5: Construct Gaps to Update with Other Shapefile Climate Data*
+> *
+.         
+.         //fixes for both other energy and electricity
+.         foreach var of varlist tmax* tavg* prcp* {
+ 37.                 
+.                 qui replace `var'=. if country == "ETH" & year <= 1991
+ 38.                 qui replace `var'=. if country == "SRB" & year <= 2004
+ 39.                 qui replace `var'=. if country == "SDN" & year <= 2011
+ 40.                 qui replace `var'=. if country == "CUW" & year < 2012
+ 41.                 qui replace `var'=. if country == "FRA"
+ 42.                 qui replace `var'=. if country == "ISR"
+ 43.                 qui replace `var'=. if country == "ITA"
+ 44.                 qui replace `var'=. if country == "SSD" & year < 2012
+ 45.                 qui replace `var'=. if country == "MMR"
+ 46.                 qui replace `var'=. if country == "ERI" & year < 1992
+ 47.                 qui replace `var'=. if country == "XKO" & year <= 1999
+ 48.                 qui replace `var'=. if country == "MNE" & year <= 2004
+ 49. 
+.         }
+ 50. 
+.         **fixes for just other energy MDA, TZA, GRL and DNK**
+.         
+.         foreach var of varlist *_other {
+ 51.                 
+.                 qui replace `var' = . if country=="MDA"
+ 52.                 qui replace `var' = . if country=="TZA"
+ 53.                 qui replace `var' = . if (country=="GRL" | country=="DNK")
+>  & year < 1990
+ 54.                 qui replace `var'=. if country == "CHE" 
+ 55.                 qui replace `var'=. if country == "LIE"
+ 56. 
+.         }
+ 57. 
+. end
+
+. 
+. 
+end of do-file
+cleaning shapefile WORLDpre
+
+. /*
+> Purpose: WORLD/pre1991 Shape File Climate Data Clean Function
+> Note: this file relies on programs in the helper_functions.do script
+> 
+> Primary Function:
+> 
+> Provide geographic issue fixes for the following issues--
+> 
+> SDN: Data for South Sudan are available from 2012. Prior to 2012, they are in
+> cluded in Sudan
+> ETH: ETH: Prior to 1992, ERI included in Ethiopia
+> Countries in former soviet union pre 1990: AZE, BLR, KAZ, KGZ, LVA, LTU, MDA,
+>  RUS, TJK, TKM, UKR, UZB, ARM, EST, GEO
+> Countries in former Yugoslavia pre 1990: HRV, MKD, MNE, SRB, SVN, BIH, XKO
+> 
+> What else happens in this function:
+> 
+> 1) Construct Fiscal Years based on the following issues:
+> ETH: Data are reported according to the Ethiopian financial year, which runs 
+> from 1 July to 30 June of the next year.
+> 
+> 2) Clean up shop: rename countries, generate product specific climate variabl
+> es, 
+> change temporal unit from monthly to yearly
+> 
+> 3) Generate long run climate measures
+> 
+> 4) drop countries in years where spatial dimensions are no longer relevant
+> 
+> */
+. 
+. 
+. 
+. 
+. program define clean_WORLDpre
+  1.         
+.         
+.         **Step 1: fix fiscal years
+.         
+.         sort country year month
+  2.         egen id = group(year month)
+  3.         encode country, gen(cnt)
+  4.         tset cnt id
+  5.         
+.         **fix fiscal years according to Azhar's code**
+.         foreach var of varlist tmax* tavg* prcp*  {
+  6.                 qui generate double `var'_N=`var'
+  7.                 qui replace `var'_N = F6.`var' if country=="ETH"
+  8.         }
+  9. 
+.         keep *_N country year month
+ 10.         rename *_N *
+ 11. 
+.         
+.         **Step 2: Clean up Shop
+.         
+.         **generate other energy specific climate variables so can make produc
+> t specific other energy
+.         generate_other
+ 12. 
+.         **rename**
+.         drop if country == "BL"
+ 13.         drop if country == "CS"
+ 14.         replace country = "FSUND" if country=="UST"
+ 15.         replace country = "YUGOND" if country=="YG"
+ 16.         replace country = "SDN" if country=="SD"
+ 17. 
+.         
+.         collapse_monthly_to_yearly
+ 18.         
+.         **Step 3: Generate long run climate measures
+.         **generating MA and TINV**
+.         longrun_climate_measures
+ 19.         
+.         **Step 4: Drop Countries where spatial dimension not relevant
+.         foreach var of varlist tmax* tavg* prcp* {
+ 20.                 qui replace `var' = . if inlist(country, "YUGOND", "FSUND"
+> ) & year > 1989
+ 21.                 qui replace `var' = . if inlist(country, "ETH") & year > 1
+> 991
+ 22.         }
+ 23. 
+. 
+. end
+
+. 
+. 
+end of do-file
+cleaning shapefile SRB_MNE_XKO
+
+. /*
+> Purpose: SRB_MNE_XKO Shape File Climate Data Clean Function
+> Note: this file relies on programs in the helper_functions.do script
+> 
+> Primary Function:
+> 
+> Provide geographic issue fixes for the following issues and complete subseque
+> nt cleaning steps--
+> 
+> SRB - XKO included in Serbia until 1999
+> SRB - MNE included in Serbia between 1990 and 2004
+> 
+> */
+. 
+. program define clean_SRB_MNE_XKO
+  1. 
+.         **rename**
+.         replace country = "SRB"
+  2. 
+.         **kenya fix**
+.         generate_other
+  3. 
+.         **generating MA**
+.         longrun_climate_measures
+  4. 
+.         **leave gaps for fill**
+.         * TO-DO: ask Maya why there's tmax*
+.         foreach var of varlist tavg* prcp* {
+  5.                 qui replace `var' = . if year > 1999 | year <= 1989
+  6.         }
+  7. 
+. end
+
+.  
+.  
+. 
+end of do-file
+cleaning shapefile SRB_MNE
+
+. /*
+> Purpose: SRB_MNE Shape File Climate Data Clean Function
+> Note: this file relies on programs in the helper_functions.do script
+> 
+> Primary Function:
+> 
+> Provide geographic issue fixes for the following issues and complete subseque
+> nt cleaning steps--
+> 
+> SRB - XKO included in Serbia until 1999
+> SRB - MNE included in Serbia between 1990 and 2004
+> 
+> */
+. 
+. 
+. program define clean_SRB_MNE
+  1. 
+.         replace country="SRB"
+  2. 
+.         **kenya fix**
+.         generate_other
+  3. 
+.         **generating MA**
+.         longrun_climate_measures
+  4. 
+.         **leave gaps**
+.         foreach var of varlist tmax* tavg* prcp* {
+  5.                 qui replace `var'=. if year > 2004 | year <= 1999
+  6.         }
+  7. 
+. end
+
+. 
+end of do-file
+cleaning shapefile MDA_other
+
+. /*
+> Purpose: MDA_other Shape File Climate Data Clean Function
+> Note: this file relies on programs in the helper_functions.do script
+> 
+> Primary Function:
+> 
+> Provide geographic issue fixes for the following issues and complete subseque
+> nt cleaning steps--
+> 
+> MDA: Official figures on natural gas imports, natural gas inputs to power pla
+> nts, electricity production and consumption 
+> are modified by the IEA Secretariat to include estimates for supply and deman
+> d for the autonomous region of Stînga Nistrului 
+> (also known as the Pridnestrovian Moldavian Republic or Transnistria). Other 
+> energy production or consumption from this region is not included in the Mold
+> ovan data.
+> 
+> 
+> */
+. 
+. program define clean_MDA_other
+  1. 
+.         replace country="MDA"
+  2. 
+.         **rename as others**
+.         foreach var of varlist tmax* tavg* prcp*  {
+  3.                 rename `var' `var'_other
+  4.         }
+  5.         
+.         **generating MA**
+.         longrun_climate_measures
+  6. 
+. end
+
+. 
+end of do-file
+cleaning shapefile ITA_SMR_VAT
+
+. /*
+> Purpose: ITA_SMR_VAT Shape File Climate Data Clean Function
+> Note: this file relies on programs in the helper_functions.do script
+> 
+> Primary Function:
+> 
+> Provide geographic issue fixes for the following issues and complete subseque
+> nt cleaning steps--
+> 
+> ITA- “Includes San Marino and the Holy See.”
+> 
+> */
+. 
+. 
+. 
+. program define clean_ITA_SMR_VAT
+  1. 
+.         replace country="ITA"
+  2. 
+.         **kenya fix**
+.         generate_other
+  3. 
+.         **generating MA**
+.         longrun_climate_measures
+  4. 
+. end
+
+. 
+end of do-file
+cleaning shapefile ISR_PSE
+
+. /*
+> Purpose: ISR_PSE Shape File Climate Data Clean Function
+> Note: this file relies on programs in the helper_functions.do script
+> 
+> Primary Function:
+> 
+> Provide geographic issue fixes for the following issues and complete subseque
+> nt cleaning steps--
+> 
+> The statistical data for Israel are supplied by and under the responsibility 
+> of the relevant Israeli authorities. 
+> The use of such data by the OECD is without prejudice to the status of the Go
+> lan Heights, 
+> East Jerusalem and Israeli settlements in the West Bank under the terms of in
+> ternational law
+> 
+> */
+. 
+. 
+. program define clean_ISR_PSE
+  1. 
+.         replace country="ISR"
+  2. 
+.         **kenya fix**
+.         generate_other
+  3. 
+.         **generating MA**
+.         longrun_climate_measures
+  4. 
+. 
+. end
+
+. 
+end of do-file
+cleaning shapefile CUW_BES_ABW
+
+. /*
+> Purpose: CUW_BES_ABW Shape File Climate Data Clean Function
+> Note: this file relies on programs in the helper_functions.do script
+> 
+> Primary Function:
+> 
+> Provide geographic issue fixes for the following issues and complete subseque
+> nt cleaning steps--
+> 
+> From 2012 onwards, data now account for the energy statistics of Curaçao Isla
+> nd only. 
+> Prior to 2012, data remain unchanged and still cover the entire territory of 
+> the former Netherland Antilles
+> 
+> */
+. 
+. program define clean_CUW_BES_ABW
+  1. 
+.         replace country="CUW"
+  2. 
+.         **kenya fix**
+.         generate_other
+  3. 
+.         **generating MA**
+.         longrun_climate_measures
+  4. 
+. 
+. 
+. end
+
+. 
+end of do-file
+cleaning shapefile FRA_MCO
+
+. /*
+> Purpose: FRA_MCO Shape File Climate Data Clean Function
+> Note: this file relies on programs in the helper_functions.do script
+> 
+> Primary Function:
+> 
+> Provide geographic issue fixes for the following issues and complete subseque
+> nt cleaning steps--
+> 
+> FRA- Includes Monaco 
+> 
+> */
+. 
+. program define clean_FRA_MCO
+  1. 
+.         replace country="FRA"
+  2. 
+.         **kenya fix**
+.         generate_other
+  3. 
+.         **generating MA**
+.         longrun_climate_measures
+  4. 
+. end
+
+. 
+end of do-file
+tmax_cdd_20C 1950_1952 WORLD
+tmax_cdd_20C 1953_1962 WORLD
+tmax_cdd_20C 1963_1972 WORLD
+tmax_cdd_20C 1973_1982 WORLD
+tmax_cdd_20C 1983_1992 WORLD
+tmax_cdd_20C 1993_2002 WORLD
+tmax_cdd_20C 2003_2010 WORLD
+tmax_hdd_20C 1950_1952 WORLD
+tmax_hdd_20C 1953_1962 WORLD
+tmax_hdd_20C 1963_1972 WORLD
+tmax_hdd_20C 1973_1982 WORLD
+tmax_hdd_20C 1983_1992 WORLD
+tmax_hdd_20C 1993_2002 WORLD
+tmax_hdd_20C 2003_2010 WORLD
+tavg_poly_1 1950_1952 WORLD
+tavg_poly_1 1953_1962 WORLD
+tavg_poly_1 1963_1972 WORLD
+tavg_poly_1 1973_1982 WORLD
+tavg_poly_1 1983_1992 WORLD
+tavg_poly_1 1993_2002 WORLD
+tavg_poly_1 2003_2010 WORLD
+tavg_poly_2 1950_1952 WORLD
+tavg_poly_2 1953_1962 WORLD
+tavg_poly_2 1963_1972 WORLD
+tavg_poly_2 1973_1982 WORLD
+tavg_poly_2 1983_1992 WORLD
+tavg_poly_2 1993_2002 WORLD
+tavg_poly_2 2003_2010 WORLD
+tavg_poly_3 1950_1952 WORLD
+tavg_poly_3 1953_1962 WORLD
+tavg_poly_3 1963_1972 WORLD
+tavg_poly_3 1973_1982 WORLD

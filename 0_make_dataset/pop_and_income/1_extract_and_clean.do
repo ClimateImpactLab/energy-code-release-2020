@@ -22,7 +22,7 @@ Purpose: Clean Pop and Income Data
 //Note: GRL GDP is not in the dataset due to no WB data for GDP PPP 
 
 //This part of the code is to be run under Sacagawea, where raw datafile saved
-local RAWDATA "/shares/gcp/estimation/energy/IEA"
+local RAWDATA "${DATA}/energy/IEA"
 
 **********************************************************************************************
 ** Clean Income/Pop Data 
@@ -145,3 +145,4 @@ drop lgdppc
 ren lgdppc_i lgdppc
 ren lgdppc_MA lgdppc_MA15
 drop if year >= 2015
+ 

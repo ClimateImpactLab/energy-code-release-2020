@@ -333,6 +333,7 @@ end
 program define write_vcv
 syntax , coefficientlist(string) num_coefficients(integer)
 
+	*TO-DO: remove this for the .csv file
 	file write csvv "gammavcv" _n
 				
 	foreach coef_row in `coefficientlist' {

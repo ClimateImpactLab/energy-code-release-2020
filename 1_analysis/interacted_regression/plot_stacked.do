@@ -32,7 +32,7 @@ local year = 2099
 * Step 1: Load Data and Clean for Plotting
 ********************************************************************************
 		
-use "$root/data/GMFD_`model_main'_regsort.dta", clear
+use "$DATA/regression/GMFD_`model_main'_regsort.dta", clear
 
 //Set up locals for plotting
 local obs = 35 + abs(-5) + 1
@@ -60,7 +60,7 @@ gen below20 = (temp1 < 20) //below 20 indicator
 * Get Income Spline Knot Location 
 	
 preserve
-use "$root/data/break_data_`model_main'.dta", clear
+use "$DATA/regression/break_data_`model_main'.dta", clear
 summ maxInc_largegpid_`var' if largegpid_`var' == 1
 local ibar_main = `r(max)'
 restore
@@ -71,7 +71,7 @@ locations are different.*/
 
 if ( "`submodel_ov'" == "EX"  ) {
 	preserve
-	use "$root/data/break_data_`model_main'_`submodel_ov'.dta", clear
+	use "$DATA/regression/break_data_`model_main'_`submodel_ov'.dta", clear
 	summ maxInc_largegpid_`var' if largegpid_`var' == 1
 	local ibar_ov = `r(max)'
 	restore
@@ -98,11 +98,15 @@ if ( "`submodel_ov'" != "" ) {
 
 	local plot_title "main_model_`plot_title'_overlay_model_`submodel_ov'"
 
-	if "`submodel_ov'" == "lininter" {
-		local fig "fig_Appendix-I3B"
+	if ("`submodel_ov'" == "lininter" ) {
+		local fig "fig_Appendix-G3B"
 	}
+	
 	if "`submodel_ov'" == "EX" {
-		local fig "fig_Appendix-I2"
+		local fig "fig_Appendix-G2"
+	}
+	if ("`submodel_ov'" == "quadinter") {
+		exit, clear
 	}
 
 }
@@ -126,10 +130,11 @@ forval lg=3(-1)1 {	//Income tercile
 		
 		// grab income and climate covariates to trace out response for this cell
 		preserve
-		use "$root/data/break_data_`model_main'.dta", clear
+		use "$DATA/regression/break_data_`model_main'.dta", clear
 		duplicates drop tpid tgpid, force
 		sort tpid tgpid 
-		local tr_index = `tr' * 3 // create index for grabbing the long run climate to plot in each cell
+		local tr_index = `tr' * 3 
+		// create index for grabbing the long run climate to plot in each cell
 		local subCDD = avgCDD_tpid[`tr_index']
 		local subHDD = avgHDD_tpid[`tr_index']
 		local subInc = avgInc_tgpid[`lg']
@@ -174,13 +179,18 @@ forval lg=3(-1)1 {	//Income tercile
 			foreach k of num 1/2 {
 				
 				local line = " `line' `add' _b[c.indp`pg'#c.indf1#c.FD_temp`k'_GMFD] * (temp`k' - 20^`k')"
-				local line = "`line' + above20*_b[c.indp`pg'#c.indf`fg'#c.FD_cdd20_TINVtemp`k'_GMFD]*`subCDD' * (temp`k' - 20^`k')"
-				local line = "`line' + below20*_b[c.indp`pg'#c.indf`fg'#c.FD_hdd20_TINVtemp`k'_GMFD]*`subHDD' * (20^`k' - temp`k')"
-				local line = "`line' + _b[c.indp`pg'#c.indf`fg'#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
+				local line = "`line' + above20*_b[c.indp`pg'#c.indf1#c.FD_cdd20_TINVtemp`k'_GMFD]*`subCDD' * (temp`k' - 20^`k')"
+				local line = "`line' + below20*_b[c.indp`pg'#c.indf1#c.FD_hdd20_TINVtemp`k'_GMFD]*`subHDD' * (20^`k' - temp`k')"
+				local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15I`ig'temp`k']*`deltacut_subInc'*(temp`k' - 20^`k')"
 
-				if (strpos("`plot_model'", "lininter") > 0) {
-					local line = "`line' + _b[c.indp`pg'#c.indf`fg'#c.FD_yeartemp`k'_GMFD] * (temp`k' - 20^`k')*`year'"
-					local line = "`line' + _b[c.indp`pg'#c.indf`fg'#c.FD_dc1_lgdppc_MA15yearI`ig'temp`k']*`deltacut_subInc'*`year'*(temp`k' - 20^`k')"
+				if ((strpos("`plot_model'", "lininter") > 0) | (strpos("`plot_model'", "quadinter") > 0)) {
+					local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_yeartemp`k'_GMFD] * (temp`k' - 20^`k')*`year'"
+					local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15yearI`ig'temp`k']*`deltacut_subInc'*`year'*(temp`k' - 20^`k')"
+				}
+
+				if (strpos("`plot_model'", "quadinter") > 0) {
+					local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_year2temp`k'_GMFD] * (temp`k' - 20^`k')*`year'*`year'"
+					local line = "`line' + _b[c.indp`pg'#c.indf1#c.FD_dc1_lgdppc_MA15year2I`ig'temp`k']*`deltacut_subInc'*`year'*`year'*(temp`k' - 20^`k')"
 				}
 
 				local add " + "
@@ -188,7 +198,7 @@ forval lg=3(-1)1 {	//Income tercile
 			}
 			
 			// trace out does response equation and add to local for plotting 
-			estimates use "$root/sters/FD_FGLS_inter_`plot_model'"
+			estimates use "$OUTPUT/sters/FD_FGLS_inter_`plot_model'"
 
 			predictnl yhat`cellid'`type' = `line', se(se`cellid'`type') ci(lower`cellid'`type' upper`cellid'`type')
 
@@ -228,6 +238,7 @@ graph combine `graphicM', imargin(zero) ycomm rows(3) ///
 	title("Split Degree Days Poly 2 Interaction Model `var'", size(small)) ///
 	subtitle("`colorGuide'", size(vsmall)) ///
 	plotregion(color(white)) graphregion(color(white)) name(comb_nose, replace)
-graph export "$root/figures/`fig'_`var'_interacted_`plot_title'.pdf", replace
+graph export "$OUTPUT/figures/`fig'_`var'_interacted_`plot_title'.pdf", replace
 
 graph drop _all	
+

@@ -1,0 +1,10 @@
+results-root: impacts-blueghost/median_OTHERIND_other_energy_TINV_clim_GMFD_dm
+output-dir: //Users/ruixueli/Downloads/energy_data_release/OUTPUT/extracted_projection_data/TINV_clim_GMFD/median_OTHERIND_other_energy_TINV_clim_GMFD/REMIND17_rcp85
+file-organize: [ssp, region]
+do-montecarlo: no
+only-rcp: rcp85
+only-models: all
+only-iam: null
+deltamethod: true
+column: rebased
+output-format: valuescsv

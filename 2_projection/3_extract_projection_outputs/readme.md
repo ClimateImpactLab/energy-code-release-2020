@@ -12,7 +12,7 @@
 # Code contents and run instructions
 
 ## `0_save_covariate_data.R`
-- This code saves covariate data from our projection system onto the code release storage location (currently `/{synology}/GCP_Reanalysis/ENERGY/code_release_data/`).
+- This code saves covariate data from our projection system onto the code release storage location (currently `/{synology}/CIL_energy/code_release_data_pixel_interaction/`).
   - The covariates that we extract and save include information on GDP and population projections taken from the SSPs. We also extract some projected climate data that is used to plot Figure C.3 in the appendix.  
 - It also moves some data from our servers that is used for plotting aesthetics. 
 - To run this code - make sure you are in the [`risingverse`](https://github.com/ClimateImpactLab/risingverse) python 3 conda environment. Also make sure that you have downloaded all projection system repos and followed their install intructions.

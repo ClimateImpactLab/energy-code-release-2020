@@ -9,8 +9,7 @@ note -- definitions are common across functions in this file... if they aren't s
 product: "other_energy" "electricity"
 proj_type: "median" "diagnostics"
 break_data: path to break dataset produced with 0_make_dataset/1_construct_regression_ready_data.do 
-proj_model: Projection Model ("TINV_clim_income_spline")
-sys: "sacagawea" or "laika"
+proj_model: Projection Model ("TINV_clim")
 config_output: root of path for generated config storage
 proj_mode: "_dm" "_hilo" "" -- delta method, hot cold and normal
 brief_output: "TRUE" outputs just rebased values in delta method output
@@ -37,7 +36,7 @@ evalqvals: which quantiles you want to extract
 program define get_config_tag, sclass
 syntax , proj_model(string)
 
-	if strpos("`proj_model'", "income_spline") {
+	if strpos("`proj_model'", "clim") {
 		local config_tag = "hddcddspline"
 	}
 	else {
@@ -92,7 +91,7 @@ end
 
 program define get_impacts_folder, sclass
 syntax , proj_model(string)
-	if strpos("`proj_model'", "income_spline") {
+	if strpos("`proj_model'", "clim") {
 		local impact_folder = "impacts-blueghost"
 	}
 	else {
@@ -103,30 +102,21 @@ syntax , proj_model(string)
 end
 
 program define get_output_path, sclass
-syntax , sys(string) proj_model(string) [ uname(string) ]
+syntax , proj_model(string)
 	
 	//there is an impacts folder specific to model type
 	get_impacts_folder , proj_model("`proj_model'")
 	local impact_folder `s(ifol)'
 	return clear
 	
-	if "`sys'" != "laika" local proj_output = "/shares/gcp/outputs/energy/`impact_folder'"
-	else local proj_output = "/global/scratch/`uname'/outputs/energy/`impact_folder'"
+	local proj_output = "`impact_folder'"
 
 	sreturn local po "`proj_output'"
 end
 
-program define get_repo_root, sclass
-syntax , sys(string) uname(string)
-
-	if "`sys'" == "laika" local repo_root "/global/scratch/`uname'/repos"
-	else local repo_root "/home/`uname'/repos"
-	sreturn local rr "`repo_root'"
-end
-
 program define get_config_server_path, sclass
-syntax , sys(string) config_output(string) uname(string)	
-	get_repo_root , sys("`sys'") uname("`uname'")
+syntax , config_output(string)
+	get_repo_root 
 	local repo_root `s(rr)'
 	return clear
 
@@ -172,9 +162,17 @@ syntax , unit(string) [ price_scen(string) ] product(string)
 	}
 	else if (strpos("`price_scen'", "price") != 0) {
 
-		local growth_rate = substr("`price_scen'",strpos("`price_scen'","0"),.)
+		local growth_rate = substr("`price_scen'",strpos("`price_scen'","0"),.)	
 		local pricing = substr("`price_scen'",1,strpos("`price_scen'","0") - 1)
+
+		// make exception for -0,27% growth
+		if strpos("`price_scen'", "0027") > 0{
+			local growth_rate = "m0027"
+			local pricing = "price"
+		}
+
 		local price_data = "`price_data'/IEA_Price_FIN_Clean_gr`growth_rate'_GLOBAL_COMPILE.dta"
+	
 
 	}
 
@@ -219,6 +217,8 @@ end
 program define write_2product_results_root 
 syntax , product_list(string) csvv(string) [ proj_mode(string) ] uncertainty(string) proj_output(string)
 	
+	* TO-DO: fixing a bug in clim_data, delete when done
+
 	di "parsing stem..."
 	local stem = substr("`csvv'", 1,strpos("`csvv'","OTHERIND") + length("OTHERIND"))
 	di "stem: `stem'"
@@ -226,7 +226,8 @@ syntax , product_list(string) csvv(string) [ proj_mode(string) ] uncertainty(str
 	local proj_model = substr("`csvv'", strpos("`csvv'","TINV"), .)
 	di "model: `proj_model'"
 	di "parsing climate data..."
-	local clim_data = substr("`csvv'", strpos("`csvv'","clim") + length("clim"), 4)
+	*local clim_data = substr("`csvv'", strpos("`csvv'","clim") + length("clim"), 4)
+	local clim_data "GMFD"
 	di "climate data: `clim_data'"
 	
 	di "writing results roots..."
@@ -253,7 +254,7 @@ syntax , uncertainty(string)
 		local evalqvals "['mean', 0.05, 0.95]"
 	} 
 	else if inlist("`uncertainty'", "full") {
-		local evalqvals "['mean', .5, 0.05, 0.95, 0.10, 0.90, 0.75, 0.25]"
+		local evalqvals "['mean', .5, 0.05, 0.17, 0.83, 0.95, 0.10, 0.90, 0.75, 0.25]"
 	} 
 	else {
 		local evalqvals ""
@@ -264,21 +265,27 @@ end
 
 
 
+program define get_repo_root, sclass
+	local repo_root "${REPO}"
+	sreturn local rr "`repo_root'"
+end
+
+
 ** Part 2: these programs write the files necessary for projection and aggregation
 
 program define write_run_config
-syntax , product(string) proj_type(string) [ proj_mode(string) ] break_data(string) [ median_folder(string) ] [ single_folder(string) ] proj_model(string) sys(string) config_output(string) uname(string) do_farmers(string) ssp_list(string)
+syntax , product(string) proj_type(string) [ proj_mode(string) ] break_data(string) [ median_folder(string) ] [ single_folder(string) ] proj_model(string) config_output(string)  do_farmers(string) ssp_list(string)
 	
 	di "Executing write_run_config program..."
 
 	//have not set up hilo projection for income spline model
-	assert(strpos("`proj_model'", "income_spline") > 0 & strpos("`proj_mode'", "hilo") == 0)
+	assert(strpos("`proj_model'", "clim") > 0 & strpos("`proj_mode'", "hilo") == 0)
 
 	//get path to projection output
 
 	di "Retrieving output path..."
 
-	get_output_path , sys("`sys'") proj_model("`proj_model'") uname("`uname'")
+	get_output_path , proj_model("`proj_model'") 
 	local proj_output `s(po)'
 	return clear
 
@@ -302,12 +309,12 @@ syntax , product(string) proj_type(string) [ proj_mode(string) ] break_data(stri
 
 	di "Retrieving model config path on server of interest..."
 
-	get_config_server_path , sys("`sys'") config_output("`config_output'") uname("`uname'")
+	get_config_server_path ,  config_output("`config_output'") 
 	local config_server_path `s(csp)'
 	return clear
 
 	//retrieve loggdppc-delta == loggdppc upper bound for lareg income group 1 
-	if (strpos("`proj_model'", "income_spline")) {
+	if (strpos("`proj_model'", "clim")) {
 		qui use "`break_data'", clear 
 		qui keep if largegpid_`product' == 1 
 		qui tostring maxInc_largegpid_`product', force replace format(%12.3f)
@@ -318,10 +325,10 @@ syntax , product(string) proj_type(string) [ proj_mode(string) ] break_data(stri
 
 	di "Setting up output path for config getting written..."
 
-	output_prep , file_list(" `config_output' `sys' run `proj_type' ")
+	output_prep , file_list(" `config_output' run `proj_type' ")
 
 	file open yml using "`run_config_name'", write replace
-	file write yml "module: `config_server_path'/`sys'/model/`model_config_name'" _n
+	file write yml "module: `config_server_path'/model/`model_config_name'" _n
 		
 	**Model config files**
 	if "`proj_type'"=="median" {
@@ -361,15 +368,18 @@ syntax , product(string) proj_type(string) [ proj_mode(string) ] break_data(stri
 	if (strpos("`proj_mode'", "dm") > 0) {
 		file write yml "timeout: 30" _n
 	}
-	if("`proj_model'" == "TINV_clim_income_spline_lininter_double"){
+	if("`proj_model'" == "TINV_clim_lininter_double"){
 		file write yml "yearcovarscale: 2" _n
+	}
+	if("`proj_model'" == "TINV_clim_lininter_half"){
+		file write yml "yearcovarscale: 0.5" _n
 	}
 
 	file close yml
 end
 
 program define write_aggregate_config
-syntax ,  product(string) sys(string) proj_type(string) proj_model(string) unit(string) [ price_scen(string) ] [ proj_mode(string) ] config_output(string) uname(string) [ single_folder(string) ] [ median_folder(string) ]
+syntax ,  product(string)  proj_type(string) proj_model(string) unit(string) [ price_scen(string) ] [ proj_mode(string) ] config_output(string)  [ single_folder(string) ] [ median_folder(string) ]
 	
 	// set up locals relevant to units in program
 
@@ -381,7 +391,7 @@ syntax ,  product(string) sys(string) proj_type(string) proj_model(string) unit(
 
 	di "Retrieving output path..."
 
-	get_output_path , sys("`sys'") proj_model("`proj_model'") uname("`uname'")
+	get_output_path , proj_model("`proj_model'") 
 	local proj_output `s(po)'
 	return clear
 
@@ -444,17 +454,17 @@ syntax ,  product(string) sys(string) proj_type(string) proj_model(string) unit(
 
 	di "Setting up file paths for config writing..."
 
-	output_prep , file_list(" `config_output' `sys' aggregate `proj_type' ")
+	output_prep , file_list(" `config_output' aggregate `proj_type' ")
 
 	file open yml using "energy-aggregate-`proj_type'-`config_tag'`price_scen_tag'`pc'_OTHERIND_`product'`proj_mode'.yml", write replace
 	
 	**Model config files**
 	if "`proj_type'"=="median" {
-		file write yml "outputdir: outputs/energy/`impact_folder'/`median_folder'`proj_mode'" _n
+		file write yml "outputdir: outputs/energy_pixel_interaction/`impact_folder'/`median_folder'`proj_mode'" _n
 		file write yml "`weighting'" _n 
 	}
 	else if "`proj_type'"=="diagnostics" {
-		file write yml "outputdir: outputs/energy/`impact_folder'" _n
+		file write yml "outputdir: outputs/energy_pixel_interaction/`impact_folder'" _n
 		file write yml "`weighting'" _n
 		file write yml "targetdir: `proj_output'/`single_folder'`proj_mode'/`rcp'/CCSM4/high/SSP3" _n
 	}
@@ -468,7 +478,14 @@ syntax ,  product(string) sys(string) proj_type(string) proj_model(string) unit(
 	if strpos("`price_scen'", "rcp") > 0 {
 		file write yml "rcp: `rcp'" _n
 	} 
-	
+	* add an option to aggregate only fulladapt and histclim
+	* for projections other than main model point estimate
+	if !(("`proj_type'"!="median") & (strpos("`proj_model'", "lininter") == 0)) {
+		file write yml "only-farmers: ['', 'histclim']" _n
+	}
+	* updated: we now want to aggregate all SSPs
+	* file write yml "ssp: SSP3"
+
 	file close yml
 end
 
@@ -476,23 +493,16 @@ program define write_model_config
 syntax , product(string) proj_type(string) [ proj_mode(string) ] break_data(string) csvv(string) proj_model(string) config_output(string) csvv_path(string) [ brief_output(string) ]
 	
 	//have not set up hilo projection for income spline model
-	assert(strpos("`proj_model'", "income_spline") > 0 & strpos("`proj_mode'", "hilo") == 0)
+	assert(strpos("`proj_model'", "clim") > 0 & strpos("`proj_mode'", "hilo") == 0)
 
 	**generate file path for config output
 	
-	//decipher which system config for based on csvv path
-	if (strpos("`csvv_path'", "scratch") > 0) {
-		local sys = "laika"
-	}
-	else {
-		local sys = "sacagawea"
-	}
 
 	// create output path and cd to destination
 
 	di "Setting up file paths for config writing..."
 
-	output_prep , file_list(" `config_output' `sys' model ")
+	output_prep , file_list(" `config_output' model ")
 
 	**Read income bin cuts for energy**
 
@@ -528,28 +538,29 @@ syntax , product(string) proj_type(string) [ proj_mode(string) ] break_data(stri
 		local filename=`"  - csvvs: "`csvv_path'/`csvv'.csvv""' 
 		file write yml `"`filename'"' _n
 		file write yml "    covariates:" _n
-	    file write yml "      - incbin: `INCbin'" _n
+	    file write yml "      - incbin.country: `INCbin'" _n
 			
 		if (strpos("`proj_model'", "lininter") > 0) {
-			file write yml "      - year*incbin: `INCbin'" _n
+			file write yml "      - year*incbin.country: `INCbin'" _n
 		}
 		
 		file write yml "      - climtas-cdd-20" _n
 		file write yml "      - climtas-hdd-20" _n
-	    file write yml "      - climtas-cdd-20*incbin: `INCbin'" _n
-	    file write yml "      - climtas-hdd-20*incbin: `INCbin'" _n
+	    file write yml "      - climtas-cdd-20*incbin.country: `INCbin'" _n
+	    file write yml "      - climtas-hdd-20*incbin.country: `INCbin'" _n
 
-	    if (strpos("`proj_model'","income_spline") > 0 ) {
-	    	file write yml "      - loggdppc-shifted*incbin: `INCbin'" _n
+	    if (strpos("`proj_model'","clim") > 0 ) {
+	    	file write yml "      - loggdppc-shifted.country*incbin.country: `INCbin'" _n
 	    }
 	    if (strpos("`proj_model'","lininter") > 0 ) {
-	    	file write yml "      - loggdppc-shifted*year*incbin: `INCbin'" _n
+	    	file write yml "      - loggdppc-shifted.country*year*incbin.country: `INCbin'" _n
 	    }
 		
 		if (strpos("`proj_model'","ui") > 0) {
 			file write yml "      - loggdppc" _n
-			file write yml "      - loggdppc*incbin: `INCbin'" _n
+			file write yml "      - loggdppc*incbin.country: `INCbin'" _n
 		}
+			
 			
 		file write yml "    clipping: false" _n
 		file write yml "    description: Change in energy usage driven by a single day's mean temperature" _n
@@ -620,11 +631,11 @@ syntax , product(string) proj_type(string) [ proj_mode(string) ] break_data(stri
 		local filename=`"  - csvvs: "`csvv_path'/`csvv'""' 
 		file write yml `"`filename'"' _n
 		file write yml "    covariates:" _n
-		file write yml "      - incbin: `INCbin'" _n
+		file write yml "      - incbin.country: `INCbin'" _n
 		file write yml "      - climtas-cdd-20" _n
 		file write yml "      - climtas-hdd-20" _n
-		file write yml "      - climtas-cdd-20*incbin: `INCbin'" _n
-		file write yml "      - climtas-hdd-20*incbin: `INCbin'" _n
+		file write yml "      - climtas-cdd-20*incbin.country: `INCbin'" _n
+		file write yml "      - climtas-hdd-20*incbin.country: `INCbin'" _n
 		file write yml "    clipping: false" _n
 		file write yml "    description: Change in energy usage driven by a single day's mean temperature" _n
 		file write yml "    depenunit: kWh/pc" _n
@@ -692,59 +703,6 @@ syntax , product(string) proj_type(string) [ proj_mode(string) ] break_data(stri
 	}
 end
 
-program define write_projection_slurm_script
-syntax , product(string) proj_model(string) partition(string) config_output(string) shell_output(string) [ proj_mode(string) ] uname(string)
-	
-	// create output path and cd to destination
-
-	di "Setting up file paths for slurm script writing..."
-
-	output_prep , file_list(" `shell_output' ")
-
-	//retrieve path to config on server
-
-	get_config_server_path , sys("laika") config_output("`config_output'") uname("`uname'")
-	local config_server_path `s(csp)'
-	return clear
-
-	//retrieve run config name..
-	
-	di "Retrieving run config name..."
-
-	get_run_config_name, proj_model("`proj_model'") proj_mode("`proj_mode'") product("`product'") proj_type("median")
-	local run_config_name `s(rcn)'
-	return clear
-
-	if (strpos("`proj_mode'", "dm") > 0) {
-		local cpus 12
-	}
-	else {
-		local cpus 24
-	}
-
-	file open sh using "`partition'_`product'`proj_mode'.sh", write replace
-
-	file write sh "#!/bin/bash" _n
-	file write sh "# Job name:" _n
-	file write sh "#SBATCH --job-name=`product'" _n
-	file write sh "# Partition:" _n
-	file write sh "#SBATCH --partition=`partition'" _n
-	file write sh "# Account:" _n
-	file write sh "#SBATCH --account=co_laika" _n
-	file write sh "# QoS:" _n
-	if "`partition'" == "savio2_bigmem" file write sh "#SBATCH --qos=laika_bigmem2_normal" _n
-	else if "`partition'" == "savio3" file write sh "#SBATCH --qos=laika_savio3_normal" _n
-	file write sh "# Wall clock limit:" _n
-	file write sh "#SBATCH --time=98:00:00" _n
-	file write sh _n
-	file write sh "## Command(s) to run:" _n
-	file write sh _n
-	file write sh "export SINGULARITY_BINDPATH=/global/scratch/groups/co_laika/" _n
-	file write sh _n
-	file write sh "/global/scratch/groups/co_laika/gcp-generate.img `config_server_path'/run/median/`run_config_name' `cpus'"
-
-	file close sh
-end
 
 program define write_extraction_config
 syntax , [ product(string) ] [ two_product(string) ] [ product_list(string) ] [ proj_mode(string) ] [ median_folder(string) ] [ price_scen(string) ] geo_level(string) uncertainty(string) unit(string) proj_model(string) [ clim_data(string) ] config_output(string) [ csvv(string) ] [ csvv_path(string) ] extraction_output(string) [ evalqvals(string) ]
@@ -787,7 +745,7 @@ syntax , [ product(string) ] [ two_product(string) ] [ product_list(string) ] [ 
 
 	// get results-root
 
-	get_output_path , sys("sacagawea") proj_model("`proj_model'")
+	get_output_path , proj_model("`proj_model'")
 	local proj_output `s(po)'
 	return clear
 
@@ -807,9 +765,9 @@ syntax , [ product(string) ] [ two_product(string) ] [ product_list(string) ] [ 
 	}
 
 	// get multiimpact vcv and setup two_product tag
-
+	* TO-DO: corrected bug here, removed -fixed, need to confirm it's correct
 	if ( "`two_product'" == "TRUE" ) {
-		local vcv "`csvv_path'/`stem'`proj_model'-fixed.csv"
+		local vcv "`csvv_path'/`stem'`proj_model'.csv"
 		local product "total_energy"
 	}
 
@@ -835,7 +793,7 @@ syntax , [ product(string) ] [ two_product(string) ] [ product_list(string) ] [ 
 	
 	di "Setting up file paths for extraction config writing..."
 
-	output_prep , file_list(" `config_output' sacagawea `u_tt' `ps_tt' `uncertainty' `gl_tt' `proj_type' ")
+	output_prep , file_list(" `config_output' `u_tt' `ps_tt' `uncertainty' `gl_tt' `proj_type' ")
 
 
 	***************************************************************************************

@@ -23,15 +23,15 @@ clear all
 set more off
 set scheme s1color
 
-glob DB "C:/Users/TomBearpark/SynologyDrive"
-glob DB_data "$DB/GCP_Reanalysis/ENERGY/code_release_data"
+glob DB "/mnt"
+glob DB_data "$DB/CIL_energy/code_release_data_pixel_interaction"
 glob dir "$DB_data/projection_system_outputs/damage_function_estimation"
 
 * SSP toggle - options are "SSP2", "SSP3", or "SSP4"
-loc ssp = "SSP3" 
+loc ssp = "SSP5" 
 
-* Model toggle  - options are "main", "lininter", or "lininter_double"
-loc model = "lininter"
+* Model toggle  - options are "main", "lininter", "lininter_double", or "lininter_half","mixed"
+loc model = "main"
 
 * What year do we use data from for determining DF estimates used for the out of sample extrapolation
 loc subset = 2085
@@ -53,11 +53,14 @@ if("`model'" == "main") {
 		loc pricelist price014 
 	}
 } 
-else if (inlist("`model'", "lininter", "lininter_double")){
+else if (inlist("`model'", "lininter", "lininter_double", "lininter_half", "mixed")){
 	loc model_tag = "_`model'"
 	assert("`ssp'" == "SSP3")
 	loc pricelist price014 
 }
+
+
+*import delim "$dir/impact_values/gcm_damages_OTHERIND_total_energy_price014_SSP3.csv", clear
 
 **********************************************************************************
 * STEP 1: Pull in and format each price scenarios csv
@@ -81,7 +84,7 @@ foreach price in `pricelist_sub' {
 
 * Merge in GMST anomaly data 
 preserve
-	insheet using "$DB_data/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010.csv", comma names clear
+	insheet using "$DB_data/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010_smooth.csv", comma names clear
 	tempfile GMST
 	save `GMST', replace
 restore

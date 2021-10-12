@@ -10,12 +10,19 @@ Outputs two figures - one for each product
 
 clear all
 set more off
+global LOG: env LOG
+log using $LOG/0_make_dataset/3_unit_root_test_and_plot.log, replace
 
 * Set up the paths:
-global root "/Users/`c(username)'/Documents/repos/energy-code-release-2020"
 
-global DATA "$root/data"
-global OUT "$root/figures"
+
+
+global REPO: env REPO
+global DATA: env DATA 
+global OUTPUT: env OUTPUT 
+global root "$REPO/energy-code-release-2020"
+
+global OUT "$OUTPUT/figures"
 
 
 ** TESTING EXISTENCE OF UNIT ROOTS **
@@ -28,7 +35,7 @@ foreach test in "DF" "PR" {
 
 		//load dataset, subset to relevant product
 
-		use "$DATA/$data_name", clear
+		use "$DATA/regression/$data_name", clear
 		keep if product=="`prod'"
 
 		//Time set the data 
@@ -129,9 +136,11 @@ foreach test in "DF" "PR" {
 foreach prod in "other_energy" "electricity" {
 	if "`prod'"== "other_energy" {
 		local sub_tit="Other Energy"
+		local rgb_color 222 154 73
 	}
 	else {
 		local sub_tit="Electricity"
+		local rgb_color 76 87 115
 	}
 	foreach test in "DF" "PR" { 
 		if "`test'"=="DF" {
@@ -145,7 +154,7 @@ foreach prod in "other_energy" "electricity" {
 		forval ll=0/2 {
 			
 			//plot
-			twoway (histogram p if lag==`ll', width(0.05) fcolor(white) fraction), ///
+			twoway (histogram p if lag==`ll', width(0.05) lcolor("`rgb_color'") fcolor("`rgb_color'") fraction), ///
 			title("Lag `ll'", size(small)) xtitle("P value", size(small)) ///
 			xline(0.05, lcolor(navy) noextend) ///
 			graphregion(color(white)) plotregion(color(white)) ///
@@ -165,3 +174,5 @@ foreach prod in "other_energy" "electricity" {
 	graph export "$OUT/fig_Appendix-A2_Unit_Root_Tests_p_val_hists_`prod'.pdf", replace
 }
 graph drop _all	
+
+log close _all

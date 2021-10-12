@@ -19,12 +19,13 @@ More details of each sections inputs and outputs can be found in each of these s
   - `main`. This refers to the main econometric model present in our paper. See details of this model in Appendix Section C.3. If a particular file or plot does not explicitly reference a model, or includes the string `"main"`, then that file refers to this model. 
   - `lininter`. This model is an extension of our main econometric model to include a linear inteaction with time. More details of this model can be found in Appendix Section I.3. 
   - `lininter_double`. This model deterministically doubles the time trend estimated in the `lininter` model. More details can be found in Appendix Section I.3.  
+  - `lininter_half`. This model deterministically halves the time trend estimated in the `lininter` model.  
   We also took the following set of estimates through a `single` projection (i.e. one that relies on future climate projections from a single GCM): 
   - `SA`, which refers to a slow-adaptation scenario, where we deterministically halve the rates of income and climate adaptation estimated in the `main` model. More details can be found in Appendix Section I.1.
 
 ## Guide to data used in this process
 
-Data used in code housed in `/3_post_projection/` are stored in an external location (currently `/{synology}/GCP_Reanalysis/ENERGY/code_release_data/projection_system_outputs`). This is intermediate data, that was produced and extracted using the projection system.
+Data used in code housed in `/3_post_projection/` are stored in an external location (currently `/{synology}/CIL_energy/code_release_data_pixel_interaction/projection_system_outputs`). This is intermediate data, that was produced and extracted using the projection system.
 
 The data in this location include: 
 - ***Time series data***, 
@@ -33,7 +34,7 @@ The data in this location include:
   - Files under the `/CCSM4/` folder contain time series of projected impacts using climate projections from a single climate model (CCSM4). 
   - Naming convention for these files: 
     - `{model}-{fuel}-{ssp}-{rcp}-{iam}-{adapt_scenario}-{price_scenario}`.
-    - `model` refers to the type of model we project (ie main, lininter, or lininter_double). 
+    - `model` refers to the type of model we project (ie main, lininter, lininter_double, or lininter_half). 
     - `fuel` is either electricity, other_energy, or total_energy. 
     - `ssp` is the Shared Socioeconomic Pathway scenario, and can be either SSP2, SSP3 or SSP4. (See Appendix Section A.3.2)
     - `rcp` is the representative concentration pathway, and can be rcp45 or rcp85.

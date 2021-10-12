@@ -26,6 +26,7 @@ library(haven)
 #' @param proj_mode type of projection (like delta method or point estimate)
 #' @param uncertainty amount of uncertainty reflected in data
 #' @param region region for which querying data
+#' @param regions multiple regions for which querying data
 #' @param rcp rcp scenario
 #' @param iam iam scenario
 #' @param price_scen dollarized damages price scenario
@@ -38,21 +39,27 @@ library(haven)
 #' 
 
 load.median.check.params <- function(proj_mode = '', dollar_convert=NULL,
-  uncertainty = NULL, region = NULL, rcp = NULL, iam = NULL, ssp = 'SSP3', spec = NULL, 
-  sector = 'energy', price_scen = NULL, ...) {
+  uncertainty = NULL, region = NULL, regions = NULL, rcp = NULL, iam = NULL, ssp = 'SSP3', spec = NULL, 
+  sector = 'energy', price_scen = NULL, geo_level, ...) {
+
+  print(list(...))
 
   # both proj_mode are a part of the full uncertainty configs, thus the code and configs are set up such that
   testit::assert(!(proj_mode == '_dm' && uncertainty == 'full')) 
-
-  if (uncertainty == 'values') {
-    
-    testit::assert(!is.null(region))
+  
+  if (uncertainty == 'values') {    
+    # testit::assert(!is.null(region))
     testit::assert(is.null(rcp))
     testit::assert(is.null(iam))
 
   } else if (uncertainty == 'full') {
-    
-    testit::assert(!is.null(region)) # due to memory constraints
+    testit::assert(!(is.null(region) && is.null(regions) && geo_level == "aggregated")) 
+    # we either extract a certain set of regions, or extract all regions from levels file only
+    # because there's a bug with extracted all regions from the aggregated files 
+    # which james is fixing here https://github.com/jrising/prospectus-tools/issues/41
+    # update: james has changed the code to ignore those regions
+    # those are all small regions with no population data
+    testit::assert(!is.null(ssp)) # due to memory constraints
     testit::assert(!is.null(rcp)) # rcp should only be null for values (possibly this might not hold when OTHERIND_total_energy gets integrated)
 
   } else if (uncertainty == 'climate') {
@@ -83,12 +90,24 @@ load.median.check.params <- function(proj_mode = '', dollar_convert=NULL,
 #' @export
 #' 
 
+get_regions_string = function(regions) {
+    s = paste0("[", paste(regions, collapse=','), "]")
+    return(s)
+}
+
 load.median <- function(yearlist = as.character(seq(1980,2100,1)), 
-  dollar_convert = NULL, uncertainty = NULL, region = NULL, proj_mode, ...) {
+  dollar_convert = NULL, uncertainty = NULL, region = NULL, regions = NULL, proj_mode, regenerate = FALSE, ...) {
 
   kwargs = list(...)
+  if (!is.null(regions)) {
+    regions = get_regions_string(regions)
+  }
   testit::assert(uncertainty != 'single')
-  kwargs = rlist::list.append(kwargs, yearlist = yearlist, uncertainty = uncertainty, region = region, proj_mode=proj_mode)
+  kwargs = rlist::list.append(kwargs, yearlist = yearlist, uncertainty = uncertainty, region = region, regions = regions, proj_mode=proj_mode)
+
+  # convert the list to a string so that it can be passed to the shell script
+  # browser()
+  
 
   print('Checking the parametres make sense...')
   do.call(load.median.check.params, kwargs)
@@ -99,20 +118,30 @@ load.median <- function(yearlist = as.character(seq(1980,2100,1)),
   # If the file we want doesn't exit - produce it using quantiles.py on the relevant netcdf! 
   # note: please feel free to revise check.memory() function if it is currently too cautious
 
+
+  if (file.exists(paths$file) && regenerate) {
+    #Delete file if it exists
+    file.remove(paths$file)
+  }
+
   if (!file.exists(paths$file)) {
-    print('File does not already exist, so we are extracting...')
+    print(paths$file)
+    print('File does not already exist or we would like to regenerate, so we are extracting...')
     kwargs = rlist::list.append(kwargs, paths = paths)
     do.call(extract, kwargs)
   }  
 
   # Let's load the file!
   print(paste0("Loading file: ", paths$file))
+  # browser()
   
-  df <-readr::read_csv(paths$file) %>%
-    dplyr::filter(year %in% yearlist)
+  df <-readr::read_csv(paths$file) %>% dplyr::filter(year %in% yearlist)
+  # browser()
 
+  # browser()
   print('Adding data identifiers to data frame...')
   print(colnames(df))
+  # browser()
   kwargs = rlist::list.append(kwargs, df = as.data.frame(df))
   df <- do.call(assign.names, kwargs)
   print('Data frame column names:')
@@ -127,18 +156,24 @@ load.median <- function(yearlist = as.character(seq(1980,2100,1)),
     df$proj_mode <- NULL
   }
 
-  if ('region' %in% colnames(df) & !is.null(region)) { 
-    print('Filtering data frame to region queried...')
-    df$region[is.na(df$region)] <- ""
-    rgn = ifelse(region == "global", "", region)
-    df = df %>% dplyr::filter(region == rgn)
-  }
+  # if ('region' %in% colnames(df) & !is.null(region)) { 
+  #   print('Filtering data frame to region queried...')
+  #   df$region[is.na(df$region)] <- ""
+  #   rgn = ifelse(region == "global", "", region)
+  #   df = df %>% dplyr::filter(region == rgn)
+  # }
+
+  # if (!is.null(regions_list) & (! ("global" %in% regions_list)) { 
+  #   print('Filtering data frame to regions queried...')
+  #   df = df %>% dplyr::filter(region %in% regions_list)
+  # }
 
   if (!is.null(dollar_convert)) { 
     # testit::assert(!is.null(price_scen))
     print(paste0('converting to 2019 USD'))
     df <- convert.to.2019(df=df, proj_mode = proj_mode)
   }
+  print("done load_median")
   
   return(df)
 }

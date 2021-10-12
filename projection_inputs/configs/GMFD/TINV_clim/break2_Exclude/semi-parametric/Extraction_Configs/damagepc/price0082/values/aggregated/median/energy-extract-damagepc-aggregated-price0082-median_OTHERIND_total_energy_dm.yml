@@ -1,0 +1,12 @@
+results-root:
+  FD_FGLS_inter_OTHERIND_other_energy_TINV_clim.*: impacts-blueghost/median_OTHERIND_other_energy_TINV_clim_GMFD_dm
+  FD_FGLS_inter_OTHERIND_electricity_TINV_clim.*: impacts-blueghost/median_OTHERIND_electricity_TINV_clim_GMFD_dm
+multiimpact_vcv: /Users/ruixueli/Downloads/repos//energy-code-release-2020/projection_inputs/csvv/TINV_clim/FD_FGLS_inter_OTHERIND_TINV_clim.csv
+output-dir: //Users/ruixueli/Downloads/energy_data_release/OUTPUT/extracted_projection_data/TINV_clim_GMFD/total_energy/price0082pc
+file-organize: [ssp, region]
+do-montecarlo: no
+only-models: all
+only-iam: null
+deltamethod: true
+column: rebased
+output-format: valuescsv

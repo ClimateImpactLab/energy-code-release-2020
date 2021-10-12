@@ -13,19 +13,19 @@ eval "$1" # fetch parameters from the command line
 
 ## extract full uncertainty impactspc for the global region --
 #### bash extraction_quantiles.sh "conda_env=projection;proj_type=median;
-#### clim_data=GMFD;model=TINV_clim_income_spline;grouping_test=semi-parametric;
+#### clim_data=GMFD;model=TINV_clim;grouping_test=semi-parametric;
 #### unit=impactpc;adapt_scen=fulladapt;geo_level=aggregated;spec=OTHERIND_other_energy;region=global;uncertainty=full"
 
 ## extract a variance value csv impactspc for the global region --
 #### bash extraction_quantiles.sh "conda_env=projection;proj_type=median;
-#### clim_data=GMFD;model=TINV_clim_income_spline;grouping_test=semi-parametric;
+#### clim_data=GMFD;model=TINV_clim;grouping_test=semi-parametric;
 #### unit=impactpc;adapt_scen=fulladapt;geo_level=aggregated;spec=OTHERIND_other_energy;
 #### region=global;uncertainty=values;proj_mode=_dm"
 
 # Parameters:
 ## note -- parameters are written with a very specific syntax so they can be read into R please stick to the syntax below if you are adding or changing parameters
 ## / parameter:grouping_test / options:semi-parametric, visual / required:yes /
-## / parameter:model / options:TINV_clim_income_spline, TINV_clim_income_spline_lininter, TINV_clim_income_spline_lininter_double / required:yes /
+## / parameter:model / options:TINV_clim, TINV_clim_lininter, TINV_clim_lininter_double, TINV_clim_lininter_half, TINV_clim_mixed / required:yes /
 ### or etc. (look to other scripts for info on other models... you should just be able to plop whatever model name in here)
 ## / parameter:clim_data / options:GMFD, BEST / required:yes /
 ## / parameter:conda_env / options:UNDEFINED / required:yes /
@@ -38,9 +38,12 @@ eval "$1" # fetch parameters from the command line
 ### 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
 ## / parameter:spec / options:OTHERIND_electricity, OTHERIND_other_energy, OTHERIND_total_energy / required:yes /
 ## / parameter:region / options:UNDEFINED / required:no /
+## / parameter:regions / options:UNDEFINED / required:no /
+## / parameter:regions_suffix / options:UNDEFINED / required:no /
 ### specify region if extracting full uncertainty or if extracting values for an aggregated region
 ## / parameter:uncertainty / options:full, climate, values / required:yes /
 ## / parameter:iam / options:high, low / required:no /
+## / parameter:ssp / options:SSP1, SSP2, SSP3, SSP4, SSP5 / required:no /
 ## / parameter:rcp / options:rcp85, rcp45 / required:no /
 ## / parameter:proj_mode / options:_dm / required:no /
 ### options really are '' and _dm but i'm not sure yet how to pass that into R through my funciton
@@ -81,7 +84,7 @@ get_input_file() {
 		as_tag=-${as}
 	fi
 
-	stem=FD_FGLS_inter_clim${clim_data}_Exclude_all-issues_break2_${grouping_test}_poly2_${product}_${model}
+	stem=FD_FGLS_inter_${product}_${model}
 	input_file=${stem}${as_tag}${price_scen_tag}${geo_level_tag}
 
         if [[ -z ${input_file} ]]; then
@@ -114,11 +117,11 @@ if [[ "${spec}" == "OTHERIND_total_energy" && "{$uncertainty}" == "full" ]]; the
     if [[ -z ${rcp} ]]; then
             echo "Aborting because rcp must be restricted if extracting total_energy due to memory constraints."
             exit 1
-    fi
-    
-    rcp_restriction=--rcp=${rcp}
-
+    fi    
  fi
+
+
+
 
 
 ############################################################################################################
@@ -137,8 +140,16 @@ fi
 
 if [[ "${uncertainty}" == "full" ]]; then
 	uncertainty_tag=_fulluncertainty
-	region_restriction=--region=${region}
-	region_tag=${region}_
+	if [[ ( ${region} ) ]]; then		
+		region_restriction=--region=${region}
+		region_tag=${region}_
+	elif [[ ( ${regions} ) ]]; then	
+		region_restriction=--regions=${regions}
+		region_tag=${regions_suffix}_
+	else 
+		region_restriction=""
+		region_tag=""
+	fi
 fi
 
 # netcdfs don't have a tag for fulladapt
@@ -158,6 +169,28 @@ else
 	iam_tag=''
 	iam_restriction=''
 fi
+
+
+if [[ ( "${rcp}" ) ]]; then
+	rcp_tag=_${rcp}
+	rcp_restriction=--only-rcp=${rcp}
+else
+	rcp_tag=''
+	rcp_restriction=''
+fi
+
+
+# restrict to one SSP if desired
+if [[ ( "${ssp}" ) ]]; then
+	ssp_tag=_${ssp}
+	ssp_restriction=--only-ssp=${ssp}
+else
+	echo "empty ssp tag"
+	ssp_tag=''
+	ssp_restriction=''
+fi
+
+
 
 # restrict to one region if extracting aggregated values (standard)
 
@@ -190,13 +223,14 @@ fi
 
 # set up some variables to make the calling line not a gazillion characters --
 ecp=${repo_root}/${extraction_config_path}/${unit}/${price_scen}/${uncertainty}/${geo_level}/median/energy-extract-${unit}${geo_level_tag}${price_scen_tag}-median_${spec}${proj_mode}.yml 
-suffix=_${region_tag}${unit}${price_scen_tag}_median${uncertainty_tag}${iam_tag}${rcp_tag}_${adapt_scen}${geo_level_tag}${proj_mode}
+suffix=_${region_tag}${unit}${price_scen_tag}_median${uncertainty_tag}${iam_tag}_${adapt_scen}${geo_level_tag}${proj_mode}
 log_file=${log_file_path}/${region_log_tag}log${suffix}_${spec}.txt
 
 # print out information about call
 
 echo "extraction.config:${ecp}"
 echo "iam.restriction:${iam_restriction}"
+echo "ssp.restriction:${ssp_restriction}"
 echo "region.restriction:${region_restriction}"
 echo "suffix:${suffix}"
 echo "log.file:${log_file}"
@@ -217,9 +251,9 @@ if [[ "${spec}" != "OTHERIND_total_energy" ]]; then
         input_file_histclim=${input_file}
 
 	if [[ "${adapt_scen}" == "noadapt" ]]; then
-	    command=$(echo "nohup python -u quantiles.py ${ecp} ${iam_restriction} ${region_restriction} --suffix=${suffix} ${input_file_adapt} >> ${log_file} 2>&1 &")
+	    command=$(echo "nohup python -u quantiles.py ${ecp} ${iam_restriction}  ${rcp_restriction}  ${ssp_restriction} ${region_restriction} --suffix=${suffix} ${input_file_adapt} >> ${log_file} 2>&1 &")
 	else
-	    command=$(echo "nohup python -u quantiles.py ${ecp} ${iam_restriction} ${region_restriction} --suffix=${suffix} ${input_file_adapt} -${input_file_histclim} >> ${log_file} 2>&1 &")
+	    command=$(echo "nohup python -u quantiles.py ${ecp} ${iam_restriction}  ${rcp_restriction}  ${ssp_restriction} ${region_restriction} --suffix=${suffix} ${input_file_adapt} -${input_file_histclim} >> ${log_file} 2>&1 &")
 	fi
 else
         echo "extracting total_energy"
@@ -237,10 +271,10 @@ else
 
 	if [[ "${adapt_scen}" == "noadapt" ]]; then
 
-	    command=$(echo "nohup python -u quantiles.py ${ecp} ${iam_restriction} ${rcp_restriction} ${region_restriction} --suffix=${suffix} ${input_file_adapt_e} ${input_file_adapt_oe} >> ${log_file} 2>&1 &")
+	    command=$(echo "nohup python -u quantiles.py ${ecp} ${iam_restriction} ${ssp_restriction} ${rcp_restriction} ${region_restriction} --suffix=${suffix} ${input_file_adapt_e} ${input_file_adapt_oe} >> ${log_file} 2>&1 &")
 
 	else
-	    command=$(echo "nohup python -u quantiles.py ${ecp} ${iam_restriction} ${rcp_restriction} ${region_restriction} --suffix=${suffix} ${input_file_adapt_e} -${input_file_histclim_e} ${input_file_adapt_oe} -${input_file_histclim_oe} >> ${log_file} 2>&1 &")
+	    command=$(echo "nohup python -u quantiles.py ${ecp} ${iam_restriction} ${ssp_restriction} ${rcp_restriction} ${region_restriction} --suffix=${suffix} ${input_file_adapt_e} -${input_file_histclim_e} ${input_file_adapt_oe} -${input_file_histclim_oe} >> ${log_file} 2>&1 &")
 	fi
 
 fi
@@ -254,6 +288,7 @@ setup_log_file ${ecp} ${log_file} "${command}"
 
 if ${extract}; then
 	# execute command
+	echo "${command}"
 	eval ${command}
 	echo "pid:$!"
 fi
