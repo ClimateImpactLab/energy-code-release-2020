@@ -105,9 +105,6 @@ forval lg=1/10 {
 	local graphic = "`graphic' addgraph`lg'"
 	local graphic_noSE = "`graphic_noSE' addgraph`lg'_noSE"
 }				
-
-*list temp1 yhat10_electricity
-							
 	
 // plot and save combined plot with SE
 graph combine `graphic', imargin(zero) ycomm rows(1) xsize(20) ysize(3) ///
@@ -115,6 +112,7 @@ title("Poly 2 Income Decile Energy Temperature Response (`model')", size(small))
 subtitle("`colorGuide'", size(small)) ///
 plotregion(color(white)) graphregion(color(white)) name(comb, replace)
 graph export "$OUTPUT/figures/fig_1A_product_overlay_income_decile_`model'.pdf", replace
+
 
 			
 graph drop _all	
