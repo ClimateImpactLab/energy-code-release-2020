@@ -11,6 +11,9 @@ library(miceadds)
 library(haven)
 library(ncdf4)
 library(tidyr)
+library(logr)
+LOG <- Sys.getenv(c("LOG"))
+log_open(file.path(LOG, "2_projection/3_extract_projection_outputs/1_prepare_visualisation_data.log"), logdir = FALSE)
 
 
 REPO <- Sys.getenv(c("REPO"))

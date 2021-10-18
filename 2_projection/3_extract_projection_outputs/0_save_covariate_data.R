@@ -13,6 +13,9 @@ library(reticulate)
 library(haven)
 library(tidyr)
 library(imputeTS)
+library(logr)
+LOG <- Sys.getenv(c("LOG"))
+log_open(file.path(LOG, "2_projection/3_extract_projection_outputs/0_save_covariate_data.log"), logdir = FALSE)
 
 # Sys.setenv(LANG = "en")
 
@@ -123,10 +126,6 @@ gdp = gdp %>% as.data.frame() %>%
 
 write_csv(gdp, paste0(OUTPUT, 
 	'/projection_system_outputs/covariates/SSP3-global-gdp-time_series.csv'))
-
-# TO-DO: generate some data for labor, delete after testing
-# write_csv(gdp, paste0(OUTPUT, 
-# 	'/projection_system_outputs/covariates/SSP3-high-global-gdp-time_series.csv'))
 
 gdppc = get_gdppc_all_regions('low', 'SSP3')
 

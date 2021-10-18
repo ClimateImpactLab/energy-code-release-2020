@@ -9,8 +9,13 @@ pacman::p_load(dplyr,
                readr, tidyr)
 
 
+REPO <- Sys.getenv(c("REPO"))
+DATA <- Sys.getenv(c("DATA"))
+OUTPUT <- Sys.getenv(c("OUTPUT"))
+root =  paste0(REPO, "/energy-code-release-2020")
+
+
 # Set paths
-DB = "/mnt/"
 DB_data = paste0(DB, "/CIL_energy/code_release_data_pixel_interaction")
 dir = paste0(DB_data, "/projection_system_outputs/damage_function_estimation/")
 

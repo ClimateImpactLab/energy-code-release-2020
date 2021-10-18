@@ -4,18 +4,21 @@
 
 rm(list = ls())
 library(RColorBrewer)
+library(logr)
+LOG <- Sys.getenv(c("LOG"))
+log_open(file.path(LOG, "3_post_projection/1_visualise_impacts/plot_damages_by_2012_income_decile.log"), logdir = FALSE)
+
 # Load in the required packages, installing them if necessary 
 if(!require("pacman")){install.packages(("pacman"))}
 pacman::p_load(ggplot2, 
                dplyr,
                readr)
 
-source("/home/liruixue/projection_repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
-
-DB = "/mnt"
-DB_data = paste0(DB, "/CIL_energy/code_release_data_pixel_interaction")
-root =  "/home/liruixue/repos/energy-code-release-2020"
-output = paste0(root, "/figures")
+REPO <- Sys.getenv(c("REPO"))
+DATA <- Sys.getenv(c("DATA"))
+OUTPUT <- Sys.getenv(c("OUTPUT"))
+root =  paste0(REPO, "/energy-code-release-2020")
+output = paste0(OUTPUT, "/figures")
 
 
 # Take deciles of 2012 income/ clim data distribution of IRs, by getting equal populations in each population
@@ -33,12 +36,14 @@ get_deciles = function(df){
 
 
 # load covariates
-cov_pixel_interaction= read_csv(paste0("/mnt/CIL_energy/code_release_data_pixel_interaction", 
+cov_pixel_interaction= read_csv(paste0(DATA, 
   '/miscellaneous/covariates_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim.csv'))
 
 # get IR level income
+# TO-DO: figure out why the column year became year...2
 country_inc = cov_pixel_interaction %>%
-    dplyr::select(year, region, loggdppc)%>%
+    dplyr::select(year...2, region, loggdppc)%>%
+    rename(year = year...2) %>%
     rename(country_inc = loggdppc) %>% 
     mutate(iso = substr(region, 1,3)) 
 
@@ -52,7 +57,7 @@ country_inc_deciles = merge(country_inc, deciles, by = c("iso"))
 
 
 # Load in impacts data
-df_impacts = read_csv(paste0(DB_data, '/projection_system_outputs/mapping_data',
+df_impacts = read_csv(paste0(OUTPUT, '/projection_system_outputs/mapping_data',
                 "/main_model-total_energy-SSP3-rcp85-high-fulladapt-price014-2099-map.csv")) %>%
   mutate(damage = damage * 1000000000 / 0.0036,
     q5 = q5 * 1000000000 / 0.0036,
@@ -66,7 +71,7 @@ df_impacts = read_csv(paste0(DB_data, '/projection_system_outputs/mapping_data',
   left_join(deciles, by = "iso")
 
 # Join with 2099 population data
-df_pop99= read_csv(paste0(DB_data, '/projection_system_outputs/covariates', 
+df_pop99= read_csv(paste0(OUTPUT, '/projection_system_outputs/covariates', 
                                    '/SSP3-high-IR_level-gdppc_pop-2099.csv')) %>% 
   dplyr::select(region, pop99)
 

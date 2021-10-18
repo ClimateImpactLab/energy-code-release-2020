@@ -5,6 +5,9 @@
 # blob plots
 
 rm(list = ls())
+library(logr)
+LOG <- Sys.getenv(c("LOG"))
+log_open(file.path(LOG, "3_post_projection/1_visualise_impacts/plot_2010_and_2090_covariate_distributions.log"), logdir = FALSE)
 
 
 REPO <- Sys.getenv(c("REPO"))

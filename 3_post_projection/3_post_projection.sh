@@ -1,7 +1,5 @@
 #!/bin/bash
 
-mkdir ${LOG}/2_projection
-
 echo "STEP 1 - Prepare projection configs"
 ./1_prepare_projection_files/1_prepare_projection_files.sh
 

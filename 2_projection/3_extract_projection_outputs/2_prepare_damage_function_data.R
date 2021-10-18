@@ -9,6 +9,8 @@ library(parallel)
 library(miceadds)
 library(haven)
 library(tidyr)
+library(logr)
+log_open(file.path(LOG, "2_projection/3_extract_projection_outputs/2_prepare_damage_function_data.log"), logdir = FALSE)
 
 
 REPO <- Sys.getenv(c("REPO"))

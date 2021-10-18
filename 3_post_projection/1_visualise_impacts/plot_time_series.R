@@ -12,7 +12,10 @@
 # 0. Set up
 
 rm(list = ls())
-source("/home/liruixue/projection_repos/post-projection-tools/mapping/imgcat.R") #this redefines the way ggplot plots. 
+library(logr)
+LOG <- Sys.getenv(c("LOG"))
+log_open(file.path(LOG, "3_post_projection/1_visualise_impacts/plot_time_series.R"), logdir = FALSE)
+
 
 # Load in the required packages, installing them if necessary 
 if(!require("pacman")){install.packages(("pacman"))}
@@ -24,14 +27,15 @@ pacman::p_load(ggplot2,
 
 
 # Set paths
-DB = "/mnt/CIL_energy"
 
-DB_data = paste0(DB, "/code_release_data_pixel_interaction")
-root =  "/home/liruixue/repos/energy-code-release-2020"
-output = paste0(root, "/figures")
+REPO <- Sys.getenv(c("REPO"))
+DATA <- Sys.getenv(c("DATA"))
+OUTPUT <- Sys.getenv(c("OUTPUT"))
+root =  paste0(REPO, "/energy-code-release-2020")
 
 # Source time series plotting codes
-source(paste0("/home/liruixue/repos/post-projection-tools/", "/timeseries/ggtimeseries.R"))
+# source(paste0("/home/liruixue/repos/post-projection-tools/", "/timeseries/ggtimeseries.R"))
+source(paste0(root, "/3_post_projection/0_utils/time_series.R"))
 
 
 #########################################
@@ -58,13 +62,13 @@ get.boxplot.vect <- function(df = NULL, yr = 2099) {
 
 # Function that takes in the long data, subsets it and returns a list of dataframes 
 # and vectors needed to plot the time series for a given fuel
-get_df_list_fig_2C = function(DB_data, fuel){
+get_df_list_fig_2C = function(OUTPUT, fuel){
   
   # Load in the impacts data: 
   load_df = function(rcp, adapt, fuel){
     print(rcp)
-    df = read_csv(paste0(DB_data,   
-                   '/projection_system_outputs/time_series_data/', 
+    df = read_csv(paste0(OUTPUT,   
+                   '/projection_system_OUTPUTs/time_series_data/', 
                    'main_model-', fuel, '-SSP3-',rcp, '-high-',adapt,'-impact_pc.csv')
                          ) 
     return(df)
@@ -116,9 +120,9 @@ get_df_list_fig_2C = function(DB_data, fuel){
 
 # post processing in illustrator 
 
-plot_ts_fig_2C = function(fuel, output, DB_data){
+plot_ts_fig_2C = function(fuel, OUTPUT){
   
-  plot_df = get_df_list_fig_2C(DB_data = DB_data,fuel = fuel)
+  plot_df = get_df_list_fig_2C(OUTPUT = OUTPUT,fuel = fuel)
   
   p <- ggtimeseries(
     df.list = list(plot_df$df_85[,c('year', 'mean')] %>% as.data.frame() , 
@@ -140,31 +144,31 @@ plot_ts_fig_2C = function(fuel, output, DB_data){
     rcp.value = 'rcp85', ssp.value = 'SSP3', iam.value = 'high-fulluncertainty')+ 
   ggtitle(paste0(fuel, "-high", "-rcp85","-SSP3", "-fulluncertainty")) 
   
-  ggsave(paste0(output, "/fig_2C_", fuel, "_time_series.pdf"), p)
+  ggsave(paste0(OUTPUT, "/figures/fig_2C_", fuel, "_time_series.pdf"), p)
   return(p)
 }
 
-p = plot_ts_fig_2C(DB_data = DB_data, fuel = "other_energy", output = output)
-q = plot_ts_fig_2C(DB_data = DB_data, fuel = "electricity", output = output)
+p = plot_ts_fig_2C(OUTPUT = OUTPUT, fuel = "other_energy")
+q = plot_ts_fig_2C(OUTPUT = OUTPUT, fuel = "electricity")
 
 
 #########################################
 # 2. Figure 3B
 
-plot_ts_fig_3B = function(DB_data, output){
+plot_ts_fig_3B = function(OUTPUT){
   
   # Load in the impacts data
-  df_impacts = read_csv(paste0(DB_data, '/projection_system_outputs/time_series_data/', 
+  df_impacts = read_csv(paste0(OUTPUT, '/projection_system_OUTPUTs/time_series_data/', 
                         'main_model-total_energy-SSP3-rcp45-high-fulladapt-price014.csv'))%>% 
     mutate(rcp = "rcp45") %>% 
     bind_rows(
-      read_csv(paste0(DB_data, '/projection_system_outputs/time_series_data/', 
+      read_csv(paste0(OUTPUT, '/projection_system_OUTPUTs/time_series_data/', 
                       'main_model-total_energy-SSP3-rcp85-high-fulladapt-price014.csv')) %>% 
         mutate(rcp = "rcp85")
     )
   
   # Load in gdp global projected SSP3 time series
-  df_gdp = read_csv(paste0(DB_data, '/projection_system_outputs/covariates/', 
+  df_gdp = read_csv(paste0(OUTPUT, '/projection_system_OUTPUTs/covariates/', 
                            "/SSP3-global-gdp-time_series.csv"))
   # Get separate dataframes for rcp45 and rcp85, for plotting
   format_df = function(rcp, df_impacts, df_gdp){
@@ -200,18 +204,18 @@ plot_ts_fig_3B = function(DB_data, output){
                 fill = "red",  alpha=0.1, show.legend = FALSE) + 
     ggtitle("Damages as a percent of global gdp, ssp3-high")
 
-  ggsave(p, file = paste0(output, 
-          "/fig_3/fig_3b_global_damage_time_series_percent_gdp_SSP3-high.pdf"), width = 8, height = 6)
+  ggsave(p, file = paste0(OUTPUT, 
+          "/figures/fig_3/fig_3b_global_damage_time_series_percent_gdp_SSP3-high.pdf"), width = 8, height = 6)
   
   return(p)  
 }
-r = plot_ts_fig_3B(DB_data =DB_data, output = output)
+r = plot_ts_fig_3B(OUTPUT =OUTPUT)
 
 
 #########################################
 # 3. Figure Appendix D.1 - Time series by price scenario
 
-df_gdp = read_csv(paste0(DB_data, '/projection_system_outputs/covariates/', 
+df_gdp = read_csv(paste0(OUTPUT, '/projection_system_OUTPUTs/covariates/', 
                          "/SSP3-global-gdp-time_series.csv"))
 
 
@@ -220,7 +224,7 @@ df_gdp = read_csv(paste0(DB_data, '/projection_system_outputs/covariates/',
 
 load_timeseries = function(rcp, price, df_gdp){
   
-  df = read_csv(paste0(DB_data, '/projection_system_outputs/time_series_data/',
+  df = read_csv(paste0(OUTPUT, '/projection_system_OUTPUTs/time_series_data/',
                 'main_model-total_energy-SSP3-',rcp,'-high-fulladapt-',price,'.csv'))  %>% 
     left_join(df_gdp, by="year") %>% 
     mutate(mean = mean * 1000000000)%>% 
@@ -231,7 +235,7 @@ load_timeseries = function(rcp, price, df_gdp){
   return(df)
 }
 
-plot_prices = function(rcp, pricelist, output) {
+plot_prices = function(rcp, pricelist, OUTPUT) {
   
   df = mapply(load_timeseries, price=pricelist, 
               MoreArgs = list(rcp = rcp, df_gdp = df_gdp),
@@ -250,27 +254,27 @@ plot_prices = function(rcp, pricelist, output) {
                     legend.values = brewer.pal(colourCount, "Spectral"),
                     rcp.value = rcp, ssp.value = "SSP3", iam.value = "high") 
   
-  ggsave(p, file = paste0(output, 
-                          "/fig_Extended_Data_fig_5_global_total_energy_timeseries_all-prices-", 
+  ggsave(p, file = paste0(OUTPUT, 
+                          "/figures/fig_Extended_Data_fig_5_global_total_energy_timeseries_all-prices-", 
                           rcp, ".pdf"), width = 8, height = 6)
 }
 
 pricelist = c("price0", "price014", "price03", "WITCHGLOBIOM42", 
               "MERGEETL60", "REMINDMAgPIE1730", "REMIND17CEMICS", "REMIND17") 
 
-plot_prices(pricelist = pricelist, rcp = "rcp45",  output = output)
-plot_prices(pricelist = pricelist, rcp = "rcp85",  output = output)
+plot_prices(pricelist = pricelist, rcp = "rcp45",  OUTPUT = OUTPUT)
+plot_prices(pricelist = pricelist, rcp = "rcp85",  OUTPUT = OUTPUT)
 
 
 #########################################
 # 4. Figure Appendix I.1 - Comparison to slow adaptation scenario single run
 
-get_plot_df_by_fuel = function(fuel, DB_data) {
+get_plot_df_by_fuel = function(fuel, OUTPUT) {
   
-  df_SA = read_csv(paste0(DB_data, "/projection_system_outputs/time_series_data/CCSM4_single/",
+  df_SA = read_csv(paste0(OUTPUT, "/projection_system_OUTPUTs/time_series_data/CCSM4_single/",
               "SA_single-", fuel, "-SSP3-high-fulladapt-impact_pc.csv"))
   
-  df_main = read_csv(paste0(DB_data, "/projection_system_outputs/time_series_data/CCSM4_single/", 
+  df_main = read_csv(paste0(OUTPUT, "/projection_system_OUTPUTs/time_series_data/CCSM4_single/", 
               "main_model_single-", fuel, "-SSP3-high-fulladapt-impact_pc.csv"))
 
   df <- rbind(df_SA, df_main) %>%
@@ -280,9 +284,9 @@ get_plot_df_by_fuel = function(fuel, DB_data) {
 
 }
 
-plot_and_save_appendix_I1 = function(fuel, DB_data, output){
+plot_and_save_appendix_I1 = function(fuel, OUTPUT){
   
-  df = get_plot_df_by_fuel(fuel = fuel, DB_data = DB_data)
+  df = get_plot_df_by_fuel(fuel = fuel, OUTPUT = OUTPUT)
   p = ggplot() +
     geom_line(data = df, aes(x = year, y = mean, color = rcp, linetype = type)) +
     scale_colour_manual(values=c("blue", "red", "steelblue", "tomato1")) +
@@ -298,34 +302,32 @@ plot_and_save_appendix_I1 = function(fuel, DB_data, output){
     ggtitle(paste0(fuel, "-SSP3-CCSM4-High")) +
     ylab("Impacts (GJ PC)") + xlab("")
   
-  ggsave(p, file = paste0(output, 
-                          "/fig_Appendix-G1_Slow_adapt-global_", fuel, "_timeseries_impact-pc_CCSM4-SSP3-high.pdf"), 
+  ggsave(p, file = paste0(OUTPUT, 
+                          "/figures/fig_Appendix-G1_Slow_adapt-global_", fuel, "_timeseries_impact-pc_CCSM4-SSP3-high.pdf"), 
                           width = 8, height = 6)
   return(p)
 }
 
-####### not done #######
-plot_and_save_appendix_I1(fuel = "electricity", DB_data = DB_data, output = output)
-plot_and_save_appendix_I1(fuel = "other_energy", DB_data = DB_data, output = output)
-###### not done #######
+plot_and_save_appendix_I1(fuel = "electricity", OUTPUT = OUTPUT)
+plot_and_save_appendix_I1(fuel = "other_energy", OUTPUT = OUTPUT)
 
-#########################################
+########################################
 # 4. Figure Appendix I.3 - modelling tech trends 
 
 
-plot_ts_appendix_I3 = function(fuel, output){
+plot_ts_appendix_I3 = function(fuel, OUTPUT){
   
   
   spec = paste0("OTHERIND_", fuel)
   
   # Load in data for each scenario
   df_lininter = read_csv(paste0(
-    DB_data, '/projection_system_outputs/time_series_data/',
+    OUTPUT, '/projection_system_OUTPUTs/time_series_data/',
     'lininter_model-', fuel,'-SSP3-rcp85-high-fulladapt-impact_pc.csv')) %>% 
     mutate(type = "lininter")
   
   df_main = read_csv(paste0(
-      DB_data, '/projection_system_outputs/time_series_data/',
+      OUTPUT, '/projection_system_OUTPUTs/time_series_data/',
       'main_model-', fuel,'-SSP3-rcp85-high-fulladapt-impact_pc.csv'))%>% 
     dplyr::filter(rcp =="rcp85" )%>% 
     dplyr::filter(adapt_scen =="fulladapt" )%>% 
@@ -341,14 +343,14 @@ plot_ts_appendix_I3 = function(fuel, output){
                    x.limits =c(2010, 2100),
                    y.limits=c(-4,8)) + scale_y_continuous(breaks=seq(-3,7,3))
 
-  ggsave(p, file = paste0(output, 
-                          "/fig_Appendix-G3_lininter-global_", fuel, "_timeseries_impact-pc_SSP3-high-rcp85.pdf"), 
+  ggsave(p, file = paste0(OUTPUT, 
+                          "/figures/fig_Appendix-G3_lininter-global_", fuel, "_timeseries_impact-pc_SSP3-high-rcp85.pdf"), 
          width = 8, height = 6)
 }
 
 
-plot_ts_appendix_I3(fuel = "electricity", output = output)
-plot_ts_appendix_I3(fuel = "other_energy", output = output)
+plot_ts_appendix_I3(fuel = "electricity", OUTPUT = OUTPUT)
+plot_ts_appendix_I3(fuel = "other_energy", OUTPUT = OUTPUT)
 
 
 

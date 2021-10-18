@@ -15,6 +15,9 @@ global REPO: env REPO
 global DATA: env DATA 
 global OUTPUT: env OUTPUT 
 
+global LOG: env LOG
+log using $LOG/3_post_projection/1_visualise_impacts/plot_city_responses.log, replace
+
 
 glob root "${REPO}/energy-code-release-2020"
 loc output "$OUTPUT/figures"

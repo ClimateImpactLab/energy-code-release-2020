@@ -4,15 +4,15 @@
 # Clean environment, and load up the required packages
 rm(list = ls())
 library(logr)
+library(haven) 
+library(tidyverse)
+
 REPO <- Sys.getenv(c("REPO"))
 DATA <- Sys.getenv(c("DATA"))
 OUTPUT <- Sys.getenv(c("OUTPUT"))
 LOG <- Sys.getenv(c("LOG"))
 
 log_open(file.path(LOG, "0_make_dataset/4_plot_ITA_other_energy_regimes_timeseries.log"), logdir = FALSE)
-
-if (!require(tidyverse)) { install.packages("tidyverse"); library(tidyverse) } 
-if (!require(haven)) { install.packages("haven"); library(haven) } 
 
 root = paste0(REPO, "/energy-code-release-2020")
 

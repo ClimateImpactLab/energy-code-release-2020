@@ -1,5 +1,12 @@
 # Run instructions
 
+Please note, the raw data used here is not publicly available. 
+* Therefore, only [2_construct_regression_ready_data.do](https://github.com/ClimateImpactLab/energy-code-release-2020/blob/master/0_make_dataset/2_construct_regression_ready_data.do), 
+[3_unit_root_test_and_plot.do](https://github.com/ClimateImpactLab/energy-code-release-2020/blob/master/0_make_dataset/3_unit_root_test_and_plot.do), and
+[4_plot_ITA_other_energy_regimes_timeseries.R](https://github.com/ClimateImpactLab/energy-code-release-2020/blob/master/0_make_dataset/4_plot_ITA_other_energy_regimes_timeseries.R)
+in this folder (the codes that use intermediate data as an input) can be run by a user outside of the Climate Impact Lab. 
+* The intermediate dataset, `IEA_merged_long.dta`, is outputed by  [1_construct_dataset_from_raw_inputs.do](https://github.com/ClimateImpactLab/energy-code-release-2020/blob/master/0_make_dataset/1_construct_dataset_from_raw_inputs.do), and cannot be run.
+
 # Folder structure
 
 `climate` - code and shapefiles for constructing, cleaning and assembling climate data 
@@ -18,14 +25,14 @@
 
 Codes in this folder accomplish the following tasks:
 * Construct an intermediate dataset including population, energy consumption, climate, and income data. 
-    * `data/IEA_merged_long.dta`: 
+    * `DATA/regression/IEA_merged_long_GMFD.dta`: 
     *  We clean IEA_merged_long.dta in two different ways to produce regression ready datasets for our main specification (*Methods* Equation 2; *Appendix* Equation C.4) and robustness models;
 * Construct regression ready data:
-    * `data/GMFD_TINV_clim_EX_regsort.dta`: used for estimating the excluding imputed data model (*Appendix* I.2)
-    * `data/GMFD_TINV_clim_regsort.dta`: used for estimating the main model
+    * `DATA/regression/GMFD_TINV_clim_EX_regsort.dta`: used for estimating the excluding imputed data model (*Appendix* I.2)
+    * `DATA/regression/GMFD_TINV_clim_regsort.dta`: used for estimating the main model
 * Save information on each country-year's income and climate covariates, which is used as an input to plotting code
-    * `data/break_data_TINV_clim_EX.dta`: used for plotting output for the excluding imputed data model
-    * `data/break_data_TINV_clim.dta`: used for plotting output for the main model
+    * `DATA/regression/break_data_TINV_clim_EX.dta`: used for plotting output for the excluding imputed data model
+    * `DATA/regression/break_data_TINV_clim.dta`: used for plotting output for the main model
 * Testing for the existence of unit roots in our outcome variable, motivating the need to use first differenced variables in our empirical analysis
 
 ## Constructing Intermediate Dataset (IEA_merged_long.dta)
@@ -38,7 +45,7 @@ Codes in this folder accomplish the following tasks:
 * unavailable raw data
 
 ### Code Outputs:
-* `energy-code-release-2020/data/IEA_merged_long.dta`
+* `DATA/regression/IEA_merged_long_GMFD.dta`
 
 ## Constructing Regression Ready Dataset (GMFD_TINV_clim*_regsort.dta)
 
@@ -55,10 +62,10 @@ Codes in this folder accomplish the following tasks:
 ***Note:*** at the top of `2_construct_regression_ready_data.do` set the global macro ***model*** to `TINV_clim` to produce regression ready data for the main model and to `TINV_clim_EX` to produce regression ready data for the excluding imputed data model.
 
 ### Code Inputs:
-* `energy-code-release-2020/data/IEA_merged_long.dta`
+* `DATA/regression/IEA_merged_long.dta`
 
 ### Code Outputs:
-* `energy-code-release-2020/data/GMFD_TINV_clim*_regsort.dta`
+* `DATA/regression/GMFD_TINV_clim*_regsort.dta`
 
 ## Constructing Covariate Intermediate Datasets (break_data_TINV_clim*.dta)
 
@@ -82,11 +89,11 @@ country-year, including:
 ***Note:*** at the top of `2_construct_regression_ready_data.do` set the global macro ***model*** to `TINV_clim` to produce regression ready data for the main model and to `TINV_clim_EX` to produce this covariate information for the excluding imputed data model.
 
 ### Code Inputs:
-* `energy-code-release-2020/data/IEA_merged_long.dta`
+* `DATA/regression/IEA_merged_long.dta`
 
 ### Code Outputs:
-* `energy-code-release-2020/data/break_data_TINV_clim.dta`
-* `energy-code-release-2020/data/break_data_TINV_clim_EX.dta`
+* `DATA/regression/break_data_TINV_clim.dta`
+* `DATA/regression/break_data_TINV_clim_EX.dta`
 
 ## Testing for the existence of unit roots in our outcome variable
 Through this data testing we motivate the first differencing completed in `Step 5` of **Constructing Regression Ready Dataset**
@@ -100,8 +107,8 @@ Through this data testing we motivate the first differencing completed in `Step 
 
 
 ### Code Inputs:
-* `energy-code-release-2020/data/GMFD_TINV_clim_regsort.dta`
+* `DATA/regression/GMFD_TINV_clim_regsort.dta`
 
 ### Code Outputs:
-* `energy-code-release-2020/figures/fig_Appendix-A1_ITA_other_fuels_time_series_regimes.pdf`
-* `energy-code-release-2020/figures/fig_Appendix-A2_Unit_Root_Tests_p_val_hists_electricity.pdf`
+* `OUTPUT/figures/fig_Appendix-A1_ITA_other_fuels_time_series_regimes.pdf`
+* `OUTPUT/figures/fig_Appendix-A2_Unit_Root_Tests_p_val_hists_electricity.pdf`

@@ -68,14 +68,12 @@ Notes:
 
 . log using $LOG/0_make_dataset/1_construct_dataset_from_raw_inputs.log, replac
 > e
-(note: file /Users/ruixueli/Downloads/energy_data_release/LOG/0_make_dataset/1_
-> construct_dataset_from_raw_inputs.log not found)
 -------------------------------------------------------------------------------
       name:  <unnamed>
        log:  /Users/ruixueli/Downloads/energy_data_release/LOG/0_make_dataset/1
 > _construct_dataset_from_raw_inputs.log
   log type:  text
- opened on:   7 Sep 2021, 05:07:15
+ opened on:  18 Oct 2021, 20:58:01
 
 . 
 . 
@@ -1014,35 +1012,11 @@ cleaning shapefile FRA_MCO
 
 . 
 end of do-file
-tmax_cdd_20C 1950_1952 WORLD
-tmax_cdd_20C 1953_1962 WORLD
-tmax_cdd_20C 1963_1972 WORLD
-tmax_cdd_20C 1973_1982 WORLD
-tmax_cdd_20C 1983_1992 WORLD
-tmax_cdd_20C 1993_2002 WORLD
-tmax_cdd_20C 2003_2010 WORLD
-tmax_hdd_20C 1950_1952 WORLD
-tmax_hdd_20C 1953_1962 WORLD
-tmax_hdd_20C 1963_1972 WORLD
-tmax_hdd_20C 1973_1982 WORLD
-tmax_hdd_20C 1983_1992 WORLD
-tmax_hdd_20C 1993_2002 WORLD
-tmax_hdd_20C 2003_2010 WORLD
-tavg_poly_1 1950_1952 WORLD
-tavg_poly_1 1953_1962 WORLD
-tavg_poly_1 1963_1972 WORLD
-tavg_poly_1 1973_1982 WORLD
-tavg_poly_1 1983_1992 WORLD
-tavg_poly_1 1993_2002 WORLD
-tavg_poly_1 2003_2010 WORLD
-tavg_poly_2 1950_1952 WORLD
-tavg_poly_2 1953_1962 WORLD
-tavg_poly_2 1963_1972 WORLD
-tavg_poly_2 1973_1982 WORLD
-tavg_poly_2 1983_1992 WORLD
-tavg_poly_2 1993_2002 WORLD
-tavg_poly_2 2003_2010 WORLD
-tavg_poly_3 1950_1952 WORLD
-tavg_poly_3 1953_1962 WORLD
-tavg_poly_3 1963_1972 WORLD
-tavg_poly_3 1973_1982 WORLD
+file
+    /Users/ruixueli/Downloads/energy_data_release/DATA/climate/_spatial_data/
+    > WORLD/weather_data//csv_monthly/GMFD/GMFD_tmax_cdd_20C_v2_1950_1952_mon
+    > thly_popwt.csv not found
+r(601);
+
+end of do-file
+r(601);
