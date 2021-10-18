@@ -23,9 +23,19 @@ clear all
 set more off
 set scheme s1color
 
-glob DB "/mnt"
-glob DB_data "$DB/CIL_energy/code_release_data_pixel_interaction"
-glob dir "$DB_data/projection_system_outputs/damage_function_estimation"
+global REPO: env REPO
+global DATA: env DATA 
+global OUTPUT: env OUTPUT 
+
+global LOG: env LOG
+log using $LOG/3_post_projection/2_damage_function_estimation/plot_damage_function_fig_3.log, replace
+
+
+glob dir "$OUTPUT/projection_system_outputs/damage_function_estimation/"
+
+glob root "${REPO}/energy-code-release-2020"
+glob output "$OUTPUT/figures/"
+
 
 * SSP toggle - options are "SSP2", "SSP3", or "SSP4"
 loc ssp = "SSP5" 
@@ -84,7 +94,7 @@ foreach price in `pricelist_sub' {
 
 * Merge in GMST anomaly data 
 preserve
-	insheet using "$DB_data/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010_smooth.csv", comma names clear
+	insheet using "$OUTPUT/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010_smooth.csv", comma names clear
 	tempfile GMST
 	save `GMST', replace
 restore

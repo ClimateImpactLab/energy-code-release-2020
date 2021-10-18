@@ -16,8 +16,7 @@ root =  paste0(REPO, "/energy-code-release-2020")
 
 
 # Set paths
-DB_data = paste0(DB, "/CIL_energy/code_release_data_pixel_interaction")
-dir = paste0(DB_data, "/projection_system_outputs/damage_function_estimation/")
+dir = paste0(OUTPUT, "/projection_system_outputs/damage_function_estimation/")
 
 
 # This function takes in a csv that contains means and variances of 

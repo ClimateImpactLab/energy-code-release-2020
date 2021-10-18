@@ -12,11 +12,17 @@ clear all
 set more off
 set scheme s1color
 
-glob DB "/mnt"
-glob DB_data "$DB/CIL_energy/code_release_data_pixel_interaction"
-glob dir "$DB_data/projection_system_outputs/damage_function_estimation"
+global REPO: env REPO
+global DATA: env DATA 
+global OUTPUT: env OUTPUT 
 
-glob root "/home/liruixue/repos/energy-code-release-2020"
+global LOG: env LOG
+log using $LOG/3_post_projection/2_damage_function_estimation/plot_damage_function_fig_3.log, replace
+
+
+glob dir "$OUTPUT/projection_system_outputs/damage_function_estimation/"
+
+glob root "${REPO}/energy-code-release-2020"
 glob output "$OUTPUT/figures/"
 
 
@@ -25,7 +31,7 @@ glob output "$OUTPUT/figures/"
 * **********************************************************************************
 
 * import and reformat the gmst anomaly data, used for defining the range of GMST we plot each damage funciton for 
-insheet using "$DB_data/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010_smooth.csv", comma names clear
+insheet using "$OUTPUT/projection_system_outputs/damage_function_estimation/GMTanom_all_temp_2001_2010_smooth.csv", comma names clear
 tempfile GMST_anom
 save `GMST_anom', replace
 preserve
@@ -91,5 +97,5 @@ graph tw `gr', yline(0, lwidth(vthin)) ///
 	xscale(r(0(1)10)) xlabel(0(1)10) legend(off) scheme(s1mono) ///
 	ylabel(, labsize(small)) 
 
-graph export "$output/fig_3/fig_3C_total_energy_damage_function_evolution_SSP3-price014.pdf", replace 
+graph export "$OUTPUT/figures/fig_3/fig_3C_total_energy_damage_function_evolution_SSP3-price014.pdf", replace 
 graph drop _all
