@@ -33,6 +33,17 @@ pip install -e .
 conda env create -f energy_env_py3.yaml
 ```
 
+Activate the environment:
+```
+conda activate energy_env_py3
+
+```
+
+Install Jupyter
+```
+conda install -c conda-forge jupyterlab
+
+```
 
 3. Install the R packages needed using the following command from the root of this repo: 
 ```
