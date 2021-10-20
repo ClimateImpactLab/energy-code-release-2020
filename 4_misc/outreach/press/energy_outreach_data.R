@@ -36,6 +36,8 @@ miceadds::source.all(paste0(projection.packages,"load_projection/"))
 #' @param regenerate set to TRUE if want to re-run load.median function (use when the extraction is not done correctly) 
 
 #' @return Data table of processed impacts.
+# nishka: this one shouldn't require any change
+# nishka: anything that has to do with "fuel" should be similar to high/low in labor
 ProcessImpacts = function(
     time_step,
     impact_type, 
@@ -88,7 +90,11 @@ ProcessImpacts = function(
 #' @param stats the statistics to produce, ("mean", "q5", "q17", "q50", "q83", "q95")
 #' @return Data table of processed impacts.
 
+# nishka: change the units of impacts, and remove calculations
+# remember to convert to 2019 dollars
+# multiply by: 1.27.....
 select_and_transform = function(df, impact_type, resolution, stats, ...) {
+    # nishka: the following line may be the only one you need, plus the dollar 2019 conversion
     df_stats = do.call("rbind", df) %>% dplyr::select(year, region, !!stats) 
     if (impact_type == "impacts_gj") {
         return(df_stats)
@@ -96,6 +102,9 @@ select_and_transform = function(df, impact_type, resolution, stats, ...) {
         gj_to_kwh <- function(x) (x * 277.78) 
         df_stats = df_stats %>% dplyr::mutate_at(vars(-c(year,region)), gj_to_kwh)
         return(df_stats)        
+    # nishka: energy does the computation of pct gdp inside this script
+    # but laber doesnt need to. we can directly extract from aggregated pct gdp nc4 files
+    # so remember to remove %gdp calculation
     } else if (impact_type == "impacts_pct_gdp") {
         gdp = return_region_gdp(resolution)    
         df_stats = left_join(df_stats, gdp, by = c("region", "year")) 
@@ -109,6 +118,8 @@ select_and_transform = function(df, impact_type, resolution, stats, ...) {
 
 
 # reshape output and save to file
+# Nishka: no need to touch this one
+# except for "fuel"
 reshape_and_save = function(df, stats, resolution, impact_type, time_step, rcp, fuel, export,...) {
 
     rownames(df) <- c()
@@ -157,6 +168,7 @@ reshape_and_save = function(df, stats, resolution, impact_type, time_step, rcp, 
 
 # identify which type of files to extract results from
 # IR level - "levels.nc4" file, other levels - "aggeregated.nc4" files
+# nishka: this one no need to change
 get_geo_level = function(resolution) {
 
     geo_level_lookup = list(
@@ -171,6 +183,8 @@ get_geo_level = function(resolution) {
 
 # a function to call load.median package and get projection output
 # note that to percentage gdp impacts are only applicable for total energy (electricity + other energy)
+# nishka: this is where most of the change happens
+# replace this function with some calls to load the output of quantiles.py
 get_energy_impacts = function(impact_type, fuel, rcp, resolution, regenerate,...) {
 
     # set parameters for the load.median function call based on impact_type parameter
@@ -198,7 +212,12 @@ get_energy_impacts = function(impact_type, fuel, rcp, resolution, regenerate,...
         # get a list of region codes to filter the data with
         regions = return_region_list(resolution)
         
-
+        # nishka: this thing calls quantiles.py
+        # so what you should do is to pre-run quantiles.py to get all extracted csv files you need
+        # and here load the csv that corresponds to what you need to produce
+        # this function only loads the correct csv. the filtering is done other locations
+        # you don't need this part (it's energy specific) if you run quantiles.py
+        # just use a few if statements to choose the correct csv to load
         df = load.median(conda_env = "risingverse-py27",
                         proj_mode = '', # '' and _dm are the two options
                         # region = region, # needs to be specified for 
@@ -244,7 +263,7 @@ get_energy_impacts = function(impact_type, fuel, rcp, resolution, regenerate,...
 
 }
 
-
+# nishka: no need to change
 #reshapes the data to get region in rows and years in columns
 YearsReshape = function(df){
 
@@ -258,6 +277,7 @@ YearsReshape = function(df){
     return(df)
 }
 
+# nishka: no need to change
 #get two-decades means
 YearChunks = function(df,intervals,...){
 
@@ -270,7 +290,7 @@ YearChunks = function(df,intervals,...){
     return(df)
 }
 
-
+# nishka: this one needs changing
 #directories and files names
 Path = function(impact_type, resolution, rcp, stats, fuel, time_step, suffix='', ...){
 
@@ -289,6 +309,7 @@ Path = function(impact_type, resolution, rcp, stats, fuel, time_step, suffix='',
 
 memo.csv = addMemoization(read.csv)
 
+# nishka: no need to change
 #add US states name to states ID
 StatesNames = function(df){
     df=setkey(as.data.table(df),region)
@@ -310,6 +331,7 @@ StatesNames = function(df){
 #' - iso: country-level output; 
 #' - global: global outputs; 
 #' @return List of IRs or region codes.
+# nishka: no need to change
 return_region_list = function(regions) {
 
     if (length(regions) > 1) {
@@ -339,6 +361,7 @@ return_region_list = function(regions) {
     return(regions)
 }
 
+# nishka: no need to change
 # get regional GDP time series at the spatial resolution specified
 return_region_gdp = function(resolution) {
 
@@ -368,7 +391,7 @@ return_region_gdp = function(resolution) {
         }
     }
 
-
+# nishka: no need to change
 #' Identifies IRs within a more aggregated region code.
 #'
 #' @param region_list Vect. of aggregated regions.
