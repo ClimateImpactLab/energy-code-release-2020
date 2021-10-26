@@ -1,3 +1,7 @@
+# About
+This repo contains the code and instructions for producing the results in:
+Rode, A., Carleton, T., Delgado, M. et al. Estimating a social cost of carbon for global energy consumption. Nature 598, 308–314 (2021). https://doi.org/10.1038/s41586-021-03883-8
+
 # Requirements For Using Code In This Repo
 
 1. You need to have `python`, `Stata`, and `R` programming capabilities, or at least environments to run code in these languages, on your computer. 
@@ -10,11 +14,9 @@
 ```
 git clone https://github.com/ClimateImpactLab/energy-code-release-2020.git
 git clone https://gitlab.com/ClimateImpactLab/Impacts/impact-calculations.git
-
-
 ```
 
-2. (SKIP) Clone `open-estimate` and `impact-common` repo and install using the following commands
+2. (please skip this for now, as the raw data needed for projection hasn't been updated, and the instruction is still under construction) Clone `open-estimate` and `impact-common` repo and install using the following commands
 
 ```
 git clone 
