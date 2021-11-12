@@ -171,9 +171,13 @@ tab gpid, gen(ind)
 // group1: decile 1-6
 // group2: decile 7-8
 // group3: decile 9-10
-gen indepic = 1
-replace indepic = 2 if ind >=7
-replace indepic = 3 if ind >=9
+gen indepic1 = 0
+gen indepic2 = 0
+gen indepic3 = 0
+replace indepic2 = 1 if (ind7 == 1 | ind8 == 1)
+replace indepic3 = 1 if (ind9 == 1 | ind10 == 1)
+replace indepic1 = 1 if (indepic2 == 0 & indepic3 == 0)
+
 tab largegpid, gen(largeind)
 
 *********************************************************
