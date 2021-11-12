@@ -167,6 +167,8 @@ drop largegpid_electricity largegpid_other_energy
 
 //Generate dummy variable by income decile and group 
 tab gpid, gen(ind)
+
+// Ashwin: you can check how the dummies for the groups are generated here
 // Group the data into 3 groups:
 // group1: decile 1-6
 // group2: decile 7-8

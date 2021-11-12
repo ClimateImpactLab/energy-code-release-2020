@@ -88,6 +88,7 @@ forval lg = 1/10 {
 	}
 }
 
+** Ashwin: generating the variables here. it parallels the lines above
 ** do the same for the indepic version
 forval lg = 1/3 {
 	forval i=1/4 {
