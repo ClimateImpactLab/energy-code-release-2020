@@ -159,6 +159,13 @@ drop largegpid_electricity largegpid_other_energy
 
 //Generate dummy variable by income decile and group 
 tab gpid, gen(ind)
+// Group the data into 3 groups for EPIC 2021 top10 charts:
+// group1: decile 1-6
+// group2: decile 7-8
+// group3: decile 9-10
+gen indepic = 1
+replace indepic = 2 if ind >=7
+replace indepic = 3 if ind >=9
 tab largegpid, gen(largeind)
 
 //Generate sector and fuel dummies
