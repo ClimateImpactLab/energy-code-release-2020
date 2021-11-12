@@ -32,13 +32,6 @@ forval pg=1/2 {
 	}
 }
 
-** the epic plot version
-forval pg=1/2 {
-	forval lg=1/3 {
-		qui gen DumIncGepic`lg'F1P`pg' = (indepic`lg'- L1.indepic`lg') * indf1 * indp`pg'
-	}
-}
-
 * income decile x temp
 
 local income_decile_temp_r = ""
@@ -47,16 +40,6 @@ forval pg = 1/2 {
 	forval lg = 1/10 {
 		forval k = 1/2 {
 			local income_decile_temp_r = "`income_decile_temp_r' c.indp`pg'#c.indf1#c.FD_I`lg'temp`k'_GMFD"
-		}
-	}		
-}	
-** the epic plot version
-local income_decile_temp_r = ""
-
-forval pg = 1/2 {
-	forval lg = 1/3 {
-		forval k = 1/2 {
-			local income_decile_epic_temp_r = "`income_decile_temp_r' c.indp`pg'#c.indf1#c.FD_Iepic`lg'temp`k'_GMFD"
 		}
 	}		
 }	
@@ -83,22 +66,4 @@ qui gen weight = 1/omega
 * run second stage FGLS regression
 reghdfe FD_load_pc `income_decile_temp_r' `precip_r' DumInc* [pw=weight], absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i)
 estimates save "$root/sters/FD_FGLS_income_decile_`model'", replace	
-
-
-
-
-** EPIC chart version	
-* run first stage regression
-reghdfe FD_load_pc `income_decile_epic_temp_r' `precip_r' DumIncGepic*, absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i) residuals(resid)
-estimates save "$root/sters/FD_income_decile_epic_`model'", replace	
-			
-* calculating weigts for FGLS
-drop if resid==.
-bysort region_i: egen omega = var(resid)
-qui gen weight = 1/omega
-				
-* run second stage FGLS regression
-reghdfe FD_load_pc `income_decile_epic_temp_r' `precip_r' DumIncGepic* [pw=weight], absorb(i.flow_i#i.product_i#i.year#i.subregionid) cluster(region_i)
-estimates save "$root/sters/FD_FGLS_income_decile_epic_`model'", replace	
-
 

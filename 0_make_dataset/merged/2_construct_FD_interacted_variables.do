@@ -88,13 +88,6 @@ forval lg = 1/10 {
 	}
 }
 
-** do the same for the indepic version
-forval lg = 1/3 {
-	forval i=1/4 {
-		gen double FD_Iepic`lg'temp`i'_GMFD = ( temp`i'_GMFD * indepic`lg' ) - ( L1.temp`i'_GMFD * L1.indepic`lg' )
-	}
-}
-
 ** First difference temp x year x income spline 
 
 forval lg=1/2 {
