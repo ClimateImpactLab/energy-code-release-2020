@@ -5,6 +5,9 @@ We have included the outputs of this projection step as csv files in the data re
 - Running a full projection over all climate model, gdp growth model, all SSPs, all fuels is highly computationally intensive - and should only be done on a server (it would probably take months on a laptop - it takes weeks on out powerful Climate Impact Lab servers). It also generates many TB of data.
 - So instead, we've provided a limited dataset that allows you to run a single projection without uncertainties that projects future electricity usage for CCSM4 climate model, SSP3, OECD gdp growth model.
 
+# Run instructions
+To run the single projection without uncertainties for which we provide full input data for, do `./2_projection.sh`. 
+
 ## Overview
 
 Codes in this repo show users how we complete three types of projection related tasks. See notes inside each subfolder for more details on each part of the process, and some run instructions. 

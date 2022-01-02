@@ -1,11 +1,14 @@
 #!/bin/bash
 
-echo "STEP 1 - Prepare projection configs"
-./1_prepare_projection_files/1_prepare_projection_files.sh
+echo "STEP 1 - Plot figures in the paper"
+cd 1_visualise_impacts
+./1_visualise_impacts.sh
+cd ..
 
-echo "STEP 2 - Running a single projection"
-./2_running_projection.sh
+echo "STEP 2 - Running damage functions"
+cd 2_damage_function_estimation
+./2_damage_function_estimation.sh
+cd ..
 
-echo "STEP 2 - Extract the result of the projection"
-./3_extract_projection_outputs.sh
-# TO-DO: this part is being updated
+# echo "STEP 2 - Calculate the SCCs"
+# # TO-DO: this part is being updated

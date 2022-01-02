@@ -15,7 +15,6 @@ DATA <- Sys.getenv(c("DATA"))
 OUTPUT <- Sys.getenv(c("OUTPUT"))
 
 
-
 # Load in the required packages, installing them if necessary 
 if(!require("pacman")){install.packages(("pacman"))}
 pacman::p_load(ggplot2, 

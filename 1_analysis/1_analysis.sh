@@ -1,4 +1,6 @@
 #!/bin/bash
+# This script run all data construction steps.
+# You can also run individual scripts using commands in this script.
 
 mkdir ${LOG}/1_analysis
 

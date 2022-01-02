@@ -10,79 +10,88 @@ Rode, A., Carleton, T., Delgado, M. et al. Estimating a social cost of carbon fo
 
 # Setup 
 
-1. Clone the following repos to a chosen directory, which we'll call `REPO`, with the following commands: 
+1. Clone the following repos to a chosen directory, which we'll call `yourREPO` from now onwards, with the following commands: 
 ```
+cd <yourREPO>
 git clone https://github.com/ClimateImpactLab/energy-code-release-2020.git
-git clone https://gitlab.com/ClimateImpactLab/Impacts/impact-calculations.git
 ```
 
-2. (please skip this for now, as the raw data needed for projection hasn't been updated, and the instruction is still under construction) Clone `open-estimate` and `impact-common` repo and install using the following commands
+2. Install the `conda` environment included in this repo by running the following commands under the root of this repo:
 
 ```
-git clone 
-cd open-estimate
-pip install -e .
-cd ..
-
-git clone 
-cd impact-common
-pip install -e .
-```
-
-2. Install the `conda` environment needed to run this repo by running the following commands under the root of this repo:
-
-```
+cd <yourREPO>/energy-code-releaser-2020
 conda env create -f energy_env_py3.yaml
 ```
 
-Activate the environment:
+Try activating the environment:
 ```
 conda activate energy_env_py3
 
 ```
+Please remember that you will need to activate this environment whenever you run python scripts in this repo.
 
-Install Jupyter
+Also, you need to install Jupyter for the scc calculation code
 ```
 conda install -c conda-forge jupyterlab
-
+ 
 ```
 
-3. Install the R packages needed using the following command from the root of this repo: 
+3. Clone `impact-calculations`, `open-estimate` and `impact-common` into `yourREPO` and install using the following commands
+
 ```
+cd <yourREPO>
+git clone https://gitlab.com/ClimateImpactLab/Impacts/impact-calculations.git
+cd impact-calculations
+pip install -e .
+cd ..
+
+git clone https://github.com/ClimateImpactLab/open-estimate.git
+cd open-estimate
+pip install -e .
+cd ..
+
+git clone https://github.com/ClimateImpactLab/impact-common.git
+cd impact-common
+pip install -e .
+cd ..
+```
+
+
+4. Install the R packages needed using the following command from the root of this repo: 
+```
+cd <yourREPO>/energy-code-releaser-2020
 Rscript install_R_packages.R
 ```
 
-4. Download data from `https://doi.org/10.5281/zenodo.5099834`.
+5. Download data from `https://doi.org/10.5281/zenodo.5099834` and unzip it somewhere. Let's call this place `yourDATA`. 
 
+6. Set up a few environmental variables.
 
-5. Set up a few environmental variables.
+On Mac, you can do this by appending the following lines to your `~/.bash_profile`.
 
-On Mac, append the following lines to your `~/.bash_profile`:
-
+First, do:
 ```
 nano ~/.bash_profile
 
 ```
-Append the following lines to the end of the `.bash_profile` file:
 
-Point the variable `DATA` in the `DATA` dierctory in the downloaded data, and do the same for `OUTPUT`. Point the `REPO` variable to the `REPO` path used above containing this repo and other repos. 
-
-```
-export REPO=path_to_your_repos
-export DATA=path_to_"energy_code_release_data/DATA"
-export OUTPUT=path_to_"energy_code_release_data/OUTPUT"
-export LOG=path_to_"energy_code_release_data/LOG"
+Then, point the variable `DATA` in the `yourDATA` dierctory in the downloaded data, and do the same for `OUTPUT`. Point the `REPO` variable to `yourREPO` path used above containing this repo and other repos by adding the following lines to `.bash_profile`:
 
 ```
+export REPO=<yourREPO>
+export DATA=<yourDATA>/DATA
+export OUTPUT=<yourDATA>/OUTPUT
+export LOG=<yourDATA>/LOG
 
-Then run a `source ~/.bash_profile` to load the changes.
+```
+Save and exit. 
+Then, run `source ~/.bash_profile` to load the changes we just made.
 
 On Windows: TO-DO
 
-6. Mass replace all occurences of `stata -b` in this repo with `stata-mp -b` or `stata-se -b` according to the version of your stata. If you're prompted `command not found` when trying to run `stata` commands from the console, install `stata(console)` for your machine according to stata official documentation that is available online. 
+7. This repo is tested with Stata/SE, and currently using the `stata-se` command to run stata scripts. If you're using the SE or MP versions of stata, please mass replace all occurences of `stata -b` in this repo with `stata-mp -b` or `stata -b` according to the version of your stata. If you're prompted `command not found` when trying to run `stata` commands from the console, install `stata(console)` for your machine according to stata official documentation that is available online. 
 
-7. Setup for the whole repo is done! Now please follow the `README`s in each subdirectory to run each part of the analysis. 
-
+8. Setup for the whole repo is done, thanks for your patience! Now please follow the `README`s in each subdirectory to run each part of the analysis. 
 
 
 # The Social Cost of Global Energy Consumption Due to Climate Change
@@ -92,13 +101,12 @@ The analysis in the paper proceeds in **five steps**.
 1. Historical data on energy consumption and climate are cleaned and merged, along with other covariates needed in our analysis (population and income). 
 2. Econometric analysis is conducted to establish the energy-temperature empirical relationship. 
 3. This relationship is used to project future impacts of climate change using an ensemble of climate models 
-    * Note: this step is exceptionally computationally intensive, and sharable code for this step is a work in progress.
+    * Note: this step is exceptionally computationally intensive, and while we share all the code needed for producing all outputs in ther paper, releasing all the data is currently not possible due to the large size of the data, so you will not be able to run everything.
 4. These impacts are translated into empirical “damage functions” relating monetized damages to warming 
 5. Damage functions are used to compute an energy-only partial social cost of carbon. 
 
 This master readme outlines the process for each step, and each analysis step has it’s own readme and set of scripts in a subdirectory.
 
-*Note, the code currently in this repo performs steps 1,2,4 and 5 outlined above. We will update with more replication code in the future. Code used to project impacts will be held in a separate git repo.*
 
 ## Description of folders
 
@@ -106,13 +114,17 @@ This master readme outlines the process for each step, and each analysis step ha
 
 `1_analysis` - Code for estimating and plotting all econometric models present in the paper
 
+`2_projection` - Code for projection the impact of climate change to 2300
+`3_post_projection` - Code for producing figures and numbers for the paper
+
+<!-- 
 `data` - Repository for storing data related to the `1_analysis` part of our paper. 
-
-`figures` - Contains figures produced by codes in this analysis
-
+ -->
+<!-- `figures` - Contains figures produced by codes in this analysis
+ -->
+<!-- 
 `sters` - Contains regression output, saved as .ster files 
-
-Codes in step 3 onwards also use data held in an external data repository (currently `/{synology}/CIL_energy/code_release_data_pixel_interaction/`). 
+ -->
 
 ## Step 1 - Historical Energy Consumption and Climate Dataset Construction
 
