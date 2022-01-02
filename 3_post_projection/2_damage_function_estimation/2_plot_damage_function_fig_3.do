@@ -14,7 +14,7 @@ global DATA: env DATA
 global OUTPUT: env OUTPUT 
 
 global LOG: env LOG
-log using $LOG/3_post_projection/2_damage_function_estimation/plot_damage_function_fig_3.log, replace
+log using $LOG/3_post_projection/2_damage_function_estimation/2_plot_damage_function_fig_3.log, replace
 
 
 glob dir "$OUTPUT/projection_system_outputs/damage_function_estimation/resampled_data"

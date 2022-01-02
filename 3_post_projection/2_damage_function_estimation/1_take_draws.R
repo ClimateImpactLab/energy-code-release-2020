@@ -1,12 +1,16 @@
 # This script loads in GCM level mean and standard deviations, and outputs random draws from 
 # the uncertainty space 
-
 rm(list = ls())
+library(logr)
+LOG <- Sys.getenv(c("LOG"))
+log_open(file.path(LOG, "3_post_projection/2_damage_function_estimation/1_take_draws.R"), logdir = FALSE)
+
 
 # Load in the required packages, installing them if necessary 
 if(!require("pacman")){install.packages(("pacman"))}
 pacman::p_load(dplyr,
                readr, tidyr)
+
 
 
 REPO <- Sys.getenv(c("REPO"))

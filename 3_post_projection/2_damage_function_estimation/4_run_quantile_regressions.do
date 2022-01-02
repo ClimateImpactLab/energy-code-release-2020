@@ -24,9 +24,14 @@ clear all
 set more off
 set scheme s1color
 
-glob DB "/mnt"
-glob DB_data "$DB/CIL_energy/code_release_data_pixel_interaction"
-glob dir "$DB_data/projection_system_outputs/damage_function_estimation"
+global REPO: env REPO
+global DATA: env DATA 
+global OUTPUT: env OUTPUT 
+
+global LOG: env LOG
+log using $LOG/3_post_projection/2_damage_function_estimation/4_run_quantile_regressions.log, replace
+glob dir "$OUTPUT/projection_system_outputs/damage_function_estimation/"
+
 
 * Note: this code is only set up to run quantile regressions for SSP3-main model. 
 loc model = "main"
