@@ -18,6 +18,8 @@ dependencies:
   - statsmodels
   - bottleneck
   - xarray
+  - matplotlib
+  - seaborn
   - pip:
     - git+https://github.com/ClimateImpactLab/impactlab-tools@master
     - git+https://github.com/ClimateImpactLab/metacsv.git@master

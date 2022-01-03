@@ -1,11 +1,6 @@
 # P values for figures in the text: 
 # need to run under energy_env_py3
 rm(list = ls())
-library(logr)
-LOG <- Sys.getenv(c("LOG"))
-log_open(file.path(LOG, "3_post_projection/3_SCC/p_values_for_text.log"), logdir = FALSE)
-
-
 
 # RCP 8.5 electricity impact at 2099 (GJ per capita)
 # RCP 8.5 other fuels impact at 2099 (GJ per capita)
@@ -42,13 +37,7 @@ library(stringr)
 library(glue)
 
 
-REPO <- Sys.getenv(c("REPO"))
-DATA <- Sys.getenv(c("DATA"))
-OUTPUT <- Sys.getenv(c("OUTPUT"))
-root =  paste0(REPO, "/energy-code-release-2020")
-output = paste0(OUTPUT, "/figures")
-
-git <- REPO
+git <- paste0("/home/liruixue/repos")
 prospectus.tools.lib <- paste0("/home/liruixue/repos",'/prospectus-tools/gcp/extract/')
 p_p_tools <- paste0(git, "/post-projection-tools/")
 # # Enable python use by R
