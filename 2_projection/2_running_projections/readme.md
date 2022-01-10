@@ -17,6 +17,8 @@
 
 Note: The following section describes how we run all the projections used in the paper. However, since we haven't released the full input data for all the projections, we will provide an example projection and example aggregation that you can run by `./2_running_projections.sh`.
 
+Please make sure that you've run the `1_prepare_projection_files` directory before running your own projections to update the paths needed in the configs.
+
 ## Running a projection
 To run a projection (after following set up instructions in the `impact-calculations` repo) run this bash command from within the `impact-calculations` repo: 
 ```
