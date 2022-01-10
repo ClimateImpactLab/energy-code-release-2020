@@ -31,3 +31,17 @@ library(maptools)
 
 # on Mac: download latest installer from https://www.r-project.org/
 # the code has been tested on R 4.1.1
+
+
+
+	**Model config files**
+	if "`proj_type'"=="median" {
+		file write yml "mode: `proj_type'" _n
+		file write yml "outputdir: `proj_output'/`median_folder'`proj_mode'" _n
+	}
+	else if "`proj_type'"=="diagnostics" {
+		file write yml "mode: writecalcs" _n
+		file write yml "outputdir: `proj_output'" _n
+		file write yml "singledir: `single_folder'`proj_mode'" _n
+	}
+		
