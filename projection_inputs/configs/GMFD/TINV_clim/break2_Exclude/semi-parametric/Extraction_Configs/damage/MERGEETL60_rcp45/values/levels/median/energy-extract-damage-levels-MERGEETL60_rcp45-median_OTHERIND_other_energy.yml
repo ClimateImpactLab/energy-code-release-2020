@@ -1,5 +1,5 @@
-results-root: //Users/ruixueli/Downloads/energy_data_release/OUTPUT/projection_system_outputs/raw_projection_output/impacts-blueghost/median_OTHERIND_other_energy_TINV_clim_GMFD
-output-dir: //Users/ruixueli/Downloads/energy_data_release/OUTPUT/extracted_projection_data/TINV_clim_GMFD/median_OTHERIND_other_energy_TINV_clim_GMFD/MERGEETL60_rcp45
+results-root: /Users/ruixueli/Downloads/energy_data_release/OUTPUT/projection_system_outputs/raw_projection_output/impacts-blueghost/median_OTHERIND_other_energy_TINV_clim_GMFD
+output-dir: /Users/ruixueli/Downloads/energy_data_release/OUTPUT/extracted_projection_data/TINV_clim_GMFD/median_OTHERIND_other_energy_TINV_clim_GMFD/MERGEETL60_rcp45
 file-organize: [ssp, region]
 do-montecarlo: no
 only-rcp: rcp45

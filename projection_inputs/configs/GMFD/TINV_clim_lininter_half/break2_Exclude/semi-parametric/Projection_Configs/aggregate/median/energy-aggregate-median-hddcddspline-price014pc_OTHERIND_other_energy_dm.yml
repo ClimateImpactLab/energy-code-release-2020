@@ -1,5 +1,7 @@
-outputdir: outputs/energy_pixel_interaction/impacts-blueghost/median_OTHERIND_other_energy_TINV_clim_lininter_half_GMFD_dm
+outputdir: /Users/ruixueli/Downloads/energy_data_release/OUTPUT/projection_system_outputs/raw_projection_output/impacts-blueghost/median_OTHERIND_other_energy_TINV_clim_lininter_half_GMFD_dm
 levels-weighting: population * social/baselines/energy/IEA_Price_FIN_Clean_gr014_GLOBAL_COMPILE.dta:country:year:other_energycompile_price
+levels-unit: GJ
+aggregated-unit: GJ
 aggregate-weighting-numerator: population * social/baselines/energy/IEA_Price_FIN_Clean_gr014_GLOBAL_COMPILE.dta:country:year:other_energycompile_price
 aggregate-weighting-denominator: population
 infix: price014pc

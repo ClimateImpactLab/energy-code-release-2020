@@ -214,6 +214,35 @@ syntax , unit(string)
 	sreturn local awd "aggregate-weighting-denominator: `weighting_denominator'"
 end
 
+
+program define get_aggregated_unit, sclass
+syntax , unit(string)
+
+	if (strpos("`unit'", "pc") > 0) {
+		local aggregated_unit = "GJ" 
+	}
+	else {
+		local aggregated_unit = "dollar"
+	}
+
+	sreturn local au "aggregated-unit: `aggregated_unit'"
+end
+
+program define get_levels_unit, sclass
+syntax , unit(string)
+
+	if (strpos("`unit'", "pc") > 0) {
+		local levels_unit = "GJ" 
+	}
+	else {
+		local levels_unit = "dollar"
+	}
+
+	sreturn local lu "levels-unit: `levels_unit'"
+end
+
+
+
 program define write_2product_results_root 
 syntax , product_list(string) csvv(string) [ proj_mode(string) ] uncertainty(string) proj_output(string)
 	
@@ -403,12 +432,33 @@ syntax ,  product(string)  proj_type(string) proj_model(string) unit(string) [ p
 	local impact_folder `s(ifol)'
 	return clear
 
+	//get path to projection output
+
+	di "Retrieving output path..."
+
+	get_output_path , proj_model("`proj_model'") 
+	local proj_output `s(po)'
+	return clear
+
+
 	// weighting or levels-weighting depends on the unit and the price scenarion
 
 	di "Retrieving weighting parameter..."
 	get_weighting_parameter , unit("`unit'") price_scen("`price_scen'") product("`product'")
 	local weighting "`s(w)'"
 	return clear
+
+
+	// aggregated or levels-unit depends on the price scenarion
+	di "Retrieving units..."
+	get_aggregated_unit , unit("`unit'")
+	local aggregated_unit "`s(au)'"
+	return clear
+
+	get_levels_unit , unit("`unit'")
+	local levels_unit "`s(lu)'"
+	return clear
+
 
 	if (strpos("`unit'", "damage") > 0) {
 
@@ -460,14 +510,17 @@ syntax ,  product(string)  proj_type(string) proj_model(string) unit(string) [ p
 	
 	**Model config files**
 	if "`proj_type'"=="median" {
-		file write yml "outputdir: outputs/energy_pixel_interaction/`impact_folder'/`median_folder'`proj_mode'" _n
+		file write yml "outputdir: `proj_output'/`median_folder'`proj_mode'" _n
 		file write yml "`weighting'" _n 
 	}
 	else if "`proj_type'"=="diagnostics" {
-		file write yml "outputdir: outputs/energy_pixel_interaction/`impact_folder'" _n
+		file write yml "outputdir: `proj_output'" _n
 		file write yml "`weighting'" _n
 		file write yml "targetdir: `proj_output'/`single_folder'`proj_mode'/`rcp'/CCSM4/high/SSP3" _n
 	}
+
+	file write yml "`levels_unit'" _n
+	file write yml "`aggregated_unit'" _n
 
 	if strpos("`unit'", "damage") > 0 {
 		file write yml "`aggregate_weighting_numerator'" _n

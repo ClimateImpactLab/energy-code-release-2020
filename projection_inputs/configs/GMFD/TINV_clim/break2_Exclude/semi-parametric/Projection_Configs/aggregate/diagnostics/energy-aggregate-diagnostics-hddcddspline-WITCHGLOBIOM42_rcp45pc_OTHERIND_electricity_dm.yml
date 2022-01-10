@@ -1,6 +1,8 @@
-outputdir: outputs/energy_pixel_interaction/impacts-blueghost
+outputdir: /Users/ruixueli/Downloads/energy_data_release/OUTPUT/projection_system_outputs/raw_projection_output/impacts-blueghost
 levels-weighting: population * social/baselines/energy/WITCHGLOBIOM42_rcp45_Prices_COMPILE.dta:country:year:electricitycompile_price
-targetdir: //Users/ruixueli/Downloads/energy_data_release/OUTPUT/projection_system_outputs/raw_projection_output/impacts-blueghost/single-OTHERIND_electricity_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_GMFD_dm/rcp45/CCSM4/high/SSP3
+targetdir: /Users/ruixueli/Downloads/energy_data_release/OUTPUT/projection_system_outputs/raw_projection_output/impacts-blueghost/single-OTHERIND_electricity_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_GMFD_dm/rcp45/CCSM4/high/SSP3
+levels-unit: GJ
+aggregated-unit: GJ
 aggregate-weighting-numerator: population * social/baselines/energy/WITCHGLOBIOM42_rcp45_Prices_COMPILE.dta:country:year:electricitycompile_price
 aggregate-weighting-denominator: population
 infix: WITCHGLOBIOM42_rcp45pc

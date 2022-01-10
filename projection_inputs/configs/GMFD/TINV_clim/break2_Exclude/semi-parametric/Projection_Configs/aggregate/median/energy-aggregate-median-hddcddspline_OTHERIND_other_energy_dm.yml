@@ -1,3 +1,5 @@
-outputdir: outputs/energy_pixel_interaction/impacts-blueghost/median_OTHERIND_other_energy_TINV_clim_GMFD_dm
+outputdir: /Users/ruixueli/Downloads/energy_data_release/OUTPUT/projection_system_outputs/raw_projection_output/impacts-blueghost/median_OTHERIND_other_energy_TINV_clim_GMFD_dm
 weighting: population
+levels-unit: GJ
+aggregated-unit: GJ
 only-farmers: ['', 'histclim']

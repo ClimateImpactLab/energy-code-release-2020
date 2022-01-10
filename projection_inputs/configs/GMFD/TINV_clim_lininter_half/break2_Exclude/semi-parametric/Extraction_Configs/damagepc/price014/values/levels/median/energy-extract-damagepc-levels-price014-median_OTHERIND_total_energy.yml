@@ -1,7 +1,7 @@
 results-root:
-  FD_FGLS_inter_OTHERIND_other_energy_TINV_clim_lininter_half.*: //Users/ruixueli/Downloads/energy_data_release/OUTPUT/projection_system_outputs/raw_projection_output/impacts-blueghost/median_OTHERIND_other_energy_TINV_clim_lininter_half_GMFD
-  FD_FGLS_inter_OTHERIND_electricity_TINV_clim_lininter_half.*: //Users/ruixueli/Downloads/energy_data_release/OUTPUT/projection_system_outputs/raw_projection_output/impacts-blueghost/median_OTHERIND_electricity_TINV_clim_lininter_half_GMFD
-output-dir: //Users/ruixueli/Downloads/energy_data_release/OUTPUT/extracted_projection_data/TINV_clim_lininter_half_GMFD/total_energy/price014pc
+  FD_FGLS_inter_OTHERIND_other_energy_TINV_clim_lininter_half.*: /Users/ruixueli/Downloads/energy_data_release/OUTPUT/projection_system_outputs/raw_projection_output/impacts-blueghost/median_OTHERIND_other_energy_TINV_clim_lininter_half_GMFD
+  FD_FGLS_inter_OTHERIND_electricity_TINV_clim_lininter_half.*: /Users/ruixueli/Downloads/energy_data_release/OUTPUT/projection_system_outputs/raw_projection_output/impacts-blueghost/median_OTHERIND_electricity_TINV_clim_lininter_half_GMFD
+output-dir: /Users/ruixueli/Downloads/energy_data_release/OUTPUT/extracted_projection_data/TINV_clim_lininter_half_GMFD/total_energy/price014pc
 file-organize: [ssp, region]
 do-montecarlo: no
 only-models: all

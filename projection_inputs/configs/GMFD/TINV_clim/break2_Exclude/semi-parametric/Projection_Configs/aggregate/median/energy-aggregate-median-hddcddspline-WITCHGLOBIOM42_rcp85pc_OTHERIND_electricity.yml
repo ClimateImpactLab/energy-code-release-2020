@@ -1,5 +1,7 @@
-outputdir: outputs/energy_pixel_interaction/impacts-blueghost/median_OTHERIND_electricity_TINV_clim_GMFD
+outputdir: /Users/ruixueli/Downloads/energy_data_release/OUTPUT/projection_system_outputs/raw_projection_output/impacts-blueghost/median_OTHERIND_electricity_TINV_clim_GMFD
 levels-weighting: population * social/baselines/energy/WITCHGLOBIOM42_rcp85_Prices_COMPILE.dta:country:year:electricitycompile_price
+levels-unit: GJ
+aggregated-unit: GJ
 aggregate-weighting-numerator: population * social/baselines/energy/WITCHGLOBIOM42_rcp85_Prices_COMPILE.dta:country:year:electricitycompile_price
 aggregate-weighting-denominator: population
 infix: WITCHGLOBIOM42_rcp85pc

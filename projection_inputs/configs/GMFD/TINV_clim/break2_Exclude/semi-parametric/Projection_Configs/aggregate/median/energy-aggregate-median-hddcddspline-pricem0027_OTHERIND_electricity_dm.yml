@@ -1,5 +1,7 @@
-outputdir: outputs/energy_pixel_interaction/impacts-blueghost/median_OTHERIND_electricity_TINV_clim_GMFD_dm
+outputdir: /Users/ruixueli/Downloads/energy_data_release/OUTPUT/projection_system_outputs/raw_projection_output/impacts-blueghost/median_OTHERIND_electricity_TINV_clim_GMFD_dm
 levels-weighting: population * social/baselines/energy/IEA_Price_FIN_Clean_grm0027_GLOBAL_COMPILE.dta:country:year:electricitycompile_price
+levels-unit: dollar
+aggregated-unit: dollar
 aggregate-weighting-numerator: population * social/baselines/energy/IEA_Price_FIN_Clean_grm0027_GLOBAL_COMPILE.dta:country:year:electricitycompile_price
 aggregate-weighting-denominator: sum-to-1
 infix: pricem0027
