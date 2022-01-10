@@ -13,6 +13,8 @@ More details of each sections inputs and outputs can be found in each of these s
 ## Run instructions: 
 * Codes in `0_utils` are not run directly, rather they are sourced by codes in the other folders. 
 * For run instructions on the other codes in the other folders, see the readmes in those folders. 
+* Or, to run all code in this folder, run `3_post_projection.sh`.
+
 
 ## Naming conventions
 - Three sets of empirical estimates were taken through the process of running projections, calculating damage functions, and calculating an SCC. These are: 
@@ -25,7 +27,7 @@ More details of each sections inputs and outputs can be found in each of these s
 
 ## Guide to data used in this process
 
-Data used in code housed in `/3_post_projection/` are stored in an external location (currently `/{synology}/CIL_energy/code_release_data_pixel_interaction/projection_system_outputs`). This is intermediate data, that was produced and extracted using the projection system.
+Data used in code housed in `/3_post_projection/` are stored in `<yourDATA>/OUTPUT`. This is intermediate data, that was produced and extracted using the projection system.
 
 The data in this location include: 
 - ***Time series data***, 

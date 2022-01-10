@@ -109,7 +109,7 @@ syntax , proj_model(string)
 	local impact_folder `s(ifol)'
 	return clear
 	
-	local proj_output = "`impact_folder'"
+	local proj_output = "${OUTPUT}/projection_system_outputs/raw_projection_output/`impact_folder'"
 
 	sreturn local po "`proj_output'"
 end

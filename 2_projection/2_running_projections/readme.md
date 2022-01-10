@@ -1,5 +1,3 @@
-# Note to ashwin and rae - change out the configs here to whatever are used in the final version. 
-
 # Overview
 
 - In this folder, we briefly describe how we run projections. 
@@ -9,13 +7,15 @@
 # Prerequisites
 - In order to run and process projections, you will need to have access to four additional git repos; `impact-calculations`, `open-estimate`, `impact-common`, and `prospectus-tools`. Please see documentationn in those repos for instructions for loading and using those codes. 
 - To run projections, you will also need access to two conda environments: 
-  - `risingverse`: a python 3 conda environment used for running and aggregating projections (where aggregation refers to conversion of impacts into units of dollars rather than energy consumption per capita, for a range of pricing scenarios, and aggregating across space to get global time series of impacts). See [here](https://github.com/ClimateImpactLab/risingverse) for install instructions
-  - `risingverse-py27`: a python 2 conda environment used for extracting projection system outputs. See [here](https://github.com/ClimateImpactLab/risingverse-py27) for install instructions. 
+  - `energy_env_py3`: a python 3 conda environment used for running and aggregating projections (where aggregation refers to conversion of impacts into units of dollars rather than energy consumption per capita, for a range of pricing scenarios, and aggregating across space to get global time series of impacts). 
+  - `energy_env_py2`: a python 2 conda environment used for extracting projection system outputs. 
     - By "extraction", we mean converting our climate model specific projection `.ncdf` outputs into `.csv` files containing means and quantiles of the impacts across these climate model specific projections. 
 - You will also need access to the climate and socioeconomic data used by the projection system. 
 - Finally, you will need to have used the config writer `2_projection/1_prepare_projection_files/2_generate_projection_configs.do`, and made sure that the configs produced reflect the set up on your server. 
 
 # Run instructions
+
+Note: The following section describes how we run all the projections used in the paper. However, since we haven't released the full input data for all the projections, we will provide an example projection and example aggregation that you can run by `./2_running_projections.sh`.
 
 ## Running a projection
 To run a projection (after following set up instructions in the `impact-calculations` repo) run this bash command from within the `impact-calculations` repo: 
@@ -27,7 +27,7 @@ This will then begin running a projection for the specification determined by th
 For example, to run a projection for SSP3, for a point estimate for our main econometric specification, with 40 processes running in parallel at the same time, the command to run would be (if you are running it on the CIL "sacagawea" server: 
 
 ```
-./generate.sh {your path}/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_electricity.yml  40
+./generate.sh <yourREPO>/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_electricity.yml  40
 ```
 
 ## Running the projections presented in the paper
@@ -43,22 +43,22 @@ To run these projecitons, run:
 
 ```
 # SSP3 point estimates
-./generate.sh {your path}/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_other_energy.yml  30
-./generate.sh {your path}/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_electricity.yml  30
+./generate.sh <yourREPO>/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_other_energy.yml  30
+./generate.sh <yourREPO>/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_electricity.yml  30
 
 # SSP3 uncertainty projections 
-./generate.sh {your path}/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_other_energy_dm.yml  30
-./generate.sh {your path}/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_electricity_dm.yml  30
+./generate.sh <yourREPO>/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_other_energy_dm.yml  30
+./generate.sh <yourREPO>/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_electricity_dm.yml  30
 ```
 Then, update the config writer such that it replaces the configs with the SSP2 configs, (or equivalently just manually edit the configs to change the `only-ssp` argument to `SSP2` and run: 
 ```
-./generate.sh {your path}/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_other_energy.yml  30
-./generate.sh {your path}/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_electricity.yml  30
+./generate.sh <yourREPO>/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_other_energy.yml  30
+./generate.sh <yourREPO>/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_electricity.yml  30
 ```
 The update the configs so they are ready to run SSP4, and once again run:
 ```
-./generate.sh {your path}/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_other_energy.yml  30
-./generate.sh {your path}/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_electricity.yml  30
+./generate.sh <yourREPO>/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_other_energy.yml  30
+./generate.sh <yourREPO>/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_electricity.yml  30
 ```
 
 
@@ -69,16 +69,16 @@ In the paper, we include projection results for:
 Command needed to run this projection: 
 
 ```
-./generate.sh {your path}/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim_lininter/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_other_energy.yml  30
-./generate.sh {your path}/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim_lininter/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_electricity.yml  30
+./generate.sh <yourREPO>/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim_lininter/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_other_energy.yml  30
+./generate.sh <yourREPO>/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim_lininter/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_electricity.yml  30
 ```
 
 ### Econometric specification with linear time trend, deterministically doubled (`lininter_double`) (Appendix Section I.3)
 In the paper, we include projection results for: 
   - SSP3 point estimate 
 ```
-./generate.sh {your path}/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim_lininter_double/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_other_energy.yml  30
-./generate.sh {your path}/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim_lininter_double/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_electricity.yml  30
+./generate.sh <yourREPO>/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim_lininter_double/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_other_energy.yml  30
+./generate.sh <yourREPO>/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim_lininter_double/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_electricity.yml  30
 ```
 
 
@@ -86,8 +86,8 @@ In the paper, we include projection results for:
 In the paper, we include projection results for: 
   - SSP3 point estimate 
 ```
-./generate.sh {your path}/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim_lininter_half/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_other_energy.yml  30
-./generate.sh {your path}/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim_lininter_half/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_electricity.yml  30
+./generate.sh <yourREPO>/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim_lininter_half/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_other_energy.yml  30
+./generate.sh <yourREPO>/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim_lininter_half/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/median/energy-median-hddcddspline_OTHERIND_electricity.yml  30
 ```
 
 
@@ -99,8 +99,8 @@ Please note - the config files for this model were generated by hand, rather tha
 
 The command used to run this projection is: 
 ```
-./generate.sh {your path}/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/diagnostics/energy-diagnostics-hddcddspline_OTHERIND_other_energy_slow_adapt.yml 
-./generate.sh {your path}/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/diagnostics/energy-diagnostics-hddcddspline_OTHERIND_electricity_slow_adapt.yml 
+./generate.sh <yourREPO>/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/diagnostics/energy-diagnostics-hddcddspline_OTHERIND_other_energy_slow_adapt.yml 
+./generate.sh <yourREPO>/energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim/break2_Exclude/semi-parametric/Projection_Configs/sacagawea/run/diagnostics/energy-diagnostics-hddcddspline_OTHERIND_electricity_slow_adapt.yml 
 ```
 
 ### Note for Ashwin and Rae: these configs are `diagnostic` configs, meaning that they will only run for a single climate model and set of RCP-SSP-IAM scenarios. By default, this will be RCP8.5, for our high IAM and SSP3. In the paper (Figure I.1), we also present results from this model for RCP4.5. To run this projection, we have to change a hard coded value in [this script](https://gitlab.com/ClimateImpactLab/Impacts/impact-calculations/-/blob/master/generate/loadmodels.py) and then re-run the above commands, (`single_clim_scenario ` = 'rcp45'). Hopefully when we are ready to release impact-calculations, this is a bit more streamlined or at least documented in James' repo.

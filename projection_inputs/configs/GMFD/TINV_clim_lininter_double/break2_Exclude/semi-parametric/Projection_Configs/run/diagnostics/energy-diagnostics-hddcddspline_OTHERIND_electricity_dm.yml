@@ -1,6 +1,6 @@
 module: /Users/ruixueli/Downloads/repos//energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim_lininter_double/break2_Exclude/semi-parametric/Projection_Configs/model/hddcddspline_OTHERIND_electricity.yml
 mode: writecalcs
-outputdir: impacts-blueghost
+outputdir: //Users/ruixueli/Downloads/energy_data_release/OUTPUT/projection_system_outputs/raw_projection_output/impacts-blueghost
 singledir: single-OTHERIND_electricity_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_lininter_double_GMFD_dm
 do_farmers: true
 do_historical: true

@@ -3,6 +3,10 @@
 ## Overview 
 - Codes in this repo reproduce figures in the paper that are visualisations of projected impacts, in order to show their distribution across space and time. 
 
+## Run instruction
+Use `./1_visualise_impacts.sh` to run all scripts in this directory, or refer to it for commands to run each script.
+
+
 ## Code specific notes
 
 ### `bar_chart_fig_2B/`

@@ -1,6 +1,6 @@
 module: /Users/ruixueli/Downloads/repos//energy-code-release-2020/projection_inputs/configs/GMFD/TINV_clim_lininter_half/break2_Exclude/semi-parametric/Projection_Configs/model/hddcddspline_OTHERIND_other_energy.yml
 mode: median
-outputdir: impacts-blueghost/median_OTHERIND_other_energy_TINV_clim_lininter_half_GMFD_dm
+outputdir: //Users/ruixueli/Downloads/energy_data_release/OUTPUT/projection_system_outputs/raw_projection_output/impacts-blueghost/median_OTHERIND_other_energy_TINV_clim_lininter_half_GMFD_dm
 do_farmers: true
 do_historical: true
 deltamethod: yes

@@ -1,5 +1,7 @@
 #!/bin/bash
 
+mkdir ${LOG}/3_post_projection/2_damage_function_estimation/
+
 Rscript 1_take_draws.R
 stata-se -b do 2_plot_damage_function_fig_3.do
 stata-se -b do 3_run_damage_functions.do 

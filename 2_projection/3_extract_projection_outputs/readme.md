@@ -5,17 +5,18 @@
 # Overview
 - Scripts in this repo extract projection system outputs, and save them as `.csv` files that are used in later analysis (i.e. in data visualisation, estimating damage functions, and calculating an SCC.)
 - These codes also move data from our servers into the code release data storage location.
-- Note: to run `0_save_covariate_data.R` you need to be in the [`risingverse`](https://github.com/ClimateImpactLab/risingverse) python 3 conda environment, whilst to run the other two codes in this directory, you need to be in the [risinsgverse-py27](https://github.com/ClimateImpactLab/risingverse-py27) conda environment. See those links for install instructions. 
-- Codes in this repo depend on the projection system repos, including `prospectus-tools`, `impact-common` and `impactlab_tools`. Make sure you have all of these downloaded, and in the same directory as this `energy-code-release-2020` repo.
+- Note: to run `0_save_covariate_data.R` you need to be in the `energy_env_py3` python 3 conda environment, whilst to run the other two codes in this directory, you need to be in the `energy_env_py3` conda environment. See those links for install instructions. 
+- Codes in this repo depend on the projection system repos, including `prospectus-tools`, `impact-common`. Make sure you have all of these downloaded, and in the same directory as this `energy-code-release-2020` repo.
 - These codes are only relevant to you if you have run your own version of the projection. Otherwise, they are provided just for reference.
 
 # Code contents and run instructions
 
+Please note that running `1_prepare_visualisation_data.R` and `2_prepare_damage_function_data.R` requires accessing all our raw projection data, which we do not provide. Therefore, currently they cannot be run.
+
 ## `0_save_covariate_data.R`
-- This code saves covariate data from our projection system onto the code release storage location (currently `/{synology}/CIL_energy/code_release_data_pixel_interaction/`).
+- This code saves covariate data from our projection system onto the code release storage location.
   - The covariates that we extract and save include information on GDP and population projections taken from the SSPs. We also extract some projected climate data that is used to plot Figure C.3 in the appendix.  
-- It also moves some data from our servers that is used for plotting aesthetics. 
-- To run this code - make sure you are in the [`risingverse`](https://github.com/ClimateImpactLab/risingverse) python 3 conda environment. Also make sure that you have downloaded all projection system repos and followed their install intructions.
+- To run this code - make sure you are in the `energy_env_py3` python 3 conda environment. Also make sure that you have downloaded all projection system repos and followed their install intructions.
 - Note: this code sources `energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/future_gdp_pop_data.py`
 
 - ***Code inputs***:
@@ -26,7 +27,7 @@
 
 ## `1_prepare_visualisation_data.R`
 - This code extracts all projection system outputs that are needed for projection related plots and data visualisations.
-- Note, to run this code you need to be in the [risinsgverse-py27](https://github.com/ClimateImpactLab/risingverse-py27) conda environment.
+- Note, to run this code you need to be in the `energy_env_py2` conda environment.
 - This code relies on the extraction configs that were created using `1_prepare_projection_files/2_generate_projection_configs.do`.
   - In order to run these codes in a location other than the Climate Impact Lab servers, you will need to update the paths fed into the `write_extraction_config()` function in that config writer to reflect the location of your projection system outputs. 
 - ***Code inputs***
@@ -37,7 +38,7 @@
 
 ## `2_prepare_damage_function_data.R`
 - This code extracts projection system outputs needed to run damage functions and calculate an SCC.
-- Note, to run this code you need to be in the [risinsgverse-py27](https://github.com/ClimateImpactLab/risingverse-py27) conda environment.
+- Note, to run this code you need to be in the `energy_env_py2` conda environment.
 - This code relies on the extraction configs that were created using `1_prepare_projection_files/2_generate_projection_configs.do`.
   - In order to run these codes in a location other than the Climate Impact Lab servers, you will need to update the paths fed into the `write_extraction_config()` function in that config writer to reflect the location of your projection system outputs. 
 - ***Code inputs***

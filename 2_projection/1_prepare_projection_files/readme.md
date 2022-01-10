@@ -28,7 +28,6 @@ Please see documentation in the `impacts-calculation` projection system repo for
 - It uses programs from `2_projection/0_packages_programs_inputs/csvv_generation_stacked.do`.
 
 #### Run instructions
-- Change the macro "root" to the location of the code release repo on your machine.
 - Note - the program in this code has more functionality than is needed to create the specific csvv files that were used. The options that are not needed are hard coded into the functions arguments in this version of the code for code-release. 
 
 #### Code inputs 
@@ -53,10 +52,8 @@ Please see documentation in the `impacts-calculation` projection system repo for
 - ***Please also note that the configs are set up to point to code and data that is saved on our CIL servers. To run this on an external server, you will need to edit this code to make it point to paths and data on your server.***
 
 #### Run instructions 
-- Change the macro `root` at the top of the code to point to the location of the code release repo on your machine. 
-- Also, change the macro `user` to your username on your server. 
 - Choose the SSP you want to generate configs for by editing the local `ssp_list`. The projection writer is set up to run "SSP3" as the default. 
-- Note - the code assumes that your projection repos, and this repo, are located on our CIL servers at `/home/{uname}/repos/` or on BRC at `/global/scratch/{uname}/repos/`. If this isn't the case, you will need to edit `/2_projection/0_packages_programs_inputs/projection_set_up/write_projection_file.do`.
+- Run `./1_prepare_projection_files.sh`
 
 #### Code inputs
 - `csvv` file name and location

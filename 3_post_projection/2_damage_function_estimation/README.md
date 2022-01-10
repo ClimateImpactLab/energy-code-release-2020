@@ -4,6 +4,10 @@
 - Codes in this folder estimate and plot damage functions from our projection system outputs. 
 - The purpose of the codes in this folder is to convert our impacts projections into empirical damage functions, and to estimate quantile regressions that will allow us to calculate uncertainty ranges for the partial SCC.
 
+### Run instruction
+Use `./2_damage_function_estimation.sh` to run all scripts in this directory, or refer to it for commands to run each script.
+
+
 ### Guide to data used in this process
 - The input data to damage function estimation is housed in an external directory, under `<yourDATA>/OUTPUT/projection_system_outputs/damage_function_estimation/`. 
 - Raw projection system outputs are contained in `<yourDATA>/OUTPUT/projection_system_outputs/damage_function_estimation/impact_values/`

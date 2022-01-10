@@ -1,9 +1,5 @@
 # Prepare code release covariates data
-# Note - this code should be run from the risingverse (python 3)
-
-# This code moves some of our projection results from our usual location on our servers 
-# and Dropbox/Synology to the code release data storage 
-# TO-DO: tidy up "/Users/ruixueli/Downloads/energy_data_release/OUTPUT/projection_system_outputs/single_projection/"
+# Note - this code should be run from the energy_env_py3 repo
 
 
 rm(list = ls())
@@ -15,21 +11,22 @@ library(tidyr)
 library(imputeTS)
 library(logr)
 LOG <- Sys.getenv(c("LOG"))
-log_open(file.path(LOG, "2_projection/3_extract_projection_outputs/0_save_covariate_data.log"), logdir = FALSE)
+log_path = file.path(LOG, "2_projection/3_extract_projection_outputs")
+dir.create(log_path, recursive = TRUE)
+log_open(file.path(log_path,"0_save_covariate_data.log"), logdir = FALSE)
 
 # Sys.setenv(LANG = "en")
 
 REPO <- Sys.getenv(c("REPO"))
 DATA <- Sys.getenv(c("DATA"))
 OUTPUT <- Sys.getenv(c("OUTPUT"))
-# REPO <- "/home/liruixue/repos"
 setwd(paste0(REPO,"/energy-code-release-2020/"))
 
 
 # Source a python code that lets us load SSP data directly from the SSPs
 # Make sure you are in the risingverse conda environment for this... 
 projection.packages <- paste0(REPO,"/energy-code-release-2020/2_projection/0_packages_programs_inputs/extract_projection_outputs/")
-use_condaenv("impact-env", required = TRUE)
+use_condaenv("energy_env_py3", required = TRUE)
 reticulate::source_python(paste0(projection.packages, "future_gdp_pop_data.py"))
 ###########################################
 # 1 Data for plotting city response functions for figure 2A
@@ -49,7 +46,7 @@ city_list = read_csv(paste0(DATA,
 # TO-DO: make sure that the singles are generated into the corresponding directories
 # Covariates are from a single run allcalcs file
 cov_electricity_single= read_csv(paste0(OUTPUT,
-	"/projection_system_outputs/single_projection/",
+	"/projection_system_outputs/raw_projection_output/impacts-blueghost/",
 	"/single-OTHERIND_electricity_FD_FGLS_719_Exclude_all-issues_break2_semi-parametric_TINV_clim_GMFD/",
 	"/rcp85/CCSM4/high/SSP3/hddcddspline_OTHERIND_electricity-allcalcs-FD_FGLS_inter_OTHERIND_electricity_TINV_clim.csv"),
   skip = 114) %>% 

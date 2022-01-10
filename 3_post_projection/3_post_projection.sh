@@ -13,6 +13,5 @@ cd 2_damage_function_estimation
 ./2_damage_function_estimation.sh
 cd ..
 
-# echo "STEP 2 - Calculate the SCCs"
-# mkdir ${LOG}/3_post_projections/
-# TO-DO: this part is being updated
+echo "STEP 3 - Calculate the SCCs"
+echo "Please follow instructions in the README in 3_SCC folder to run this step."

@@ -19,7 +19,7 @@ git clone https://github.com/ClimateImpactLab/energy-code-release-2020.git
 2. Install the `conda` environment included in this repo by running the following commands under the root of this repo:
 
 ```
-cd <yourREPO>/energy-code-releaser-2020
+cd <yourREPO>/energy-code-release-2020
 conda env create -f energy_env_py3.yaml
 ```
 
@@ -36,7 +36,7 @@ conda install -c conda-forge jupyterlab
  
 ```
 
-3. Clone `impact-calculations`, `open-estimate` and `impact-common` into `yourREPO` and install using the following commands
+3. (You can skip this step if you do not want to run the impact projections on your own. This does not affect your ability of running other scripts, like regression or plotting code.) Clone `impact-calculations`, `open-estimate` and `impact-common` into `yourREPO` and install using the following commands:
 
 ```
 cd <yourREPO>
@@ -59,13 +59,13 @@ cd ..
 
 4. Install the R packages needed using the following command from the root of this repo: 
 ```
-cd <yourREPO>/energy-code-releaser-2020
+cd <yourREPO>/energy-code-release-2020
 Rscript install_R_packages.R
 ```
 
-5. Download data from `https://doi.org/10.5281/zenodo.5099834` and unzip it somewhere. Let's call this place `yourDATA`. 
+5. Download data from `https://doi.org/10.5281/zenodo.5099834` and unzip it somewhere on your machine with 50GB+ space. Let's call this location `yourDATA`. 
 
-6. Set up a few environmental variables.
+6. Set up a few environmental variables so that all the code runs smoothly.
 
 On Mac, you can do this by appending the following lines to your `~/.bash_profile`.
 
@@ -89,7 +89,7 @@ Then, run `source ~/.bash_profile` to load the changes we just made.
 
 On Windows: TO-DO
 
-7. This repo is tested with Stata/SE, and currently using the `stata-se` command to run stata scripts. If you're using the SE or MP versions of stata, please mass replace all occurences of `stata -b` in this repo with `stata-mp -b` or `stata -b` according to the version of your stata. If you're prompted `command not found` when trying to run `stata` commands from the console, install `stata(console)` for your machine according to stata official documentation that is available online. 
+7. This repo is tested with Stata/SE, and currently using the `stata-se` command to run stata scripts. If you're using other versionsof stata, please mass replace all occurences of `stata-se -b` in this repo with `stata-mp -b` or `stata -b` according to the version of your stata. If you're prompted `command not found` when trying to run `stata` commands from the console, install `stata(console)` for your machine according to stata official documentation that is available online. 
 
 8. Setup for the whole repo is done, thanks for your patience! Now please follow the `README`s in each subdirectory to run each part of the analysis. 
 
@@ -115,7 +115,12 @@ This master readme outlines the process for each step, and each analysis step ha
 `1_analysis` - Code for estimating and plotting all econometric models present in the paper
 
 `2_projection` - Code for projection the impact of climate change to 2300
-`3_post_projection` - Code for producing figures and numbers for the paper
+
+`3_post_projection` - Code for producing figures for the paper
+
+`4_misc` - Code for producing additional figures and numbers for the paper
+
+`projection_inputs` - Files needed to run projections
 
 <!-- 
 `data` - Repository for storing data related to the `1_analysis` part of our paper. 
@@ -181,11 +186,11 @@ variables for use in later econometric analysis.
 
 ### Outputs of Step 1 
 
-* Step 1 produces datasets ready to run regressions on, and datasets used in later plotting analysis. These can be found in [/data](https://github.com/ClimateImpactLab/energy-code-release-2020/tree/master/data). Specifically,
-    * Part 1.D produces `/data/IEA_Merged_long_GMFD.do` -- an intermediate dataset used to construct the final analysis dataset
+* Step 1 produces datasets ready to run regressions on, and datasets used in later plotting analysis. These can be found in `yourDATA`. Specifically,
+    * Part 1.D produces `<yourDATA>/regression/IEA_Merged_long_GMFD.do` -- an intermediate dataset used to construct the final analysis dataset
     * Part 1.E produces: 
-        * `/data/GMFD_*_regsort.data` -- the analysis dataset used in `Step 2`
-        * `/data/break_data_*.dta` -- a dataset used for plotting 3 x 3 arrays
+        * `<yourDATA>/regression/GMFD_*_regsort.data` -- the analysis dataset used in `Step 2`
+        * `<yourDATA>/regression/break_data_*.dta` -- a dataset used for plotting 3 x 3 arrays
 * Within Step 1, we produce two figures that are used in the paper:
     * ***Figure Appendix A.1***: `fig_Appendix-A1_ITA_other_fuels_time_series_regimes.pdf`
         * This figure is used to visualise the persistent shocks present in energy consumption. 
@@ -227,15 +232,8 @@ We run three kinds of regressions in this section:
 In this stage of our analysis, we take the coefficients identified in Step 2, 
 and use them to project future impacts on energy consumption due to climate change. 
 
-Running code for in this step is highly computationally intensive. Therefore, we are including the inputs from our analysis that would allow a user to run this step, but we are also providing the outputs of this step that are required for further analysis as stand-alone `.csv` files, should a user wish to run code in steps 4 and 5 without running step 3. 
+Running code for in this step is highly computationally intensive. Therefore, we are including the inputs from our analysis that would allow a user to run this step and code to run an example projection for one climate and socileconomic scenario, but we are also providing the outputs of this step that are required for further analysis as stand-alone `.csv` files.
 
-When complete, we plan to contain in this repo: 
-- Code for converting the regression coefficient estimates from step 2 into a format that our projection system can use.  
-- Code for writing configuration files for running the projection system. 
-- Links to the projection system (external) git repo, and some intructions for how to operate the projection system.
-- Code for converting projection system outputs into the data required for steps 4 and 5. 
-
-Code for this step is not currently in this repo.
 
 ## Step 4 - Estimate Empirical Damage Function
 

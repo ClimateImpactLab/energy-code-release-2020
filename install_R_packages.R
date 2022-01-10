@@ -14,8 +14,6 @@ list.of.packages <- c("readr","tidyverse", "haven","Rcpp", "imputeTS",
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages, repos="http://cran.us.r-project.org")
 
-
-
 install.packages("maptools")
 library(maptools)
 # if the above two lines fail for you:
@@ -23,9 +21,7 @@ library(maptools)
 # and then run the following line:
 # install.packages('rgdal', type = "source", configure.args=c('--with-proj-include=/Library/Frameworks/PROJ.framework/Headers', '--with-proj-lib=/Library/Frameworks/PROJ.framework/unix/lib'))
 
-
-
-# If you encounter R issues, it might be worth trying out updating R:
+# If you encounter other R issues, it might be worth trying out updating R:
 # # on windows: 
 # if(!require(installr)) {
 #   install.packages("installr"); 

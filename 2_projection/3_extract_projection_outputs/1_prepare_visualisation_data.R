@@ -15,11 +15,9 @@ library(logr)
 LOG <- Sys.getenv(c("LOG"))
 log_open(file.path(LOG, "2_projection/3_extract_projection_outputs/1_prepare_visualisation_data.log"), logdir = FALSE)
 
-
 REPO <- Sys.getenv(c("REPO"))
 DATA <- Sys.getenv(c("DATA"))
 OUTPUT <- Sys.getenv(c("OUTPUT"))
-
 
 dir = paste0(OUTPUT, '/projection_system_outputs/extracted_projection_data/',
 				'multi-models/rationalized_code/break2_Exclude_all-issues_semi-parametric/')

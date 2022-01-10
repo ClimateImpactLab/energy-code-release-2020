@@ -1,4 +1,4 @@
-results-root: impacts-blueghost/median_OTHERIND_electricity_TINV_clim_lininter_half_GMFD
+results-root: //Users/ruixueli/Downloads/energy_data_release/OUTPUT/projection_system_outputs/raw_projection_output/impacts-blueghost/median_OTHERIND_electricity_TINV_clim_lininter_half_GMFD
 output-dir: //Users/ruixueli/Downloads/energy_data_release/OUTPUT/extracted_projection_data/TINV_clim_lininter_half_GMFD/median_OTHERIND_electricity_TINV_clim_lininter_half_GMFD/price014
 file-organize: [ssp, region]
 do-montecarlo: no

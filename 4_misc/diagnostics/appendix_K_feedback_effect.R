@@ -13,7 +13,15 @@ library(miceadds)
 library(haven)
 library(ncdf4)
 library(tidyr)
-cilpath.r:::cilpath()
+
+library(logr)
+LOG <- Sys.getenv(c("LOG"))
+log_open(file.path(LOG, "3_post_projection/3_SCC/p_values_for_text.log"), logdir = FALSE)
+
+REPO <- Sys.getenv(c("REPO"))
+DATA <- Sys.getenv(c("DATA"))
+OUTPUT <- Sys.getenv(c("OUTPUT"))
+
 
 
 db = '/mnt/CIL_energy/'

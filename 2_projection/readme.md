@@ -6,7 +6,7 @@ We have included the outputs of this projection step as csv files in the data re
 - So instead, we've provided a limited dataset that allows you to run a single projection without uncertainties that projects future electricity usage for CCSM4 climate model, SSP3, OECD gdp growth model.
 
 # Run instructions
-To run the single projection without uncertainties for which we provide full input data for, do `./2_projection.sh`. 
+To run the single projection without uncertainties for which we provide full input data for, and aggregate that projection of impact-region level impacts to aggregated regions, do `./2_projection.sh`. 
 
 ## Overview
 
