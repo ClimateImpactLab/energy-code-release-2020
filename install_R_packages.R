@@ -3,18 +3,18 @@
 # to fix reticulate
 install.packages("devtools", repos="http://cran.us.r-project.org")
 library("devtools")
-devtools::install_github("rstudio/reticulate")
+devtools::install_github("rstudio/reticulate", repos="http://cran.us.r-project.org")
 
 list.of.packages <- c("readr","tidyverse", "haven","Rcpp", "imputeTS",
  "ggplot2", "DescTools", "mvtnorm", "magrittr", "dplyr", 
  "testit", "stringr", "readstata13", "viridis", "gridExtra", 
  "grid", "lattice", "ncdf4", "narray", "tidyr", "cowplot", 
  "data.table", "gdata", "logr", "miceadds", "R.utils","rlist",
- "pacman","ggnewscale","sp","rgdal","maptools")
+ "pacman","ggnewscale","sp","rgdal")
 new.packages <- list.of.packages[!(list.of.packages %in% installed.packages()[,"Package"])]
 if(length(new.packages)) install.packages(new.packages, repos="http://cran.us.r-project.org")
 
-install.packages("maptools")
+install.packages("maptools", repos="http://cran.us.r-project.org")
 library(maptools)
 # if the above two lines fail for you:
 # on OS X, you may need to download GDAL from http://www.kyngchaos.com/software/frameworks/
@@ -31,17 +31,4 @@ library(maptools)
 
 # on Mac: download latest installer from https://www.r-project.org/
 # the code has been tested on R 4.1.1
-
-
-
-	**Model config files**
-	if "`proj_type'"=="median" {
-		file write yml "mode: `proj_type'" _n
-		file write yml "outputdir: `proj_output'/`median_folder'`proj_mode'" _n
-	}
-	else if "`proj_type'"=="diagnostics" {
-		file write yml "mode: writecalcs" _n
-		file write yml "outputdir: `proj_output'" _n
-		file write yml "singledir: `single_folder'`proj_mode'" _n
-	}
 		

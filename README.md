@@ -28,7 +28,7 @@ Try activating the environment:
 conda activate energy_env_py3
 
 ```
-Please remember that you will need to activate this environment whenever you run python scripts in this repo.
+Please remember that you will need to activate this environment whenever you run python scripts in this repo, including the `pip install -e .` commands in the following section.
 
 Also, you need to install Jupyter for the scc calculation code
 ```
@@ -36,7 +36,7 @@ conda install -c conda-forge jupyterlab
  
 ```
 
-3. (You can skip this step if you do not want to run the impact projections on your own. This does not affect your ability of running other scripts, like regression or plotting code.) Clone `impact-calculations`, `open-estimate` and `impact-common` into `yourREPO` and install using the following commands:
+3. (You can skip this step if you do not want to run the impact projections on your own. This does not affect your ability of running other scripts, like regression or plotting code.) Clone `impact-calculations`, `open-estimate` and `impact-common` into `yourREPO` and install using the following commands (Note: You'll need to activate the `energy_env_py3` environment to install the repos): 
 
 ```
 cd <yourREPO>
