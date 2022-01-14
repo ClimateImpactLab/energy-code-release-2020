@@ -91,7 +91,7 @@ On Windows: TO-DO
 
 7. This repo is tested with Stata/SE, and currently using the `stata-se` command to run stata scripts. If you're using other versionsof stata, please mass replace all occurences of `stata-se -b` in this repo with `stata-mp -b` or `stata -b` according to the version of your stata. If you're prompted `command not found` when trying to run `stata` commands from the console, install `stata(console)` for your machine according to stata official documentation that is available online. 
 
-8. Setup for the whole repo is done, thanks for your patience! Now please follow the `README`s in each subdirectory to run each part of the analysis. 
+8. Setup for the whole repo is done, thanks for your patience! Now please follow the `README`s in each subdirectory to run each part of the analysis. In general, each directory will come with a `.sh` bash script which you can use `./path_to_bash_script.sh` to run scripts in that subdirectory. If you encounter the permission denied error, use `chmod +x path_to_bash_script.sh` to make it runnable.
 
 
 # The Social Cost of Global Energy Consumption Due to Climate Change
