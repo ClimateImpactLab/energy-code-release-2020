@@ -87,9 +87,12 @@ export LOG=<yourDATA>/LOG
 Save and exit. 
 Then, run `source ~/.bash_profile` to load the changes we just made.
 
-On Windows: TO-DO
+(TO-DO) On Windows, please search how to add environmental variables on your own for now. 
 
 7. This repo is tested with Stata/SE, and currently using the `stata-se` command to run stata scripts. If you're using other versionsof stata, please mass replace all occurences of `stata-se -b` in this repo with `stata-mp -b` or `stata -b` according to the version of your stata. If you're prompted `command not found` when trying to run `stata` commands from the console, install `stata(console)` for your machine according to stata official documentation that is available online. 
+
+One source that should work is section C.4.2 of https://www.stata.com/manuals16/gsm.pdf.
+
 
 8. Setup for the whole repo is done, thanks for your patience! Now please follow the `README`s in each subdirectory to run each part of the analysis. In general, each directory will come with a `.sh` bash script which you can use `./path_to_bash_script.sh` to run scripts in that subdirectory. If you encounter the permission denied error, use `chmod +x path_to_bash_script.sh` to make it runnable.
 
@@ -153,7 +156,7 @@ In Part E, we prepare merged data for econometric analysis.
 
 #### Part 1.B - Historical Climate Data
 
-* We take Historical Climata Data on daily average temperature and precip-
+* We take Historical Climata Data on daily average temperature and precip
 itation from the Global Meteorological Forcing Dataset v1 (GMFD) dataset.
 * The raw GMFD data are at the 0.25 x 0.25 degree gridded resolution. We link climate and energy con-
 sumption data by aggregating gridded daily temperature data to the country-year level
@@ -187,9 +190,9 @@ variables for use in later econometric analysis.
 ### Outputs of Step 1 
 
 * Step 1 produces datasets ready to run regressions on, and datasets used in later plotting analysis. These can be found in `yourDATA`. Specifically,
-    * Part 1.D produces `<yourDATA>/regression/IEA_Merged_long_GMFD.do` -- an intermediate dataset used to construct the final analysis dataset
+    * Part 1.D produces `<yourDATA>/DATA/regression/IEA_Merged_long_GMFD.do` -- an intermediate dataset used to construct the final analysis dataset
     * Part 1.E produces: 
-        * `<yourDATA>/regression/GMFD_*_regsort.data` -- the analysis dataset used in `Step 2`
+        * `<yourDATA>/regression/GMFD_*_regsort.dta` -- the analysis dataset used in `Step 2`
         * `<yourDATA>/regression/break_data_*.dta` -- a dataset used for plotting 3 x 3 arrays
 * Within Step 1, we produce two figures that are used in the paper:
     * ***Figure Appendix A.1***: `fig_Appendix-A1_ITA_other_fuels_time_series_regimes.pdf`
