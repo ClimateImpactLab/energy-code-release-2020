@@ -126,3 +126,4 @@ foreach prod in "electricity" "other_energy" {
 }
 * Save as a csv for plotting in R using ggplot
 export delimited using "`DB_data'/intermediate_data/figure_2B_bar_chart_data.csv", replace
+import delimited using "`DB_data'/intermediate_data/figure_2B_bar_chart_data.csv", clear

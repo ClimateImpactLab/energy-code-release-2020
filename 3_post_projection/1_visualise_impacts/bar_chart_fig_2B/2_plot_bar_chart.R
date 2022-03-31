@@ -82,7 +82,6 @@ dfsellist = dfsel[dfsel$country %in%
 
 # Function to get a dataframe of 2099 change due to climate change percent of 2010 consumption
 get_percent_change_df = function(fuel, df, list) {
-  
   var_name = paste0("levels_", fuel)
   var_name_q5 = paste0(var_name, "_q5")
   var_name_q95 = paste0(var_name, "_q95")
