@@ -17,10 +17,10 @@ Within each directory there are at least two pieces of code:
 # Run Instructions
 To run all code in this directory, do `./1_analysis.sh`. 
 
-Note, the input datasets for codes in this analysis are generated in the [0_make_dataset](https://gitlab.com/ClimateImpactLab/Impacts/energy-code-release/tree/master/0_make_dataset) section of this repo
+Note, the input datasets for codes in this analysis are generated in the `0_make_dataset` section of this repo
 
 1. Run `1_uninteracted_regression.do` to estimate and plot the global average energy-temperature response (*Appendix* Equation C.1, C.2).
-	* ***Code Inputs***: `<yourDATA>/regression/GMFD_TINV_clim_regsort.dta` -- used for response estimation and plotting
+	* ***Code Inputs***: `<yourDATA>/DATA/regression/GMFD_TINV_clim_regsort.dta` -- used for response estimation and plotting
 	* ***Code Outputs***:
 	    * Regression output  
     		* `<yourData>/OUTPUT/sters/FD_global_TINV_clim.ster`

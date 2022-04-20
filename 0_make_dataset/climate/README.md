@@ -13,6 +13,7 @@ We account for these two types of energy consumption data features by constructi
 definitions baked into each energy consumption observation. For example:
 * We construct yearly Australian climate data with the following definition of year: July t to June t + 1.  
 * We use a shapefile for Italy which includes San Marino and the Holy See.
+
 Please reference this [readme](https://github.com/ClimateImpactLab/energy-code-release-2020/tree/master/0_make_dataset/coded_issues) 
 for more information about the IEA dataset documentation and how we incorporated it into our analysis.
 
@@ -28,8 +29,7 @@ when aggregating and compiling aggregated daily gridded climate data.
 * contribution: aggregate climate data into regions which correspond to the regions in the IEA energy consumption dataset
 
 `1_clean_climate_data.do` - the master program
-* contribution: assemble a country x year panel dataset with temporally and spatially aggregated climate data that corresponds 
-* to definitions of space and time in each energy consumption observation.
+* contribution: assemble a country x year panel dataset with temporally and spatially aggregated climate data that corresponds to definitions of space and time in each energy consumption observation.
 
 ## Definitions of the Climate Variables we use in our analysis: 
 

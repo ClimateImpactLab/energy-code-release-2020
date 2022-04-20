@@ -13,7 +13,7 @@ The configuration files that our projection system needs to run fall broadly int
         2. A `model` config. This contains information on the projection model. It tells the projection system where to find the csvv, and provides information on how the projected model is constructed. 
   - ***Aggregation***:
     - Aggregation configs are inputs to the aggregation of projection system results. Aggregation performs two functions; spatial aggregation, and unit conversion. 
-      - Spatial aggregation converts our impacts from being at the Impact Region level higher administrative units (eg country level or global level).
+      - Spatial aggregation converts our impacts from being at the Impact Region level to higher administrative units (eg country level or global level).
       - Unit conversion aggregation converts projections from being in units of energy use per capita to dollars, or to dollars per person.
   - ***Extraction***:
     - Extraction configs are used to extract results from the netcdf outputs of the projection system into user friendly `.csv` files for post-projection analysis. 
@@ -48,8 +48,6 @@ Please see documentation in the `impacts-calculation` projection system repo for
 ### `2_generate_projection_configs.do`
 - This code generates config files that are used to run projections. 
 - It uses programs from `/2_projection/0_packages_programs_inputs/projection_set_up/write_projection_file.do`. 
-- ***Please note - this code is set up to run the projections that we actually ran. Therefore it points to the CSVVs generated in from the gcp-energy repo. The names of these csvvs are slightly different! Also, they are in KWh rather than GJ. To run this using the csvv files made in this repo, you will need to edit the config writer***. 
-- ***Please also note that the configs are set up to point to code and data that is saved on our CIL servers. To run this on an external server, you will need to edit this code to make it point to paths and data on your server.***
 
 #### Run instructions 
 - Choose the SSP you want to generate configs for by editing the local `ssp_list`. The projection writer is set up to run "SSP3" as the default. 

@@ -87,7 +87,7 @@ export LOG=<yourDATA>/LOG
 Save and exit. 
 Then, run `source ~/.bash_profile` to load the changes we just made.
 
-(TO-DO) On Windows, please search how to add environmental variables on your own for now. 
+On Windows or other operation systems, please search how to add environmental variables. 
 
 7. This repo is tested with Stata/SE, and currently using the `stata-se` command to run stata scripts. If you're using other versionsof stata, please mass replace all occurences of `stata-se -b` in this repo with `stata-mp -b` or `stata -b` according to the version of your stata. If you're prompted `command not found` when trying to run `stata` commands from the console, install `stata(console)` for your machine according to stata official documentation that is available online. 
 
@@ -156,8 +156,7 @@ In Part E, we prepare merged data for econometric analysis.
 
 #### Part 1.B - Historical Climate Data
 
-* We take Historical Climata Data on daily average temperature and precip
-itation from the Global Meteorological Forcing Dataset v1 (GMFD) dataset.
+* We take Historical Climata Data on daily average temperature and precipitation from the Global Meteorological Forcing Dataset v1 (GMFD) dataset.
 * The raw GMFD data are at the 0.25 x 0.25 degree gridded resolution. We link climate and energy con-
 sumption data by aggregating gridded daily temperature data to the country-year level
 using a procedure detailed in Appendix A.2.4 that preserves nonlinearity in the energy
@@ -213,7 +212,7 @@ We run three kinds of regressions in this section:
         * ster files for both the first stage and the FGLS regression: `FD_global_TINV_clim.ster` and `FD_FGLS_global_TINV_clim.ster`, respectively  
         * ***Appendix Figure C1***: `fig_Appendix-B1_product_overlay_TINV_clim_global.pdf`
 2. Decile regressions (*Appendix* Equation C.3)
-    * These regressions are run in order to understand how the sensitivity of energy consumption to climate change modulates with incomoe levels. 
+    * These regressions are run in order to understand how the sensitivity of energy consumption to climate change modulates with income levels. 
     * Code for these regressions can be found in [1_analysis/decile_regression](https://github.com/ClimateImpactLab/energy-code-release-2020/tree/master/1_analysis/decile_regression)
     * This code outputs:
         * ster files for both the first stage and the FGLS regression: `FD_FGLS_income_decile_TINV_clim.ster` and `FD_FGLS_income_decile_TINV_clim.ster`, respectively

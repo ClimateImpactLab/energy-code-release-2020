@@ -111,10 +111,9 @@ The command used to run this projection is:
 
 ## Running an aggregation
 
-### Note for Ashwin and Rae - when running these aggregations, added something to the projection code to prevent the code from aggregating the incadapt and noadapt scenarios (this is just to save disk space). Since then, James has implemented an option to specify this in the config instead. See [this issue](https://gitlab.com/ClimateImpactLab/Impacts/impact-calculations/-/issues/31) for details. If we want to implement this option in the aggregation configs for future aggregations, just add the line `only-farmers: ['', 'histclim']` to the aggregation configs by editing the config writer.
 
 - After running projections, the next step is to aggregate them. This means converting impacts into units of dollars rather than energy consumption per capita, for a range of pricing scenarios, and aggregating across space to get global time series of impacts. 
-- To run an aggregation, you need to be in the `risingverse` conda environment, and have the projection repos set up. 
+- To run an aggregation, you need to be in the `energy_env_py3` conda environment, and have the projection repos set up. 
 
 The generic syntax for running an aggregation is to run (from inside the impact-calculations projection repo): 
 ```
@@ -123,7 +122,6 @@ The generic syntax for running an aggregation is to run (from inside the impact-
 
 Please note - running aggregation generates large data files! 
 
-To run aggregations for all permutations of scenarios in the paper, run `energy_aggregation.sh`, after editing the `uname` variable such that the `repo_root` variable points to the location of the energy code release repo on your machine.
 
 ## Extracting results
 - See the readme in `2_projection/3_extract_projection_outputs/`.
