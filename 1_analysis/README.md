@@ -68,16 +68,14 @@ Note, the input datasets for codes in this analysis are generated in the `0_make
 
 ### Non Pop-Weighted Regression - We implement this procedure in the `interacted` model and the `decile` model
 
-* In regressions that are not population weighted, we construct the FGLS weight for an observation within a regime $`i`$ as:
-$` \frac{1}{V_i} `$
-<img src="https://render.githubusercontent.com/render/math?math=\frac{1}{V_i}">
-* $` V_i `$ is the variance of the residual within regime $` i `$.
+* In regressions that are not population weighted, we construct the FGLS weight for an observation within a regime <img src="https://render.githubusercontent.com/render/math?math=i"> as: <img src="https://render.githubusercontent.com/render/math?math=\frac{1}{V_i}">
+* $` V_i `$<img src="https://render.githubusercontent.com/render/math?math="> is the variance of the residual within regime $` i `$<img src="https://render.githubusercontent.com/render/math?math=">.
 * This procedure applies to regressions in the `interacted_regression` and `decile_regression` folders in this directory. 
 
 ### Pop-Weighted Regression - We implement this procedure in the `uninteracted` model
 
 * For pop-weighted regressions, we need to account for the fact that our residuals in the first stage regression have already had weights applied to them.
-* Therefore, we construct the FGLS weight for an observation $` j `$ within a regime $`i`$ as: $` w^{i}_{j} = w_{j} \frac{1}{\omega_i} `$
-* $` w_{j} `$ is the population weight assigned to observation $` j `$ in the first stage regression. 
-* $` \omega_i `$ is sample variance of the weighted first stage residuals, within regime $` i `$. 
+* Therefore, we construct the FGLS weight for an observation <img src="https://render.githubusercontent.com/render/math?math=j"> within a regime <img src="https://render.githubusercontent.com/render/math?math=i"> as: <img src="https://render.githubusercontent.com/render/math?math=w^{i}_{j} = w_{j} \frac{1}{\omega_i}">
+* <img src="https://render.githubusercontent.com/render/math?math=w_{j}"> is the population weight assigned to observation <img src="https://render.githubusercontent.com/render/math?math=j"> in the first stage regression. 
+* <img src="https://render.githubusercontent.com/render/math?math="> is sample variance of the weighted first stage residuals, within regime <img src="https://render.githubusercontent.com/render/math?math=i">. 
 * This procedure applies to regressions in the `uninteracted_regression` folder in this directory. 
