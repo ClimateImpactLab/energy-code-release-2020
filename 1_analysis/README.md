@@ -70,6 +70,7 @@ Note, the input datasets for codes in this analysis are generated in the `0_make
 
 * In regressions that are not population weighted, we construct the FGLS weight for an observation within a regime $`i`$ as:
 $` \frac{1}{V_i} `$
+<img src="https://render.githubusercontent.com/render/math?math=\frac{1}{V_i}">
 * $` V_i `$ is the variance of the residual within regime $` i `$.
 * This procedure applies to regressions in the `interacted_regression` and `decile_regression` folders in this directory. 
 
