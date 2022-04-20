@@ -2,7 +2,7 @@
 
 #### Contents: 
 - SCC code. This code takes in damage function coefficients estimated previously, and outputs SCC values. 
-- `/functions/`: this folder contains parameters from the FAIR climate model (See Step 5 of Methods) and functions called by the SCC code.  
+- `/functions/`: this folder contains parameters from the FAIR climate model (See Step 5 of Methods in the paper) and functions called by the SCC code.  
 
 #### Run Instructions
 You can start a `jupyter` session in the browser by running `jupyter lab` and navigate to the notebooks in this directory.
