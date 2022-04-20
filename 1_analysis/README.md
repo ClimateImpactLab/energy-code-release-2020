@@ -69,7 +69,7 @@ Note, the input datasets for codes in this analysis are generated in the `0_make
 ### Non Pop-Weighted Regression - We implement this procedure in the `interacted` model and the `decile` model
 
 * In regressions that are not population weighted, we construct the FGLS weight for an observation within a regime <img src="https://render.githubusercontent.com/render/math?math=i"> as: <img src="https://render.githubusercontent.com/render/math?math=\frac{1}{V_i}">
-* <img src="https://render.githubusercontent.com/render/math?math= V_i"> is the variance of the residual within regime <img src="https://render.githubusercontent.com/render/math?math=i">.
+* <img src="https://render.githubusercontent.com/render/math?math=V_i"> is the variance of the residual within regime <img src="https://render.githubusercontent.com/render/math?math=i">.
 * This procedure applies to regressions in the `interacted_regression` and `decile_regression` folders in this directory. 
 
 ### Pop-Weighted Regression - We implement this procedure in the `uninteracted` model
