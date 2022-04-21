@@ -1,5 +1,5 @@
 #!/bin/bash
-mkdir ${LOG}/3_post_projections
+mkdir ${LOG}/3_post_projection
 
 echo "STEP 1 - Plot figures in the paper"
 mkdir ${LOG}/3_post_projection/1_visualise_impacts
