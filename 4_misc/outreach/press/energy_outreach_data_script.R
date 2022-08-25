@@ -2,6 +2,7 @@ rm(list=ls())
 library(glue)
 library(parallel)
 library(vroom)
+library(glue)
 
 REPO <- "/home/liruixue/repos"
 
@@ -17,6 +18,7 @@ out = ProcessImpacts(
   impact_type="impacts_pct_gdp",
   resolution="states", 
   rcp="rcp85",
+  iam="low",
   ssp="SSP3",
   stats="q50",
   fuel = "total_energy",

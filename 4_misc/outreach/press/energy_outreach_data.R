@@ -30,6 +30,8 @@ miceadds::source.all(paste0(projection.packages,"load_projection/"))
 #' @param impact_type unit of output ("impacts_gj", "impacts_kwh", "impacts_pct_gdp")
 #' @param resolution spatial resolution of output, ("all_IRs", "states", "iso", "global")
 #' @param rcp ("rcp45", "rcp85")
+#' @param iam ("high", "low")
+#' @param ssp ("SSP1", "SSP2","SSP3","SSP4","SSP5")
 #' @param stats the statistics to produce, ("mean", "q5", "q17", "q50", "q83", "q95")
 #' @param fuel ("electricity", "other_energy")
 #' @param export set to TRUE if want to write output to file
@@ -43,6 +45,7 @@ ProcessImpacts = function(
     impact_type, 
     resolution, 
     rcp=NULL, 
+    ssp=NULL,
     stats=NULL,
     fuel = NULL,
     export = TRUE,
@@ -55,6 +58,8 @@ ProcessImpacts = function(
         resolution = resolution,
         fuel = fuel, 
         rcp = rcp, 
+        iam = iam,
+        ssp = ssp,
         regenerate = regenerate,
         mc.cores=1,
         mc.silent=FALSE,
@@ -76,6 +81,8 @@ ProcessImpacts = function(
         time_step = time_step,
         fuel = fuel, 
         rcp = rcp,
+        iam = iam,
+        ssp = ssp,
         export = export)
 
     return(df)
@@ -120,7 +127,7 @@ select_and_transform = function(df, impact_type, resolution, stats, ...) {
 # reshape output and save to file
 # Nishka: no need to touch this one
 # except for "fuel"
-reshape_and_save = function(df, stats, resolution, impact_type, time_step, rcp, fuel, export,...) {
+reshape_and_save = function(df, stats, resolution, impact_type, time_step, rcp, iam, ssp, fuel, export,...) {
 
     rownames(df) <- c()
     if(resolution=="states") 
@@ -158,6 +165,8 @@ reshape_and_save = function(df, stats, resolution, impact_type, time_step, rcp, 
                 Path, args = list(impact_type = impact_type, 
                         resolution = resolution,
                         rcp = rcp, 
+                        iam = iam,
+                        ssp=ssp,
                         stats = stats, 
                         fuel = fuel, 
                         time_step=time_step)))
@@ -185,7 +194,7 @@ get_geo_level = function(resolution) {
 # note that to percentage gdp impacts are only applicable for total energy (electricity + other energy)
 # nishka: this is where most of the change happens
 # replace this function with some calls to load the output of quantiles.py
-get_energy_impacts = function(impact_type, fuel, rcp, ssp, resolution, regenerate,...) {
+get_energy_impacts = function(impact_type, fuel, rcp, iam, ssp, resolution, regenerate,...) {
 
     # set parameters for the load.median function call based on impact_type parameter
     if (impact_type == "impacts_gj" | impact_type == "impacts_kwh"  ) {
@@ -229,7 +238,7 @@ get_energy_impacts = function(impact_type, fuel, rcp, ssp, resolution, regenerat
                         unit =  unit, # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
                         uncertainty = "full", # full, climate, values
                         geo_level = "aggregated", # aggregated (ir agglomerations) or 'levels' (single irs)
-                        iam = "low", 
+                        iam = iam, 
                         model = "TINV_clim", 
                         adapt_scen = "fulladapt", 
                         clim_data = "GMFD", 
@@ -247,7 +256,7 @@ get_energy_impacts = function(impact_type, fuel, rcp, ssp, resolution, regenerat
                         unit =  unit, # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
                         uncertainty = "full", # full, climate, values
                         geo_level = "levels", # aggregated (ir agglomerations) or 'levels' (single irs)
-                        iam = "low", 
+                        iam = iam, 
                         model = "TINV_clim", 
                         adapt_scen = "fulladapt", 
                         clim_data = "GMFD", 
@@ -292,14 +301,14 @@ YearChunks = function(df,intervals,...){
 
 # nishka: this one needs changing
 #directories and files names
-Path = function(impact_type, resolution, rcp, ssp, stats, fuel, time_step, suffix='', ...){
+Path = function(impact_type, resolution, rcp, iam, ssp, stats, fuel, time_step, suffix='', ...){
 
     # define a named vector to rename folders and files
     geography = c("global","US_states","country_level","impact_regions")
     names(geography) = c("global", "states", "iso", "all_IRs")
     
-    dir = glue("/mnt/CIL_energy/impacts_outreach/{geography[resolution]}/{rcp}/{ssp}/")
-    file = glue("unit_{fuel}_{impact_type}_geography_{geography[resolution]}_years_{time_step}_{rcp}_{ssp}_quantiles_{stats}{suffix}.csv")
+    dir = glue("/mnt/CIL_energy/tamma_2022aug/{geography[resolution]}/{rcp}/{ssp}/{iam}")
+    file = glue("unit_{fuel}_{impact_type}_geography_{geography[resolution]}_years_{time_step}_{rcp}_{ssp}_{iam}_quantiles_{stats}{suffix}.csv")
 
     print(glue('{dir}/{file}'))
     dir.create(dir, recursive = TRUE, showWarnings = FALSE)
