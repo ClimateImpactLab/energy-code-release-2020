@@ -4,7 +4,143 @@ Purpose: Plot the energy overlayed version of 1A
 
 */
 
+/// the 3 group version
 
+
+
+
+clear all
+set more off
+macro drop _all
+
+global REPO "/home/liruixue/repos/"
+/////////////// SET UP USER SPECIFIC PATHS //////////////////////////////////////////////////////
+
+* path to energy-code-release repo:
+
+global root "${REPO}/energy-code-release-2020"
+
+/////////////////////////////////////////////////////////////////////////////////////////////////
+
+******Set Script Toggles********************************************************
+
+// What model do you want? TINV_clim or TINV_clim_EX
+global model "TINV_clim"
+
+
+local model = "$model"
+			
+********************************************************************************
+*Step 1: Load Data
+********************************************************************************
+		
+use "$root/data/GMFD_`model'_regsort.dta", `clear'
+
+********************************************************************************
+* Step 2: Prepare Regressors and Run Regression
+********************************************************************************
+
+
+
+foreach fuel in "electricity" {
+	set scheme s1color
+
+	****** Set Model Specification Locals ******************************************
+
+	local model = "$model"
+
+	****** Set Plotting Toggles ****************************************************
+
+	// plotting color and color name for title
+
+	* electricity 
+	local electricity_col "dknavy"
+	local electricity_colTT "Blue"
+
+	* other energy 
+	local other_energy_col "dkorange"
+	local other_energy_colTT "Orange"
+				
+	********************************************************************************
+	*Step 1: Load Data and Clean for Plotting
+	********************************************************************************
+			
+	use "$root/data/GMFD_`model'_regsort.dta", clear
+
+	//Set up locals for plotting
+	local obs = 35 + abs(-5) + 1
+
+	//clean data for plotting
+	drop if _n > 0
+	set obs `obs'
+
+	replace temp1_GMFD = _n - 6
+
+	foreach k of num 1/2 {
+		rename temp`k'_GMFD temp`k'
+		replace temp`k' = temp1 ^ `k'
+	}
+
+	********************************************************************************
+	* Step 2: Plot Plot Plot
+	********************************************************************************
+	local graphic ""
+	local graphic_noSE "tw "
+
+
+
+	// loop over income deciles
+	forval lg=1/3 {
+				
+		// set up plotting locals
+		local SE ""
+		local noSE ""
+		local colorGuide ""	
+
+		foreach var in `fuel' {
+
+			// assign product index
+			if "`var'" == "electricity" {
+				local pg = 1
+			}
+			else if "`var'" == "other_energy" {
+				local pg=2
+			}
+
+			* construct local variable that holds dose response
+			
+			local line = ""
+			local add = ""
+			
+			forval k = 1/2 {
+
+				local line = "`line'`add'_b[c.indp`pg'#c.indf1#c.FD_Iepic`lg'temp`k'] * (temp`k' - 20^`k')"
+				local add " + "
+
+			} 
+			* use ster to estimate dose response
+
+
+			* Ashwin: you probably only need to look at these few lines for generating the predicted y
+			estimates use "$root/sters/FD_FGLS_income_decile_epic_`model'"
+			predictnl yhat`lg'_`var' = `line', se(se`lg'_`var') ci(lower`lg'_`var' upper`lg'_`var')
+			label variable yhat`lg'_`var' "group `lg'"
+	}				
+
+	** Ashwin: and here for a simple plot
+	colorpalette blue, intensity(0.4(.3)1)
+ 	graph twoway line yhat1_electricity yhat2_electricity yhat3_electricity temp1, ///
+ 	lcolor(`r(p1)' `r(p2)' `r(p3)' ) ///
+	yline(0, lwidth(vthin)) xlabel(-5(10)35, labsize(vsmall)) ///
+	ylabel(, labsize(vsmall) nogrid) 
+
+	graph export "$root/figures/fig_1A_product_overlay_for_EPIC_top10_2021_3group_income_decile_`model'.pdf", replace	
+}
+
+
+
+
+/* 
 
 clear all
 set more off
@@ -171,4 +307,12 @@ foreach fuel in "electricity" {
 
 	
 }
+
+
+ */
+
+
+
+
+
 
