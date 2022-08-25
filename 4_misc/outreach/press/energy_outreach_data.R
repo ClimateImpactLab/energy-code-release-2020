@@ -185,7 +185,7 @@ get_geo_level = function(resolution) {
 # note that to percentage gdp impacts are only applicable for total energy (electricity + other energy)
 # nishka: this is where most of the change happens
 # replace this function with some calls to load the output of quantiles.py
-get_energy_impacts = function(impact_type, fuel, rcp, resolution, regenerate,...) {
+get_energy_impacts = function(impact_type, fuel, rcp, ssp, resolution, regenerate,...) {
 
     # set parameters for the load.median function call based on impact_type parameter
     if (impact_type == "impacts_gj" | impact_type == "impacts_kwh"  ) {
@@ -224,7 +224,7 @@ get_energy_impacts = function(impact_type, fuel, rcp, resolution, regenerate,...
                         regions = regions,
                         regions_suffix = resolution,
                         rcp = rcp, 
-                        ssp = "SSP3", 
+                        ssp = ssp, 
                         price_scen = price_scen, # have this as NULL, "price014", "MERGEETL", ...
                         unit =  unit, # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
                         uncertainty = "full", # full, climate, values
@@ -242,7 +242,7 @@ get_energy_impacts = function(impact_type, fuel, rcp, resolution, regenerate,...
             df = load.median(conda_env = "risingverse-py27",
                         proj_mode = '', # '' and _dm are the two options
                         rcp = rcp, 
-                        ssp = "SSP3", 
+                        ssp = ssp, 
                         price_scen = price_scen, # have this as NULL, "price014", "MERGEETL", ...
                         unit =  unit, # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
                         uncertainty = "full", # full, climate, values
@@ -292,14 +292,14 @@ YearChunks = function(df,intervals,...){
 
 # nishka: this one needs changing
 #directories and files names
-Path = function(impact_type, resolution, rcp, stats, fuel, time_step, suffix='', ...){
+Path = function(impact_type, resolution, rcp, ssp, stats, fuel, time_step, suffix='', ...){
 
     # define a named vector to rename folders and files
     geography = c("global","US_states","country_level","impact_regions")
     names(geography) = c("global", "states", "iso", "all_IRs")
     
-    dir = glue("/mnt/CIL_energy/impacts_outreach/{geography[resolution]}/{rcp}/SSP3/")
-    file = glue("unit_{fuel}_{impact_type}_geography_{geography[resolution]}_years_{time_step}_{rcp}_SSP3_quantiles_{stats}{suffix}.csv")
+    dir = glue("/mnt/CIL_energy/impacts_outreach/{geography[resolution]}/{rcp}/{ssp}/")
+    file = glue("unit_{fuel}_{impact_type}_geography_{geography[resolution]}_years_{time_step}_{rcp}_{ssp}_quantiles_{stats}{suffix}.csv")
 
     print(glue('{dir}/{file}'))
     dir.create(dir, recursive = TRUE, showWarnings = FALSE)
@@ -363,12 +363,12 @@ return_region_list = function(regions) {
 
 # nishka: no need to change
 # get regional GDP time series at the spatial resolution specified
-return_region_gdp = function(resolution) {
+return_region_gdp = function(ssp, resolution) {
 
     DB_data = "/mnt/CIL_energy/code_release_data_pixel_interaction"
     gdp = read_csv(
         paste0(DB_data, '/projection_system_outputs/covariates/', 
-         'SSP3-low-IR_level-gdppc-pop-gdp-all-years_iso-income.csv')) 
+         '{ssp}-low-IR_level-gdppc-pop-gdp-all-years_iso-income.csv')) 
     if (resolution == 'all_IRs') {
             return(gdp[c("region","year","gdp")])
         } else if (resolution == 'iso' | resolution == "states") {

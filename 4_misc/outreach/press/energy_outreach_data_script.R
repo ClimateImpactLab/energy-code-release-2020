@@ -17,6 +17,7 @@ out = ProcessImpacts(
   impact_type="impacts_pct_gdp",
   resolution="states", 
   rcp="rcp85",
+  ssp="SSP3",
   stats="q50",
   fuel = "total_energy",
   regenerate = FALSE,
