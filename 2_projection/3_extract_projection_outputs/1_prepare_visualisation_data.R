@@ -11,6 +11,7 @@ library(miceadds)
 library(haven)
 library(ncdf4)
 library(tidyr)
+library(glue)
 cilpath.r:::cilpath()
 
 REPO <- "/home/liruixue/repos"
@@ -40,44 +41,51 @@ miceadds::source.all(paste0(projection.packages,"load_projection/"))
 # Impacts maps for figure 2A 
 ######################done#########################
 
-get_main_model_impacts_maps = function(fuel, price_scen, unit, year, output){
+get_main_model_impacts_maps = function(rcp, ssp, iam, fuel, price_scen=NULL, unit, year, output){
 	
 	spec = paste0("OTHERIND_", fuel)
 	df = load.median(conda_env = "risingverse-py27",
                     proj_mode = '', # '' and _dm are the two options
                     region = NULL, # needs to be specified for 
-                    rcp = "rcp85", 
-                    ssp = "SSP3", 
+                    rcp = rcp, 
+                    ssp = ssp, 
                     price_scen = price_scen, # have this as NULL, "price014", "MERGEETL", ...
                     unit =  unit, # 'damagepc' ($ pc) 'impactpc' (kwh pc) 'damage' ($ pc)
                     uncertainty = "climate", # full, climate, values
                     geo_level = "levels", # aggregated (ir agglomerations) or 'levels' (single irs)
-                    iam = "high", 
+                    iam = iam, 
                     model = "TINV_clim", 
                     adapt_scen = "fulladapt", 
                     clim_data = "GMFD", 
                     yearlist = year,  
                     spec = spec,
                     grouping_test = "semi-parametric",
-                    regenerate = TRUE) %>%
-		dplyr::select(region, year, mean,  q5, q10, q25, q50, q75, q90, q95) %>%
+                    regenerate = FALSE) %>%
+		dplyr::select(region, year, mean) %>%
 		dplyr::filter(year == !!year)
 
 	price_tag = ifelse(is.null(price_scen), "impact_pc", price)
   write_csv(df, 
 		paste0(output, '/projection_system_outputs/mapping_data/', 
-			'main_model-', fuel, '-SSP3-rcp85-high-fulladapt-',price_tag ,'-',year,'-map.csv'))
+			'main_model-', fuel, '-', ssp, '-',rcp, '-', iam, '-fulladapt-',price_tag ,'-',year,'-map.csv'))
 }
 
 fuels = c("electricity","other_energy")
+iams = c("high", "low")
+ssps = c("SSP2", "SSP3")
+rcps = c("rcp85", "rcp45") 
+options = expand.grid(fuels = fuels, rcps = rcps, ssps = ssps, iams = iams)
+
 
 df = lapply(fuels, get_main_model_impacts_maps, 
-	price_scen = NULL, unit = "impactpc", year = 2099, output = output)
+	rcp = "rcp85", ssp = "SSP2", iam = 'high', price_scen = NULL, unit = "impactpc", year = 2099, output = output)
 
 # get data for some sanity checks
 df = lapply(fuels, get_main_model_impacts_maps, 
   price_scen = NULL, unit = "impactpc", year = 2090, output = output)
 
+
+mcmapply(get_main_model_impacts_maps, rcp = options$rcps, ssp = options$ssps, iam = options$iams, fuel = options$fuels, unit = "impactpc", year = 2099, output = output, cores = 30)
 
 ###############################################
 # Get time series data for figure 2C
